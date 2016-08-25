@@ -4,6 +4,7 @@
 module SolidusSubscriptions
   class Subscription < ActiveRecord::Base
     belongs_to :user, class_name: Spree.user_class
+    has_one :line_item, class_name: 'SolidusSubscriptions::LineItem'
     validates :user, presence: :true
   end
 end
