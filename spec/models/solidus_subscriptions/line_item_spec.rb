@@ -8,7 +8,7 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
   it { is_expected.to validate_presence_of :subscribable_id }
 
   it { is_expected.to validate_numericality_of(:quantity).is_greater_than(0) }
-  it { is_expected.to validate_numericality_of(:installments).is_greater_than(0) }
+  it { is_expected.to validate_numericality_of(:max_installments).is_greater_than(0) }
   it { is_expected.to validate_numericality_of(:interval).is_greater_than(0) }
-  it { is_expected.to validate_numericality_of(:installments).allow_nil }
+  it { is_expected.to validate_numericality_of(:max_installments).allow_nil }
 end
