@@ -32,7 +32,7 @@ require 'spree/testing_support/factories'
 require 'spree/testing_support/url_helpers'
 
 # Requires factories defined in lib/solidus_subscriptions/factories.rb
-require 'solidus_subscriptions/factories'
+Dir[File.join(File.dirname(__FILE__), 'factories/**/*_factory.rb')].each { |f| require f }
 
 require 'spec_helper'
 require 'shoulda-matchers'
