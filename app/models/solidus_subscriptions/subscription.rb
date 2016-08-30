@@ -9,6 +9,12 @@ module SolidusSubscriptions
 
     validates :user, presence: :true
 
+    # The following methods are delegated to the associated
+    # SolidusSubscriptions::LineItem
+    #
+    # :interval
+    delegate :interval, to: :line_item
+
     # The subscription state determines the behaviours around when it is
     # processed. Here is a brief description of the states and how they affect
     # the subscription.
@@ -68,6 +74,26 @@ module SolidusSubscriptions
     def can_be_deactivated?
       return false if line_item.max_installments.nil?
       installments.count >= line_item.max_installments
+    end
+
+    # Get the date after the current actionable_date where this subscription
+    # will be actionable again
+    #
+    # @return [Date] The current actionable_date plus 1 interval. The next
+    #   date after the current actionable_date this subscription will be
+    #   eligible to be processed.
+    def next_actionable_date
+      actionable_date + interval.seconds
+    end
+
+    # Advance the actionable date to the next_actionable_date value. Will modify
+    # the record.
+    #
+    # @return [Date] The next date after the current actionable_date this
+    # subscription will be eligible to be processed.
+    def advance_actionable_date
+      update! actionable_date: next_actionable_date
+      actionable_date
     end
   end
 end

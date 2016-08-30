@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :subscription_line_item, class: 'SolidusSubscriptions::LineItem' do
     subscribable_id 1
     quantity 1
+    interval 30.days
 
     association :spree_line_item, factory: :line_item
 
