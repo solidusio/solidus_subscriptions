@@ -26,6 +26,6 @@ module SolidusSubscriptions
 
     validates :spree_line_item, :subscribable_id, presence: :true
     validates :quantity, :interval, numericality: { greater_than: 0 }
-    validates :installments, numericality: { greater_than: 0 }, allow_blank: true
+    validates :max_installments, numericality: { greater_than: 0 }, allow_blank: true
   end
 end
