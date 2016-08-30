@@ -18,6 +18,7 @@
 module SolidusSubscriptions
   class LineItem < ActiveRecord::Base
     belongs_to :spree_line_item, class_name: 'Spree::LineItem'
+    has_one :order, through: :spree_line_item, class_name: 'Spree::Order'
     belongs_to(
       :subscription,
       class_name: 'SolidusSubscriptions::Subscription',

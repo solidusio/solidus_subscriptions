@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe SolidusSubscriptions::LineItem, type: :model do
   it { is_expected.to belong_to :spree_line_item }
   it { is_expected.to belong_to :subscription }
+  it { is_expected.to have_one :order }
 
   it { is_expected.to validate_presence_of :spree_line_item }
   it { is_expected.to validate_presence_of :subscribable_id }
