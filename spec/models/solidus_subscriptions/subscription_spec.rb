@@ -53,4 +53,19 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       it { is_expected.to be_falsy }
     end
   end
+
+  describe '#next_actionable_date' do
+    subject { subscription.next_actionable_date }
+
+    let(:expected_date) { Date.today + subscription.interval.seconds }
+    let(:subscription) do
+      build_stubbed(
+        :subscription,
+        :with_line_item,
+        actionable_date: Date.today
+      )
+    end
+
+    it { is_expected.to eq expected_date }
+  end
 end
