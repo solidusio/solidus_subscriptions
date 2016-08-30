@@ -68,4 +68,26 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
     it { is_expected.to eq expected_date }
   end
+
+  describe '#advance_actionable_date' do
+    subject { subscription.advance_actionable_date }
+
+    let(:expected_date) { Date.today + subscription.interval.seconds }
+    let(:subscription) do
+      build(
+        :subscription,
+        :with_line_item,
+        actionable_date: Date.today
+      )
+    end
+
+    it { is_expected.to eq expected_date }
+
+    it 'updates the subscription with the new actionable date' do
+      subject
+      expect(subscription.reload).to have_attributes(
+        actionable_date: expected_date
+      )
+    end
+  end
 end

@@ -85,5 +85,15 @@ module SolidusSubscriptions
     def next_actionable_date
       actionable_date + interval.seconds
     end
+
+    # Advance the actionable date to the next_actionable_date value. Will modify
+    # the record.
+    #
+    # @return [Date] The next date after the current actionable_date this
+    # subscription will be eligible to be processed.
+    def advance_actionable_date
+      update! actionable_date: next_actionable_date
+      actionable_date
+    end
   end
 end
