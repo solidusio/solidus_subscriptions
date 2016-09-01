@@ -1,3 +1,4 @@
+# Accept parameters needed to build SolidusSubscriptions::LineItem objects
 module Spree
   module Controllers
     module Orders
