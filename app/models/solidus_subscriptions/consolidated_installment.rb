@@ -21,7 +21,26 @@ module SolidusSubscriptions
     #
     # @return [Spree::Order]
     def process
-      Spree::Order.new
+      populate
+      order
+    end
+
+    # The order fulfilling the consolidated installment
+    #
+    # @return [Spree::Order]
+    def order
+      @order ||= Spree::Order.new
+    end
+
+    private
+
+    def populate
+      line_items = installments.map { |i| i.line_item_builder.line_item }
+      order_builder.add_line_items(line_items)
+    end
+
+    def order_builder
+      @order_builder ||= OrderBuilder.new(order)
     end
   end
 end
