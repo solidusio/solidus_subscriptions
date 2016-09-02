@@ -1,6 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
+  # Things needed to move through the checkout smoothly
+  before do
+    create :credit_card_payment_method
+    create :country
+    create :shipping_method
+  end
+
   let(:consolidated_installment) { described_class.new(installments) }
   let(:installments) { create_list(:installment, 2) }
 
@@ -23,12 +30,39 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
         variant_id: subscription_line_item.subscribable_id
       )
     end
+
+    it 'has a shipment' do
+      expect(order.shipments).to be_present
+    end
+
+    it 'has a payment' do
+      expect(order.payments.valid).to be_present
+    end
+
+    it 'has the correct totals' do
+      expect(order).to have_attributes(
+        total: 29.99,
+        shipment_total: 10
+      )
+    end
+
+    it { is_expected.to be_complete }
   end
 
   describe '#order' do
     subject { consolidated_installment.order }
+    let(:user) { installments.first.subscription.user }
+    let(:root_order) { installments.first.subscription.root_order }
 
     it { is_expected.to be_a Spree::Order }
+
+    it 'has the correct attributes' do
+      expect(subject).to have_attributes(
+        user: user,
+        email: user.email,
+        store: root_order.store
+      )
+    end
 
     it 'is the same instance any time its called' do
       order = consolidated_installment.order
