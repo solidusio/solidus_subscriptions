@@ -5,7 +5,6 @@ FactoryGirl.define do
     trait :with_line_item do
       transient do
         line_item_traits []
-        test 9
       end
 
       line_item { build :subscription_line_item, *line_item_traits }
