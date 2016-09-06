@@ -1,19 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
-  # Things needed to move through the checkout smoothly
-  before do
-    create :credit_card_payment_method
-    create :country
-    create :shipping_method
-  end
-
   let(:consolidated_installment) { described_class.new(installments) }
   let(:installments) { create_list(:installment, 2) }
 
-  describe '#process' do
+  describe '#process', :checkout do
     subject(:order) { consolidated_installment.process }
-
     let(:subscription_line_item) { installments.first.subscription.line_item }
 
     it { is_expected.to be_a Spree::Order }
