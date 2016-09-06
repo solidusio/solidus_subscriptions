@@ -8,6 +8,6 @@ module SolidusSubscriptions
       inverse_of: :details
     )
 
-    validates :state, :installment, presence: true
+    validates :installment, presence: true
   end
 end
