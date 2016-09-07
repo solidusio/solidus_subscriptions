@@ -42,8 +42,37 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
       it { is_expected.to be_complete }
     end
 
+    context 'the user has addresss and active card' do
+      let(:credit_card) { create(:credit_card, gateway_customer_profile_id: 'BGS-123', default: true) }
+
+      before do
+        consolidated_installment.user.credit_cards << credit_card
+        consolidated_installment.user.update ship_address: create(:address)
+      end
+
+      it_behaves_like 'a completed checkout'
+
+      it 'uses the root order address' do
+        expect(order.ship_address).to eq consolidated_installment.user.ship_address
+      end
+
+      it 'uses the root orders last payment method' do
+        source = order.payments.last.source
+        expect(source).to eq credit_card
+      end
+    end
+
     context 'the user has no address or active card' do
       it_behaves_like 'a completed checkout'
+
+      it 'uses the root order address' do
+        expect(order.ship_address).to eq consolidated_installment.root_order.ship_address
+      end
+
+      it 'uses the root orders last payment method' do
+        source = order.payments.last.source
+        expect(source).to eq consolidated_installment.root_order.payments.last.source
+      end
     end
   end
 
