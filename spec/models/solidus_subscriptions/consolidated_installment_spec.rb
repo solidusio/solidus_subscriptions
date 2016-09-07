@@ -8,37 +8,43 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
     subject(:order) { consolidated_installment.process }
     let(:subscription_line_item) { installments.first.subscription.line_item }
 
-    it { is_expected.to be_a Spree::Order }
+    shared_examples 'a completed checkout' do
+      it { is_expected.to be_a Spree::Order }
 
-    it 'has the correct number of line items' do
-      count = order.line_items.length
-      expect(count).to eq installments.count
+      it 'has the correct number of line items' do
+        count = order.line_items.length
+        expect(count).to eq installments.length
+      end
+
+      it 'the line items have the correct values' do
+        line_item = order.line_items.first
+        expect(line_item).to have_attributes(
+          quantity: subscription_line_item.quantity,
+          variant_id: subscription_line_item.subscribable_id
+        )
+      end
+
+      it 'has a shipment' do
+        expect(order.shipments).to be_present
+      end
+
+      it 'has a payment' do
+        expect(order.payments.valid).to be_present
+      end
+
+      it 'has the correct totals' do
+        expect(order).to have_attributes(
+          total: 49.98,
+          shipment_total: 10
+        )
+      end
+
+      it { is_expected.to be_complete }
     end
 
-    it 'the line items have the correct values' do
-      line_item = order.line_items.first
-      expect(line_item).to have_attributes(
-        quantity: subscription_line_item.quantity,
-        variant_id: subscription_line_item.subscribable_id
-      )
+    context 'the user has no address or active card' do
+      it_behaves_like 'a completed checkout'
     end
-
-    it 'has a shipment' do
-      expect(order.shipments).to be_present
-    end
-
-    it 'has a payment' do
-      expect(order.payments.valid).to be_present
-    end
-
-    it 'has the correct totals' do
-      expect(order).to have_attributes(
-        total: 29.99,
-        shipment_total: 10
-      )
-    end
-
-    it { is_expected.to be_complete }
   end
 
   describe '#order' do
