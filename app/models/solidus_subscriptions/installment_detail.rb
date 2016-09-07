@@ -9,5 +9,13 @@ module SolidusSubscriptions
     )
 
     validates :installment, presence: true
+    alias_attribute :successful, :success
+
+    # Was the attempt at fulfilling this installment a failure?
+    #
+    # @return [Boolean]
+    def failed?
+      !success
+    end
   end
 end
