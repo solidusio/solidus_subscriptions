@@ -1,5 +1,6 @@
 FactoryGirl.define do
   factory :installment, class: 'SolidusSubscriptions::Installment' do
-    association :subscription, factory: [:subscription, :with_line_item]
+    transient { subscription_traits [] }
+    subscription { build :subscription, :with_line_item, *subscription_traits }
   end
 end

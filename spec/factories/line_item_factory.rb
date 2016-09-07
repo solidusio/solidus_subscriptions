@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :subscription_line_item, class: 'SolidusSubscriptions::LineItem' do
-    subscribable_id 1
+    subscribable_id { create(:variant, subscribable: true).id }
     quantity 1
     interval 30.days
 
