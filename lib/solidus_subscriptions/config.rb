@@ -1,6 +1,10 @@
 module SolidusSubscriptions
   module Config
     class << self
+      def default_gateway=(gateway)
+        @gateway = gateway
+      end
+
       def default_gateway
         @gateway ||= Spree::Gateway.where(active: true).detect do |gateway|
           gateway.payment_source_class == Spree::CreditCard

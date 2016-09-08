@@ -28,4 +28,14 @@ RSpec.describe SolidusSubscriptions::Config do
       end
     end
   end
+
+  describe 'default_gateway=' do
+    subject(:gateway) { described_class.default_gateway = value }
+    let(:value) { 'test123' }
+
+    it 'sets the correct instance variable' do
+      subject
+      expect(described_class.instance_variable_get('@gateway')).to eq value
+    end
+  end
 end
