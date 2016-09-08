@@ -1,12 +1,17 @@
 module SolidusSubscriptions
   class Engine < Rails::Engine
     require 'spree/core'
+
     isolate_namespace Spree
     engine_name 'solidus_subscriptions'
 
     # use rspec for tests
     config.generators do |g|
       g.test_framework :rspec
+    end
+
+    initializer 'solidus_subscriptions.configs', before: "spree.register.payment_methods" do
+      require 'solidus_subscriptions/config'
     end
 
     def self.activate
