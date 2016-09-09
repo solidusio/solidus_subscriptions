@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe SolidusSubscriptions::OrderBuilder do
   let(:builder) { described_class.new order }
 
-  describe '#provide_line_item!' do
+  describe '#add_line_items' do
     subject { builder.add_line_items(line_item) }
 
     let(:variant) { create :variant, subscribable: true }
