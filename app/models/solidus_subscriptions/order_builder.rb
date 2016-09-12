@@ -18,9 +18,9 @@ module SolidusSubscriptions
     # add the line item to the order.
     #
     # @param [Array<Spree::LineItem>] :order, the order to add the line item to
-    # @return [Spree::Order] The same order that was passed in
+    # @return [Array<Spree::LineItem] The collection that was passed in
     def add_line_items(*items)
-      items.each { |item| add_item_to_order(item) }
+      items.map { |item| add_item_to_order(item) }
     end
 
     private
@@ -32,6 +32,7 @@ module SolidusSubscriptions
 
       if line_item
         line_item.quantity += new_item.quantity
+        line_item
       else
         order.line_items << new_item
       end
