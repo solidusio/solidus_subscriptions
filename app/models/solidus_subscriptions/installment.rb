@@ -68,6 +68,15 @@ module SolidusSubscriptions
       order_id.nil? || !order.completed?
     end
 
+    def payment_failed!
+      advance_actionable_date
+
+      details.create!(
+        success: false,
+        message: I18n.t('solidus_subscriptions.installment_details.payment_failed')
+      )
+    end
+
     private
 
     def advance_actionable_date
