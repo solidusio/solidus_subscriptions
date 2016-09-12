@@ -1,3 +1,5 @@
+Dir[File.join(File.dirname(__FILE__), 'helpers/**/*.rb')].each { |f| require f }
+
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
 
@@ -11,6 +13,8 @@ RSpec.configure do |config|
   # visit spree.admin_path
   # current_path.should eql(spree.products_path)
   config.include Spree::TestingSupport::UrlHelpers
+
+  config.extend CheckoutInfrastructure, :checkout
 
   # == Mock Framework
   #

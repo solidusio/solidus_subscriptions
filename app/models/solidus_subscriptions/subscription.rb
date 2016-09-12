@@ -6,6 +6,7 @@ module SolidusSubscriptions
     belongs_to :user, class_name: Spree.user_class
     has_one :line_item, class_name: 'SolidusSubscriptions::LineItem'
     has_many :installments, class_name: 'SolidusSubscriptions::Installment'
+    has_one :root_order, through: :line_item, class_name: 'Spree::Order', source: :order
 
     validates :user, presence: :true
 
