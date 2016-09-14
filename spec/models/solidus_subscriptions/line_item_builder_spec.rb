@@ -24,7 +24,7 @@ RSpec.describe SolidusSubscriptions::LineItemBuilder do
 
       it 'raises an unsubscribable error' do
         expect { subject }.to raise_error(
-          SolidusSubscriptions::LineItemBuilder::UnsubscribableError,
+          SolidusSubscriptions::UnsubscribableError,
           /cannot be subscribed to/
         )
       end
