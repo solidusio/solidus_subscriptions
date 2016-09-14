@@ -42,6 +42,28 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
       it { is_expected.to be_complete }
     end
 
+    context 'no line items get added to the cart' do
+      before do
+        installments
+        Spree::StockItem.update_all(count_on_hand: 0, backorderable: false)
+      end
+
+      it 'creates two failed installment details' do
+        expect { order }.
+          to change { SolidusSubscriptions::InstallmentDetail.count }.
+          by(installments.length)
+
+        details = SolidusSubscriptions::InstallmentDetail.last(installments.length)
+        expect(details).to all be_failed
+      end
+
+      it { is_expected.to be_nil }
+
+      it 'creates no order' do
+        expect { subject }.to_not change { Spree::Order.count }
+      end
+    end
+
     context 'the user has addresss and active card' do
       let(:credit_card) { create(:credit_card, gateway_customer_profile_id: 'BGS-123', default: true) }
 

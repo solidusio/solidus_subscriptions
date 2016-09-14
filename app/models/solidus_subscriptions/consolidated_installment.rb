@@ -26,6 +26,10 @@ module SolidusSubscriptions
       ActiveRecord::Base.transaction do
         populate
 
+        # Installments are removed and set for future processing if they are
+        # out of stock. If there are no line items left there is nothing to do
+        return if installments.empty?
+
         order.next! # cart => address
 
         order.ship_address = ship_address
