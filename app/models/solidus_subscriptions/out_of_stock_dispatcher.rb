@@ -7,5 +7,16 @@ module SolidusSubscriptions
     def initialize(*installments)
       @installments = installments
     end
+
+    def dispatch
+      installments.each(&:out_of_stock)
+      log_failure
+    end
+
+    private
+
+    def log_failure
+      # Tell someone stuff was out of stock
+    end
   end
 end
