@@ -61,6 +61,13 @@ module SolidusSubscriptions
       )
     end
 
+    # Does this installment still need to be fulfilled by a completed order
+    #
+    # @return [Boolean]
+    def unfulfilled?
+      order_id.nil? || !order.completed?
+    end
+
     private
 
     def advance_actionable_date
