@@ -7,7 +7,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
 
   it { is_expected.to validate_presence_of :subscription }
 
-  let(:installment) { build_stubbed :installment }
+  let(:installment) { create :installment }
 
   describe '#line_item_builder' do
     subject { installment.line_item_builder }
@@ -16,5 +16,17 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
 
     it { is_expected.to be_a SolidusSubscriptions::LineItemBuilder }
     it { is_expected.to have_attributes(subscription_line_item: line_item) }
+  end
+
+  describe '#out_of_stock' do
+    subject { installment.out_of_stock }
+
+    it { is_expected.to be_a SolidusSubscriptions::InstallmentDetail }
+    it { is_expected.to_not be_successful }
+    it 'has the correct message' do
+      expect(subject).to have_attributes(
+        message: I18n.t('solidus_subscriptions.installment_details.out_of_stock')
+      )
+    end
   end
 end
