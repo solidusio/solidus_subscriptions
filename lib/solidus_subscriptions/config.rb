@@ -1,6 +1,10 @@
 module SolidusSubscriptions
   module Config
     class << self
+      # Time between an installment failing to be processed and the system
+      # retrying to fulfil it
+      mattr_accessor(:reprocessing_interval) { 1.day }
+
       def default_gateway=(gateway)
         @gateway = gateway
       end
