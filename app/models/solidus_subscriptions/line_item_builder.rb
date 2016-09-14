@@ -4,20 +4,6 @@ module SolidusSubscriptions
   class LineItemBuilder
     attr_reader :subscription_line_item
 
-    class UnsubscribableError < StandardError
-      def initialize(subscribable)
-        @subscribable = subscribable
-        super
-      end
-
-      def to_s
-        <<-MSG.squish
-          #{@subscribable.class} with id: #{@subscribable.id} cannot be
-          subscribed to.
-        MSG
-      end
-    end
-
     # Get a new instance of a LineItemBuilder
     #
     # @params [SolidusSubscriptions::LineItem] :subscription_line_item, The
