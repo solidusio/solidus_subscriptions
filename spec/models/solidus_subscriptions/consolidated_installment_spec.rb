@@ -74,6 +74,36 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
         expect(source).to eq consolidated_installment.root_order.payments.last.source
       end
     end
+
+    context 'the variant is out of stock' do
+      # Remove stock for 1 variant in the consolidated installment
+      before do
+        subscribable_id = installments.first.subscription.line_item.subscribable_id
+        variant = Spree::Variant.find(subscribable_id)
+        variant.stock_items.update_all(count_on_hand: 0, backorderable: false)
+      end
+
+      it 'creates an installment detail' do
+        expect { subject }.
+          to change { SolidusSubscriptions::InstallmentDetail.count }.
+          by(1)
+      end
+
+      it 'creates a failed installment detail' do
+        subject
+        detail = SolidusSubscriptions::InstallmentDetail.last
+
+        expect(detail).to_not be_successful
+        expect(detail.message).
+          to eq I18n.t('solidus_subscriptions.installment_details.out_of_stock')
+      end
+
+      it 'removes the installment from the list of installments' do
+        expect { subject }.
+          to change { consolidated_installment.installments.length }.
+          by(-1)
+      end
+    end
   end
 
   describe '#order' do
