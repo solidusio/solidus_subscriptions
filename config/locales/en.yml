@@ -8,3 +8,4 @@ en:
         This installment could not be processed because of insufficient
         stock.
       success: This installment has been processed successfully!
+      failed: This installment could not be processed

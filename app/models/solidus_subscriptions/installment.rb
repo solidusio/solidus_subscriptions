@@ -48,6 +48,19 @@ module SolidusSubscriptions
       )
     end
 
+    # Mark this installment as a failure
+    #
+    # @return [SolidusSubscriptions::InstallmentDetail] The record of the
+    #   failed processing attempt
+    def failed
+      advance_actionable_date
+
+      details.create!(
+        success: false,
+        message: I18n.t('solidus_subscriptions.installment_details.failed')
+      )
+    end
+
     private
 
     def advance_actionable_date

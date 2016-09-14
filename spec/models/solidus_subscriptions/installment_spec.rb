@@ -65,4 +65,26 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
       )
     end
   end
+
+  describe '#failed' do
+    subject { installment.failed }
+
+    let(:expected_date) do
+      Date.today + SolidusSubscriptions::Config.reprocessing_interval
+    end
+
+    it { is_expected.to be_a SolidusSubscriptions::InstallmentDetail }
+    it { is_expected.to_not be_successful }
+    it 'has the correct message' do
+      expect(subject).to have_attributes(
+        message: I18n.t('solidus_subscriptions.installment_details.failed')
+      )
+    end
+
+    it 'advances the installment actionable_date' do
+      subject
+      actionable_date = installment.reload.actionable_date
+      expect(actionable_date).to eq expected_date
+    end
+  end
 end
