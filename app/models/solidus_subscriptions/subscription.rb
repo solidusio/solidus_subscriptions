@@ -16,6 +16,10 @@ module SolidusSubscriptions
     # :interval
     delegate :interval, to: :line_item
 
+    # Find all subscriptions that are "actionable"; that is, ones that have an
+    # actionable_date in the past and are not invalid or canceled.
+    scope :actionable, ->{ where("actionable_date < ?", Time.zone.now).where.not(state: ["canceled", "inactive"]) }
+
     # The subscription state determines the behaviours around when it is
     # processed. Here is a brief description of the states and how they affect
     # the subscription.
