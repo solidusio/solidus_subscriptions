@@ -40,6 +40,18 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
       end
 
       it { is_expected.to be_complete }
+
+      it 'associates the order to the installments' do
+        order
+        installment_orders = installments.map { |i| i.reload.order }
+        expect(installment_orders).to all eq order
+      end
+
+      it 'creates an installment detail for each installment' do
+        expect { subject }.
+          to change { SolidusSubscriptions::InstallmentDetail.count }.
+          by(installments.count)
+      end
     end
 
     context 'no line items get added to the cart' do
@@ -105,15 +117,9 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
         variant.stock_items.update_all(count_on_hand: 0, backorderable: false)
       end
 
-      it 'creates an installment detail' do
-        expect { subject }.
-          to change { SolidusSubscriptions::InstallmentDetail.count }.
-          by(1)
-      end
-
       it 'creates a failed installment detail' do
         subject
-        detail = SolidusSubscriptions::InstallmentDetail.last
+        detail = installments.first.details.last
 
         expect(detail).to_not be_successful
         expect(detail.message).

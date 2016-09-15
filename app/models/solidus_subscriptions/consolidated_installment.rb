@@ -39,6 +39,10 @@ module SolidusSubscriptions
         create_payment
         order.complete! # payment => complete
 
+        # Associate the order with the fulfilled installments
+        installments.each { |installment| installment.update!(order_id: order.id) }
+        SuccessDispatcher.new(installments).dispatch
+
         order
       end
     end
