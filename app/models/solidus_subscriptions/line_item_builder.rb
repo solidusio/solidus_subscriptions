@@ -21,6 +21,7 @@ module SolidusSubscriptions
     def line_item
       variant = Spree::Variant.find(subscription_line_item.subscribable_id)
       raise UnsubscribableError.new(variant) unless variant.subscribable?
+      return unless variant.can_supply?(subscription_line_item.quantity)
 
       Spree::LineItem.new(variant: variant, quantity: subscription_line_item.quantity)
     end

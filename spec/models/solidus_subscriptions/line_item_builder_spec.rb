@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe SolidusSubscriptions::LineItemBuilder do
   let(:builder) { described_class.new subscription_line_item }
-  let!(:variant) { create(:variant, subscribable: true) }
+  let(:variant) { create(:variant, subscribable: true) }
   let(:subscription_line_item) do
     build_stubbed(:subscription_line_item, subscribable_id: variant.id)
   end
@@ -28,6 +28,11 @@ RSpec.describe SolidusSubscriptions::LineItemBuilder do
           /cannot be subscribed to/
         )
       end
+    end
+
+    context 'the variant is out of stock' do
+      before { create :stock_location, backorderable_default: false }
+      it { is_expected.to be_nil }
     end
   end
 end

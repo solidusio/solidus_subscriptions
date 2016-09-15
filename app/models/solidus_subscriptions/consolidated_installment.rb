@@ -26,6 +26,10 @@ module SolidusSubscriptions
       ActiveRecord::Base.transaction do
         populate
 
+        # Installments are removed and set for future processing if they are
+        # out of stock. If there are no line items left there is nothing to do
+        return if installments.empty?
+
         order.next! # cart => address
 
         order.ship_address = ship_address
@@ -53,7 +57,26 @@ module SolidusSubscriptions
     private
 
     def populate
-      line_items = installments.map { |i| i.line_item_builder.line_item }
+      unfulfilled_installments = []
+
+      line_items = installments.map do |installment|
+        line_item = installment.line_item_builder.line_item
+
+        if line_item.nil?
+          unfulfilled_installments << installment
+          next
+        end
+
+        line_item
+      end.
+      compact
+
+      # Remove installments which had no stock from the active list
+      # They will be reprocessed later
+      @installments -= unfulfilled_installments
+      OutOfStockDispatcher.new(*unfulfilled_installments).dispatch
+
+      return if installments.empty?
       order_builder.add_line_items(line_items)
     end
 
