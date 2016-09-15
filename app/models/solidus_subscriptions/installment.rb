@@ -21,5 +21,28 @@ module SolidusSubscriptions
     def line_item_builder
       LineItemBuilder.new(subscription.line_item)
     end
+
+    # Mark this installment as out of stock.
+    #
+    # @return [SolidusSubscriptions::InstallmentDetail] The record of the failed
+    #   processing attempt
+    def out_of_stock
+      advance_actionable_date
+
+      details.create!(
+        success: false,
+        message: I18n.t('solidus_subscriptions.installment_details.out_of_stock')
+      )
+    end
+
+    private
+
+    def advance_actionable_date
+      update(actionable_date: next_actionable_date)
+    end
+
+    def next_actionable_date
+      Date.today + Config.reprocessing_interval
+    end
   end
 end

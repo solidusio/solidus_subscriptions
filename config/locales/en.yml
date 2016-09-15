@@ -2,4 +2,8 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  hello: Hello world
+  solidus_subscriptions:
+    installment_details:
+      out_of_stock: >
+        This installment could not be processed because of insufficient
+        stock.
