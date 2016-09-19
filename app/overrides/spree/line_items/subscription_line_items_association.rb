@@ -8,8 +8,11 @@ module Spree
         base.has_many(
           :subscription_line_items,
           class_name: 'SolidusSubscriptions::LineItem',
-          foreign_key: :spree_line_item_id
+          foreign_key: :spree_line_item_id,
+          inverse_of: :spree_line_item
         )
+
+        base.accepts_nested_attributes_for :subscription_line_items
       end
     end
   end
