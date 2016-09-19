@@ -130,6 +130,8 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
         variant.stock_items.update_all(count_on_hand: 0, backorderable: false)
       end
 
+      let(:expected_date) { Date.today + SolidusSubscriptions::Config.reprocessing_interval }
+
       it 'creates a failed installment detail' do
         subject
         detail = installments.first.details.last
@@ -179,6 +181,13 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
 
       it 'creates a installment detail for every installment' do
         expect { subject }.to change { SolidusSubscriptions::InstallmentDetail.count }.by installments.length
+      end
+
+      it 'marks the installment to be reprocessed' do
+        subject
+        actionable_date = installments.first.reload.actionable_date
+
+        expect(actionable_date).to eq expected_date
       end
     end
 
