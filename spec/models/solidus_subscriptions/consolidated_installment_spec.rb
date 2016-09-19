@@ -181,6 +181,42 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
         expect { subject }.to change { SolidusSubscriptions::InstallmentDetail.count }.by installments.length
       end
     end
+
+    context 'the payment fails' do
+      let(:credit_card) { create(:credit_card, default: true) }
+      let(:expected_date) { Date.today + SolidusSubscriptions::Config.reprocessing_interval }
+
+      before do
+        consolidated_installment.user.credit_cards << credit_card
+      end
+
+      it { is_expected.to be_nil }
+
+      it 'marks all of the installments as failed' do
+        subject
+
+        details = installments.map do |installments|
+          installments.details(true).last
+        end
+
+        expect(details).to all be_failed && have_attributes(
+          message: I18n.t('solidus_subscriptions.installment_details.payment_failed')
+        )
+      end
+
+      it 'creates no order' do
+        expect { subject }.to_not change { Spree::Order.count }
+      end
+
+      it 'marks the installment to be reprocessed' do
+        subject
+        actionable_dates = installments.map do |installment|
+          installment.reload.actionable_date
+        end
+
+        expect(actionable_dates).to all eq expected_date
+      end
+    end
   end
 
   describe '#order' do

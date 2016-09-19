@@ -30,13 +30,20 @@ module SolidusSubscriptions
         # out of stock. If there are no line items left there is nothing to do
         return if installments.empty?
 
-        checkout
+        if checkout
+          # Associate the order with the fulfilled installments
+          installments.each { |installment| installment.update!(order_id: order.id) }
+          SuccessDispatcher.new(installments).dispatch
+          return order
+        end
 
-        # Associate the order with the fulfilled installments
-        installments.each { |installment| installment.update!(order_id: order.id) }
-        SuccessDispatcher.new(installments).dispatch
-
-        order
+        # A new order will only have 1 payment that we created
+        if order.payments.any?(&:failed?)
+          PaymentFailedDispatcher.new(installments).dispatch
+          installments.clear
+          order.destroy!
+          nil
+        end
       end
     ensure
       # Any installments that failed to be processed will be reprocessed
