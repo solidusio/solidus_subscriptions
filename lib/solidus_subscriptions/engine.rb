@@ -2,7 +2,7 @@ module SolidusSubscriptions
   class Engine < Rails::Engine
     require 'spree/core'
 
-    isolate_namespace Spree
+    isolate_namespace SolidusSubscriptions
     engine_name 'solidus_subscriptions'
 
     # use rspec for tests
