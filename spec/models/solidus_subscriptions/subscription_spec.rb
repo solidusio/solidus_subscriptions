@@ -103,6 +103,10 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       expect(subject).to include past_subscription
     end
 
+    it "does not include future subscriptions" do
+      expect(subject).to_not include future_subscription
+    end
+
     it "does not include inactive subscriptions" do
       expect(subject).to_not include inactive_subscription
     end
