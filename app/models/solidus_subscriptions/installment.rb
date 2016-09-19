@@ -27,7 +27,7 @@ module SolidusSubscriptions
     # @return [SolidusSubscriptions::InstallmentDetail] The record of the failed
     #   processing attempt
     def out_of_stock
-      advance_actionable_date
+      advance_actionable_date!
 
       details.create!(
         success: false,
@@ -53,7 +53,7 @@ module SolidusSubscriptions
     # @return [SolidusSubscriptions::InstallmentDetail] The record of the
     #   failed processing attempt
     def failed
-      advance_actionable_date
+      advance_actionable_date!
 
       details.create!(
         success: false,
@@ -69,7 +69,7 @@ module SolidusSubscriptions
     end
 
     def payment_failed!
-      advance_actionable_date
+      advance_actionable_date!
 
       details.create!(
         success: false,
@@ -79,8 +79,8 @@ module SolidusSubscriptions
 
     private
 
-    def advance_actionable_date
-      update(actionable_date: next_actionable_date)
+    def advance_actionable_date!
+      update!(actionable_date: next_actionable_date)
     end
 
     def next_actionable_date
