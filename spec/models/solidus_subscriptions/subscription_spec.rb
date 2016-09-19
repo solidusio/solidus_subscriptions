@@ -90,4 +90,29 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       )
     end
   end
+
+  describe ".actionable" do
+    let!(:past_subscription) { create :subscription, actionable_date: 2.days.ago }
+    let!(:future_subscription) { create :subscription, actionable_date: 1.month.from_now }
+    let!(:inactive_subscription) { create :subscription, state: "inactive", actionable_date: 7.days.ago }
+    let!(:canceled_subscription) { create :subscription, state: "canceled", actionable_date: 4.days.ago }
+
+    subject { described_class.actionable }
+
+    it "returns subscriptions that have an actionable date in the past" do
+      expect(subject).to include past_subscription
+    end
+
+    it "does not include future subscriptions" do
+      expect(subject).to_not include future_subscription
+    end
+
+    it "does not include inactive subscriptions" do
+      expect(subject).to_not include inactive_subscription
+    end
+
+    it "does not include canceled subscriptions" do
+      expect(subject).to_not include canceled_subscription
+    end
+  end
 end
