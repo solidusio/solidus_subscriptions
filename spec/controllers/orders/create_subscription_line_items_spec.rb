@@ -5,6 +5,7 @@ RSpec.describe Spree::Controllers::Orders::SubscriptionParams, type: :controller
   routes { Spree::Core::Engine.routes }
 
   let!(:user) { create :user }
+  let!(:store) { create :store }
 
   before do
     allow(controller).to receive_messages(try_spree_current_user: user)

@@ -37,7 +37,8 @@ module SolidusSubscriptions
         order.next! # delivery => payment
 
         create_payment
-        order.complete! # payment => complete
+        order.next! # payment => confirm
+        order.complete!
 
         # Associate the order with the fulfilled installments
         installments.each { |installment| installment.update!(order_id: order.id) }
