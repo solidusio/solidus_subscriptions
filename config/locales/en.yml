@@ -7,3 +7,4 @@ en:
       out_of_stock: >
         This installment could not be processed because of insufficient
         stock.
+      success: This installment has been processed successfully!

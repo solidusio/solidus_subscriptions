@@ -35,6 +35,19 @@ module SolidusSubscriptions
       )
     end
 
+    # Mark this installment as a success
+    #
+    # @return [SolidusSubscriptions::InstallmentDetail] The record of the
+    #   successful processing attempt
+    def success!
+      update!(actionable_date: nil)
+
+      details.create!(
+        success: true,
+        message: I18n.t('solidus_subscriptions.installment_details.success')
+      )
+    end
+
     private
 
     def advance_actionable_date

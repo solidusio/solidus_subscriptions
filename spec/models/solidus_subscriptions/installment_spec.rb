@@ -39,4 +39,30 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
       expect(actionable_date).to eq expected_date
     end
   end
+
+  describe '#success!' do
+    subject { installment.success! }
+
+    let(:installment) { create :installment, actionable_date: actionable_date }
+    let(:actionable_date) { 1.month.from_now.to_date }
+
+    it 'removes any actionable date if any' do
+      expect { subject }.
+        to change { installment.actionable_date }.
+        from(actionable_date).to(nil)
+    end
+
+    it 'creates a new installment detail' do
+      expect { subject }.
+        to change { SolidusSubscriptions::InstallmentDetail.count }.
+        by(1)
+    end
+
+    it 'creates a successful installment detail' do
+      subject
+      expect(installment.details.last).to be_successful && have_attributes(
+        message: I18n.t('solidus_subscriptions.installment_details.success')
+      )
+    end
+  end
 end
