@@ -7,10 +7,7 @@ module Spree
 
         def subscription_params
           params.require(:subscription_line_item).permit(
-            :quantity,
-            :subscribable_id,
-            :interval,
-            :max_installments
+            SolidusSubscriptions::Config.subscription_line_item_attributes
           )
         end
       end
