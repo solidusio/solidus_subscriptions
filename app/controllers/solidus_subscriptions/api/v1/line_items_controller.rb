@@ -2,6 +2,9 @@ class SolidusSubscriptions::Api::V1::LineItemsController < Spree::Api::BaseContr
   before_filter :load_line_item, only: :update
 
   def update
+    return render json: {}, status: 400 unless @line_item.order.completed?
+    return render json: {}, status: 404 unless @line_item.order.user == current_api_user
+
     if @line_item.update(line_item_params)
       render json: @line_item.to_json
     else

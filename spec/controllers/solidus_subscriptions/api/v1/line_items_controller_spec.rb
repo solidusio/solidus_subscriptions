@@ -7,35 +7,49 @@ RSpec.describe SolidusSubscriptions::Api::V1::LineItemsController, type: :contro
   before { user.generate_spree_api_key! }
 
   describe "#update" do
-    let!(:line) { create :subscription_line_item }
+    let(:line) { create :subscription_line_item, order: order }
+    let(:params) do
+      {
+        id: line.id,
+        subscription_line_item: { quantity: 21 },
+        token: user.spree_api_key
+      }
+    end
     subject { post :update, params }
 
-    context "with valid params" do
-      let(:params) do
-        {
-          id: line.id,
-          subscription_line_item: { max_installments: 24 },
-          token: user.spree_api_key
-        }
-      end
-      let(:json_body) { JSON.parse(subject.body) }
+    context "when the order belongs to the user" do
+      let(:order) { create :completed_order_with_totals, user: user }
 
-      it { is_expected.to be_success }
-      it "returns the updated record" do
-        expect(json_body["max_installments"]).to eq 24
+      context "with valid params" do
+        let(:json_body) { JSON.parse(subject.body) }
+
+        it { is_expected.to be_success }
+        it "returns the updated record" do
+          expect(json_body["quantity"]).to eq 21
+        end
+      end
+
+      context "with invalid params" do
+        let(:params) do
+          {
+            id: line.id,
+            subscription_line_item: { max_installments: "lots" },
+            token: user.spree_api_key
+          }
+        end
+
+        it { is_expected.to be_unprocessable }
       end
     end
 
-    context "with invalid params" do
-      let(:params) do
-        {
-          id: line.id,
-          subscription_line_item: { max_installments: "lots" },
-          token: user.spree_api_key
-        }
-      end
+    context "when the order belongs to someone else" do
+      let(:order) { create :completed_order_with_totals, user: create(:user) }
+      it { is_expected.to be_not_found }
+    end
 
-      it { is_expected.to be_unprocessable }
+    context "when the order is incomplete" do
+      let(:order) { create :order, state: "delivery", user: user }
+      it { is_expected.to be_bad_request }
     end
   end
 end
