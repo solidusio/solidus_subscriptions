@@ -2,7 +2,18 @@ require 'rails_helper'
 
 RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
   let(:consolidated_installment) { described_class.new(installments) }
-  let(:installments) { create_list(:installment, 2) }
+  let(:root_order) { create :completed_order_with_pending_payment }
+  let(:installments) do
+    traits = {
+      subscription_traits: [{
+        line_item_traits: [{
+          spree_line_item: root_order.line_items.first
+        }]
+      }]
+    }
+
+    create_list(:installment, 2, traits)
+  end
 
   describe '#process', :checkout do
     subject(:order) { consolidated_installment.process }
@@ -137,7 +148,6 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
   describe '#order' do
     subject { consolidated_installment.order }
     let(:user) { installments.first.subscription.user }
-    let(:root_order) { installments.first.subscription.root_order }
 
     it { is_expected.to be_a Spree::Order }
 
