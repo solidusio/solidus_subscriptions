@@ -18,7 +18,7 @@ RSpec.describe SolidusSubscriptions::Api::V1::LineItemsController, type: :contro
     subject { post :update, params }
 
     context "when the order belongs to the user" do
-      let(:order) { create :completed_order_with_totals, user: user }
+      let(:order) { create :order, user: user }
 
       context "with valid params" do
         let(:json_body) { JSON.parse(subject.body) }
@@ -43,13 +43,8 @@ RSpec.describe SolidusSubscriptions::Api::V1::LineItemsController, type: :contro
     end
 
     context "when the order belongs to someone else" do
-      let(:order) { create :completed_order_with_totals, user: create(:user) }
+      let(:order) { create :order, user: create(:user) }
       it { is_expected.to be_not_found }
-    end
-
-    context "when the order is incomplete" do
-      let(:order) { create :order, state: "delivery", user: user }
-      it { is_expected.to be_bad_request }
     end
   end
 end
