@@ -1,3 +1,11 @@
+SolidusSubscriptions::Engine.routes.draw do
+  namespace :api do
+    namespace :v1 do
+      resources :line_items, only: [:update]
+    end
+  end
+end
+
 Spree::Core::Engine.routes.draw do
-  # Add your extension routes here
+  mount SolidusSubscriptions::Engine, at: '/subscriptions'
 end
