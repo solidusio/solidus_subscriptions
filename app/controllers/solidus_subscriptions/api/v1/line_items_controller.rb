@@ -15,9 +15,7 @@ class SolidusSubscriptions::Api::V1::LineItemsController < Spree::Api::BaseContr
 
   def line_item_params
     params.require(:subscription_line_item).permit(
-      :max_installments,
-      :interval,
-      :quantity
+      SolidusSubscriptions::Config.subscription_line_item_attributes - [:subscribable_id]
     )
   end
 
