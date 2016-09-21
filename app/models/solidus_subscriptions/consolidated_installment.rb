@@ -46,6 +46,9 @@ module SolidusSubscriptions
 
         order
       end
+    ensure
+      # Any installments that failed to be processed will be reprocessed
+      FailureDispatcher.new(installments.select(&:unfulfilled?)).dispatch
     end
 
     # The order fulfilling the consolidated installment
