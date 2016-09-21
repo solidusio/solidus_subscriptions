@@ -16,6 +16,13 @@ RSpec.configure do |config|
 
   config.extend CheckoutInfrastructure, :checkout
 
+  if defined?(VersionCake::TestHelpers)
+    config.include VersionCake::TestHelpers, type: :controller
+    config.before(:each, type: :controller) do
+      set_request_version('', 1)
+    end
+  end
+
   # == Mock Framework
   #
   # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:

@@ -35,4 +35,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'shoulda-matchers', '~> 3.1'
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'rspec-activemodel-mocks'
+  s.add_development_dependency 'versioncake'
 end
