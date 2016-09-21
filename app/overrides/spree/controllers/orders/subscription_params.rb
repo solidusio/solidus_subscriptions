@@ -6,7 +6,7 @@ module Spree
         private
 
         def subscription_params
-          params.require(:subscription_line_item).permit(
+          params.require(:order).require(:subscription_line_item).permit(
             SolidusSubscriptions::Config.subscription_line_item_attributes
           )
         end

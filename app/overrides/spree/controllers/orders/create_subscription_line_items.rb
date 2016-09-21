@@ -16,7 +16,7 @@ module Spree
         private
 
         def create_subscription_line_item
-          return unless params[:subscription_line_item]
+          return unless params.fetch(:order, {})[:subscription_line_item]
 
           SolidusSubscriptions::LineItem.create!(
             subscription_params.merge(spree_line_item: line_item)
