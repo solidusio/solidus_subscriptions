@@ -121,6 +121,8 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
     end
 
     context 'the variant is out of stock' do
+      let(:subscription_line_item) { installments.last.subscription.line_item }
+
       # Remove stock for 1 variant in the consolidated installment
       before do
         subscribable_id = installments.first.subscription.line_item.subscribable_id
@@ -141,6 +143,42 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
         expect { subject }.
           to change { consolidated_installment.installments.length }.
           by(-1)
+      end
+
+      it { is_expected.to be_a Spree::Order }
+
+      it 'has the correct number of line items' do
+        count = order.line_items.length
+        expect(count).to eq(installments.length - 1)
+      end
+
+      it 'the line items have the correct values' do
+        line_item = order.line_items.last
+        expect(line_item).to have_attributes(
+          quantity: subscription_line_item.quantity,
+          variant_id: subscription_line_item.subscribable_id
+        )
+      end
+
+      it 'has a shipment' do
+        expect(order.shipments).to be_present
+      end
+
+      it 'has a payment' do
+        expect(order.payments.valid).to be_present
+      end
+
+      it 'has the correct totals' do
+        expect(order).to have_attributes(
+          total: 29.99,
+          shipment_total: 10
+        )
+      end
+
+      it { is_expected.to be_complete }
+
+      it 'creates a installment detail for every installment' do
+        expect { subject }.to change { SolidusSubscriptions::InstallmentDetail.count }.by installments.length
       end
     end
   end
