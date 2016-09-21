@@ -42,6 +42,11 @@ RSpec.describe Spree::Api::OrdersController, type: :controller do
       }
     end
 
+    it 'is a successful response' do
+      subject
+      expect(response).to be_successful
+    end
+
     it 'create the correct number of subscription line items' do
       expect(subscription_line_items.length).
         to eq line_items_params[:subscription_line_items_attributes].length
