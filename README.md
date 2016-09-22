@@ -42,11 +42,13 @@ To subscribe to a variant include the following parameters when posting to
   {
     // other add to cart params
     subscription_line_item: {
-      quantity: 2,           // number of units in each subscription order,
-      subscribable_id: 1234, // Which variant the subscription is for,
-      interval: 2592000      // Time between subscription orders (in seconds... because Ruby),
-      max_installments: 12   // Stop processing after this many subscription orders
-                             // (use null to process the subscription ad nauseam)
+      quantity: 2,              // number of units in each subscription order.
+      subscribable_id: 1234,    // Which variant the subscription is for.
+      interval_length: 1,       // The time between subscription activations.
+      interval_units: "months", // A plural qualifier for length.
+                                // Can be one of "days", "weeks", "months", or "years".
+      max_installments: 12      // Stop processing after this many subscription orders.
+                                // (use null to process the subscription ad nauseam)
     }
   }
 ```
