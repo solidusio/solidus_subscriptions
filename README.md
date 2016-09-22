@@ -83,7 +83,7 @@ When testing your applications integration with this extension you may use it's 
 Simply add this require statement to your spec_helper:
 
 ```ruby
-require 'solidus_subscriptions/factories'
+require 'solidus_subscriptions/testing_support/factories'
 ```
 
 Copyright (c) 2016 Stembolt, released under the New BSD License
