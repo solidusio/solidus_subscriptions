@@ -25,8 +25,22 @@ module SolidusSubscriptions
       inverse_of: :line_item
     )
 
+    enum interval_units: [
+      :days,
+      :weeks,
+      :months,
+      :years
+    ]
+
     validates :spree_line_item, :subscribable_id, presence: :true
-    validates :quantity, :interval, numericality: { greater_than: 0 }
+    validates :quantity, :interval_length, numericality: { greater_than: 0 }
     validates :max_installments, numericality: { greater_than: 0 }, allow_blank: true
+
+    # Calculates the number of seconds in the interval.
+    #
+    # @return [Integer] The number of seconds.
+    def interval
+      ActiveSupport::Duration.new(interval_length, { interval_units.to_sym => interval_length })
+    end
   end
 end
