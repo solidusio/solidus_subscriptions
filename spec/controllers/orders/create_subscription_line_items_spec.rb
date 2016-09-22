@@ -32,7 +32,8 @@ RSpec.describe Spree::Controllers::Orders::SubscriptionParams, type: :controller
               quantity: 2,
               max_installments: 3,
               subscribable_id: variant.id,
-              interval: 30.days.to_i
+              interval_length: 30,
+              interval_units: "days"
             }
           }
         }

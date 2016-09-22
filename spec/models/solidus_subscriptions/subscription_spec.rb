@@ -57,7 +57,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
   describe '#next_actionable_date' do
     subject { subscription.next_actionable_date }
 
-    let(:expected_date) { Date.today + subscription.interval.seconds }
+    let(:expected_date) { Date.today + subscription.interval }
     let(:subscription) do
       build_stubbed(
         :subscription,
@@ -72,7 +72,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
   describe '#advance_actionable_date' do
     subject { subscription.advance_actionable_date }
 
-    let(:expected_date) { Date.today + subscription.interval.seconds }
+    let(:expected_date) { Date.today + subscription.interval }
     let(:subscription) do
       build(
         :subscription,
