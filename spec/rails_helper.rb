@@ -1,6 +1,7 @@
 # Run Coverage report
 require 'simplecov'
 SimpleCov.start do
+  add_filter 'spec/spec_helper.rb'
   add_filter 'spec/dummy'
   add_filter 'lib/solidus_subscriptions/engine.rb'
   add_group 'Controllers', 'app/controllers'
@@ -10,6 +11,7 @@ SimpleCov.start do
   add_group 'Views', 'app/views'
   add_group 'Libraries', 'lib'
 end
+SimpleCov.minimum_coverage 100
 
 # Configure Rails Environment
 ENV['RAILS_ENV'] = 'test'
