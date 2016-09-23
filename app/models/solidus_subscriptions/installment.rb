@@ -13,6 +13,11 @@ module SolidusSubscriptions
 
     validates :subscription, presence: true
 
+    scope :actionable, (lambda do
+      where("#{table_name}.actionable_date <= ?", Time.zone.now).
+        where(order_id: nil)
+    end)
+
     # Get the builder for the subscription_line_item. This will be an
     # object that can generate the appropriate line item for the subscribable
     # object
