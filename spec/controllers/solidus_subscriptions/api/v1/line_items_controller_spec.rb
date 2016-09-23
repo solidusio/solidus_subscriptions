@@ -44,7 +44,7 @@ RSpec.describe SolidusSubscriptions::Api::V1::LineItemsController, type: :contro
 
     context "when the order belongs to someone else" do
       let(:order) { create :order, user: create(:user) }
-      it { is_expected.to be_not_found }
+      it { is_expected.to be_unauthorized }
     end
   end
 end
