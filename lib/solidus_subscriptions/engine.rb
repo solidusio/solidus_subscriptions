@@ -18,6 +18,8 @@ module SolidusSubscriptions
       Dir.glob(File.join(File.dirname(__FILE__), '../../app/overrides/**/*.rb')) do |c|
         Rails.configuration.cache_classes ? require(c) : load(c)
       end
+
+      Spree::Ability.register_ability(SolidusSubscriptions::Ability)
     end
 
     config.to_prepare(&method(:activate).to_proc)
