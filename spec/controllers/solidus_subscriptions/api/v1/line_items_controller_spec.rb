@@ -6,8 +6,9 @@ RSpec.describe SolidusSubscriptions::Api::V1::LineItemsController, type: :contro
   let!(:user) { create(:user) }
   before { user.generate_spree_api_key! }
 
+  let(:line) { create :subscription_line_item, order: order }
+
   describe "#update" do
-    let(:line) { create :subscription_line_item, order: order }
     let(:params) do
       {
         id: line.id,
@@ -45,6 +46,26 @@ RSpec.describe SolidusSubscriptions::Api::V1::LineItemsController, type: :contro
     context "when the order belongs to someone else" do
       let(:order) { create :order, user: create(:user) }
       it { is_expected.to be_unauthorized }
+    end
+  end
+
+  describe "#destroy" do
+    let(:params) { { id: line.id, order_id: order.id, token: user.spree_api_key } }
+    subject { delete :destroy, params }
+
+    context "when the order is not ours" do
+      let(:order) { create :order, user: create(:user) }
+      it { is_expected.to be_unauthorized }
+    end
+
+    context "when the order is finalised" do
+      let(:order) { create :completed_order_with_totals, user: user }
+      it { is_expected.to be_bad_request }
+    end
+
+    context "when the order is ours and incomplete" do
+      let(:order) { create :order, user: user }
+      it { is_expected.to be_success }
     end
   end
 end
