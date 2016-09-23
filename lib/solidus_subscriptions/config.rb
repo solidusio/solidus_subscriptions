@@ -5,6 +5,9 @@ module SolidusSubscriptions
       # retrying to fulfil it
       mattr_accessor(:reprocessing_interval) { 1.day }
 
+      # Which queue is responsible for processing subscriptions
+      mattr_accessor(:processing_queue) { :default }
+
       # SolidusSubscriptions::LineItem attributes which are allowed to
       # be updated from user data
       #
