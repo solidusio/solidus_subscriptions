@@ -18,7 +18,8 @@ module SolidusSubscriptions
       # ```
       # SolidusSubscriptions::Config.subscription_line_item_attributes = [
       #   :quantity,
-      #   :interval,
+      #   :interval_length,
+      #   :interval_units,
       #   :subscribable_id
       # ]
       # ```
@@ -29,7 +30,8 @@ module SolidusSubscriptions
         [
           :quantity,
           :subscribable_id,
-          :interval,
+          :interval_length,
+          :interval_units,
           :max_installments
         ]
       end
