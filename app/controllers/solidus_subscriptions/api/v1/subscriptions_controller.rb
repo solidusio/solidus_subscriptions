@@ -2,7 +2,7 @@ class SolidusSubscriptions::Api::V1::SubscriptionsController < Spree::Api::BaseC
   before_filter :load_subscription, only: :cancel
 
   def cancel
-    if @subscription.cancel && @subscription.update(actionable_date: nil)
+    if @subscription.cancel
       render json: @subscription.to_json
     else
       render json: @subscription.errors.to_json, status: 422
