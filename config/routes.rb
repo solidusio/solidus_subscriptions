@@ -5,6 +5,7 @@ SolidusSubscriptions::Engine.routes.draw do
       resources :subscriptions, only: [:update] do
         member do
           post :cancel
+          post :skip
         end
       end
     end
