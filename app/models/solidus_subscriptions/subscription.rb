@@ -13,8 +13,8 @@ module SolidusSubscriptions
     # The following methods are delegated to the associated
     # SolidusSubscriptions::LineItem
     #
-    # :interval
-    delegate :interval, to: :line_item
+    # :interval, :quantity, :subscribable_id, :max_installments
+    delegate :interval, :quantity, :subscribable_id, :max_installments, to: :line_item
 
     # Find all subscriptions that are "actionable"; that is, ones that have an
     # actionable_date in the past and are not invalid or canceled.
