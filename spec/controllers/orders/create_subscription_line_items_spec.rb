@@ -27,14 +27,12 @@ RSpec.describe Spree::Controllers::Orders::SubscriptionParams, type: :controller
       let(:params) { line_item_params.merge(subscription_line_item_params) }
       let(:subscription_line_item_params) do
         {
-          order: {
-            subscription_line_item: {
-              quantity: 2,
-              max_installments: 3,
-              subscribable_id: variant.id,
-              interval_length: 30,
-              interval_units: "days"
-            }
+          subscription_line_item: {
+            quantity: 2,
+            max_installments: 3,
+            subscribable_id: variant.id,
+            interval_length: 30,
+            interval_units: "days"
           }
         }
       end
@@ -50,7 +48,7 @@ RSpec.describe Spree::Controllers::Orders::SubscriptionParams, type: :controller
         subscription_line_item = SolidusSubscriptions::LineItem.last
 
         expect(subscription_line_item).to have_attributes(
-          subscription_line_item_params[:order][:subscription_line_item]
+          subscription_line_item_params[:subscription_line_item]
         )
       end
     end
