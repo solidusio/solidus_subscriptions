@@ -10,14 +10,16 @@ module Spree
     module Orders
       module CreateSubscriptionLineItems
         def self.prepended(base)
-          base.after_action :create_subscription_line_item
+          base.after_action(
+            :create_subscription_line_item,
+            only: :populate,
+            if: ->{ params[:subscription_line_item] }
+          )
         end
 
         private
 
         def create_subscription_line_item
-          return unless params.fetch(:order, {})[:subscription_line_item]
-
           SolidusSubscriptions::LineItem.create!(
             subscription_params.merge(spree_line_item: line_item)
           )
