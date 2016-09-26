@@ -4,7 +4,7 @@ SolidusSubscriptions::Engine.routes.draw do
       resources :line_items, only: [:update, :destroy]
       resources :subscriptions, only: [] do
         member do
-          get :cancel
+          post :cancel
         end
       end
     end
