@@ -115,4 +115,13 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       expect(subject).to_not include canceled_subscription
     end
   end
+
+  describe ".unset_actionable_date!" do
+    let!(:subscription) { create :subscription, actionable_date: 1.day.from_now }
+    subject { subscription.unset_actionable_date! }
+
+    it "removes the actionable_date from the record" do
+      expect{ subject }.to change { subscription.actionable_date }.to(nil)
+    end
+  end
 end

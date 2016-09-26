@@ -41,6 +41,8 @@ module SolidusSubscriptions
         transition active: :pending_cancellation
       end
 
+      after_transition on: :cancel, do: :unset_actionable_date!
+
       event :deactivate do
         transition active: :inactive,
           if: ->(subscription) { subscription.can_be_deactivated? }
@@ -99,6 +101,13 @@ module SolidusSubscriptions
     def advance_actionable_date
       update! actionable_date: next_actionable_date
       actionable_date
+    end
+
+    # Modify the record and set the actionable_date to nil.
+    #
+    # @return [SolidusSubscription::Subscription] The updated record.
+    def unset_actionable_date!
+      update!(actionable_date: nil)
     end
   end
 end
