@@ -10,6 +10,8 @@ module SolidusSubscriptions
 
     validates :user, presence: :true
 
+    accepts_nested_attributes_for :line_item
+
     # The following methods are delegated to the associated
     # SolidusSubscriptions::LineItem
     #
