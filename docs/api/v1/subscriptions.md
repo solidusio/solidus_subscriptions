@@ -10,6 +10,7 @@ actionable date to prevent further processing.
 
 ```json
 {
+  "token": "userapitoken",
   "id": 1
 }
 ```
@@ -27,4 +28,50 @@ HTTP/1.1 200 OK
   "created_at": "2016-09-26T16:40:37.660Z",
   "updated_at": "2016-09-26T16:43:55.330Z"
 }
+```
+
+## PATCH `/api/v1/subscriptions/:id`
+*Authentication Required*
+
+Make changes to the Subscription object or the subscription line item object
+
+### Example params
+
+```json
+{
+  "token": "userapitoken",
+  "id": 1,
+  "line_item_attributes": {
+    "quantity": 5,
+    "interval_length": 1,
+    "interval_units": "months"
+  }
+}
+```
+
+## Example response
+```
+HTTP/1.1 200 OK
+
+{
+  "id": 1,
+  "actionable_date": nil,
+  "state": "active",
+  "user_id": 1,
+  "created_at": "2016-09-26T23:50:32.923Z",
+  "updated_at": "2016-09-26T23:50:32.923Z",
+  "line_item": {
+    "id": 1,
+    "spree_line_item_id": 1,
+    "subscription_id": 1,
+    "quantity": 5,
+    "max_installments": nil,
+    "subscribable_id": 2,
+    "created_at": "2016-09-26T23:50:32.923Z",
+    "updated_at": "2016-09-26T23:51:05.784Z",
+    "interval_units": "months",
+    "interval_length": 1
+   }
+ }
+
 ```
