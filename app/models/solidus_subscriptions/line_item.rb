@@ -42,5 +42,50 @@ module SolidusSubscriptions
     def interval
       ActiveSupport::Duration.new(interval_length, { interval_units.to_sym => interval_length })
     end
+
+    # The name of the variant which will eventually fulfill this line item
+    #
+    # @return [String]
+    def name
+      dummy_line_item.name
+    end
+
+    def price
+      dummy_line_item.price
+    end
+
+    def next_actionable_date
+      dummy_subscription.next_actionable_date
+    end
+
+    def as_json(**options)
+      options[:methods] ||= [:price, :next_actionable_date, :name]
+      super(options)
+    end
+
+    private
+
+    # Get a placeholder line item for calculating the values of future
+    # subscription orders. It is frozen and cannot be saved
+    def dummy_line_item
+      dummy_subscription.line_item_builder.line_item.tap do |li|
+        li.order = dummy_order
+        li.validate
+      end.
+      freeze
+    end
+
+    # Get a placeholder order for calculating the values of future
+    # subscription orders. It is a frozen duplicate of the current order and
+    # cannot be saved
+    def dummy_order
+      spree_line_item.order.dup.freeze
+    end
+
+    # A place holder for calculating dynamic values needed to display in the cart
+    # it is frozen and cannot be saved
+    def dummy_subscription
+      Subscription.new(line_item: dup).freeze
+    end
   end
 end

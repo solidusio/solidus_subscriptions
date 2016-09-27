@@ -90,7 +90,7 @@ module SolidusSubscriptions
     #   date after the current actionable_date this subscription will be
     #   eligible to be processed.
     def next_actionable_date
-      actionable_date + interval
+      (actionable_date || Time.zone.now) + interval
     end
 
     # Advance the actionable date to the next_actionable_date value. Will modify
@@ -108,6 +108,15 @@ module SolidusSubscriptions
     # @return [SolidusSubscription::Subscription] The updated record.
     def unset_actionable_date!
       update!(actionable_date: nil)
+    end
+
+    # Get the builder for the subscription_line_item. This will be an
+    # object that can generate the appropriate line item for the subscribable
+    # object
+    #
+    # @return [SolidusSubscriptions::LineItemBuilder]
+    def line_item_builder
+      LineItemBuilder.new(line_item)
     end
   end
 end
