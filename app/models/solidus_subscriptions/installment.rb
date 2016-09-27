@@ -19,7 +19,7 @@ module SolidusSubscriptions
     #
     # @return [SolidusSubscriptions::LineItemBuilder]
     def line_item_builder
-      LineItemBuilder.new(subscription.line_item)
+      subscription.line_item_builder
     end
 
     # Mark this installment as out of stock.

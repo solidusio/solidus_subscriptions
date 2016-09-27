@@ -124,4 +124,14 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       expect{ subject }.to change { subscription.actionable_date }.to(nil)
     end
   end
+
+  describe '#line_item_builder' do
+    subject { subscription.line_item_builder }
+
+    let(:subscription) { create :subscription, :with_line_item }
+    let(:line_item) { subscription.line_item }
+
+    it { is_expected.to be_a SolidusSubscriptions::LineItemBuilder }
+    it { is_expected.to have_attributes(subscription_line_item: line_item) }
+  end
 end
