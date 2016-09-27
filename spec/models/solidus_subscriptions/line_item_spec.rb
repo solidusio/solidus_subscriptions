@@ -29,52 +29,6 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
     end
   end
 
-  describe '#name' do
-    subject { line_item.name }
-
-    let(:line_item) do
-      create(
-        :subscription_line_item,
-        :with_subscription,
-        subscribable_id: variant.id
-      )
-    end
-
-    let(:variant) { create :variant, subscribable: true }
-
-    it 'is the name of the fulfilling variant' do
-      expect(subject).to eq variant.name
-    end
-  end
-
-  describe '#price' do
-    subject { line_item.price }
-
-    let(:variant) { create :variant, subscribable: true }
-    let(:line_item) do
-      create(
-        :subscription_line_item,
-        :with_subscription,
-        subscribable_id: variant.id
-      )
-    end
-
-    it 'is the price of the fulfilling variant' do
-      expect(subject).to eq variant.price
-    end
-  end
-
-  describe '#next_actionable_date' do
-    subject { line_item.next_actionable_date }
-
-    around { |e| Timecop.freeze { e.run } }
-
-    let(:line_item) { create(:subscription_line_item, :with_subscription) }
-    let(:expected_date) { Time.zone.now + line_item.interval }
-
-    it { is_expected.to eq expected_date }
-  end
-
   describe '#as_json' do
     subject { line_item.as_json }
 
@@ -92,15 +46,29 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
         "created_at" => line_item.created_at,
         "updated_at" => line_item.updated_at,
         "interval_units" => line_item.interval_units,
-        "interval_length" => line_item.interval_length,
-        "price" => line_item.price.to_f,
-        "next_actionable_date" => line_item.next_actionable_date,
-        "name" => line_item.name
+        "interval_length" => line_item.interval_length
       }
     end
 
-    it 'is the json reporesentation of the line item' do
-      expect(subject).to eq(expected_hash)
+    it 'includes the attribute values' do
+      expect(subject).to match a_hash_including(expected_hash)
+    end
+
+    it 'includes the dummy lineitem' do
+      expect(subject['dummy_line_item']).to be_a Spree::LineItem
+    end
+  end
+
+  describe '#dummy_line_item' do
+    subject { line_item.dummy_line_item }
+
+    let(:line_item) { create(:subscription_line_item, :with_subscription) }
+
+    it { is_expected.to be_a Spree::LineItem }
+    it { is_expected.to be_frozen }
+
+    it 'has the correct variant' do
+      expect(subject.variant_id).to eq line_item.subscribable_id
     end
   end
 end

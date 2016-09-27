@@ -43,27 +43,14 @@ module SolidusSubscriptions
       ActiveSupport::Duration.new(interval_length, { interval_units.to_sym => interval_length })
     end
 
-    # The name of the variant which will eventually fulfill this line item
-    #
-    # @return [String]
-    def name
-      dummy_line_item.name
-    end
-
-    def price
-      dummy_line_item.price
-    end
-
     def next_actionable_date
       dummy_subscription.next_actionable_date
     end
 
     def as_json(**options)
-      options[:methods] ||= [:price, :next_actionable_date, :name]
+      options[:methods] ||= [:dummy_line_item, :next_actionable_date]
       super(options)
     end
-
-    private
 
     # Get a placeholder line item for calculating the values of future
     # subscription orders. It is frozen and cannot be saved
@@ -74,6 +61,8 @@ module SolidusSubscriptions
       end.
       freeze
     end
+
+    private
 
     # Get a placeholder order for calculating the values of future
     # subscription orders. It is a frozen duplicate of the current order and
