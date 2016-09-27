@@ -9,6 +9,7 @@ module SolidusSubscriptions
     config.generators do |g|
       g.test_framework :rspec
     end
+    config.autoload_paths << config.root.join('lib')
 
     initializer 'solidus_subscriptions.configs', before: "spree.register.payment_methods" do
       require 'solidus_subscriptions/config'
@@ -20,6 +21,7 @@ module SolidusSubscriptions
       end
 
       Spree::Ability.register_ability(SolidusSubscriptions::Ability)
+      PermittedAttributes.update_spree_permiteed_attributes
     end
 
     config.to_prepare(&method(:activate).to_proc)
