@@ -1,5 +1,6 @@
 class SolidusSubscriptions::Api::V1::LineItemsController < Spree::Api::BaseController
   before_filter :load_line_item, only: [:update, :destroy]
+  wrap_parameters :subscription_line_item
 
   def update
     authorize! :manage, @line_item
