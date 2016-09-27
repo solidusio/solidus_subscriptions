@@ -20,9 +20,10 @@ Spree.user_class.prepend(Spree::Users::HaveManySubscritptions)
 user_attributes = Spree::PermittedAttributes.user_attributes
 
 subscription_attributes = {
-  subscriptions_attributes: {
-    line_item_attributes: SolidusSubscriptions::Config.subscription_line_item_attributes
-  }
+  subscriptions_attributes: [
+    :id,
+    { line_item_attributes: SolidusSubscriptions::Config.subscription_line_item_attributes + [:id] }
+  ]
 }
 
 Spree::PermittedAttributes.class_variable_set(
