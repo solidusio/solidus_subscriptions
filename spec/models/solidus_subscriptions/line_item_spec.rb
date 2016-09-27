@@ -28,4 +28,22 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
       expect(subject.from_now).to eq Date.parse("2016-10-22")
     end
   end
+
+  describe '#name' do
+    subject { line_item.name }
+
+    let(:line_item) do
+      create(
+        :subscription_line_item,
+        :with_subscription,
+        subscribable_id: variant.id
+      )
+    end
+
+    let(:variant) { create :variant, subscribable: true }
+
+    it 'is the name of the fulfilling variant' do
+      expect(subject).to eq variant.name
+    end
+  end
 end

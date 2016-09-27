@@ -42,5 +42,12 @@ module SolidusSubscriptions
     def interval
       ActiveSupport::Duration.new(interval_length, { interval_units.to_sym => interval_length })
     end
+
+    # The name of the variant which will eventually fulfill this line item
+    #
+    # @return [String]
+    def name
+      build_subscription.line_item_builder.line_item.name
+    end
   end
 end
