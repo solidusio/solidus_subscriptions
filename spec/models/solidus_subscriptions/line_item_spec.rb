@@ -74,4 +74,33 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
 
     it { is_expected.to eq expected_date }
   end
+
+  describe '#as_json' do
+    subject { line_item.as_json }
+
+    around { |e| Timecop.freeze { e.run } }
+    let(:line_item) { create(:subscription_line_item, :with_subscription) }
+
+    let(:expected_hash) do
+      {
+        "id" => line_item.id,
+        "spree_line_item_id" => line_item.spree_line_item.id,
+        "subscription_id" => line_item.subscription_id,
+        "quantity" => line_item.quantity,
+        "max_installments" => line_item.max_installments,
+        "subscribable_id" => line_item.subscribable_id,
+        "created_at" => line_item.created_at,
+        "updated_at" => line_item.updated_at,
+        "interval_units" => line_item.interval_units,
+        "interval_length" => line_item.interval_length,
+        "price" => line_item.price.to_f,
+        "next_actionable_date" => line_item.next_actionable_date,
+        "name" => line_item.name
+      }
+    end
+
+    it 'is the json reporesentation of the line item' do
+      expect(subject).to eq(expected_hash)
+    end
+  end
 end

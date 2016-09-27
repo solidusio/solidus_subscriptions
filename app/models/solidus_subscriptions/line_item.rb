@@ -58,6 +58,11 @@ module SolidusSubscriptions
       dummy_subscription.next_actionable_date
     end
 
+    def as_json(**options)
+      options[:methods] ||= [:price, :next_actionable_date, :name]
+      super(options)
+    end
+
     private
 
     # Get a placeholder line item for calculating the values of future
@@ -80,7 +85,7 @@ module SolidusSubscriptions
     # A place holder for calculating dynamic values needed to display in the cart
     # it is frozen and cannot be saved
     def dummy_subscription
-      Subscription.new(line_item: self).freeze
+      Subscription.new(line_item: dup).freeze
     end
   end
 end
