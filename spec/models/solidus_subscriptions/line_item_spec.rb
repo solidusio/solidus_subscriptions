@@ -63,4 +63,15 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
       expect(subject).to eq variant.price
     end
   end
+
+  describe '#next_actionable_date' do
+    subject { line_item.next_actionable_date }
+
+    around { |e| Timecop.freeze { e.run } }
+
+    let(:line_item) { create(:subscription_line_item, :with_subscription) }
+    let(:expected_date) { Time.zone.now + line_item.interval }
+
+    it { is_expected.to eq expected_date }
+  end
 end

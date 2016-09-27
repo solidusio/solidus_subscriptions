@@ -54,6 +54,10 @@ module SolidusSubscriptions
       dummy_line_item.price
     end
 
+    def next_actionable_date
+      dummy_subscription.next_actionable_date
+    end
+
     private
 
     # Get a placeholder line item for calculating the values of future

@@ -90,7 +90,7 @@ module SolidusSubscriptions
     #   date after the current actionable_date this subscription will be
     #   eligible to be processed.
     def next_actionable_date
-      actionable_date + interval
+      (actionable_date || Time.zone.now) + interval
     end
 
     # Advance the actionable date to the next_actionable_date value. Will modify
