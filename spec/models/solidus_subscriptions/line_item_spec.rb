@@ -46,4 +46,21 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
       expect(subject).to eq variant.name
     end
   end
+
+  describe '#price' do
+    subject { line_item.price }
+
+    let(:variant) { create :variant, subscribable: true }
+    let(:line_item) do
+      create(
+        :subscription_line_item,
+        :with_subscription,
+        subscribable_id: variant.id
+      )
+    end
+
+    it 'is the price of the fulfilling variant' do
+      expect(subject).to eq variant.price
+    end
+  end
 end

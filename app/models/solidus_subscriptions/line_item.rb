@@ -50,12 +50,26 @@ module SolidusSubscriptions
       dummy_line_item.name
     end
 
+    def price
+      dummy_line_item.price
+    end
+
     private
 
     # Get a placeholder line item for calculating the values of future
     # subscription orders. It associates to a frozen order and cannot be saved
     def dummy_line_item
-      @dummy_line_item ||= dummy_subscription.line_item_builder.line_item
+      @dummy_line_item ||= dummy_subscription.line_item_builder.line_item.tap do |li|
+        li.order = dummy_order
+        li.validate
+      end
+    end
+
+    # Get a placeholder order for calculating the values of future
+    # subscription orders. It is a frozen duplicate of the current order and
+    # cannot be saved
+    def dummy_order
+      @dummy_order ||= spree_line_item.order.dup.freeze
     end
 
     # A place holder for calculating dynamic values needed to display in the cart
