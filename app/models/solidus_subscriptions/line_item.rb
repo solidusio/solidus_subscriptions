@@ -47,7 +47,21 @@ module SolidusSubscriptions
     #
     # @return [String]
     def name
-      build_subscription.line_item_builder.line_item.name
+      dummy_line_item.name
+    end
+
+    private
+
+    # Get a placeholder line item for calculating the values of future
+    # subscription orders. It associates to a frozen order and cannot be saved
+    def dummy_line_item
+      @dummy_line_item ||= dummy_subscription.line_item_builder.line_item
+    end
+
+    # A place holder for calculating dynamic values needed to display in the cart
+    # it is frozen and cannot be saved
+    def dummy_subscription
+      @dummy_subscritpion ||= Subscription.new(line_item: self).freeze
     end
   end
 end
