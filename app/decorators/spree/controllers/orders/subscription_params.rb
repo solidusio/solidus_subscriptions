@@ -21,9 +21,7 @@ Spree::OrdersController.prepend(Spree::Controllers::Orders::SubscriptionParams)
 line_item_attributes = Spree::PermittedAttributes.line_item_attributes
 
 subscription_line_item_attributes = {
-  subscription_line_items_attributes: [
-    SolidusSubscriptions::Config.subscription_line_item_attributes
-  ]
+  subscription_line_items_attributes: SolidusSubscriptions::Config.subscription_line_item_attributes
 }
 
 Spree::PermittedAttributes.class_variable_set(

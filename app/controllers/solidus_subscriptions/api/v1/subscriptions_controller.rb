@@ -1,5 +1,13 @@
 class SolidusSubscriptions::Api::V1::SubscriptionsController < Spree::Api::BaseController
-  before_filter :load_subscription, only: :cancel
+  before_filter :load_subscription, only: [:cancel, :update]
+
+  def update
+    if @subscription.update(subscription_params)
+      render json: @subscription.to_json(include: :line_item)
+    else
+      render json: @subscription.errors.to_json, status: 422
+    end
+  end
 
   def cancel
     if @subscription.cancel
@@ -13,5 +21,15 @@ class SolidusSubscriptions::Api::V1::SubscriptionsController < Spree::Api::BaseC
 
   def load_subscription
     @subscription = current_api_user.subscriptions.find(params[:id])
+  end
+
+  def subscription_params
+    params.require(:subscription).permit(
+      line_item_attributes: line_item_attributes
+    )
+  end
+
+  def line_item_attributes
+    SolidusSubscriptions::Config.subscription_line_item_attributes - [:subscribable_id] + [:id]
   end
 end

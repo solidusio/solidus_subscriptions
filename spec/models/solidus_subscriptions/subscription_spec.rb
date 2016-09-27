@@ -6,6 +6,8 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
   it { is_expected.to have_one :line_item }
   it { is_expected.to validate_presence_of :user }
 
+  it { is_expected.to accept_nested_attributes_for :line_item }
+
   describe '#cancel' do
     subject { subscription.cancel }
 
@@ -35,12 +37,14 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
     let(:traits) { [] }
     let(:subscription) do
-      create :subscription, :with_line_item, line_item_traits: traits
+      create :subscription, :with_line_item, line_item_traits: traits do |s|
+        s.installments = build_list(:installment, 2)
+      end
     end
 
     context 'the subscription can be deactivated' do
       let(:traits) do
-        [{ max_installments: 0 }]
+        [{ max_installments: 1 }]
       end
 
       it 'is inactive' do

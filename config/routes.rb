@@ -2,7 +2,7 @@ SolidusSubscriptions::Engine.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :line_items, only: [:update, :destroy]
-      resources :subscriptions, only: [] do
+      resources :subscriptions, only: [:update] do
         member do
           post :cancel
         end

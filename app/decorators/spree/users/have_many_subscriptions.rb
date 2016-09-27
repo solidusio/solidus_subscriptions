@@ -8,9 +8,25 @@ module Spree
           class_name: 'SolidusSubscriptions::Subscription',
           foreign_key: 'user_id'
         )
+
+        base.accepts_nested_attributes_for :subscriptions
       end
     end
   end
 end
 
 Spree.user_class.prepend(Spree::Users::HaveManySubscritptions)
+
+user_attributes = Spree::PermittedAttributes.user_attributes
+
+subscription_attributes = {
+  subscriptions_attributes: [
+    :id,
+    { line_item_attributes: SolidusSubscriptions::Config.subscription_line_item_attributes + [:id] }
+  ]
+}
+
+Spree::PermittedAttributes.class_variable_set(
+  '@@user_attributes',
+  user_attributes << subscription_attributes
+)
