@@ -14,11 +14,9 @@ class SolidusSubscriptions::Api::V1::LineItemsController < Spree::Api::BaseContr
   def destroy
     authorize! :manage, @line_item
     return render json: {}, status: 400 if @line_item.order.complete?
-    if @line_item.destroy
-      render json: @line_item.to_json
-    else
-      render json: @line_item.errors.to_json, status: 500
-    end
+
+    @line_item.destroy!
+    render json: @line_item.to_json
   end
 
   private
