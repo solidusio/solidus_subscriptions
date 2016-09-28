@@ -22,7 +22,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     subject { installment.out_of_stock }
 
     let(:expected_date) do
-      Date.today + SolidusSubscriptions::Config.reprocessing_interval
+      Date.current + SolidusSubscriptions::Config.reprocessing_interval
     end
 
     it { is_expected.to be_a SolidusSubscriptions::InstallmentDetail }
@@ -70,7 +70,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     subject { installment.failed }
 
     let(:expected_date) do
-      Date.today + SolidusSubscriptions::Config.reprocessing_interval
+      Date.current + SolidusSubscriptions::Config.reprocessing_interval
     end
 
     it { is_expected.to be_a SolidusSubscriptions::InstallmentDetail }

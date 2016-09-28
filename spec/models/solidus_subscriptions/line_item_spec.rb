@@ -17,7 +17,7 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
     let(:line_item) { create :subscription_line_item, :with_subscription }
     before do
       Timecop.freeze(Date.parse("2016-09-22"))
-      line_item.subscription.update!(actionable_date: Date.today)
+      line_item.subscription.update!(actionable_date: Date.current)
     end
     after { Timecop.return }
 
