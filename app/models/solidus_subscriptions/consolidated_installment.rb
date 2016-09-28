@@ -30,21 +30,20 @@ module SolidusSubscriptions
         # out of stock. If there are no line items left there is nothing to do
         return if installments.empty?
 
-        order.next! # cart => address
+        if checkout
+          # Associate the order with the fulfilled installments
+          installments.each { |installment| installment.update!(order_id: order.id) }
+          SuccessDispatcher.new(installments).dispatch
+          return order
+        end
 
-        order.ship_address = ship_address
-        order.next! # address => delivery
-        order.next! # delivery => payment
-
-        create_payment
-        order.next! # payment => confirm
-        order.complete!
-
-        # Associate the order with the fulfilled installments
-        installments.each { |installment| installment.update!(order_id: order.id) }
-        SuccessDispatcher.new(installments).dispatch
-
-        order
+        # A new order will only have 1 payment that we created
+        if order.payments.any?(&:failed?)
+          PaymentFailedDispatcher.new(installments).dispatch
+          installments.clear
+          order.destroy!
+          nil
+        end
       end
     ensure
       # Any installments that failed to be processed will be reprocessed
@@ -63,6 +62,21 @@ module SolidusSubscriptions
     end
 
     private
+
+    def checkout
+      order.next! # cart => address
+
+      order.ship_address = ship_address
+      order.next! # address => delivery
+      order.next! # delivery => payment
+
+      create_payment
+      order.next! # payment => confirm
+
+      # Do this as a separate "quiet" transition so that it returns true or
+      # false rather than raising a failed transition error
+      order.complete
+    end
 
     def populate
       unfulfilled_installments = []
