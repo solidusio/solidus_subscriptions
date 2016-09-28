@@ -19,6 +19,11 @@ RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :co
       let!(:subscription) { create :subscription, user: create(:user) }
       it { is_expected.to be_not_found }
     end
+
+    context 'when the subscription is already cancelled' do
+      let!(:subscription) { create :subscription, user: user, state: 'canceled' }
+      it { is_expected.to be_unprocessable }
+    end
   end
 
   describe 'PATCH :update' do
