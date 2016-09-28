@@ -228,6 +228,31 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
         expect(actionable_dates).to all eq expected_date
       end
     end
+
+    context 'when there are cart promotions' do
+      let!(:promo) do
+        create(
+          :promotion_with_order_adjustment,
+          promo_params
+        )
+      end
+
+      # Promotions require the :apply_automatically flag to be auto applied in
+      # solidus versions greater than 1.0
+      let(:promo_params) do
+        { weighted_order_adjustment_amount: 0 }.tap do |params|
+          if Spree::Promotion.new.respond_to?(:apply_automatically)
+            params[:apply_automatically] = true
+          end
+        end
+      end
+
+      it_behaves_like 'a completed checkout'
+
+      it 'applies the correct adjustments' do
+        expect(subject.adjustments).to be_present
+      end
+    end
   end
 
   describe '#order' do
