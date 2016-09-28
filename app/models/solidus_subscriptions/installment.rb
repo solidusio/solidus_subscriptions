@@ -75,7 +75,7 @@ module SolidusSubscriptions
     end
 
     def next_actionable_date
-      Date.today + Config.reprocessing_interval
+      Date.current + Config.reprocessing_interval
     end
   end
 end
