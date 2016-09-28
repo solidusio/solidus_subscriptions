@@ -9,3 +9,9 @@ en:
         stock.
       success: This installment has been processed successfully!
       failed: This installment could not be processed
+
+  spree:
+    promotion_rule_types:
+        subscription_promotion_rule:
+            name: Subscription
+            description: Order contains a subscription
