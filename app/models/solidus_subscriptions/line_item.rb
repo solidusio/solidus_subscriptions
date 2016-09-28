@@ -36,6 +36,8 @@ module SolidusSubscriptions
     validates :quantity, :interval_length, numericality: { greater_than: 0 }
     validates :max_installments, numericality: { greater_than: 0 }, allow_blank: true
 
+    before_save :update_actionable_date_if_interval_changed
+
     # Calculates the number of seconds in the interval.
     #
     # @return [Integer] The number of seconds.
@@ -75,6 +77,24 @@ module SolidusSubscriptions
     # it is frozen and cannot be saved
     def dummy_subscription
       Subscription.new(line_item: dup).freeze
+    end
+
+    def update_actionable_date_if_interval_changed
+      if subscription && (interval_length_changed? || interval_units_changed?)
+        if subscription.installments.any?
+          new_date = interval.from_now(subscription.installments.last.created_at)
+          if new_date < Time.zone.now
+            # if the last installment plus the new interval is in the past, set
+            # the actionable_date to be now.
+            new_date = Time.zone.now
+          end
+        else
+          # if we have no installments, set the actionable date to be now.
+          new_date = interval.from_now(subscription.created_at)
+        end
+
+        subscription.actionable_date = new_date
+      end
     end
   end
 end

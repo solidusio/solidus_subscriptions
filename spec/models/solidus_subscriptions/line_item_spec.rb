@@ -71,4 +71,46 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
       expect(subject.variant_id).to eq line_item.subscribable_id
     end
   end
+
+  describe "#update_actionable_date_if_interval_changed" do
+    let(:subscription) { create :subscription }
+    let(:line_item) { create :subscription_line_item, subscription: subscription, interval_length: 3, interval_units: "months" }
+
+    before do
+      Timecop.freeze(Date.parse("2016-09-22"))
+      line_item.subscription.update!(actionable_date: 1.month.ago)
+    end
+    after { Timecop.return }
+
+    subject { line_item.update!(interval_length: 1, interval_units: "months") }
+
+    context "with installments" do
+      before do
+        create(:installment, subscription: subscription, created_at: last_installment_date)
+      end
+
+      context "when the last installment date would cause the interval to be in the past" do
+        let(:last_installment_date) { 2.months.ago }
+        it "sets the actionable_date to the current day" do
+          subject
+          expect(subscription.actionable_date).to eq Time.zone.now
+        end
+      end
+
+      context "when the last installment date would cause the interval to be in the future" do
+        let(:last_installment_date) { 4.days.ago }
+        it "sets the actionable_date to an interval from the last installment" do
+          subject
+          expect(subscription.actionable_date).to eq 1.month.from_now(last_installment_date)
+        end
+      end
+    end
+
+    context "when there are no installments" do
+      it "sets the actionable_date to one interval past the subscription creation date" do
+        subject
+        expect(subscription.actionable_date).to eq Date.parse("2016-10-22")
+      end
+    end
+  end
 end
