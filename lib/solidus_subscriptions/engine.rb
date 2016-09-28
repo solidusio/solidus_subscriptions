@@ -11,6 +11,9 @@ module SolidusSubscriptions
     end
     config.autoload_paths << config.root.join('lib')
 
+    config.autoload_paths << config.root.join('app', 'jobs')
+    config.autoload_paths << config.root.join('lib')
+
     initializer 'solidus_subscriptions.configs', before: "spree.register.payment_methods" do
       require 'solidus_subscriptions/config'
     end
