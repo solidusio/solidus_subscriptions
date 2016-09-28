@@ -32,7 +32,7 @@ RSpec.describe Spree::Api::UsersController, type: :controller do
         id: subscription.line_item.id,
         quantity: 6,
         interval_length: 1,
-        interval_units: 'months'
+        interval_units: 'month'
       }
     end
 

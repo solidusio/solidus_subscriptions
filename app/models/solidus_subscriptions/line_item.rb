@@ -26,10 +26,10 @@ module SolidusSubscriptions
     )
 
     enum interval_units: [
-      :days,
-      :weeks,
-      :months,
-      :years
+      :day,
+      :week,
+      :month,
+      :year
     ]
 
     validates :spree_line_item, :subscribable_id, presence: :true
@@ -40,7 +40,7 @@ module SolidusSubscriptions
     #
     # @return [Integer] The number of seconds.
     def interval
-      ActiveSupport::Duration.new(interval_length, { interval_units.to_sym => interval_length })
+      ActiveSupport::Duration.new(interval_length, { interval_units.pluralize.to_sym => interval_length })
     end
 
     def next_actionable_date
