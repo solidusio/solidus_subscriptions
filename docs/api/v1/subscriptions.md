@@ -44,7 +44,7 @@ Make changes to the Subscription object or the subscription line item object
   "line_item_attributes": {
     "quantity": 5,
     "interval_length": 1,
-    "interval_units": "months"
+    "interval_units": "month"
   }
 }
 ```
@@ -69,7 +69,7 @@ HTTP/1.1 200 OK
     "subscribable_id": 2,
     "created_at": "2016-09-26T23:50:32.923Z",
     "updated_at": "2016-09-26T23:51:05.784Z",
-    "interval_units": "months",
+    "interval_units": "month",
     "interval_length": 1
    }
  }

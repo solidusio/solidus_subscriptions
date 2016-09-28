@@ -26,10 +26,10 @@ module SolidusSubscriptions
     )
 
     enum interval_units: [
-      :days,
-      :weeks,
-      :months,
-      :years
+      :day,
+      :week,
+      :month,
+      :year
     ]
 
     validates :spree_line_item, :subscribable_id, presence: :true

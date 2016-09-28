@@ -45,8 +45,8 @@ To subscribe to a variant include the following parameters when posting to
       quantity: 2,              // number of units in each subscription order.
       subscribable_id: 1234,    // Which variant the subscription is for.
       interval_length: 1,       // The time between subscription activations.
-      interval_units: "months", // A plural qualifier for length.
-                                // Can be one of "days", "weeks", "months", or "years".
+      interval_units: "month", // A plural qualifier for length.
+                                // Can be one of "day", "week", "month", or "year".
       max_installments: 12      // Stop processing after this many subscription orders.
                                 // (use null to process the subscription ad nauseam)
     }

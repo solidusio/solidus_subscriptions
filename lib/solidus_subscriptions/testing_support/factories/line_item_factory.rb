@@ -3,7 +3,7 @@ FactoryGirl.define do
     subscribable_id { create(:variant, subscribable: true).id }
     quantity 1
     interval_length 1
-    interval_units :months
+    interval_units :month
 
     association :spree_line_item, factory: :line_item
 
