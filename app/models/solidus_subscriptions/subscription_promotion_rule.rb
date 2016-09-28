@@ -14,8 +14,7 @@ module SolidusSubscriptions
     # An order is eligible if it contains a line item with an associates
     # subscription_line_item.  This rule applies to order and so its eligibility
     # will always be considered against an order. Will only return true for
-    # orders containing # Spree::Line item with associated
-    # subscription_line_items
+    # orders containing Spree::Line item with associated subscription_line_items
     #
     # @param order [Spree::Order] The order which could have this rule applied
     #   to it.
