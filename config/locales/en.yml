@@ -12,6 +12,9 @@ en:
 
   spree:
     promotion_rule_types:
-        subscription_promotion_rule:
-            name: Subscription
-            description: Order contains a subscription
+      subscription_promotion_rule:
+        name: Subscription
+        description: Order contains a subscription
+      subscription_order_promotion_rule:
+        name: Subscription Order
+        description: Order fulfills a subscription
