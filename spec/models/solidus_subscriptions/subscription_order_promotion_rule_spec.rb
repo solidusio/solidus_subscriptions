@@ -1,0 +1,33 @@
+require 'rails_helper'
+
+RSpec.describe SolidusSubscriptions::SubscriptionOrderPromotionRule do
+  let(:rule) { described_class.new }
+
+  describe '#applicable' do
+    subject { rule.applicable? promotable }
+
+    context 'when the promotable is a Spree::Order' do
+      let(:promotable) { build_stubbed :order }
+      it { is_expected.to be_truthy }
+    end
+
+    context 'when the promotable is not a Spree::Order' do
+      let(:promotable) { build_stubbed :line_item }
+      it { is_expected.to be_falsy }
+    end
+  end
+
+  describe '#eligible?' do
+    subject { rule.eligible? order }
+    let(:order) { create(:order) }
+
+    context 'when the order fulfills a subscription installment' do
+      let!(:installment) { create(:installment, order: order) }
+      it { is_expected.to be_truthy }
+    end
+
+    context 'when the order contains does not fulfill a subscription installment' do
+      it { is_expected.to be_falsy }
+    end
+  end
+end
