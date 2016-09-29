@@ -8,7 +8,7 @@ RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :co
 
   shared_examples "an authenticated subscription" do
     context "when the subscription belongs to user" do
-      let!(:subscription) { create :subscription, user: user }
+      let!(:subscription) { create :subscription, :with_line_item, user: user }
       it { is_expected.to be_success }
     end
 
@@ -17,7 +17,7 @@ RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :co
       it { is_expected.to be_not_found }
     end
 
-    context 'when the subscription is already cancelled' do
+    context 'when the subscription is canceled' do
       let!(:subscription) { create :subscription, user: user, state: 'canceled' }
       it { is_expected.to be_unprocessable }
     end
