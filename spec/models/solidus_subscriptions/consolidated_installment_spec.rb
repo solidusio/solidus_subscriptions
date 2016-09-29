@@ -23,10 +23,12 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
 
     shared_examples 'a completed checkout' do
       it { is_expected.to be_a Spree::Order }
+      let(:total) { 49.98 }
+      let(:quantity) { installments.length }
 
       it 'has the correct number of line items' do
         count = order.line_items.length
-        expect(count).to eq installments.length
+        expect(count).to eq quantity
       end
 
       it 'the line items have the correct values' do
@@ -47,7 +49,7 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
 
       it 'has the correct totals' do
         expect(order).to have_attributes(
-          total: 49.98,
+          total: total,
           shipment_total: 10
         )
       end
@@ -56,7 +58,7 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
 
       it 'associates the order to the installments' do
         order
-        installment_orders = installments.map { |i| i.reload.order }
+        installment_orders = installments.map { |i| i.reload.order }.compact
         expect(installment_orders).to all eq order
       end
 
@@ -149,47 +151,9 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
           by(-1)
       end
 
-      it { is_expected.to be_a Spree::Order }
-
-      it 'has the correct number of line items' do
-        count = order.line_items.length
-        expect(count).to eq(installments.length - 1)
-      end
-
-      it 'the line items have the correct values' do
-        line_item = order.line_items.last
-        expect(line_item).to have_attributes(
-          quantity: subscription_line_item.quantity,
-          variant_id: subscription_line_item.subscribable_id
-        )
-      end
-
-      it 'has a shipment' do
-        expect(order.shipments).to be_present
-      end
-
-      it 'has a payment' do
-        expect(order.payments.valid).to be_present
-      end
-
-      it 'has the correct totals' do
-        expect(order).to have_attributes(
-          total: 29.99,
-          shipment_total: 10
-        )
-      end
-
-      it { is_expected.to be_complete }
-
-      it 'creates a installment detail for every installment' do
-        expect { subject }.to change { SolidusSubscriptions::InstallmentDetail.count }.by installments.length
-      end
-
-      it 'marks the installment to be reprocessed' do
-        subject
-        actionable_date = installments.first.reload.actionable_date
-
-        expect(actionable_date).to eq expected_date
+      it_behaves_like 'a completed checkout' do
+        let(:total) { 29.99 }
+        let(:quantity) { installments.length - 1 }
       end
     end
 
