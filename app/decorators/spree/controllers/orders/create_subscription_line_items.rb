@@ -23,6 +23,9 @@ module Spree
           SolidusSubscriptions::LineItem.create!(
             subscription_params.merge(spree_line_item: line_item)
           )
+
+          # Rerun the promotion handler to pickup subscription promotions
+          Spree::PromotionHandler::Cart.new(current_order).activate
         end
 
         def line_item
