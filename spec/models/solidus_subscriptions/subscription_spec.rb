@@ -61,16 +61,23 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
   describe '#next_actionable_date' do
     subject { subscription.next_actionable_date }
 
-    let(:expected_date) { Date.current + subscription.interval }
-    let(:subscription) do
-      build_stubbed(
-        :subscription,
-        :with_line_item,
-        actionable_date: Date.current
-      )
+    context "when the subscription is active" do
+      let(:expected_date) { Date.current + subscription.interval }
+      let(:subscription) do
+        build_stubbed(
+          :subscription,
+          :with_line_item,
+          actionable_date: Date.current
+        )
+      end
+
+      it { is_expected.to eq expected_date }
     end
 
-    it { is_expected.to eq expected_date }
+    context "when the subscription is not active" do
+      let(:subscription) { build_stubbed :subscription, :with_line_item, state: :canceled }
+      it { is_expected.to be_nil }
+    end
   end
 
   describe '#advance_actionable_date' do
@@ -117,15 +124,6 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
     it "does not include canceled subscriptions" do
       expect(subject).to_not include canceled_subscription
-    end
-  end
-
-  describe ".unset_actionable_date!" do
-    let!(:subscription) { create :subscription, actionable_date: 1.day.from_now }
-    subject { subscription.unset_actionable_date! }
-
-    it "removes the actionable_date from the record" do
-      expect{ subject }.to change { subscription.actionable_date }.to(nil)
     end
   end
 
