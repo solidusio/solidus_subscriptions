@@ -55,15 +55,6 @@ RSpec.describe Spree::Api::LineItemsController, type: :controller do
           to change { SolidusSubscriptions::LineItem.count }.
           from(0).to(1)
       end
-
-      it 'creates a subscription line item with the correct values' do
-        subject
-        subscription_line_item = SolidusSubscriptions::LineItem.last
-
-        expect(subscription_line_item).to have_attributes(
-          subscription_line_item_params[:subscription_line_item]
-        )
-      end
     end
 
     context 'without subscription_line_item params' do
