@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Spree::Controllers::Orders::SubscriptionParams, type: :controller do
+RSpec.describe Spree::Controllers::Orders::CreateSubscriptionLineItems, type: :controller do
   controller(Spree::OrdersController) {}
   routes { Spree::Core::Engine.routes }
 
