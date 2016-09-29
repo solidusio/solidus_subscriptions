@@ -96,7 +96,7 @@ module SolidusSubscriptions
       # Remove installments which had no stock from the active list
       # They will be reprocessed later
       @installments -= unfulfilled_installments
-      OutOfStockDispatcher.new(*unfulfilled_installments).dispatch
+      OutOfStockDispatcher.new(unfulfilled_installments).dispatch
 
       return if installments.empty?
       order_builder.add_line_items(line_items)
