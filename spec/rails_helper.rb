@@ -1,8 +1,7 @@
 # Run Coverage report
 require 'simplecov'
 SimpleCov.start do
-  add_filter 'spec/spec_helper.rb'
-  add_filter 'spec/dummy'
+  add_filter 'spec/'
   add_filter 'lib/solidus_subscriptions/engine.rb'
   add_group 'Controllers', 'app/controllers'
   add_group 'Helpers', 'app/helpers'

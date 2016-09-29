@@ -64,6 +64,7 @@ module SolidusSubscriptions
     private
 
     def checkout
+      order.update_totals
       apply_promotions
 
       order.next! # cart => address
