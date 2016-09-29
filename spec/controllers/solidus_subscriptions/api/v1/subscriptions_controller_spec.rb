@@ -6,12 +6,9 @@ RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :co
   let!(:user) { create :user }
   before { user.generate_spree_api_key! }
 
-  describe "POST :cancel" do
-    let(:params) { { id: subscription.id, token: user.spree_api_key } }
-    subject { post :cancel, params }
-
+  shared_examples "an authenticated subscription" do
     context "when the subscription belongs to user" do
-      let!(:subscription) { create :subscription, user: user }
+      let!(:subscription) { create :subscription, :with_line_item, user: user }
       it { is_expected.to be_success }
     end
 
@@ -20,7 +17,7 @@ RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :co
       it { is_expected.to be_not_found }
     end
 
-    context 'when the subscription is already cancelled' do
+    context 'when the subscription is canceled' do
       let!(:subscription) { create :subscription, user: user, state: 'canceled' }
       it { is_expected.to be_unprocessable }
     end
@@ -67,5 +64,19 @@ RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :co
       let!(:subscription) { create :subscription, :with_line_item, user: create(:user) }
       it { is_expected.to be_not_found }
     end
+  end
+
+  describe "POST :skip" do
+    let(:params) { { id: subscription.id, token: user.spree_api_key } }
+    subject { post :skip, params }
+
+    it_behaves_like "an authenticated subscription"
+  end
+
+  describe "POST :cancel" do
+    let(:params) { { id: subscription.id, token: user.spree_api_key } }
+    subject { post :cancel, params }
+
+    it_behaves_like "an authenticated subscription"
   end
 end
