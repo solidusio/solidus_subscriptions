@@ -81,16 +81,19 @@ module SolidusSubscriptions
 
     def update_actionable_date_if_interval_changed
       if subscription && (interval_length_changed? || interval_units_changed?)
-        if subscription.installments.any?
-          new_date = interval.from_now(subscription.installments.last.created_at)
-          if new_date < Time.zone.now
-            # if the last installment plus the new interval is in the past, set
-            # the actionable_date to be now.
-            new_date = Time.zone.now
-          end
+        base_date = if subscription.installments.any?
+          subscription.installments.last.created_at
         else
-          # if we have no installments, set the actionable date to be now.
-          new_date = interval.from_now(subscription.created_at)
+          subscription.created_at
+        end
+
+        new_date = interval.since(base_date)
+
+        if new_date < Time.zone.now
+          # if the chosen base time plus the new interval is in the past, set
+          # the actionable_date to be now to avoid confusion and possible
+          # mis-processing.
+          new_date = Time.zone.now
         end
 
         subscription.actionable_date = new_date

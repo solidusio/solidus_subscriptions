@@ -107,9 +107,21 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
     end
 
     context "when there are no installments" do
-      it "sets the actionable_date to one interval past the subscription creation date" do
-        subject
-        expect(subscription.actionable_date).to eq Date.parse("2016-10-22")
+      context "when the subscription creation date would cause the interval to be in the past" do
+        before do
+          subscription.update(created_at: 4.months.ago)
+        end
+        it "sets the actionable_date to one interval past the subscription creation date" do
+          subject
+          expect(subscription.actionable_date).to eq Time.zone.now
+        end
+      end
+
+      context "when the subscription creation date would cause the interval to be in the future" do
+        it "sets the actionable_date to one interval past the subscription creation date" do
+          subject
+          expect(subscription.actionable_date).to eq Date.parse("2016-10-22")
+        end
       end
     end
   end
