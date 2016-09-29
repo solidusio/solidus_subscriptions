@@ -74,7 +74,7 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
 
   describe "#update_actionable_date_if_interval_changed" do
     let(:subscription) { create :subscription }
-    let(:line_item) { create :subscription_line_item, subscription: subscription, interval_length: 3, interval_units: "months" }
+    let(:line_item) { create :subscription_line_item, subscription: subscription, interval_length: 3, interval_units: "month" }
 
     before do
       Timecop.freeze(Date.parse("2016-09-22"))
@@ -82,7 +82,7 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
     end
     after { Timecop.return }
 
-    subject { line_item.update!(interval_length: 1, interval_units: "months") }
+    subject { line_item.update!(interval_length: 1, interval_units: "month") }
 
     context "with installments" do
       before do
