@@ -23,6 +23,22 @@ RSpec.describe Spree::Controllers::Orders::SubscriptionParams, type: :controller
       }
     end
 
+    shared_examples 'a new order line item' do
+      it { is_expected.to redirect_to cart_path }
+
+      it 'creates an order' do
+        expect { subject }.
+          to change { Spree::Order.count }.
+          from(0).to(1)
+      end
+
+      it 'creates a line item' do
+        expect { subject }.
+          to change { Spree::LineItem.count }.
+          from(0).to(1)
+      end
+    end
+
     context 'with subscription_line_item params' do
       let(:params) { line_item_params.merge(subscription_line_item_params) }
       let(:subscription_line_item_params) do
@@ -36,6 +52,8 @@ RSpec.describe Spree::Controllers::Orders::SubscriptionParams, type: :controller
           }
         }
       end
+
+      it_behaves_like 'a new order line item'
 
       it 'creates a new subscription line item' do
         expect { subject }.
@@ -54,19 +72,7 @@ RSpec.describe Spree::Controllers::Orders::SubscriptionParams, type: :controller
     end
 
     context 'without subscription_line_item params' do
-      it { is_expected.to redirect_to cart_path }
-
-      it 'creates an order' do
-        expect { subject }.
-          to change { Spree::Order.count }.
-          from(0).to(1)
-      end
-
-      it 'creates a line item' do
-        expect { subject }.
-          to change { Spree::LineItem.count }.
-          from(0).to(1)
-      end
+      it_behaves_like 'a new order line item'
     end
   end
 end
