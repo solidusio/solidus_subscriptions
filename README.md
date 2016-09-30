@@ -7,7 +7,7 @@ A Solidus extension for subscriptions.
 Add solidus_subscriptions to your Gemfile:
 
 ```ruby
-gem 'solidus_subscriptions'
+gem 'solidus_subscriptions', git: 'https://github.com/brendandeere/solidus_subscriptions/'
 ```
 
 Bundle your dependencies and run the installation generator:
