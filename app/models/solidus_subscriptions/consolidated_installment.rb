@@ -64,6 +64,9 @@ module SolidusSubscriptions
     private
 
     def checkout
+      order.update_totals
+      apply_promotions
+
       order.next! # cart => address
 
       order.ship_address = ship_address
@@ -124,6 +127,11 @@ module SolidusSubscriptions
         amount: order.total,
         payment_method: Config.default_gateway
       )
+    end
+
+    def apply_promotions
+      Spree::PromotionHandler::Cart.new(order).activate
+      order.updater.update # reload totals
     end
   end
 end
