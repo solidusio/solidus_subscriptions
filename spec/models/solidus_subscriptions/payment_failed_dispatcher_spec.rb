@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 RSpec.describe SolidusSubscriptions::PaymentFailedDispatcher do
   let(:dispatcher) { described_class.new(installments) }
@@ -18,7 +18,7 @@ RSpec.describe SolidusSubscriptions::PaymentFailedDispatcher do
     end
 
     it 'logs the failure' do
-      expect(dispatcher).to receive(:log_failure).once
+      expect(dispatcher).to receive(:notify).once
       subject
     end
   end

@@ -1,29 +1,17 @@
 # A handler for behaviour that should happen after installments are marked as
 # failures
 module SolidusSubscriptions
-  class FailureDispatcher
-    attr_reader :installments
-
-    # Get a new instance of the FailureDispatcher
-    #
-    # @param [Array<SolidusSubscriptions::Installment>] :installments,
-    #   the installments which have failed to be fulfilled
-    #
-    # @return [SolidusSubscriptions::FailureDispatcher]
-    def initialize(installments)
-      @installments = installments
-    end
-
-    # Run after failure callback methods
+  class FailureDispatcher < Dispatcher
     def dispatch
       installments.each(&:failed)
-      notify
+      super
     end
 
-    private
-
-    def notify
-      # Tell someone stuff happened
+    def message
+      "
+      Something went wrong processing installments: #{installments.map(&:id).join(', ')}.
+      They have been marked for reprocessing.
+      "
     end
   end
 end

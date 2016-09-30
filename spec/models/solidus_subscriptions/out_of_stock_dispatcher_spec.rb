@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe SolidusSubscriptions::OutOfStockDispatcher do
-  let(:dispatcher) { described_class.new(*installments) }
+  let(:dispatcher) { described_class.new(installments) }
   let(:installments) { build_list(:installment, 2) }
 
   describe 'initialization' do
@@ -18,7 +18,7 @@ RSpec.describe SolidusSubscriptions::OutOfStockDispatcher do
     end
 
     it 'logs the failure' do
-      expect(dispatcher).to receive(:log_failure).once
+      expect(dispatcher).to receive(:notify).once
       subject
     end
   end
