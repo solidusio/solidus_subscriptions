@@ -1,6 +1,8 @@
 # SolidusSubscriptions
 
-A Solidus extension for subscriptions.
+A Solidus extension for subscriptions. **Important note**: this is
+**PRE-RELEASE** software and is currently a work-in-progress. There are **no
+guarantees** this will work for your store!
 
 ## Installation
 
