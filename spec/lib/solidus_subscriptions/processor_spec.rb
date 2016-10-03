@@ -41,6 +41,17 @@ RSpec.describe SolidusSubscriptions::Processor, :checkout do
       subject
       expect(order_variant_ids).to match_array expected_ids
     end
+
+    it 'advances the subsription actionable dates' do
+      subscription = actionable_subscriptions.first
+
+      current_date = subscription.actionable_date
+      expected_date = subscription.next_actionable_date
+
+      expect { subject }.
+        to change { subscription.reload.actionable_date }.
+        from(current_date).to(expected_date)
+    end
   end
 
   describe '.run' do
