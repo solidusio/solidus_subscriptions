@@ -15,6 +15,17 @@ RSpec.describe "Subscription endpoints", type: :request do
       expect(json_resp["state"]).to eq "canceled"
       expect(json_resp["actionable_date"]).to be_nil
     end
+
+    context 'when the miniumum notice has been past' do
+      let(:subscription) do
+        create :subscription, actionable_date: Date.current, user: user
+      end
+
+      it "returns the record pending cancellation", :aggregate_failures do
+        post solidus_subscriptions.cancel_api_v1_subscription_path(subscription), token: user.spree_api_key
+        expect(json_resp["state"]).to eq "pending_cancellation"
+      end
+    end
   end
 
   describe "#skip" do
