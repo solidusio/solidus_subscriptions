@@ -7,6 +7,10 @@ RSpec.describe SolidusSubscriptions::Processor, :checkout do
   end
 
   let!(:actionable_subscriptions) { create_list(:subscription, 2, :actionable, user: user) }
+  let!(:pending_cancellation_subscriptions) do
+    create_list(:subscription, 2, :pending_cancellation, user: user)
+  end
+
   let!(:future_subscriptions) { create_list(:subscription, 2, :not_actionable) }
   let!(:canceled_subscriptions) { create_list(:subscription, 2, :canceled) }
   let!(:inactive) { create_list(:subscription, 2, :inactive) }
@@ -27,7 +31,8 @@ RSpec.describe SolidusSubscriptions::Processor, :checkout do
   shared_examples 'a subscription order' do
     let(:order_variant_ids) { Spree::Order.last.variant_ids }
     let(:expected_ids) do
-      subs_ids = actionable_subscriptions.map { |s| s.line_item.subscribable_id }
+      subs = actionable_subscriptions + pending_cancellation_subscriptions
+      subs_ids = subs.map { |s| s.line_item.subscribable_id }
       inst_ids = failed_installments.map { |i| i.subscription.line_item.subscribable_id }
 
       subs_ids + inst_ids
@@ -52,11 +57,17 @@ RSpec.describe SolidusSubscriptions::Processor, :checkout do
         to change { subscription.reload.actionable_date }.
         from(current_date).to(expected_date)
     end
+
+    it 'cancels subscriptions pending cancellation' do
+      subs = pending_cancellation_subscriptions.first
+      expect { subject }.
+        to change { subs.reload.state }.
+        from('pending_cancellation').to('canceled')
+    end
   end
 
   describe '.run' do
     subject { described_class.run }
-
     it_behaves_like 'a subscription order'
   end
 

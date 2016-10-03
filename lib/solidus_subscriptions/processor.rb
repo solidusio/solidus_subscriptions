@@ -83,6 +83,7 @@ module SolidusSubscriptions
       subscriptions_by_id.fetch(user.id, []).map do |sub|
         ActiveRecord::Base.transaction do
           sub.advance_actionable_date
+          sub.cancel! if sub.pending_cancellation?
           sub.installments.create!
         end
       end

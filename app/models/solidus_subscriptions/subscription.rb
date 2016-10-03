@@ -73,6 +73,7 @@ module SolidusSubscriptions
     # :pending_cancellation state instead of being canceled. Susbcriptions
     # pending cancellation will still be processed.
     def can_be_canceled?
+      return true if actionable_date.nil?
       (actionable_date - Config.minimum_cancellation_notice).future?
     end
 
