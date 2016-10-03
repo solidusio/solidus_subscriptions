@@ -11,9 +11,15 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
   describe '#cancel' do
     subject { subscription.cancel }
 
-    let(:subscription) { create :subscription, :with_line_item }
+    let(:subscription) do
+      create :subscription, :with_line_item, actionable_date: actionable_date
+    end
+
+    around { |e| Timecop.freeze { e.run } }
 
     context 'the subscription can be canceled' do
+      let(:actionable_date) { 1.month.from_now }
+
       it 'is canceled' do
         subject
         expect(subscription.canceled?).to be_truthy
@@ -21,9 +27,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
     end
 
     context 'the subscription cannot be canceled' do
-      before do
-        allow(subscription).to receive(:can_be_canceled?).and_return(false)
-      end
+      let(:actionable_date) { Date.current }
 
       it 'is pending cancelation' do
         subject

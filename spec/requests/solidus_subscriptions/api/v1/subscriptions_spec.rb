@@ -6,7 +6,9 @@ RSpec.describe "Subscription endpoints", type: :request do
   before { user.generate_spree_api_key! }
 
   describe "#cancel" do
-    let(:subscription) { create :subscription, user: user }
+    let(:subscription) do
+      create :subscription, actionable_date: (Date.current + 1.month), user: user
+    end
 
     it "returns the canceled record", :aggregate_failures do
       post solidus_subscriptions.cancel_api_v1_subscription_path(subscription), token: user.spree_api_key
