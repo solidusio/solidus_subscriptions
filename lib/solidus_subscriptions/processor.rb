@@ -18,8 +18,8 @@ module SolidusSubscriptions
       private
 
       def batched_users_to_be_processed
-        subscriptions = Subscription.arel_table
-        installments = Installment.arel_table
+        subscriptions = SolidusSubscriptions::Subscription.arel_table
+        installments = SolidusSubscriptions::Installment.arel_table
 
         Spree::User.
           joins(:subscriptions).
@@ -30,8 +30,8 @@ module SolidusSubscriptions
               join_sources
           ).
           where(
-            Subscription.actionable.arel.constraints.reduce(:and).
-              or(Installment.actionable.arel.constraints.reduce(:and))
+            SolidusSubscriptions::Subscription.actionable.arel.constraints.reduce(:and).
+              or(SolidusSubscriptions::Installment.actionable.arel.constraints.reduce(:and))
           ).
           distinct.
           find_in_batches
