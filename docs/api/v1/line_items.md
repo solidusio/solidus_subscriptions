@@ -13,15 +13,16 @@ subscription.
 ### Example params:
 ```js
   {
-    order_token: '1234'
-    order: {
-      line_items_attributes: [{
+    "order_token": '1234'
+    "order": {
+      "line_items_attributes": [{
         // line item attributes
-        subscription_line_items_attributes: [{
-          quantity: 1,          // How many to include in the subscription orders
-          max_installments: 12, // How many times to process the subscriptions (null for ad nauseam)
-          interval: 2592000,    // frequency of subscription orders (in seconds)
-          subscribable_id: 1234 // What item to include in the subscription order
+        "subscription_line_items_attributes": [{
+          "quantity": 1,          // How many to include in the subscription orders
+          "max_installments": 12, // How many times to process the subscriptions (null for ad nauseam)
+          "interval_length": 1,
+          "interval_units": "month", // one of: day, week, month, year
+          "subscribable_id": 1234 // What item to include in the subscription order
         }]
       }]
     }
@@ -31,6 +32,7 @@ subscription.
 This endpoint accepts the default subscription_line_item_attributes (which are
 configurable) except for the :subscribable_id. These atrributes are:
 - `:quantity`
-- `:interval`
+- `:interval_units`
+- `:interval_length`
 - `:max_installments`
 - `:subscribable_id`
