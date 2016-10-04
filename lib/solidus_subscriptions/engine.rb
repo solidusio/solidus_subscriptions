@@ -9,7 +9,6 @@ module SolidusSubscriptions
     config.generators do |g|
       g.test_framework :rspec
     end
-    config.autoload_paths << config.root.join('lib')
 
     config.autoload_paths << config.root.join('app', 'jobs')
     config.autoload_paths << config.root.join('lib')
