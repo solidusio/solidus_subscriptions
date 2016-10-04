@@ -136,4 +136,35 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
     it { is_expected.to be_a SolidusSubscriptions::LineItemBuilder }
     it { is_expected.to have_attributes(subscription_line_item: line_item) }
   end
+
+  describe '#processing_state' do
+    subject { subscription.processing_state }
+
+    context 'when the subscription has never been processed' do
+      let(:subscription) { build_stubbed :subscription }
+      it { is_expected.to eq 'pending' }
+    end
+
+    context 'when the last processing attempt failed' do
+      let(:subscription) do
+        create(
+          :subscription,
+          installments: create_list(:installment, 1, :failed)
+        )
+      end
+
+      it { is_expected.to eq 'failed' }
+    end
+
+    context 'when the last processing attempt succeeded' do
+      let(:subscription) do
+        create(
+          :subscription,
+          installments: create_list(:installment, 1, :success)
+        )
+      end
+
+      it { is_expected.to eq 'success' }
+    end
+  end
 end
