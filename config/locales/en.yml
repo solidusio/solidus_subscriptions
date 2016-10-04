@@ -11,6 +11,9 @@ en:
       failed: This installment could not be processed
 
   spree:
+    admin:
+      tab:
+        subscriptions: Subscriptions
     promotion_rule_types:
       subscription_promotion_rule:
         name: Subscription

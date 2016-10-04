@@ -22,6 +22,17 @@ module SolidusSubscriptions
       app.config.spree.promotions.rules << 'SolidusSubscriptions::SubscriptionOrderPromotionRule'
     end
 
+    initializer 'subscriptions_backend' do
+      next unless Spree::Backend::Config.respond_to?(:menu_items)
+      Spree::Backend::Config.configure do |config|
+        config.menu_items << config.class::MenuItem.new(
+          [:subscriptions],
+          'repeat',
+          url: :admin_subscriptions_path
+        )
+      end
+    end
+
     def self.activate
       Dir.glob(File.join(File.dirname(__FILE__), '../../app/decorators/**/*.rb')) do |c|
         Rails.configuration.cache_classes ? require(c) : load(c)

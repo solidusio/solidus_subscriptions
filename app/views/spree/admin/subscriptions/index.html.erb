@@ -1,4 +1,8 @@
-<% admin_breadcrumb(plural_resource_name(SolidusSubscriptions::Subscription)) %>
+<% if respond_to?(:admin_breadcrumb) %>
+  <% admin_breadcrumb(SolidusSubscriptions::Subscription.model_name.human) %>
+<% else %>
+  <% content_for(:page_title, SolidusSubscriptions::Subscription.model_name.human) %>
+<% end %>
 
 <% content_for :table_filter_title do %>
   <%= Spree.t(:search) %>

@@ -2,6 +2,7 @@
 require 'simplecov'
 SimpleCov.start do
   add_filter 'spec/'
+  add_filter 'app/overrides'
   add_filter 'lib/solidus_subscriptions/engine.rb'
   add_group 'Controllers', 'app/controllers'
   add_group 'Helpers', 'app/helpers'
