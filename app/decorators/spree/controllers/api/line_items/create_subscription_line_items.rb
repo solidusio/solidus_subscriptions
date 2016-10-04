@@ -12,7 +12,7 @@ module Spree
     def self.prepended(base)
       base.after_action(
         :handle_subscription_line_items,
-        only: :create,
+        only: [:create, :update],
         if: ->{ params[:subscription_line_item] }
       )
     end
