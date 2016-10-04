@@ -52,15 +52,5 @@ RSpec.describe Spree::Api::OrdersController, type: :controller do
       expect(subscription_line_items.length).
         to eq line_items_params[:subscription_line_items_attributes].length
     end
-
-    it 'creates the correct subscription line item' do
-      line_item = subscription_line_items.first
-
-      aggregate_failures do
-        expect(line_item).to have_attributes(subscription_line_items_params)
-        expect(line_item).to be_persisted
-        expect(line_item.spree_line_item).to be
-      end
-    end
   end
 end

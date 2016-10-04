@@ -1,10 +1,11 @@
-# Spree::Orders
+# Spree::LineItems
 Creating SolidusSubscriptions::LineItems though the Solidus API. The subscriptions
-extension overrides the solidus orders api endpoint to accept nested attributes
-for SolidusSubscriptions::LineItems.
+extension overrides the solidus line_items api endpoint to create subscription
+line items when the correct parameters are passed
 
-## PATCH `/api/orders/:id`
-*Authentication Required*: An api or order token must be provided
+## POST `/api/orders/:order_id/line_items`
+*Authentication Required*: An order token must be provided
+*This is a Spree API endpoint*
 
 Add a new line item to the specified order which may have an associated
 subscription.
@@ -31,6 +32,7 @@ subscription.
 This endpoint accepts the default subscription_line_item_attributes (which are
 configurable) except for the :subscribable_id. These atrributes are:
 - `:quantity`
-- `:interval`
+- `:interval_units`
+- `:interval_length`
 - `:max_installments`
 - `:subscribable_id`

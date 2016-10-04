@@ -9,9 +9,11 @@ module Spree
   module Controllers
     module Orders
       module CreateSubscriptionLineItems
+        include SolidusSubscriptions::SubscriptionLineItemBuilder
+
         def self.prepended(base)
           base.after_action(
-            :create_subscription_line_item,
+            :handle_subscription_line_items,
             only: :populate,
             if: ->{ params[:subscription_line_item] }
           )
@@ -19,17 +21,9 @@ module Spree
 
         private
 
-        def create_subscription_line_item
-          SolidusSubscriptions::LineItem.create!(
-            subscription_params.merge(spree_line_item: line_item)
-          )
-
-          # Rerun the promotion handler to pickup subscription promotions
-          Spree::PromotionHandler::Cart.new(current_order).activate
-        end
-
-        def line_item
-          @current_order.line_items.find_by(variant_id: params[:variant_id])
+        def handle_subscription_line_items
+          line_item = @current_order.line_items.find_by(variant_id: params[:variant_id])
+          create_subscription_line_item(line_item)
         end
       end
     end
