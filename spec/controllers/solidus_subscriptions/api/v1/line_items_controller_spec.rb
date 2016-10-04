@@ -18,6 +18,41 @@ RSpec.describe SolidusSubscriptions::Api::V1::LineItemsController, type: :contro
     end
     subject { post :update, params }
 
+    context 'guest user' do
+      let(:order) { create :order }
+
+      let(:params) do
+        {
+          id: line.id,
+          subscription_line_item: { quantity: 21 },
+          checkout_id: order.number,
+          order_token: order.guest_token
+        }
+      end
+
+      context "with valid params" do
+        let(:json_body) { JSON.parse(subject.body) }
+
+        it { is_expected.to be_success }
+        it "returns the updated record" do
+          expect(json_body["quantity"]).to eq 21
+        end
+      end
+
+      context "with invalid params" do
+        let(:params) do
+          {
+            id: line.id,
+            subscription_line_item: { max_installments: "lots" },
+            checkout_id: order.number,
+            order_token: order.guest_token
+          }
+        end
+
+        it { is_expected.to be_unprocessable }
+      end
+    end
+
     context "when the order belongs to the user" do
       let(:order) { create :order, user: user }
 
