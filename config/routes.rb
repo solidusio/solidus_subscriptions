@@ -14,4 +14,8 @@ end
 
 Spree::Core::Engine.routes.draw do
   mount SolidusSubscriptions::Engine, at: '/subscriptions'
+
+  namespace :admin do
+    resources :subscriptions, only: :index
+  end
 end
