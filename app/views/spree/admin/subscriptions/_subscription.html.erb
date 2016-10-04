@@ -1,0 +1,23 @@
+<%= content_tag :tr, class: cycle('odd', 'even') do %>
+  <%= content_tag :td, l(subscription.created_at.to_date), class: 'align-center' %>
+
+  <%= content_tag :td, class: 'align-center' do %>
+    <%= link_to subscription.user.email, admin_user_path(subscription.user) %>
+  <% end %>
+
+  <%= content_tag :td, class: 'align-center' do %>
+    <%= subscription.actionable_date ? l(subscription.actionable_date) : '-' %>
+  <% end %>
+
+  <%= content_tag :td, class: 'align-center' do %>
+    <%= content_tag :span, subscription.human_state_name, class: "state #{ subscription.state }" %>
+  <% end %>
+
+  <%= content_tag :td, class: 'align-center' do %>
+    <%= content_tag :span,  class: "state #{ subscription.processing_state }" do %>
+      <%= subscription.class.human_attribute_name("processing_state.#{ subscription.processing_state }") %>
+    <% end %>
+  <% end %>
+
+  <td class="actions align-center"></td>
+<% end %>

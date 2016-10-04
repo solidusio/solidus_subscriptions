@@ -18,3 +18,10 @@ en:
       subscription_order_promotion_rule:
         name: Subscription Order
         description: Order fulfills a subscription
+
+  activerecord:
+    attributes:
+      solidus_subscriptions/subscription/processing_state:
+        pending: new
+        success: success
+        failed: failure
