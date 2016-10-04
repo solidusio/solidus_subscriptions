@@ -7,7 +7,7 @@ module SolidusSubscriptions
         li.order.user == user || li.order == order
       end
 
-      can(:manage, Subscription) { |s| s.user == user }
+      can(:manage, Subscription, user_id: user.id)
     end
   end
 end
