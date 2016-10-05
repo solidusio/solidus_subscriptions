@@ -9,7 +9,7 @@ FactoryGirl.define do
     end
 
     trait :success do
-      association :order, factory: :completed_order_with_totals
+      order { create :completed_order_with_totals }
       details { build_list(:installment_detail, 1, :success, installment: @instance) }
     end
   end

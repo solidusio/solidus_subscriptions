@@ -103,6 +103,21 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     end
   end
 
+  describe '#fulfilled' do
+    subject { installment.fulfilled? }
+    let(:installment) { create(:installment, order: order) }
+
+    context 'the installment has an associated completed order' do
+      let(:order) { create :completed_order_with_totals }
+      it { is_expected.to be_truthy }
+    end
+
+    context 'the installment has no associated completed order' do
+      let(:order) { nil }
+      it { is_expected.to be_falsy }
+    end
+  end
+
   describe '#payment_failed!' do
     subject { installment.payment_failed! }
 

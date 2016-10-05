@@ -117,5 +117,16 @@ module SolidusSubscriptions
     def line_item_builder
       LineItemBuilder.new(line_item)
     end
+
+    # The state of the last attempt to process an installment associated to
+    # this subscrtipion
+    #
+    # @return [String] pending if the no installments have been processed,
+    #   failed if the last installment has not been fulfilled and, success
+    #   if the last installment was fulfilled.
+    def processing_state
+      return 'pending' if installments.empty?
+      installments.last.fulfilled? ? 'success' : 'failed'
+    end
   end
 end

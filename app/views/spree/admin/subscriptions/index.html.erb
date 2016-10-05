@@ -1,0 +1,18 @@
+<% admin_breadcrumb(plural_resource_name(SolidusSubscriptions::Subscription)) %>
+
+<table id="listing_subscriptions" class="index">
+  <thead>
+    <tr>
+      <th><%= SolidusSubscriptions::Subscription.human_attribute_name(:created_at) %></th>
+      <th><%= SolidusSubscriptions::Subscription.human_attribute_name(:user) %></th>
+      <th><%= SolidusSubscriptions::Subscription.human_attribute_name(:actionable_date) %></th>
+      <th><%= SolidusSubscriptions::Subscription.human_attribute_name(:state) %></th>
+      <th><%= SolidusSubscriptions::Subscription.human_attribute_name(:processing_state) %></th>
+      <th class='actions'></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <%= render partial: 'subscription', collection: @subscriptions %>
+  </tbody>
+</table>

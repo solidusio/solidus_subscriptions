@@ -73,6 +73,17 @@ module SolidusSubscriptions
       order_id.nil? || !order.completed?
     end
 
+    # Had this installment been fulfilled by a completed order
+    #
+    # @return [Boolean]
+    def fulfilled?
+      !unfulfilled?
+    end
+
+    # Mark this installment as having a failed payment
+    #
+    # @return [SolidusSubscriptions::InstallmentDetail] The record of the
+    #   failed processing attempt
     def payment_failed!
       advance_actionable_date!
 
