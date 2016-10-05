@@ -14,6 +14,7 @@ module Spree
 
       def new
         @subscription = SolidusSubscriptions::Subscription.new
+        @line_item = SolidusSubscriptions::LineItem.new
       end
 
       def create
