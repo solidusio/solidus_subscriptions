@@ -8,7 +8,15 @@ RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :co
 
   shared_examples "an authenticated subscription" do
     context "when the subscription belongs to user" do
-      let!(:subscription) { create :subscription, :with_line_item, user: user }
+      let!(:subscription) do
+        create(
+          :subscription,
+          :with_line_item,
+          actionable_date: (Date.current + 1.month ),
+          user: user
+        )
+      end
+
       it { is_expected.to be_success }
     end
 

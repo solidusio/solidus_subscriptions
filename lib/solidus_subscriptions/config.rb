@@ -5,6 +5,8 @@ module SolidusSubscriptions
       # retrying to fulfil it
       mattr_accessor(:reprocessing_interval) { 1.day }
 
+      mattr_accessor(:minimum_cancellation_notice) { 1.day }
+
       # Which queue is responsible for processing subscriptions
       mattr_accessor(:processing_queue) { :default }
 

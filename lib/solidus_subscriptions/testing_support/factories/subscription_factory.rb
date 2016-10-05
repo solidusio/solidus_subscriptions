@@ -23,6 +23,11 @@ FactoryGirl.define do
       actionable_date { Time.zone.now.tomorrow }
     end
 
+    trait(:pending_cancellation) do
+      actionable
+      state { 'pending_cancellation' }
+    end
+
     trait(:canceled) { state 'canceled' }
     trait(:inactive) { state 'inactive' }
   end

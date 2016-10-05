@@ -80,7 +80,13 @@ module SolidusSubscriptions
     end
 
     def new_installments(user)
-      subscriptions_by_id.fetch(user.id, []).map { |sub| sub.installments.create! }
+      subscriptions_by_id.fetch(user.id, []).map do |sub|
+        ActiveRecord::Base.transaction do
+          sub.advance_actionable_date
+          sub.cancel! if sub.pending_cancellation?
+          sub.installments.create!
+        end
+      end
     end
 
     def user_ids
