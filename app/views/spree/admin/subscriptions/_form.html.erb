@@ -1,0 +1,17 @@
+<%= form_for @subscription, url: spree.admin_subscriptions_url, class: "row" do |f| %>
+  <div class="columns offset-by-four alpha omega">
+    <div class="field columns four alpha">
+      <%= f.label :user_id, Spree.t(:user), class: "required" %><br>
+      <%= f.collection_select :user_id,  Spree::User.all, :id, :email, {}, class: "select2 fullwidth" %>
+    </div>
+
+    <div class="field columns four omega">
+      <%= f.label :actionable_date %><br>
+      <%= f.text_field :actionable_date, class: "fullwidth datepicker" %>
+    </div>
+
+    <div class="field columns eight align-center alpha omega">
+      <%= f.button type: :submit %>
+    </div>
+  </div>
+<% end %>

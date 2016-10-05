@@ -12,6 +12,14 @@ module Spree
           per(params[:per_page] || Spree::Config[:orders_per_page])
       end
 
+      def new
+        @subscription = SolidusSubscriptions::Subscription.new
+      end
+
+      def create
+
+      end
+
       private
 
       def model_class
