@@ -172,6 +172,11 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
     end
   end
 
+  describe '.ransackable_scopes' do
+    subject { described_class.ransackable_scopes }
+    it { is_expected.to match_array [:in_processing_state] }
+  end
+
   describe '.in_processing_state' do
     subject { described_class.in_processing_state(state) }
 

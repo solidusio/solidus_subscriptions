@@ -44,6 +44,10 @@ module SolidusSubscriptions
       end
     end)
 
+    def self.ransackable_scopes(_auth_object = nil)
+      [:in_processing_state]
+    end
+
     # The subscription state determines the behaviours around when it is
     # processed. Here is a brief description of the states and how they affect
     # the subscription.
