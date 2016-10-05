@@ -25,6 +25,25 @@ module SolidusSubscriptions
         where.not(state: ["canceled", "inactive"])
     end)
 
+    # Find subscriptions based on their processing state. This state is not a
+    # model attrubute.
+    #
+    # @param :state [Symbol] One of :pending, :success, or failed
+    #
+    # pending: New subscriptions, never been processed
+    # failed: Subscriptions which failed to be processed on the last attempt
+    # success: Subscriptions which were successfully processed on the last attempt
+    scope :in_processing_state, (lambda do |state|
+      case state.to_sym
+      when :success
+        joins(installments: :order)
+      when :failed
+        joins(:installments).includes(installments: :order).where(spree_orders: { id: nil })
+      when :pending
+        includes(:installments).where(solidus_subscriptions_installments: { id: nil })
+      end
+    end)
+
     # The subscription state determines the behaviours around when it is
     # processed. Here is a brief description of the states and how they affect
     # the subscription.
