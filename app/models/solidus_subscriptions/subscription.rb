@@ -3,6 +3,8 @@
 # behalf of a specific user.
 module SolidusSubscriptions
   class Subscription < ActiveRecord::Base
+    PROCESSING_STATES = [:pending, :failed, :success]
+
     belongs_to :user, class_name: Spree.user_class
     has_one :line_item, class_name: 'SolidusSubscriptions::LineItem'
     has_many :installments, class_name: 'SolidusSubscriptions::Installment'
@@ -46,6 +48,10 @@ module SolidusSubscriptions
 
     def self.ransackable_scopes(_auth_object = nil)
       [:in_processing_state]
+    end
+
+    def self.processing_states
+      PROCESSING_STATES
     end
 
     # The subscription state determines the behaviours around when it is

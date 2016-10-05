@@ -199,4 +199,9 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       it { is_expected.to match_array new_subs }
     end
   end
+
+  describe '.processing_states' do
+    subject { described_class.processing_states }
+    it { is_expected.to match_array [:pending, :success, :failed] }
+  end
 end
