@@ -4,7 +4,12 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
   it { is_expected.to have_many :installments }
   it { is_expected.to belong_to :user }
   it { is_expected.to have_one :line_item }
+
   it { is_expected.to validate_presence_of :user }
+  it { is_expected.to validate_presence_of :skip_count }
+  it { is_expected.to validate_presence_of :successive_skip_count }
+  it { is_expected.to validate_numericality_of(:skip_count).is_greater_than_or_equal_to(0) }
+  it { is_expected.to validate_numericality_of(:successive_skip_count).is_greater_than_or_equal_to(0) }
 
   it { is_expected.to accept_nested_attributes_for :line_item }
 
