@@ -82,6 +82,7 @@ module SolidusSubscriptions
     def new_installments(user)
       subscriptions_by_id.fetch(user.id, []).map do |sub|
         ActiveRecord::Base.transaction do
+          sub.successive_skip_count = 0
           sub.advance_actionable_date
           sub.cancel! if sub.pending_cancellation?
           sub.installments.create!
