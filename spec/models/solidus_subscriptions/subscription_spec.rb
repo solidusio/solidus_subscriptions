@@ -41,6 +41,60 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
     end
   end
 
+  describe '#skip' do
+    subject { subscription.skip }
+
+    let(:total_skips) { 0 }
+    let(:successive_skips) { 0 }
+    let(:expected_date) { 1.month.from_now.to_date }
+
+    let(:subscription) do
+      create(
+        :subscription,
+        :with_line_item,
+        skip_count: total_skips,
+        successive_skip_count: successive_skips
+      )
+    end
+
+    around(:all) do |e|
+      successive_skip_limit = SolidusSubscriptions::Config.maximum_successive_skips
+      total_skip_limit = SolidusSubscriptions::Config.maximum_total_skips
+
+      SolidusSubscriptions::Config.maximum_successive_skips = 1
+      SolidusSubscriptions::Config.maximum_total_skips = 1
+
+      Timecop.freeze { e.run }
+
+      SolidusSubscriptions::Config.maximum_successive_skips = successive_skip_limit
+      SolidusSubscriptions::Config.maximum_total_skips = total_skip_limit
+    end
+
+    context 'when the successive skips have been exceeded' do
+      let(:successive_skips) { 1 }
+      it { is_expected.to be_falsy }
+
+      it 'adds errors to the subscription' do
+        subject
+        expect(subscription.errors[:successive_skip_count]).to_not be_empty
+      end
+    end
+
+    context 'when the total skips have been exceeded' do
+      let(:total_skips) { 1 }
+      it { is_expected.to be_falsy }
+
+      it 'adds errors to the subscription' do
+        subject
+        expect(subscription.errors[:skip_count]).to_not be_empty
+      end
+    end
+
+    context 'when the subscription can be skipped' do
+      it { is_expected.to eq expected_date }
+    end
+  end
+
   describe '#deactivate' do
     subject { subscription.deactivate }
 

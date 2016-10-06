@@ -78,6 +78,15 @@ module SolidusSubscriptions
       (actionable_date - Config.minimum_cancellation_notice).future?
     end
 
+    def skip
+      check_successive_skips_exceeded
+      check_total_skips_exceeded
+
+      return if errors.any?
+
+      advance_actionable_date
+    end
+
     # This method determines if a subscription can be deactivated. A deactivated
     # subscription will not be processed. By default a subscription can be
     # deactivated if the number of max_installments defined on the
@@ -129,6 +138,24 @@ module SolidusSubscriptions
     def processing_state
       return 'pending' if installments.empty?
       installments.last.fulfilled? ? 'success' : 'failed'
+    end
+
+    private
+
+    def check_successive_skips_exceeded
+      return unless Config.maximum_successive_skips
+
+      if successive_skip_count >= Config.maximum_successive_skips
+        errors.add(:successive_skip_count, :exceeded)
+      end
+    end
+
+    def check_total_skips_exceeded
+      return unless Config.maximum_total_skips
+
+      if skip_count >= Config.maximum_total_skips
+        errors.add(:skip_count, :exceeded)
+      end
     end
   end
 end
