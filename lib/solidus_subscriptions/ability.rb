@@ -3,11 +3,17 @@ module SolidusSubscriptions
     include CanCan::Ability
 
     def initialize(user)
-      can(:manage, LineItem) do |li, order|
-        li.order.user == user || li.order == order
-      end
+      alias_action :create, :read, :update, :destroy, to: :crud
 
-      can(:manage, Subscription, user_id: user.id)
+      if user.has_spree_role?('admin')
+        can(:manage, LineItem)
+        can(:manage, Subscription)
+      else
+        can([:crud, :skip, :cancel], Subscription, user_id: user.id)
+        can(:crud, LineItem) do |li, order|
+          li.order.user == user || li.order == order
+        end
+      end
     end
   end
 end
