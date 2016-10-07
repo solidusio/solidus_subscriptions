@@ -3,6 +3,8 @@
 # behalf of a specific user.
 module SolidusSubscriptions
   class Subscription < ActiveRecord::Base
+    PROCESSING_STATES = [:pending, :failed, :success]
+
     belongs_to :user, class_name: Spree.user_class
     has_one :line_item, class_name: 'SolidusSubscriptions::LineItem'
     has_many :installments, class_name: 'SolidusSubscriptions::Installment'
@@ -24,6 +26,33 @@ module SolidusSubscriptions
       where("#{table_name}.actionable_date < ?", Time.zone.now).
         where.not(state: ["canceled", "inactive"])
     end)
+
+    # Find subscriptions based on their processing state. This state is not a
+    # model attrubute.
+    #
+    # @param :state [Symbol] One of :pending, :success, or failed
+    #
+    # pending: New subscriptions, never been processed
+    # failed: Subscriptions which failed to be processed on the last attempt
+    # success: Subscriptions which were successfully processed on the last attempt
+    scope :in_processing_state, (lambda do |state|
+      case state.to_sym
+      when :success
+        joins(installments: :order)
+      when :failed
+        joins(:installments).includes(installments: :order).where(spree_orders: { id: nil })
+      when :pending
+        includes(:installments).where(solidus_subscriptions_installments: { id: nil })
+      end
+    end)
+
+    def self.ransackable_scopes(_auth_object = nil)
+      [:in_processing_state]
+    end
+
+    def self.processing_states
+      PROCESSING_STATES
+    end
 
     # The subscription state determines the behaviours around when it is
     # processed. Here is a brief description of the states and how they affect

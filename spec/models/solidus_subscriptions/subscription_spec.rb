@@ -171,4 +171,37 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       it { is_expected.to eq 'success' }
     end
   end
+
+  describe '.ransackable_scopes' do
+    subject { described_class.ransackable_scopes }
+    it { is_expected.to match_array [:in_processing_state] }
+  end
+
+  describe '.in_processing_state' do
+    subject { described_class.in_processing_state(state) }
+
+    let!(:new_subs) { create_list :subscription, 2 }
+    let!(:failed_subs) { create_list(:installment, 2, :failed).map(&:subscription) }
+    let!(:success_subs) { create_list(:installment, 2, :success).map(&:subscription) }
+
+    context 'successfull subscriptions' do
+      let(:state) { :success }
+      it { is_expected.to match_array success_subs }
+    end
+
+    context 'failed subscriptions' do
+      let(:state) { :failed }
+      it { is_expected.to match_array failed_subs }
+    end
+
+    context 'new subscriptions' do
+      let(:state) { :pending }
+      it { is_expected.to match_array new_subs }
+    end
+  end
+
+  describe '.processing_states' do
+    subject { described_class.processing_states }
+    it { is_expected.to match_array [:pending, :success, :failed] }
+  end
 end
