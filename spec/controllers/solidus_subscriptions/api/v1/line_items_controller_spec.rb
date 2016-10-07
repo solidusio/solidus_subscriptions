@@ -26,7 +26,8 @@ RSpec.describe SolidusSubscriptions::Api::V1::LineItemsController, type: :contro
           id: line.id,
           subscription_line_item: { quantity: 21 },
           checkout_id: order.number,
-          order_token: order.guest_token
+          order_token: order.guest_token,
+          order_id: order.number
         }
       end
 

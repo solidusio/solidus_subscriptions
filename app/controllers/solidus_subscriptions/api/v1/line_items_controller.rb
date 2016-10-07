@@ -3,7 +3,7 @@ class SolidusSubscriptions::Api::V1::LineItemsController < Spree::Api::BaseContr
   wrap_parameters :subscription_line_item
 
   def update
-    authorize! :manage, @line_item, @order
+    authorize! :crud, @line_item, @order
     if @line_item.update(line_item_params)
       render json: @line_item.to_json
     else
@@ -12,7 +12,7 @@ class SolidusSubscriptions::Api::V1::LineItemsController < Spree::Api::BaseContr
   end
 
   def destroy
-    authorize! :manage, @line_item, @order
+    authorize! :crud, @line_item, @order
     return render json: {}, status: 400 if @line_item.order.complete?
 
     @line_item.destroy!
