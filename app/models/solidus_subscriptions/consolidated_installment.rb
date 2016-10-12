@@ -47,7 +47,10 @@ module SolidusSubscriptions
       end
     ensure
       # Any installments that failed to be processed will be reprocessed
-      FailureDispatcher.new(installments.select(&:unfulfilled?)).dispatch
+      unfulfilled_installments = installments.select(&:unfulfilled?)
+      if unfulfilled_installments.any?
+        FailureDispatcher.new(unfulfilled_installments).dispatch
+      end
     end
 
     # The order fulfilling the consolidated installment
@@ -99,7 +102,9 @@ module SolidusSubscriptions
       # Remove installments which had no stock from the active list
       # They will be reprocessed later
       @installments -= unfulfilled_installments
-      OutOfStockDispatcher.new(unfulfilled_installments).dispatch
+      if unfulfilled_installments.any?
+        OutOfStockDispatcher.new(unfulfilled_installments).dispatch
+      end
 
       return if installments.empty?
       order_builder.add_line_items(line_items)

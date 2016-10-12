@@ -221,6 +221,29 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
         expect(subject.adjustments).to be_present
       end
     end
+
+    context 'there is an aribitrary failure' do
+      let(:expected_date) { Date.current + SolidusSubscriptions::Config.reprocessing_interval }
+
+      before do
+        allow(consolidated_installment).to receive(:populate).and_raise('arbitrary runtime error')
+      end
+
+      it 'advances the installment actionable dates', :aggregate_failures do
+        expect { subject }. to raise_error('arbitrary runtime error')
+
+        actionable_dates = installments.map do |installment|
+          installment.reload.actionable_date
+        end
+
+        expect(actionable_dates).to all eq expected_date
+      end
+
+      it 'creates no orders' do
+        expect { subject }.to raise_error('arbitrary runtime error').
+          and change { Spree::Order.count }.by(0)
+      end
+    end
   end
 
   describe '#order' do
