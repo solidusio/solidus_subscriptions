@@ -5,6 +5,7 @@ RSpec.describe SolidusSubscriptions::ProcessInstallmentsJob do
   let(:installments) do
     traits = {
       subscription_traits: [{
+        user: root_order.user,
         line_item_traits: [{
           spree_line_item: root_order.line_items.first
         }]

@@ -16,6 +16,7 @@ module SolidusSubscriptions
     # to be used when generating a new order
     def initialize(installments)
       @installments = installments
+      raise UserMismatchError.new(installments) if different_owners?
     end
 
     # Generate a new Spree::Order based on the information associated to the
@@ -137,6 +138,10 @@ module SolidusSubscriptions
     def apply_promotions
       Spree::PromotionHandler::Cart.new(order).activate
       order.updater.update # reload totals
+    end
+
+    def different_owners?
+      installments.map { |i| i.subscription.user }.uniq.length > 1
     end
   end
 end
