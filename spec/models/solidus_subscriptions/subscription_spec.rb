@@ -257,6 +257,14 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       let(:state) { :pending }
       it { is_expected.to match_array new_subs }
     end
+
+    context 'unknown state' do
+      let(:state) { :foo }
+
+      it 'raises an error' do
+        expect { subject }.to raise_error ArgumentError, /state must be one of/
+      end
+    end
   end
 
   describe '.processing_states' do
