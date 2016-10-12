@@ -19,7 +19,9 @@ module SolidusSubscriptions
     private
 
     def notify
-      Rails.logger.info message
+      Rails.logger.tagged('Event') do
+        Rails.logger.info message.squish.tr("\n", ' ')
+      end
     end
 
     def message
