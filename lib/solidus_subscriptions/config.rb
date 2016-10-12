@@ -1,6 +1,37 @@
 module SolidusSubscriptions
   module Config
     class << self
+      # Processing Event handlers
+      # These handlers are pluggable, however it is highly encouraged that you
+      # subclass from the the dispatcher you are replacing, and call super
+      # from within the #dispatch method (if you override it)
+      #
+      # This handler is called when a susbcription order is successfully placed.
+      attr_writer :success_dispatcher_class
+      def success_dispatcher_class
+        @success_dispatcher_class ||= ::SolidusSubscriptions::SuccessDispatcher
+      end
+
+      # This handler is called when an order cant be placed for a group of
+      # installments
+      attr_writer :failure_dispatcher_class
+      def failure_dispatcher_class
+        @failure_dispatcher_class ||= ::SolidusSubscriptions::FailureDispatcher
+      end
+
+      # This handler is called when a payment fails on a subscription order
+      attr_writer :payment_failed_dispatcher_class
+      def payment_failed_dispatcher_class
+        @payment_failed_dispatcher_class ||= ::SolidusSubscriptions::PaymentFailedDispatcher
+      end
+
+      # This handler is called when installemnts cannot be fulfilled due to lack
+      # of stock
+      attr_writer :out_of_stock_dispatcher
+      def out_of_stock_dispatcher_class
+        @out_of_stock_dispatcher_class ||= ::SolidusSubscriptions::OutOfStockDispatcher
+      end
+
       # Maximum number of times a user can skip their subscription before it
       # must be processed
       mattr_accessor(:maximum_successive_skips) { 1 }
