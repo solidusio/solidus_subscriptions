@@ -44,3 +44,21 @@ SolidusSubscriptions::Config.subscription_line_item_attributes = [
   :interval_units,
   :max_installments
 ]
+
+# Dispatchers (processing callbacks)
+
+# These handlers are pluggable, however it is highly encouraged that you
+# subclass from the the dispatcher you are replacing, and call super
+# from within the #dispatch method (if you override it)
+
+# This handler is called when a susbcription order is successfully placed.
+SolidusSubscriptions::Config.success_dispatcher_class = ::SolidusSubscriptions::SuccessDispatcher
+
+# This handler is called when an order cant be placed for a group of installments
+SolidusSubscriptions::Config.failure_dispatcher_class = ::SolidusSubscriptions::FailureDispatcher
+
+# This handler is called when a payment fails on a subscription order
+SolidusSubscriptions::Config.payment_failed_dispatcher_class = ::SolidusSubscriptions::PaymentFailedDispatcher
+
+# This handler is called when installemnts cannot be fulfilled due to lack of stock
+SolidusSubscriptions::Config.out_of_stock_dispatcher_class = ::SolidusSubscriptions::OutOfStockDispatcher

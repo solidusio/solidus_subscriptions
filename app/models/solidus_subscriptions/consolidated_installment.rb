@@ -33,13 +33,13 @@ module SolidusSubscriptions
         if checkout
           # Associate the order with the fulfilled installments
           installments.each { |installment| installment.update!(order_id: order.id) }
-          SuccessDispatcher.new(installments).dispatch
+          Config.success_dispatcher_class.new(installments).dispatch
           return order
         end
 
         # A new order will only have 1 payment that we created
         if order.payments.any?(&:failed?)
-          PaymentFailedDispatcher.new(installments).dispatch
+          Config.payment_failed_dispatcher_class.new(installments).dispatch
           installments.clear
           order.destroy!
           nil
@@ -49,7 +49,7 @@ module SolidusSubscriptions
       # Any installments that failed to be processed will be reprocessed
       unfulfilled_installments = installments.select(&:unfulfilled?)
       if unfulfilled_installments.any?
-        FailureDispatcher.new(unfulfilled_installments).dispatch
+        Config.failure_dispatcher_class.new(unfulfilled_installments).dispatch
       end
     end
 
@@ -103,7 +103,7 @@ module SolidusSubscriptions
       # They will be reprocessed later
       @installments -= unfulfilled_installments
       if unfulfilled_installments.any?
-        OutOfStockDispatcher.new(unfulfilled_installments).dispatch
+        Config.out_of_stock_dispatcher_class.new(unfulfilled_installments).dispatch
       end
 
       return if installments.empty?
