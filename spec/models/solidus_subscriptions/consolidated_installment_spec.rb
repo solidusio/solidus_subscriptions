@@ -17,6 +17,16 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
     create_list(:installment, 2, traits)
   end
 
+  context 'initialized with installments belonging to multiple users' do
+    subject { consolidated_installment }
+    let(:installments) { build_stubbed_list :installment, 2 }
+
+    it 'raises an error' do
+      expect { subject }.
+        to raise_error SolidusSubscriptions::UserMismatchError, /must have the same user/
+    end
+  end
+
   describe '#process', :checkout do
     subject(:order) { consolidated_installment.process }
     let(:subscription_line_item) { installments.first.subscription.line_item }
