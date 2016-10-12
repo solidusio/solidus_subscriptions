@@ -1,6 +1,14 @@
 module SolidusSubscriptions
   module Config
     class << self
+      # Maximum number of times a user can skip their subscription before it
+      # must be processed
+      mattr_accessor(:maximum_successive_skips) { 1 }
+
+      # Limit on the number of times a user can skip thier subscription. Once
+      # this limit is reached, no skips are permitted
+      mattr_accessor(:maximum_total_skips) { nil }
+
       # Time between an installment failing to be processed and the system
       # retrying to fulfil it
       mattr_accessor(:reprocessing_interval) { 1.day }

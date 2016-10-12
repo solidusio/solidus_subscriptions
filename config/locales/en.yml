@@ -28,3 +28,17 @@ en:
         pending: new
         success: success
         failed: failure
+
+    errors:
+      models:
+        solidus_subscriptions/subscription:
+          attributes:
+            successive_skip_count:
+              exceeded: >
+                This subscription has exceeded the maximum configured successive
+                skip limit. It can be skipped again after the next time it is
+                processed.
+            skip_count:
+              exceeded: >
+                This subscription has exceeded the maximum configured skip
+                limit. It can no longer be skipped.

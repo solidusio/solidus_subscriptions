@@ -10,7 +10,7 @@ class SolidusSubscriptions::Api::V1::SubscriptionsController < Spree::Api::BaseC
   end
 
   def skip
-    if @subscription.advance_actionable_date
+    if @subscription.skip
       render json: @subscription.to_json
     else
       render json: @subscription.errors.to_json, status: 422

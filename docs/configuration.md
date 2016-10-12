@@ -14,6 +14,14 @@ SolidusSubscriptions::Config.default_gateway = my_gateway
 # be reprocessed by the `Processor`
 SolidusSubscriptions::Config.reprocessing_interval = 1.days
 
+# Maximum number of times a user can skip their subscription before it
+# must be processed
+mattr_accessor(:maximum_successive_skips) { 1 }
+
+# Limit on the number of times a user can skip thier subscription. Once
+# this limit is reached, no skips are permitted
+mattr_accessor(:maximum_total_skips) { nil }
+
 # Notice required to cancel a subscription. A cancellation with insufficient
 # notice will result in the subscription being moved to the
 # `pending_cancellation` state. Subscriptions pending cancellations will be

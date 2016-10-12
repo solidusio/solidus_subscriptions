@@ -64,6 +64,13 @@ RSpec.describe SolidusSubscriptions::Processor, :checkout do
         to change { subs.reload.state }.
         from('pending_cancellation').to('canceled')
     end
+
+    it 'resets the subscription successive skip count' do
+      subs = pending_cancellation_subscriptions.first
+      expect { subject }.
+        to change { subs.reload.state }.
+        from('pending_cancellation').to('canceled')
+    end
   end
 
   describe '.run' do
