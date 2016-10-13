@@ -254,6 +254,15 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
           and change { Spree::Order.count }.by(0)
       end
     end
+
+    context 'the user has store credit' do
+      it_behaves_like 'a completed checkout'
+      let!(:store_credit) { create :store_credit, user: subscription_user }
+
+      it 'has a valid store credit payment' do
+        expect(order.payments.valid.store_credits).to be_present
+      end
+    end
   end
 
   describe '#order' do
