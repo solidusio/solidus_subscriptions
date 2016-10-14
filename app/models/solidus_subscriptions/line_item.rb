@@ -32,7 +32,7 @@ module SolidusSubscriptions
       :year
     ]
 
-    validates :spree_line_item, :subscribable_id, presence: :true
+    validates :subscribable_id, presence: :true
     validates :quantity, :interval_length, numericality: { greater_than: 0 }
     validates :max_installments, numericality: { greater_than: 0 }, allow_blank: true
 
