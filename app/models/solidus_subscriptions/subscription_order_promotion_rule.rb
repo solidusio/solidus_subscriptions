@@ -19,7 +19,7 @@ module SolidusSubscriptions
     #
     # @return [Boolean]
     def eligible?(order, **_options)
-      Installment.exists?(order: order)
+      order.subscription_order?
     end
   end
 end

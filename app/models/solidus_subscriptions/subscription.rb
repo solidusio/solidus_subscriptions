@@ -39,9 +39,10 @@ module SolidusSubscriptions
     scope :in_processing_state, (lambda do |state|
       case state.to_sym
       when :success
-        joins(installments: :order)
+        joins(installments: { details: :order }).where.not(spree_orders: { completed_at: nil })
       when :failed
-        joins(:installments).includes(installments: :order).where(spree_orders: { id: nil })
+        fulfilled_ids = joins(installments: { details: :order }).where.not(spree_orders: { completed_at: nil }).pluck(:id)
+        joins(:installments).where.not(solidus_subscriptions_subscriptions: { id: fulfilled_ids })
       when :pending
         includes(:installments).where(solidus_subscriptions_installments: { id: nil })
       else

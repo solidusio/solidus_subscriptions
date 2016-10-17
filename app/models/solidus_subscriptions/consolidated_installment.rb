@@ -57,7 +57,8 @@ module SolidusSubscriptions
       @order ||= Spree::Order.create(
         user: user,
         email: user.email,
-        store: root_order.store
+        store: root_order.store,
+        subscription_order: true
       )
     end
 

@@ -19,14 +19,14 @@ RSpec.describe SolidusSubscriptions::SubscriptionOrderPromotionRule do
 
   describe '#eligible?' do
     subject { rule.eligible? order }
-    let(:order) { create(:order) }
 
     context 'when the order fulfills a subscription installment' do
-      let!(:installment) { create(:installment, order: order) }
+      let(:order) { create(:order, subscription_order: true) }
       it { is_expected.to be_truthy }
     end
 
     context 'when the order contains does not fulfill a subscription installment' do
+      let(:order) { create(:order) }
       it { is_expected.to be_falsy }
     end
   end

@@ -9,8 +9,13 @@ FactoryGirl.define do
     end
 
     trait :success do
-      order { create :completed_order_with_totals }
-      details { build_list(:installment_detail, 1, :success, installment: @instance) }
+      transient do
+        order { create :completed_order_with_totals }
+      end
+
+      details do
+        build_list(:installment_detail, 1, :success, installment: @instance, order: order)
+      end
     end
   end
 end

@@ -66,9 +66,9 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
 
       it { is_expected.to be_complete }
 
-      it 'associates the order to the installments' do
+      it 'associates the order to the installment detail' do
         order
-        installment_orders = installments.map { |i| i.reload.order }.compact
+        installment_orders = installments.flat_map { |i| i.details.map(&:order) }.compact
         expect(installment_orders).to all eq order
       end
 

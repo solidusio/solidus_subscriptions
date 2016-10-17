@@ -4,7 +4,6 @@
 module SolidusSubscriptions
   class Installment < ActiveRecord::Base
     has_many :details, class_name: 'SolidusSubscriptions::InstallmentDetail'
-    belongs_to :order, class_name: 'Spree::Order'
     belongs_to(
       :subscription,
       class_name: 'SolidusSubscriptions::Subscription',
@@ -13,9 +12,15 @@ module SolidusSubscriptions
 
     validates :subscription, presence: true
 
+    scope :fulfilled, (lambda do
+      joins(details: :order).where.not(spree_orders: { completed_at: nil }).distinct
+    end)
+
     scope :actionable, (lambda do
+      fulfilled_installment_ids = fulfilled.pluck(:id)
+
       where("#{table_name}.actionable_date <= ?", Time.zone.now).
-        where(order_id: nil)
+        where.not(id: fulfilled_installment_ids)
     end)
 
     # Get the builder for the subscription_line_item. This will be an
