@@ -24,27 +24,25 @@ module SolidusSubscriptions
     #
     # @return [Spree::Order]
     def process
-      ActiveRecord::Base.transaction do
-        populate
+      populate
 
-        # Installments are removed and set for future processing if they are
-        # out of stock. If there are no line items left there is nothing to do
-        return if installments.empty?
+      # Installments are removed and set for future processing if they are
+      # out of stock. If there are no line items left there is nothing to do
+      return if installments.empty?
 
-        if checkout
-          # Associate the order with the fulfilled installments
-          installments.each { |installment| installment.update!(order_id: order.id) }
-          Config.success_dispatcher_class.new(installments).dispatch
-          return order
-        end
+      if checkout
+        # Associate the order with the fulfilled installments
+        installments.each { |installment| installment.update!(order_id: order.id) }
+        Config.success_dispatcher_class.new(installments).dispatch
+        return order
+      end
 
-        # A new order will only have 1 payment that we created
-        if order.payments.any?(&:failed?)
-          Config.payment_failed_dispatcher_class.new(installments).dispatch
-          installments.clear
-          order.destroy!
-          nil
-        end
+      # A new order will only have 1 payment that we created
+      if order.payments.any?(&:failed?)
+        Config.payment_failed_dispatcher_class.new(installments).dispatch
+        installments.clear
+        order.destroy!
+        nil
       end
     ensure
       # Any installments that failed to be processed will be reprocessed
