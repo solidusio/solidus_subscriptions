@@ -4,8 +4,8 @@ module SolidusSubscriptions
 
     # Get a new instance of the FailureDispatcher
     #
-    # @param [Array<SolidusSubscriptions::Installment>] :installments,
-    #   the installments which have failed to be fulfilled
+    # @param installments [Array<SolidusSubscriptions::Installment>] The
+    #   installments which have failed to be fulfilled
     #
     # @return [SolidusSubscriptions::FailureDispatcher]
     def initialize(installments)

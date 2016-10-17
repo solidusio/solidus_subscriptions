@@ -6,7 +6,7 @@ module SolidusSubscriptions
 
     # Get a new instance of a OrderBuilder
     #
-    # @params [Spree::Order] :order, The order to be built
+    # @param order [Spree::Order] The order to be built
     #
     # @return [SolidusSubscriptions::OrderBuilder]
     def initialize(order)
@@ -17,7 +17,7 @@ module SolidusSubscriptions
     # has a line item for a given variant_id, update the quantity. Otherwise
     # add the line item to the order.
     #
-    # @param [Array<Spree::LineItem>] :order, the order to add the line item to
+    # @param items [Array<Spree::LineItem>] The order to add the line item to
     # @return [Array<Spree::LineItem] The collection that was passed in
     def add_line_items(*items)
       items.map { |item| add_item_to_order(item) }

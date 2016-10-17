@@ -31,7 +31,7 @@ module SolidusSubscriptions
     # Find subscriptions based on their processing state. This state is not a
     # model attrubute.
     #
-    # @param :state [Symbol] One of :pending, :success, or failed
+    # @param state [Symbol] One of :pending, :success, or failed
     #
     # pending: New subscriptions, never been processed
     # failed: Subscriptions which failed to be processed on the last attempt
