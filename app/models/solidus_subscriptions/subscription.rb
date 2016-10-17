@@ -44,6 +44,8 @@ module SolidusSubscriptions
         joins(:installments).includes(installments: :order).where(spree_orders: { id: nil })
       when :pending
         includes(:installments).where(solidus_subscriptions_installments: { id: nil })
+      else
+        raise ArgumentError.new("state must be one of: :success, :failed, :pending")
       end
     end)
 

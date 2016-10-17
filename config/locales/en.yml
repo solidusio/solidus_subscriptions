@@ -9,6 +9,7 @@ en:
         stock.
       success: This installment has been processed successfully!
       failed: This installment could not be processed
+      payment_failed: The payment for this installment failed
 
   spree:
     admin:
