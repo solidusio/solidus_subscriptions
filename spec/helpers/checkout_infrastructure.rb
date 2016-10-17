@@ -6,11 +6,13 @@ module CheckoutInfrastructure
       create :credit_card_payment_method
       create :country
       create :shipping_method
+
+      SolidusSubscriptions::Config.default_gateway { Spree::Gateway::Bogus.last }
     end
 
     base.after(:all) do
       DatabaseCleaner.clean_with(:truncation)
-      SolidusSubscriptions::Config.default_gateway = nil
+      SolidusSubscriptions::Config.default_gateway { nil }
     end
   end
 end

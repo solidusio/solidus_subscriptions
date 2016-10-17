@@ -28,7 +28,7 @@ If you would like to specify the gateway used by the gem you can add this to
 an initialzer.
 
 ```ruby
-SolidusSubscriptions::Config.default_gateway = my_gateway
+SolidusSubscriptions::Config.default_gateway { my_gateway }
 ```
 
 ## Usage
