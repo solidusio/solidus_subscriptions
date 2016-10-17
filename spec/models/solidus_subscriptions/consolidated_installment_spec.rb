@@ -189,10 +189,6 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
         )
       end
 
-      it 'creates no order' do
-        expect { subject }.to_not change { Spree::Order.count }
-      end
-
       it 'marks the installment to be reprocessed' do
         subject
         actionable_dates = installments.map do |installment|
@@ -247,11 +243,6 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
         end
 
         expect(actionable_dates).to all eq expected_date
-      end
-
-      it 'creates no orders' do
-        expect { subject }.to raise_error('arbitrary runtime error').
-          and change { Spree::Order.count }.by(0)
       end
     end
 

@@ -57,11 +57,12 @@ module SolidusSubscriptions
     #
     # @return [SolidusSubscriptions::InstallmentDetail] The record of the
     #   failed processing attempt
-    def failed
+    def failed!(order)
       advance_actionable_date!
 
       details.create!(
         success: false,
+        order: order,
         message: I18n.t('solidus_subscriptions.installment_details.failed')
       )
     end

@@ -66,8 +66,9 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     end
   end
 
-  describe '#failed' do
-    subject { installment.failed }
+  describe '#failed!' do
+    subject { installment.failed!(order) }
+    let(:order) { create :order }
 
     let(:expected_date) do
       Date.current + SolidusSubscriptions::Config.reprocessing_interval
@@ -77,7 +78,8 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     it { is_expected.to_not be_successful }
     it 'has the correct message' do
       expect(subject).to have_attributes(
-        message: I18n.t('solidus_subscriptions.installment_details.failed')
+        message: I18n.t('solidus_subscriptions.installment_details.failed'),
+        order: order
       )
     end
 

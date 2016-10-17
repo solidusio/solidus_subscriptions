@@ -8,7 +8,7 @@ RSpec.describe SolidusSubscriptions::FailureDispatcher do
     subject { dispatcher.dispatch }
 
     it 'marks all the installments out of stock' do
-      expect(installments).to all receive(:failed).once
+      expect(installments).to all receive(:failed!).once
       subject
     end
 

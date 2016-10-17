@@ -3,7 +3,7 @@
 module SolidusSubscriptions
   class FailureDispatcher < Dispatcher
     def dispatch
-      installments.each(&:failed)
+      installments.each { |i| i.failed!(order) }
       super
     end
 

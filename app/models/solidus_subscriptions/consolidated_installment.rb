@@ -41,14 +41,14 @@ module SolidusSubscriptions
       if order.payments.any?(&:failed?)
         Config.payment_failed_dispatcher_class.new(installments).dispatch
         installments.clear
-        order.destroy!
         nil
       end
     ensure
       # Any installments that failed to be processed will be reprocessed
       unfulfilled_installments = installments.select(&:unfulfilled?)
       if unfulfilled_installments.any?
-        Config.failure_dispatcher_class.new(unfulfilled_installments).dispatch
+        Config.failure_dispatcher_class.
+          new(unfulfilled_installments, order).dispatch
       end
     end
 
