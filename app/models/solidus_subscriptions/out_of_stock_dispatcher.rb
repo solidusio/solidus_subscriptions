@@ -11,7 +11,7 @@ module SolidusSubscriptions
 
     def message
       "
-      The following installemnts cannot be fulfilled due to lack of stock:
+      The following installments cannot be fulfilled due to lack of stock:
       #{installments.map(&:id).join(', ')}.
       "
     end
