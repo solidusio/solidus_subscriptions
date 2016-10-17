@@ -31,9 +31,7 @@ module SolidusSubscriptions
       return if installments.empty?
 
       if checkout
-        # Associate the order with the fulfilled installments
-        installments.each { |installment| installment.update!(order_id: order.id) }
-        Config.success_dispatcher_class.new(installments).dispatch
+        Config.success_dispatcher_class.new(installments, order).dispatch
         return order
       end
 

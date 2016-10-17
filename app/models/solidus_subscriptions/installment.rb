@@ -44,11 +44,12 @@ module SolidusSubscriptions
     #
     # @return [SolidusSubscriptions::InstallmentDetail] The record of the
     #   successful processing attempt
-    def success!
+    def success!(order)
       update!(actionable_date: nil)
 
       details.create!(
         success: true,
+        order: order,
         message: I18n.t('solidus_subscriptions.installment_details.success')
       )
     end
