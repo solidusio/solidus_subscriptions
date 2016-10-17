@@ -4,8 +4,8 @@ module SolidusSubscriptions
   module SubscriptionGenerator
     # Create and persist a collection of subscriptions
     #
-    # @param [Array<SolidusSubscriptions::LineItem>] :subscription_line_items,
-    #   The subscription_line_items to be activated
+    # @param subscription_line_items [Array<SolidusSubscriptions::LineItem>] The
+    #   subscription_line_items to be activated
     #
     # @return [Array<SolidusSubscriptions::Subscription>]
     def self.activate(subscription_line_items)

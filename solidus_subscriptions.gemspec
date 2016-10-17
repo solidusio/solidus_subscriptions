@@ -38,4 +38,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'rspec-activemodel-mocks'
   s.add_development_dependency 'versioncake'
+  s.add_development_dependency 'yard'
 end

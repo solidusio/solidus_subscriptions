@@ -7,7 +7,7 @@ module SolidusSubscriptions
 
      # Process a collection of installments
      #
-     # @param [Array<SolidusSubscriptions::Installment>] :installments, The
+     # @param installments [Array<SolidusSubscriptions::Installment>] The
      #   installments to be processed together and fulfilled by the same order
      #
      # @return [Spree::Order] The order which fulfills the list of installments

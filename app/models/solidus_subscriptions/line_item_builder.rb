@@ -6,7 +6,7 @@ module SolidusSubscriptions
 
     # Get a new instance of a LineItemBuilder
     #
-    # @params [SolidusSubscriptions::LineItem] :subscription_line_item, The
+    # @param subscription_line_item [SolidusSubscriptions::LineItem] The
     #   subscription line item to be converted into a Spree::LineItem
     #
     # @return [SolidusSubscriptions::LineItemBuilder]

@@ -12,7 +12,7 @@ module SolidusSubscriptions
 
     # Get a new instance of a ConsolidatedInstallment
     #
-    # @param [Array<Installment>] :installments, The collection of installments
+    # @param installments [Array<Installment>] The collection of installments
     # to be used when generating a new order
     def initialize(installments)
       @installments = installments
