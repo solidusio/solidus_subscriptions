@@ -121,7 +121,9 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
   end
 
   describe '#payment_failed!' do
-    subject { installment.payment_failed! }
+    subject { installment.payment_failed!(order) }
+
+    let(:order) { create :order }
 
     let(:expected_date) do
       Date.current + SolidusSubscriptions::Config.reprocessing_interval
@@ -131,6 +133,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     it { is_expected.to_not be_successful }
     it 'has the correct message' do
       expect(subject).to have_attributes(
+        order: order,
         message: I18n.t('solidus_subscriptions.installment_details.payment_failed')
       )
     end

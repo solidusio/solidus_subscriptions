@@ -39,7 +39,7 @@ module SolidusSubscriptions
 
       # A new order will only have 1 payment that we created
       if order.payments.any?(&:failed?)
-        Config.payment_failed_dispatcher_class.new(installments).dispatch
+        Config.payment_failed_dispatcher_class.new(installments, order).dispatch
         installments.clear
         nil
       end

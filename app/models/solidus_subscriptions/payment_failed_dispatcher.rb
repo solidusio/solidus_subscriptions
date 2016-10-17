@@ -4,7 +4,7 @@
 module SolidusSubscriptions
   class PaymentFailedDispatcher < Dispatcher
     def dispatch
-      installments.each(&:payment_failed!)
+      installments.each { |i| i.payment_failed!(order) }
       super
     end
 
