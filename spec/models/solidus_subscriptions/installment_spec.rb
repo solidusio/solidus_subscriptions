@@ -41,7 +41,9 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
   end
 
   describe '#success!' do
-    subject { installment.success! }
+    subject { installment.success!(order) }
+
+    let(:order) { create :order }
 
     let(:installment) { create :installment, actionable_date: actionable_date }
     let(:actionable_date) { 1.month.from_now.to_date }
@@ -61,6 +63,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     it 'creates a successful installment detail' do
       subject
       expect(installment.details.last).to be_successful && have_attributes(
+        order: order,
         message: I18n.t('solidus_subscriptions.installment_details.success')
       )
     end
@@ -92,7 +95,12 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
 
   describe '#unfulfilled?' do
     subject { installment.unfulfilled? }
-    let(:installment) { create(:installment, order: order) }
+    let(:installment) do
+      create(
+        :installment,
+        details: build_list(:installment_detail, 1, order: order)
+      )
+    end
 
     context 'the installment has an associated completed order' do
       let(:order) { create :completed_order_with_totals }
@@ -107,7 +115,12 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
 
   describe '#fulfilled' do
     subject { installment.fulfilled? }
-    let(:installment) { create(:installment, order: order) }
+    let(:installment) do
+      create(
+        :installment,
+        details: build_list(:installment_detail, 1, order: order)
+      )
+    end
 
     context 'the installment has an associated completed order' do
       let(:order) { create :completed_order_with_totals }

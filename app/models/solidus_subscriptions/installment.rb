@@ -71,14 +71,14 @@ module SolidusSubscriptions
     #
     # @return [Boolean]
     def unfulfilled?
-      order_id.nil? || !order.completed?
+      !fulfilled?
     end
 
     # Had this installment been fulfilled by a completed order
     #
     # @return [Boolean]
     def fulfilled?
-      !unfulfilled?
+      details.joins(:order).where.not(spree_orders: { completed_at: nil } ).exists?
     end
 
     # Mark this installment as having a failed payment
