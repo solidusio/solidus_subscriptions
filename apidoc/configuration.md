@@ -8,7 +8,7 @@ behaviour of the gem:
 
 # The gateway the `ConsolidatedInstallment` will use when charging recurring
 # orders. We highly recommend setting this to a specific value
-SolidusSubscriptions::Config.default_gateway = my_gateway
+SolidusSubscriptions::Config.default_gateway { my_gateway }
 
 # Defines how long the system will wait before allowing a failed installment to
 # be reprocessed by the `Processor`
