@@ -47,6 +47,9 @@ module SolidusSubscriptions
 
     # Mark this installment as a success
     #
+    # @param order [Spree::Order] The order generated for this processing
+    #   attempt
+    #
     # @return [SolidusSubscriptions::InstallmentDetail] The record of the
     #   successful processing attempt
     def success!(order)
@@ -60,6 +63,9 @@ module SolidusSubscriptions
     end
 
     # Mark this installment as a failure
+    #
+    # @param order [Spree::Order] The order generated for this processing
+    #   attempt
     #
     # @return [SolidusSubscriptions::InstallmentDetail] The record of the
     #   failed processing attempt
@@ -88,6 +94,9 @@ module SolidusSubscriptions
     end
 
     # Mark this installment as having a failed payment
+    #
+    # @param order [Spree::Order] The order generated for this processing
+    #   attempt
     #
     # @return [SolidusSubscriptions::InstallmentDetail] The record of the
     #   failed processing attempt
