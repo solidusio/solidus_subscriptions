@@ -236,7 +236,7 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
       end
 
       it 'advances the installment actionable dates', :aggregate_failures do
-        expect { subject }. to raise_error('arbitrary runtime error')
+        expect { subject }.to raise_error('arbitrary runtime error')
 
         actionable_dates = installments.map do |installment|
           installment.reload.actionable_date

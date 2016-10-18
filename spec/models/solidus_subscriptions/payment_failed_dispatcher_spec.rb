@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe SolidusSubscriptions::PaymentFailedDispatcher do
-  let(:dispatcher) { described_class.new(installments) }
+  let(:dispatcher) { described_class.new(installments, order) }
   let(:installments) { build_list(:installment, 2) }
+  let(:order) { create :order_with_line_items }
 
   describe 'initialization' do
     subject { dispatcher }
@@ -20,6 +21,10 @@ RSpec.describe SolidusSubscriptions::PaymentFailedDispatcher do
     it 'logs the failure' do
       expect(dispatcher).to receive(:notify).once
       subject
+    end
+
+    it 'cancels the order' do
+      expect { subject }.to change { order.state }.to 'canceled'
     end
   end
 end
