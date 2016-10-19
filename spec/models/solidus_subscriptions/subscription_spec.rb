@@ -229,7 +229,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
             :installment,
             1,
             :success,
-            details: build_list(:installment_detail, 1, order: order)
+            details: build_list(:installment_detail, 1, order: order, success: true)
           )
         )
       end

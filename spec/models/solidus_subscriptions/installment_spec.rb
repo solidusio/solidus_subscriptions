@@ -94,40 +94,30 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
 
   describe '#unfulfilled?' do
     subject { installment.unfulfilled? }
-    let(:installment) do
-      create(
-        :installment,
-        details: build_list(:installment_detail, 1, order: order)
-      )
-    end
+    let(:installment) { create(:installment, details: details) }
 
-    context 'the installment has an associated completed order' do
-      let(:order) { create :completed_order_with_totals }
+    context 'the installment has an associated successful detail' do
+      let(:details) { create_list :installment_detail, 1, success: true }
       it { is_expected.to be_falsy }
     end
 
-    context 'the installment has no associated completed order' do
-      let(:order) { nil }
+    context 'the installment has no associated successful detail' do
+      let(:details) { create_list :installment_detail, 1 }
       it { is_expected.to be_truthy }
     end
   end
 
   describe '#fulfilled' do
     subject { installment.fulfilled? }
-    let(:installment) do
-      create(
-        :installment,
-        details: build_list(:installment_detail, 1, order: order)
-      )
-    end
+    let(:installment) { create(:installment, details: details) }
 
     context 'the installment has an associated completed order' do
-      let(:order) { create :completed_order_with_totals }
+      let(:details) { create_list :installment_detail, 1, success: true }
       it { is_expected.to be_truthy }
     end
 
     context 'the installment has no associated completed order' do
-      let(:order) { nil }
+      let(:details) { create_list :installment_detail, 1 }
       it { is_expected.to be_falsy }
     end
   end

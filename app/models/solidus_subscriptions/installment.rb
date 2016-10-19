@@ -13,14 +13,16 @@ module SolidusSubscriptions
     validates :subscription, presence: true
 
     scope :fulfilled, (lambda do
-      joins(details: :order).where.not(spree_orders: { completed_at: nil }).distinct
+      joins(:details).where(InstallmentDetail.table_name => { success: true }).distinct
+    end)
+
+    scope :unfulfilled, (lambda do
+      fulfilled_ids = fulfilled.pluck(:id)
+      where.not(id: fulfilled_ids).distinct
     end)
 
     scope :actionable, (lambda do
-      fulfilled_installment_ids = fulfilled.pluck(:id)
-
-      where("#{table_name}.actionable_date <= ?", Time.zone.now).
-        where.not(id: fulfilled_installment_ids)
+      unfulfilled.where("#{table_name}.actionable_date <= ?", Time.zone.now)
     end)
 
     # Get the builder for the subscription_line_item. This will be an
@@ -90,7 +92,7 @@ module SolidusSubscriptions
     #
     # @return [Boolean]
     def fulfilled?
-      details.joins(:order).where.not(spree_orders: { completed_at: nil } ).exists?
+      details.where(success: true).exists?
     end
 
     # Mark this installment as having a failed payment

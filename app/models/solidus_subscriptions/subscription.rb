@@ -39,15 +39,24 @@ module SolidusSubscriptions
     scope :in_processing_state, (lambda do |state|
       case state.to_sym
       when :success
-        joins(installments: { details: :order }).where.not(spree_orders: { completed_at: nil })
+        fulfilled.joins(:installments)
       when :failed
-        fulfilled_ids = joins(installments: { details: :order }).where.not(spree_orders: { completed_at: nil }).pluck(:id)
-        joins(:installments).where.not(solidus_subscriptions_subscriptions: { id: fulfilled_ids })
+        fulfilled_ids = fulfilled.pluck(:id)
+        where.not(id: fulfilled_ids)
       when :pending
         includes(:installments).where(solidus_subscriptions_installments: { id: nil })
       else
         raise ArgumentError.new("state must be one of: :success, :failed, :pending")
       end
+    end)
+
+    scope :fulfilled, (lambda do
+      unfulfilled_ids = unfulfilled.pluck(:id)
+      where.not(id: unfulfilled_ids)
+    end)
+
+    scope :unfulfilled, (lambda do
+      joins(:installments).merge(Installment.unfulfilled)
     end)
 
     def self.ransackable_scopes(_auth_object = nil)
