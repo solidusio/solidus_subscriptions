@@ -14,7 +14,14 @@ en:
       payment_failed: The payment for this installment failed
 
   spree:
+    new_subscription: New Subscription
     admin:
+      subscriptions:
+        index:
+          new_subscription: New Subscription
+        new:
+          back: Back to Subscriptions List
+          title: Create a Susbcription
       tab:
         subscriptions: Subscriptions
     promotion_rule_types:
