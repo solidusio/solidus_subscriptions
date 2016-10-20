@@ -1,66 +1,64 @@
-<%= form_for @subscription, url: spree.admin_subscriptions_url, class: "row" do |f| %>
-  <fieldset>
-    <legend>Subscription</legend>
-
-    <div class="field">
-      <%= f.label :user_id, Spree.t(:user), class: "required" %><br>
-      <%= f.collection_select :user_id,  Spree::User.all, :id, :email, {}, class: "select2 fullwidth" %>
-    </div>
-
-    <div class="field">
-      <%= f.label :actionable_date %><br>
-      <%= f.text_field :actionable_date, class: "fullwidth datepicker" %>
-    </div>
-  </fieldset>
-
-  <%= f.fields_for :line_item, @line_item do |lf| %>
-    <fieldset>
-      <legend>Subscription Line Item</legend>
-
-      <div class="row">
-        <div class="field columns thirteen alpha">
-          <%= lf.label :subscribable_id %>
-          <%= lf.collection_select :subscribable_id, Spree::Variant.all, :id, :pretty_name, {}, {class: "fullwidth select2"} %>
-        </div>
-        <div class="field columns three omega">
-          <%= lf.label :quantity %>
-          <%= lf.number_field :quantity, min: 1, class: "fullwidth" %>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="field columns eight alpha">
-          <%= lf.label :inverval_length %><br>
-          <%= lf.number_field :interval_length, class: "fullwidth" %>
-        </div>
-        <div class="field columns eight omega">
-          <%= lf.label :interval_units %><br>
-          <%
-            unit_values = SolidusSubscriptions::LineItem.interval_units.keys
-            units = unit_values.map do |unit|
-              [
-                unit,
-                SolidusSubscriptions::LineItem.human_attribute_name("interval_units.#{ unit }")
-              ]
-            end
-          %>
-
-          <%=
-            lf.collection_radio_buttons(:interval_units, units, :first, :last) do |b|
-              content_tag(:div) { b.radio_button + b.label { b.text } }
-            end
-          %>
-        </div>
-      </div>
-
-      <div class="field">
-        <%= lf.label :max_installments %><br>
-        <%= lf.number_field :max_installments, class: "required", min: 1, class: "fullwidth" %>
-      </div>
-    </fieldset>
-  <% end %>
+<fieldset>
+  <legend>Subscription</legend>
 
   <div class="field">
-    <%= f.button type: :submit %>
+    <%= f.label :user_id, Spree.t(:user), class: "required" %><br>
+    <%= f.collection_select :user_id,  Spree::User.all, :id, :email, {}, class: "select2 fullwidth" %>
   </div>
+
+  <div class="field">
+    <%= f.label :actionable_date %><br>
+    <%= f.text_field :actionable_date, class: "fullwidth datepicker" %>
+  </div>
+</fieldset>
+
+<%= f.fields_for :line_item, @line_item do |lf| %>
+  <fieldset>
+    <legend>Subscription Line Item</legend>
+
+    <div class="row">
+      <div class="field columns thirteen alpha">
+        <%= lf.label :subscribable_id %>
+        <%= lf.collection_select :subscribable_id, Spree::Variant.all, :id, :pretty_name, {}, {class: "fullwidth select2"} %>
+      </div>
+      <div class="field columns three omega">
+        <%= lf.label :quantity %>
+        <%= lf.number_field :quantity, min: 1, class: "fullwidth" %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field columns eight alpha">
+        <%= lf.label :inverval_length %><br>
+        <%= lf.number_field :interval_length, class: "fullwidth" %>
+      </div>
+      <div class="field columns eight omega">
+        <%= lf.label :interval_units %><br>
+        <%
+          unit_values = SolidusSubscriptions::LineItem.interval_units.keys
+          units = unit_values.map do |unit|
+            [
+              unit,
+              SolidusSubscriptions::LineItem.human_attribute_name("interval_units.#{ unit }")
+            ]
+          end
+        %>
+
+        <%=
+          lf.collection_radio_buttons(:interval_units, units, :first, :last) do |b|
+            content_tag(:div) { b.radio_button + b.label { b.text } }
+          end
+        %>
+      </div>
+    </div>
+
+    <div class="field">
+      <%= lf.label :max_installments %><br>
+      <%= lf.number_field :max_installments, class: "required", min: 1, class: "fullwidth" %>
+    </div>
+  </fieldset>
 <% end %>
+
+<div class="field">
+  <%= f.button type: :submit %>
+</div>

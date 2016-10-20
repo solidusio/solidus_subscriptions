@@ -4,4 +4,6 @@
   <li><%= button_link_to t('.back'), admin_subscriptions_path %></li>
 <% end %>
 
-<%= render "form" %>
+<%= form_for @subscription, url: spree.admin_subscriptions_url, class: "row" do |f| %>
+  <%= render "form", f: f %>
+<% end %>
