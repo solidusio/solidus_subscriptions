@@ -19,7 +19,7 @@ module SolidusSubscriptions
     #
     # @param items [Array<Spree::LineItem>] The order to add the line item to
     # @return [Array<Spree::LineItem] The collection that was passed in
-    def add_line_items(*items)
+    def add_line_items(items)
       items.map { |item| add_item_to_order(item) }
     end
 

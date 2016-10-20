@@ -4,7 +4,7 @@ RSpec.describe SolidusSubscriptions::OrderBuilder do
   let(:builder) { described_class.new order }
 
   describe '#add_line_items' do
-    subject { builder.add_line_items(line_item) }
+    subject { builder.add_line_items([line_item]) }
 
     let(:variant) { create :variant, subscribable: true }
     let(:order) do
