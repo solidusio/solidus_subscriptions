@@ -35,7 +35,21 @@
         </div>
         <div class="field columns eight omega">
           <%= lf.label :interval_units %><br>
-          <%= lf.collection_select :interval_units, SolidusSubscriptions::LineItem.interval_units, :last, :first, {}, {class: "fullwidth select2"} %>
+          <%
+            unit_values = SolidusSubscriptions::LineItem.interval_units.keys
+            units = unit_values.map do |unit|
+              [
+                unit,
+                SolidusSubscriptions::LineItem.human_attribute_name("interval_units.#{ unit }")
+              ]
+            end
+          %>
+
+          <%=
+            lf.collection_radio_buttons(:interval_units, units, :first, :last) do |b|
+              content_tag(:div) { b.radio_button + b.label { b.text } }
+            end
+          %>
         </div>
       </div>
 

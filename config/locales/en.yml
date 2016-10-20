@@ -27,6 +27,11 @@ en:
 
   activerecord:
     attributes:
+      solidus_subscriptions/line_item/interval_units:
+        day: Days
+        week: Weeks
+        month: Months
+        year: Years
       solidus_subscriptions/subscription/processing_state:
         pending: new
         success: success
