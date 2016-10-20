@@ -13,8 +13,7 @@ module Spree
       end
 
       def new
-        @subscription = SolidusSubscriptions::Subscription.new
-        @line_item = SolidusSubscriptions::LineItem.new
+        @subscription.build_line_item
       end
 
       def create
