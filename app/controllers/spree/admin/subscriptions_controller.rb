@@ -16,10 +16,6 @@ module Spree
         @subscription.build_line_item
       end
 
-      def create
-
-      end
-
       private
 
       def model_class
