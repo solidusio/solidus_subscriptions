@@ -80,8 +80,9 @@ module SolidusSubscriptions
         ]
       end
 
-      def default_gateway
-        block_given? ? @gateway = Proc.new : @gateway.call
+      def default_gateway(&block)
+        return @gateway.call unless block_given?
+        @gateway = block
       end
     end
   end

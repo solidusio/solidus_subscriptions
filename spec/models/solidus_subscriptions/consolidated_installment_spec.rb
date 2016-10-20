@@ -66,9 +66,9 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
 
       it { is_expected.to be_complete }
 
-      it 'associates the order to the installments' do
+      it 'associates the order to the installment detail' do
         order
-        installment_orders = installments.map { |i| i.reload.order }.compact
+        installment_orders = installments.flat_map { |i| i.details.map(&:order) }.compact
         expect(installment_orders).to all eq order
       end
 
@@ -189,10 +189,6 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
         )
       end
 
-      it 'creates no order' do
-        expect { subject }.to_not change { Spree::Order.count }
-      end
-
       it 'marks the installment to be reprocessed' do
         subject
         actionable_dates = installments.map do |installment|
@@ -240,18 +236,13 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
       end
 
       it 'advances the installment actionable dates', :aggregate_failures do
-        expect { subject }. to raise_error('arbitrary runtime error')
+        expect { subject }.to raise_error('arbitrary runtime error')
 
         actionable_dates = installments.map do |installment|
           installment.reload.actionable_date
         end
 
         expect(actionable_dates).to all eq expected_date
-      end
-
-      it 'creates no orders' do
-        expect { subject }.to raise_error('arbitrary runtime error').
-          and change { Spree::Order.count }.by(0)
       end
     end
 

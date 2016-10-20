@@ -24,7 +24,7 @@ module SolidusSubscriptions
     # Find all subscriptions that are "actionable"; that is, ones that have an
     # actionable_date in the past and are not invalid or canceled.
     scope :actionable, (lambda do
-      where("#{table_name}.actionable_date < ?", Time.zone.now).
+      where("#{table_name}.actionable_date <= ?", Time.zone.now).
         where.not(state: ["canceled", "inactive"])
     end)
 
@@ -39,14 +39,24 @@ module SolidusSubscriptions
     scope :in_processing_state, (lambda do |state|
       case state.to_sym
       when :success
-        joins(installments: :order)
+        fulfilled.joins(:installments)
       when :failed
-        joins(:installments).includes(installments: :order).where(spree_orders: { id: nil })
+        fulfilled_ids = fulfilled.pluck(:id)
+        where.not(id: fulfilled_ids)
       when :pending
         includes(:installments).where(solidus_subscriptions_installments: { id: nil })
       else
         raise ArgumentError.new("state must be one of: :success, :failed, :pending")
       end
+    end)
+
+    scope :fulfilled, (lambda do
+      unfulfilled_ids = unfulfilled.pluck(:id)
+      where.not(id: unfulfilled_ids)
+    end)
+
+    scope :unfulfilled, (lambda do
+      joins(:installments).merge(Installment.unfulfilled)
     end)
 
     def self.ransackable_scopes(_auth_object = nil)

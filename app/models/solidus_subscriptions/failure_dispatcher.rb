@@ -3,7 +3,9 @@
 module SolidusSubscriptions
   class FailureDispatcher < Dispatcher
     def dispatch
-      installments.each(&:failed)
+      order.touch :completed_at
+      order.cancel!
+      installments.each { |i| i.failed!(order) }
       super
     end
 

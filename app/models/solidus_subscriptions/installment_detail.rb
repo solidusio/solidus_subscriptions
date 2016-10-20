@@ -8,6 +8,8 @@ module SolidusSubscriptions
       inverse_of: :details
     )
 
+    belongs_to(:order, class_name: 'Spree::Order')
+
     validates :installment, presence: true
     alias_attribute :successful, :success
 

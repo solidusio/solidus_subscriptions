@@ -1,6 +1,6 @@
 module SolidusSubscriptions
   class Dispatcher
-    attr_reader :installments
+    attr_reader :installments, :order
 
     # Get a new instance of the FailureDispatcher
     #
@@ -8,8 +8,9 @@ module SolidusSubscriptions
     #   installments which have failed to be fulfilled
     #
     # @return [SolidusSubscriptions::FailureDispatcher]
-    def initialize(installments)
+    def initialize(installments, order = nil)
       @installments = installments
+      @order = order
     end
 
     def dispatch

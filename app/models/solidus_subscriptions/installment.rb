@@ -4,7 +4,6 @@
 module SolidusSubscriptions
   class Installment < ActiveRecord::Base
     has_many :details, class_name: 'SolidusSubscriptions::InstallmentDetail'
-    belongs_to :order, class_name: 'Spree::Order'
     belongs_to(
       :subscription,
       class_name: 'SolidusSubscriptions::Subscription',
@@ -13,9 +12,17 @@ module SolidusSubscriptions
 
     validates :subscription, presence: true
 
+    scope :fulfilled, (lambda do
+      joins(:details).where(InstallmentDetail.table_name => { success: true }).distinct
+    end)
+
+    scope :unfulfilled, (lambda do
+      fulfilled_ids = fulfilled.pluck(:id)
+      where.not(id: fulfilled_ids).distinct
+    end)
+
     scope :actionable, (lambda do
-      where("#{table_name}.actionable_date <= ?", Time.zone.now).
-        where(order_id: nil)
+      unfulfilled.where("#{table_name}.actionable_date <= ?", Time.zone.now)
     end)
 
     # Get the builder for the subscription_line_item. This will be an
@@ -42,26 +49,34 @@ module SolidusSubscriptions
 
     # Mark this installment as a success
     #
+    # @param order [Spree::Order] The order generated for this processing
+    #   attempt
+    #
     # @return [SolidusSubscriptions::InstallmentDetail] The record of the
     #   successful processing attempt
-    def success!
+    def success!(order)
       update!(actionable_date: nil)
 
       details.create!(
         success: true,
+        order: order,
         message: I18n.t('solidus_subscriptions.installment_details.success')
       )
     end
 
     # Mark this installment as a failure
     #
+    # @param order [Spree::Order] The order generated for this processing
+    #   attempt
+    #
     # @return [SolidusSubscriptions::InstallmentDetail] The record of the
     #   failed processing attempt
-    def failed
+    def failed!(order)
       advance_actionable_date!
 
       details.create!(
         success: false,
+        order: order,
         message: I18n.t('solidus_subscriptions.installment_details.failed')
       )
     end
@@ -70,25 +85,29 @@ module SolidusSubscriptions
     #
     # @return [Boolean]
     def unfulfilled?
-      order_id.nil? || !order.completed?
+      !fulfilled?
     end
 
     # Had this installment been fulfilled by a completed order
     #
     # @return [Boolean]
     def fulfilled?
-      !unfulfilled?
+      details.where(success: true).exists?
     end
 
     # Mark this installment as having a failed payment
     #
+    # @param order [Spree::Order] The order generated for this processing
+    #   attempt
+    #
     # @return [SolidusSubscriptions::InstallmentDetail] The record of the
     #   failed processing attempt
-    def payment_failed!
+    def payment_failed!(order)
       advance_actionable_date!
 
       details.create!(
         success: false,
+        order: order,
         message: I18n.t('solidus_subscriptions.installment_details.payment_failed')
       )
     end

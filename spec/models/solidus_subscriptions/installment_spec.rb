@@ -2,7 +2,6 @@ require 'rails_helper'
 
 RSpec.describe SolidusSubscriptions::Installment, type: :model do
   it { is_expected.to have_many :details }
-  it { is_expected.to belong_to :order }
   it { is_expected.to belong_to :subscription }
 
   it { is_expected.to validate_presence_of :subscription }
@@ -41,7 +40,9 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
   end
 
   describe '#success!' do
-    subject { installment.success! }
+    subject { installment.success!(order) }
+
+    let(:order) { create :order }
 
     let(:installment) { create :installment, actionable_date: actionable_date }
     let(:actionable_date) { 1.month.from_now.to_date }
@@ -61,13 +62,15 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     it 'creates a successful installment detail' do
       subject
       expect(installment.details.last).to be_successful && have_attributes(
+        order: order,
         message: I18n.t('solidus_subscriptions.installment_details.success')
       )
     end
   end
 
-  describe '#failed' do
-    subject { installment.failed }
+  describe '#failed!' do
+    subject { installment.failed!(order) }
+    let(:order) { create :order }
 
     let(:expected_date) do
       Date.current + SolidusSubscriptions::Config.reprocessing_interval
@@ -77,7 +80,8 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     it { is_expected.to_not be_successful }
     it 'has the correct message' do
       expect(subject).to have_attributes(
-        message: I18n.t('solidus_subscriptions.installment_details.failed')
+        message: I18n.t('solidus_subscriptions.installment_details.failed'),
+        order: order
       )
     end
 
@@ -90,36 +94,38 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
 
   describe '#unfulfilled?' do
     subject { installment.unfulfilled? }
-    let(:installment) { create(:installment, order: order) }
+    let(:installment) { create(:installment, details: details) }
 
-    context 'the installment has an associated completed order' do
-      let(:order) { create :completed_order_with_totals }
+    context 'the installment has an associated successful detail' do
+      let(:details) { create_list :installment_detail, 1, success: true }
       it { is_expected.to be_falsy }
     end
 
-    context 'the installment has no associated completed order' do
-      let(:order) { nil }
+    context 'the installment has no associated successful detail' do
+      let(:details) { create_list :installment_detail, 1 }
       it { is_expected.to be_truthy }
     end
   end
 
   describe '#fulfilled' do
     subject { installment.fulfilled? }
-    let(:installment) { create(:installment, order: order) }
+    let(:installment) { create(:installment, details: details) }
 
     context 'the installment has an associated completed order' do
-      let(:order) { create :completed_order_with_totals }
+      let(:details) { create_list :installment_detail, 1, success: true }
       it { is_expected.to be_truthy }
     end
 
     context 'the installment has no associated completed order' do
-      let(:order) { nil }
+      let(:details) { create_list :installment_detail, 1 }
       it { is_expected.to be_falsy }
     end
   end
 
   describe '#payment_failed!' do
-    subject { installment.payment_failed! }
+    subject { installment.payment_failed!(order) }
+
+    let(:order) { create :order }
 
     let(:expected_date) do
       Date.current + SolidusSubscriptions::Config.reprocessing_interval
@@ -129,6 +135,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     it { is_expected.to_not be_successful }
     it 'has the correct message' do
       expect(subject).to have_attributes(
+        order: order,
         message: I18n.t('solidus_subscriptions.installment_details.payment_failed')
       )
     end

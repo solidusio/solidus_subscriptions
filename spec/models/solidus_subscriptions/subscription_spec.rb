@@ -220,10 +220,17 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
     end
 
     context 'when the last processing attempt succeeded' do
+      let(:order) { create :completed_order_with_totals }
+
       let(:subscription) do
         create(
           :subscription,
-          installments: create_list(:installment, 1, :success)
+          installments: create_list(
+            :installment,
+            1,
+            :success,
+            details: build_list(:installment_detail, 1, order: order, success: true)
+          )
         )
       end
 
