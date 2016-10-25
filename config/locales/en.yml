@@ -17,8 +17,11 @@ en:
     new_subscription: New Subscription
     admin:
       subscriptions:
+        successfully_canceled: Subsciption Canceled!
         index:
           new_subscription: New Subscription
+        subscription:
+          cancel: Cancel
         new:
           back: Back to Subscriptions List
           title: Create a Susbcription

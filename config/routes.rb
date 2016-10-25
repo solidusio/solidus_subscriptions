@@ -16,6 +16,8 @@ Spree::Core::Engine.routes.draw do
   mount SolidusSubscriptions::Engine, at: '/subscriptions'
 
   namespace :admin do
-    resources :subscriptions, only: [:index, :new, :create]
+    resources :subscriptions, only: [:index, :new, :create] do
+      delete :cancel, on: :member
+    end
   end
 end

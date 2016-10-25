@@ -20,5 +20,18 @@
   <% end %>
 
   <td class="actions align-center">
+    <% if subscription.state_events.include?(:cancel) %>
+      <%=
+        link_to_with_icon(
+          :pause,
+          t('.cancel'),
+          spree.cancel_admin_subscription_path(subscription),
+          no_text: true,
+          method: :delete
+        )
+      %>
+    <% end %>
+
+    <%= link_to_edit(subscription, no_text: true) %>
   </td>
 <% end %>
