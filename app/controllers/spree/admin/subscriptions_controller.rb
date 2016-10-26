@@ -43,6 +43,17 @@ module Spree
         redirect_to spree.admin_subscriptions_path, notice: notice
       end
 
+      def skip
+        @subscription.advance_actionable_date
+
+        notice = I18n.t(
+          'spree.admin.subscriptions.successfully_skipped',
+          date: @subscription.actionable_date
+        )
+
+        redirect_to spree.admin_subscriptions_path, notice: notice
+      end
+
       private
 
       def model_class

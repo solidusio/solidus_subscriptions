@@ -44,6 +44,18 @@
       %>
     <% end %>
 
+    <% if subscription.active? %>
+      <%=
+        link_to_with_icon(
+          :'fast-forward',
+          t('.skip'),
+          spree.skip_admin_subscription_path(subscription),
+          no_text: true,
+          method: :post
+        )
+      %>
+    <% end %>
+
     <%= link_to_edit(subscription, no_text: true) %>
   </td>
 <% end %>

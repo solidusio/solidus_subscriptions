@@ -19,6 +19,7 @@ Spree::Core::Engine.routes.draw do
     resources :subscriptions, only: [:index, :new, :create] do
       delete :cancel, on: :member
       post :activate, on: :member
+      post :skip, on: :member
     end
   end
 end
