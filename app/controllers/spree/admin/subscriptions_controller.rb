@@ -8,6 +8,8 @@ module Spree
           accessible_by(current_ability, :index).ransack(params[:q])
 
         @subscriptions = @search.result(distinct: true).
+          includes(:line_item, :user).
+          joins(:line_item, :user).
           page(params[:page]).
           per(params[:per_page] || Spree::Config[:orders_per_page])
       end
