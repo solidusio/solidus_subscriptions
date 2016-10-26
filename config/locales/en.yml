@@ -2,6 +2,9 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
+  time:
+    formats:
+      human:
   solidus_subscriptions:
     subscription:
       actionable_date: "Actionable Date"
@@ -16,16 +19,19 @@ en:
   spree:
     new_subscription: New Subscription
     admin:
+      solidus_subscriptions:
+        subscriptions:
+          subscription:
+            cancel: Cancel
+            activate: Activate
+            skip: Skip One
+
       subscriptions:
         successfully_canceled: Subsciption Canceled!
         successfully_activated: Subsciption Activated!
         successfully_skipped: Subsciption delayed until %{date}
         index:
           new_subscription: New Subscription
-        subscription:
-          cancel: Cancel
-          activate: Activate
-          skip: Skip One
         edit:
           back: Back to Subscriptions List
           title: Edit a Susbcription
