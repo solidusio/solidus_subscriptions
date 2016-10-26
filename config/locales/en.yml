@@ -26,9 +26,20 @@ en:
           cancel: Cancel
           activate: Activate
           skip: Skip One
+        edit:
+          back: Back to Subscriptions List
+          title: Edit a Susbcription
+          customer: Customer
+          status: Status
+          fulfillment_status: Fulfillment Status
+          revenue: Revenue
+          interval: Interval
         new:
           back: Back to Subscriptions List
           title: Create a Susbcription
+        form:
+          subscription: Subscription
+          subscription_line_item: Subscription Line Item
       tab:
         subscriptions: Subscriptions
     promotion_rule_types:
