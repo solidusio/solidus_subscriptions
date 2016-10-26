@@ -4,6 +4,10 @@
   <% content_for(:page_title, SolidusSubscriptions::Subscription.model_name.human) %>
 <% end %>
 
+<% content_for :page_actions do %>
+  <li><%= button_link_to t('.new_subscription'), new_admin_subscription_path %></li>
+<% end %>
+
 <% content_for :table_filter_title do %>
   <%= Spree.t(:search) %>
 <% end %>
@@ -90,19 +94,25 @@
   <%= paginate @subscriptions %>
 <% end %>
 
-<table id="listing_subscriptions" class="index">
-  <thead>
-    <tr>
-      <th><%= SolidusSubscriptions::Subscription.human_attribute_name(:created_at) %></th>
-      <th><%= SolidusSubscriptions::Subscription.human_attribute_name(:user) %></th>
-      <th><%= SolidusSubscriptions::Subscription.human_attribute_name(:actionable_date) %></th>
-      <th><%= SolidusSubscriptions::Subscription.human_attribute_name(:state) %></th>
-      <th><%= SolidusSubscriptions::Subscription.human_attribute_name(:processing_state) %></th>
-      <th class='actions'></th>
-    </tr>
-  </thead>
+<% if @subscriptions.any? %>
+  <table id="listing_subscriptions" class="index">
+    <thead>
+      <tr>
+        <th><%= SolidusSubscriptions::Subscription.human_attribute_name(:created_at) %></th>
+        <th><%= SolidusSubscriptions::Subscription.human_attribute_name(:user) %></th>
+        <th><%= SolidusSubscriptions::Subscription.human_attribute_name(:actionable_date) %></th>
+        <th><%= SolidusSubscriptions::Subscription.human_attribute_name(:state) %></th>
+        <th><%= SolidusSubscriptions::Subscription.human_attribute_name(:processing_state) %></th>
+        <th class='actions'></th>
+      </tr>
+    </thead>
 
-  <tbody>
-    <%= render partial: 'subscription', collection: @subscriptions %>
-  </tbody>
-</table>
+    <tbody>
+      <%= render @subscriptions %>
+    </tbody>
+  </table>
+<% else %>
+  <div class="alpha twelve columns no-objects-found">
+    <%= render 'spree/admin/shared/no_objects_found', resource: SolidusSubscriptions::Subscription, new_resource_url: spree.new_admin_subscription_path %>
+  </div>
+<% end %>

@@ -12,6 +12,10 @@ module Spree
           per(params[:per_page] || Spree::Config[:orders_per_page])
       end
 
+      def new
+        @subscription.build_line_item
+      end
+
       private
 
       def model_class

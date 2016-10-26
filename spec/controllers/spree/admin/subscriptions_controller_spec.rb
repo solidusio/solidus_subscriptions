@@ -10,4 +10,11 @@ RSpec.describe Spree::Admin::SubscriptionsController, type: :controller do
     it { is_expected.to be_successful }
     it { is_expected.to render_template :index }
   end
+
+  describe 'GET :new' do
+    subject { get :new }
+
+    it { is_expected.to be_successful }
+    it { is_expected.to render_template :new }
+  end
 end
