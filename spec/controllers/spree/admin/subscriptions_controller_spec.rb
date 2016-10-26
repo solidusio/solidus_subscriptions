@@ -50,4 +50,38 @@ RSpec.describe Spree::Admin::SubscriptionsController, type: :controller do
       end
     end
   end
+
+  describe 'POST activate' do
+    subject { post :activate, id: subscription.id }
+
+    context 'the subscription can be activated' do
+      let(:subscription) { create :subscription, :canceled, :with_line_item }
+
+      it { is_expected.to redirect_to admin_subscriptions_path }
+
+      it 'has a message' do
+        subject
+        expect(flash[:notice]).to be_present
+      end
+
+      it 'cancels the subscription' do
+        expect { subject }.to change { subscription.reload.state }.from('canceled').to('active')
+      end
+    end
+
+    context 'the subscription cannot be activated' do
+      let(:subscription) { create :subscription, :actionable, :with_line_item }
+
+      it { is_expected.to redirect_to admin_subscriptions_path }
+
+      it 'has a message' do
+        subject
+        expect(flash[:notice]).to be_present
+      end
+
+      it 'cancels the subscription' do
+        expect { subject }.to_not change { subscription.reload.state }
+      end
+    end
+  end
 end

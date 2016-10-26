@@ -32,6 +32,18 @@
       %>
     <% end %>
 
+    <% if subscription.state_events.include?(:activate) %>
+      <%=
+        link_to_with_icon(
+          :play,
+          t('.activate'),
+          spree.activate_admin_subscription_path(subscription),
+          no_text: true,
+          method: :post
+        )
+      %>
+    <% end %>
+
     <%= link_to_edit(subscription, no_text: true) %>
   </td>
 <% end %>

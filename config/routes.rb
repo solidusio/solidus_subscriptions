@@ -18,6 +18,7 @@ Spree::Core::Engine.routes.draw do
   namespace :admin do
     resources :subscriptions, only: [:index, :new, :create] do
       delete :cancel, on: :member
+      post :activate, on: :member
     end
   end
 end

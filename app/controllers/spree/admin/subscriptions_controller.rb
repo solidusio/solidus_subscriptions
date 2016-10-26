@@ -31,6 +31,18 @@ module Spree
         redirect_to spree.admin_subscriptions_path, notice: notice
       end
 
+      def activate
+        @subscription.activate
+
+        if @subscription.errors.none?
+          notice = I18n.t('spree.admin.subscriptions.successfully_activated')
+        else
+          notice = @subscription.errors.full_messages.to_sentence
+        end
+
+        redirect_to spree.admin_subscriptions_path, notice: notice
+      end
+
       private
 
       def model_class

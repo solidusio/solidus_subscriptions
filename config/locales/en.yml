@@ -18,10 +18,12 @@ en:
     admin:
       subscriptions:
         successfully_canceled: Subsciption Canceled!
+        successfully_activated: Subsciption Activated!
         index:
           new_subscription: New Subscription
         subscription:
           cancel: Cancel
+          activate: Activate
         new:
           back: Back to Subscriptions List
           title: Create a Susbcription

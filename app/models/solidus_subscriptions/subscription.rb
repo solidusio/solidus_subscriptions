@@ -94,6 +94,12 @@ module SolidusSubscriptions
         transition active: :inactive,
           if: ->(subscription) { subscription.can_be_deactivated? }
       end
+
+      event :activate do
+        transition any - [:active] => :active
+      end
+
+      after_transition to: :active, do: :advance_actionable_date
     end
 
     # This method determines if a subscription may be canceled. Canceled
