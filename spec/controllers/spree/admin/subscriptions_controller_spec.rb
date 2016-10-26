@@ -17,4 +17,91 @@ RSpec.describe Spree::Admin::SubscriptionsController, type: :controller do
     it { is_expected.to be_successful }
     it { is_expected.to render_template :new }
   end
+
+  describe 'POST cancel' do
+    subject { delete :cancel, id: subscription.id }
+    context 'the subscription can be canceled' do
+      let(:subscription) { create :subscription, :actionable }
+
+      it { is_expected.to redirect_to admin_subscriptions_path }
+
+      it 'has a message' do
+        subject
+        expect(flash[:notice]).to be_present
+      end
+
+      it 'cancels the subscription' do
+        expect { subject }.to change { subscription.reload.state }.from('active').to('canceled')
+      end
+    end
+
+    context 'the subscription cannot be canceled' do
+      let(:subscription) { create :subscription, :canceled }
+
+      it { is_expected.to redirect_to admin_subscriptions_path }
+
+      it 'has a message' do
+        subject
+        expect(flash[:notice]).to be_present
+      end
+
+      it 'cancels the subscription' do
+        expect { subject }.to_not change { subscription.reload.state }
+      end
+    end
+  end
+
+  describe 'POST activate' do
+    subject { post :activate, id: subscription.id }
+
+    context 'the subscription can be activated' do
+      let(:subscription) { create :subscription, :canceled, :with_line_item }
+
+      it { is_expected.to redirect_to admin_subscriptions_path }
+
+      it 'has a message' do
+        subject
+        expect(flash[:notice]).to be_present
+      end
+
+      it 'cancels the subscription' do
+        expect { subject }.to change { subscription.reload.state }.from('canceled').to('active')
+      end
+    end
+
+    context 'the subscription cannot be activated' do
+      let(:subscription) { create :subscription, :actionable, :with_line_item }
+
+      it { is_expected.to redirect_to admin_subscriptions_path }
+
+      it 'has a message' do
+        subject
+        expect(flash[:notice]).to be_present
+      end
+
+      it 'cancels the subscription' do
+        expect { subject }.to_not change { subscription.reload.state }
+      end
+    end
+  end
+
+  describe 'POST skip' do
+    subject { post :skip, id: subscription.id }
+
+    let(:subscription) { create :subscription, :actionable, :with_line_item }
+    let!(:expected_date) { subscription.next_actionable_date }
+
+    it { is_expected.to redirect_to admin_subscriptions_path }
+
+    it 'has a message' do
+      subject
+      expect(flash[:notice]).to be_present
+    end
+
+    it 'advances the actioanble_date' do
+      expect { subject }.
+        to change { subscription.reload.actionable_date }.
+        from(subscription.actionable_date).to(expected_date)
+    end
+  end
 end

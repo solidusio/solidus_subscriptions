@@ -17,11 +17,29 @@ en:
     new_subscription: New Subscription
     admin:
       subscriptions:
+        successfully_canceled: Subsciption Canceled!
+        successfully_activated: Subsciption Activated!
+        successfully_skipped: Subsciption delayed until %{date}
         index:
           new_subscription: New Subscription
+        subscription:
+          cancel: Cancel
+          activate: Activate
+          skip: Skip One
+        edit:
+          back: Back to Subscriptions List
+          title: Edit a Susbcription
+          customer: Customer
+          status: Status
+          fulfillment_status: Fulfillment Status
+          revenue: Revenue
+          interval: Interval
         new:
           back: Back to Subscriptions List
           title: Create a Susbcription
+        form:
+          subscription: Subscription
+          subscription_line_item: Subscription Line Item
       tab:
         subscriptions: Subscriptions
     promotion_rule_types:

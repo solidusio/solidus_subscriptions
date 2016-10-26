@@ -69,6 +69,17 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
     it 'has the correct variant' do
       expect(subject.variant_id).to eq line_item.subscribable_id
     end
+
+    context 'with no spree line item' do
+      let(:line_item) { create(:subscription_line_item, :with_subscription, spree_line_item: nil) }
+
+      it { is_expected.to be_a Spree::LineItem }
+      it { is_expected.to be_frozen }
+
+      it 'has the correct variant' do
+        expect(subject.variant_id).to eq line_item.subscribable_id
+      end
+    end
   end
 
   describe "#update_actionable_date_if_interval_changed" do
