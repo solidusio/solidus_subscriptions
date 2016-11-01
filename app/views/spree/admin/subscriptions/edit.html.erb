@@ -39,6 +39,6 @@
   </dl>
 <% end %>
 
-<%= form_for @subscription, url: spree.edit_admin_subscription_path(@subscription) do |f| %>
+<%= form_for @subscription, url: spree.admin_subscription_path(@subscription) do |f| %>
   <%= render "form", f: f %>
 <% end %>
