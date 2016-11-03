@@ -45,6 +45,11 @@ SolidusSubscriptions::Config.subscription_line_item_attributes = [
   :max_installments
 ]
 
+# SolidusSubscriptions::Subscription attributes which are allowed to
+# be updated from user data
+
+SolidusSubscriptions::Config.subscription_attributes = [:actionable_date]
+
 # Dispatchers (processing callbacks)
 
 # These handlers are pluggable, however it is highly encouraged that you
