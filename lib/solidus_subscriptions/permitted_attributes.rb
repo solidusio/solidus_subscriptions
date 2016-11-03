@@ -21,7 +21,7 @@ module SolidusSubscriptions
       end
 
       def subscription_attributes
-        [
+        Config.subscription_attributes | [
           { line_item_attributes: nested(subscription_line_item_attributes) - [:subscribable_id] }
         ]
       end
@@ -29,7 +29,7 @@ module SolidusSubscriptions
       private
 
       def nested(attributes)
-        attributes << :id
+        attributes | [:id]
       end
     end
   end

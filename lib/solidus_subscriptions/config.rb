@@ -80,6 +80,10 @@ module SolidusSubscriptions
         ]
       end
 
+      # SolidusSubscriptions::Subscription attributes which are allowed to
+      # be updated from user data
+      mattr_accessor(:subscription_attributes) { [:actionable_date] }
+
       def default_gateway(&block)
         return @gateway.call unless block_given?
         @gateway = block
