@@ -8,7 +8,7 @@ RSpec.describe SolidusSubscriptions::OrderBuilder do
 
     let(:variant) { create :variant, subscribable: true }
     let(:order) do
-      build_stubbed :order, line_items_attributes: line_items_attributes
+      create :order, line_items_attributes: line_items_attributes
     end
 
     let(:line_item) { create(:line_item, quantity: 4, variant: variant) }
@@ -45,7 +45,7 @@ RSpec.describe SolidusSubscriptions::OrderBuilder do
         existing_line_item = order.line_items.first
 
         expect { subject }.
-          to change { existing_line_item.quantity }.
+          to change { existing_line_item.reload.quantity }.
           by(line_item.quantity)
       end
     end
