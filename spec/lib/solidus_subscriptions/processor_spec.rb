@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe SolidusSubscriptions::Processor, :checkout do
+  include ActiveJob::TestHelper
+  around { |e| perform_enqueued_jobs { e.run } }
+
   let(:user) do
     ccs = build_list(:credit_card, 1, gateway_customer_profile_id: 'BGS-123', default: true)
     build :user, credit_cards: ccs
