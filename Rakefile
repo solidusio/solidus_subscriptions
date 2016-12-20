@@ -9,8 +9,6 @@ begin
 
   RSpec::Core::RakeTask.new(:spec)
 
-  RuboCop::RakeTask.new
-
   task default: %i(first_run rubocop spec)
 rescue LoadError
   # no rspec available
