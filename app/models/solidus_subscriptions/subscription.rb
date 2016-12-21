@@ -9,6 +9,7 @@ module SolidusSubscriptions
     has_one :line_item, class_name: 'SolidusSubscriptions::LineItem'
     has_many :installments, class_name: 'SolidusSubscriptions::Installment'
     has_one :root_order, through: :line_item, class_name: 'Spree::Order', source: :order
+    belongs_to :store, class_name: 'Spree::Store'
 
     validates :user, presence: :true
     validates :skip_count, :successive_skip_count, presence: true, numericality: { greater_than_or_equal_to: 0 }
