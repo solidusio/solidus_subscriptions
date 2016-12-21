@@ -8,7 +8,7 @@ module SolidusSubscriptions
     #   when generating a new order
     attr_reader :installments
 
-    delegate :user, :root_order, to: :subscription
+    delegate :user, to: :subscription
 
     # Get a new instance of a ConsolidatedInstallment
     #
@@ -117,11 +117,11 @@ module SolidusSubscriptions
     end
 
     def ship_address
-      user.ship_address || root_order.ship_address
+      user.ship_address
     end
 
     def active_card
-      user.credit_cards.default.last || root_order.credit_cards.last
+      user.credit_cards.default.last
     end
 
     def create_payment

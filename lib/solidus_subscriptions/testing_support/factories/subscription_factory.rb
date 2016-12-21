@@ -4,7 +4,7 @@ FactoryGirl.define do
 
     user do
       ccs = build_list(:credit_card, 1, gateway_customer_profile_id: 'BGS-123', default: true)
-      build :user, credit_cards: ccs
+      build :user, :subscription_user, credit_cards: ccs
     end
 
     trait :with_line_item do
