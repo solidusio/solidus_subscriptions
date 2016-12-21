@@ -7,6 +7,7 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
     let(:subscription_line_items) { build_list :subscription_line_item, 1 }
     let(:subscription_line_item) { subscription_line_items.first }
     let(:user) { subscription_line_items.first.order.user }
+    let(:store) { subscription_line_items.first.order.store }
 
     it { is_expected.to be_a Array }
 
@@ -20,7 +21,8 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
       subscription = subject.first
       expect(subscription).to have_attributes(
         user: user,
-        line_item: subscription_line_item
+        line_item: subscription_line_item,
+        store: store
       )
     end
   end
