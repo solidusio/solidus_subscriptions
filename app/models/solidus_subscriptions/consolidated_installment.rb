@@ -85,17 +85,13 @@ module SolidusSubscriptions
     def populate
       unfulfilled_installments = []
 
-      line_items = installments.map do |installment|
-        line_item = installment.line_item_builder.line_item
+      order_line_items = installments.flat_map do |installment|
+        line_items = installment.line_item_builder.spree_line_items
 
-        if line_item.nil?
-          unfulfilled_installments << installment
-          next
-        end
+        unfulfilled_installments.push(installment) if line_items.empty?
 
-        line_item
-      end.
-      compact
+        line_items
+      end
 
       # Remove installments which had no stock from the active list
       # They will be reprocessed later
@@ -105,7 +101,7 @@ module SolidusSubscriptions
       end
 
       return if installments.empty?
-      order_builder.add_line_items(line_items)
+      order_builder.add_line_items(order_line_items)
     end
 
     def order_builder

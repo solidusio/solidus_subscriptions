@@ -57,12 +57,12 @@ module SolidusSubscriptions
     # Get a placeholder line item for calculating the values of future
     # subscription orders. It is frozen and cannot be saved
     def dummy_line_item
-      dummy_subscription.line_item_builder.line_item.tap do |li|
-        next unless li
-        li.order = dummy_order
-        li.validate
-      end.
-      freeze
+      li = LineItemBuilder.new([self]).spree_line_items.first
+      return unless li
+
+      li.order = dummy_order
+      li.validate
+      li.freeze
     end
 
     private

@@ -1,14 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe SolidusSubscriptions::LineItemBuilder do
-  let(:builder) { described_class.new subscription_line_item }
+  let(:builder) { described_class.new subscription_line_items }
   let(:variant) { create(:variant, subscribable: true) }
-  let(:subscription_line_item) do
-    build_stubbed(:subscription_line_item, subscribable_id: variant.id)
+  let(:subscription_line_item) { subscription_line_items.first }
+  let(:subscription_line_items) do
+    build_stubbed_list(:subscription_line_item, 1, subscribable_id: variant.id)
   end
 
-  describe '#line_item' do
-    subject { builder.line_item }
+  describe '#spree_line_items' do
+    subject { builder.spree_line_items }
     let(:expected_attributes) do
       {
         variant_id: subscription_line_item.subscribable_id,
@@ -16,8 +17,11 @@ RSpec.describe SolidusSubscriptions::LineItemBuilder do
       }
     end
 
-    it { is_expected.to be_a Spree::LineItem }
-    it { is_expected.to have_attributes expected_attributes }
+    it { is_expected.to be_a Array }
+
+    it 'contains a line item with the correct attributes' do
+      expect(subject.first).to have_attributes expected_attributes
+    end
 
     context 'the variant is not subscribable' do
       let!(:variant) { create(:variant) }
@@ -32,7 +36,7 @@ RSpec.describe SolidusSubscriptions::LineItemBuilder do
 
     context 'the variant is out of stock' do
       before { create :stock_location, backorderable_default: false }
-      it { is_expected.to be_nil }
+      it { is_expected.to be_empty }
     end
   end
 end

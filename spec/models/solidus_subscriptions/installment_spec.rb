@@ -14,7 +14,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     let(:line_item) { installment.subscription.line_item }
 
     it { is_expected.to be_a SolidusSubscriptions::LineItemBuilder }
-    it { is_expected.to have_attributes(subscription_line_item: line_item) }
+    it { is_expected.to have_attributes(subscription_line_items: [line_item]) }
   end
 
   describe '#out_of_stock' do
