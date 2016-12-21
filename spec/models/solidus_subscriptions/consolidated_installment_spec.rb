@@ -266,7 +266,7 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
       expect(subject).to have_attributes(
         user: user,
         email: user.email,
-        store: root_order.store
+        store: installments.first.subscription.store
       )
     end
 
