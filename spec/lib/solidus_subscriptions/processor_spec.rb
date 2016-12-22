@@ -35,8 +35,8 @@ RSpec.describe SolidusSubscriptions::Processor, :checkout do
     let(:order_variant_ids) { Spree::Order.last.variant_ids }
     let(:expected_ids) do
       subs = actionable_subscriptions + pending_cancellation_subscriptions
-      subs_ids = subs.map { |s| s.line_item.subscribable_id }
-      inst_ids = failed_installments.map { |i| i.subscription.line_item.subscribable_id }
+      subs_ids = subs.flat_map { |s| s.line_items.pluck(:subscribable_id) }
+      inst_ids = failed_installments.flat_map { |i| i.subscription.line_items.pluck(:subscribable_id) }
 
       subs_ids + inst_ids
     end

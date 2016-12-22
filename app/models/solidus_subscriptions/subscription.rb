@@ -6,14 +6,14 @@ module SolidusSubscriptions
     PROCESSING_STATES = [:pending, :failed, :success]
 
     belongs_to :user, class_name: Spree.user_class
-    has_one :line_item, class_name: 'SolidusSubscriptions::LineItem'
+    has_many :line_items, class_name: 'SolidusSubscriptions::LineItem'
     has_many :installments, class_name: 'SolidusSubscriptions::Installment'
     belongs_to :store, class_name: 'Spree::Store'
 
     validates :user, presence: :true
     validates :skip_count, :successive_skip_count, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
-    accepts_nested_attributes_for :line_item
+    accepts_nested_attributes_for :line_items
 
     # The following methods are delegated to the associated
     # SolidusSubscriptions::LineItem
@@ -173,7 +173,7 @@ module SolidusSubscriptions
     #
     # @return [SolidusSubscriptions::LineItemBuilder]
     def line_item_builder
-      LineItemBuilder.new([line_item])
+      LineItemBuilder.new(line_items)
     end
 
     # The state of the last attempt to process an installment associated to
@@ -203,6 +203,10 @@ module SolidusSubscriptions
       if skip_count >= Config.maximum_total_skips
         errors.add(:skip_count, :exceeded)
       end
+    end
+
+    def line_item
+      line_items.first
     end
   end
 end

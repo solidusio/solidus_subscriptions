@@ -17,12 +17,12 @@ module SolidusSubscriptions
       end
 
       def subscription_line_item_attributes
-        Config.subscription_line_item_attributes
+        [Config.subscription_line_item_attributes]
       end
 
       def subscription_attributes
         Config.subscription_attributes | [
-          { line_item_attributes: nested(subscription_line_item_attributes) - [:subscribable_id] }
+          { line_items_attributes: nested(subscription_line_item_attributes) - [:subscribable_id] }
         ]
       end
 

@@ -21,7 +21,7 @@ RSpec.describe Spree::Api::UsersController, type: :controller do
         user: {
           subscriptions_attributes: [{
             id: subscription.id,
-            line_item_attributes: line_item_attributes
+            line_items_attributes: [line_item_attributes]
           }]
         }
       }
@@ -29,7 +29,7 @@ RSpec.describe Spree::Api::UsersController, type: :controller do
 
     let(:line_item_attributes) do
       {
-        id: subscription.line_item.id,
+        id: subscription.line_item_ids.first,
         quantity: 6,
         interval_length: 1,
         interval_units: 'month'
@@ -38,7 +38,7 @@ RSpec.describe Spree::Api::UsersController, type: :controller do
 
     it 'updates the subscription line items' do
       subject
-      line_item = subscription.line_item(true)
+      line_item = subscription.line_items(true).first
 
       expect(line_item).to have_attributes(line_item_attributes)
     end

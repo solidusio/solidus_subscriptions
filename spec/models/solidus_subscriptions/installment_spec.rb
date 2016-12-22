@@ -11,10 +11,10 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
   describe '#line_item_builder' do
     subject { installment.line_item_builder }
 
-    let(:line_item) { installment.subscription.line_item }
+    let(:line_items) { installment.subscription.line_items }
 
     it { is_expected.to be_a SolidusSubscriptions::LineItemBuilder }
-    it { is_expected.to have_attributes(subscription_line_items: [line_item]) }
+    it { is_expected.to have_attributes(subscription_line_items: line_items) }
   end
 
   describe '#out_of_stock' do
