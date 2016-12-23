@@ -25,12 +25,12 @@ module SolidusSubscriptions
       inverse_of: :line_item
     )
 
-    enum interval_units: [
-      :day,
-      :week,
-      :month,
-      :year
-    ]
+    enum interval_units: {
+      day: 0,
+      week: 1,
+      month: 2,
+      year: 3
+    }
 
     validates :subscribable_id, presence: :true
     validates :quantity, :interval_length, numericality: { greater_than: 0 }
