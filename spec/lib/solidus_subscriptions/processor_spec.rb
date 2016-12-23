@@ -74,6 +74,16 @@ RSpec.describe SolidusSubscriptions::Processor, :checkout do
         to change { subs.reload.state }.
         from('pending_cancellation').to('canceled')
     end
+
+    context 'the subscriptions have different shipping addresses' do
+      let!(:sub_to_different_address) do
+        create(:subscription, :actionable, :with_address, user: user)
+      end
+
+      it 'creates an order for each shipping address' do
+        expect { subject }.to change { Spree::Order.complete.count }.by 2
+      end
+    end
   end
 
   describe '.run' do

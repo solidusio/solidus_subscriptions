@@ -15,7 +15,7 @@ module SolidusSubscriptions
        return if installment_ids.empty?
 
        installments = SolidusSubscriptions::Installment.where(id: installment_ids).
-         includes(subscription: [:line_item, :user])
+         includes(subscription: [:line_items, :user])
        ConsolidatedInstallment.new(installments).process
      end
   end
