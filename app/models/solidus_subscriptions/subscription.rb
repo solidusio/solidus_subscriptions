@@ -14,7 +14,7 @@ module SolidusSubscriptions
     validates :user, presence: :true
     validates :skip_count, :successive_skip_count, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
-    accepts_nested_attributes_for :line_items
+    accepts_nested_attributes_for :line_items, :shipping_address
 
     # The following methods are delegated to the associated
     # SolidusSubscriptions::LineItem

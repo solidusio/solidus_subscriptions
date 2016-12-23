@@ -48,7 +48,10 @@ SolidusSubscriptions::Config.subscription_line_item_attributes = [
 # SolidusSubscriptions::Subscription attributes which are allowed to
 # be updated from user data
 
-SolidusSubscriptions::Config.subscription_attributes = [:actionable_date]
+SolidusSubscriptions::Config.subscription_attributes = [
+  :actionable_date,
+  shipping_address_attributes: Spree::PermittedAttributes.address_attributes
+]
 
 # Dispatchers (processing callbacks)
 

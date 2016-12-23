@@ -73,7 +73,7 @@ module SolidusSubscriptions
     #   :subscribable_id
     # ]
     # ```
-
+    #
     # This configuration also easily allows the gem to be customized to track
     # more information on the subcriptions line items.
     mattr_accessor(:subscription_line_item_attributes) do
@@ -88,6 +88,11 @@ module SolidusSubscriptions
 
     # SolidusSubscriptions::Subscription attributes which are allowed to
     # be updated from user data
-    mattr_accessor(:subscription_attributes) { [:actionable_date] }
+    mattr_accessor(:subscription_attributes) do
+      [
+        :actionable_date,
+        shipping_address_attributes: Spree::PermittedAttributes.address_attributes
+      ]
+    end
   end
 end
