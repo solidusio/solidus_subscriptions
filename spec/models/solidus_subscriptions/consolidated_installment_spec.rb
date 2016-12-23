@@ -2,18 +2,22 @@ require 'rails_helper'
 
 RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
   let(:consolidated_installment) { described_class.new(installments) }
-
+  let(:root_order) { create :completed_order_with_pending_payment }
   let(:subscription_user) do
     ccs = build_list(:credit_card, 1, gateway_customer_profile_id: 'BGS-123', default: true)
     create :user, :subscription_user, credit_cards: ccs
   end
+  let(:installments) { create_list(:installment, 2, installment_traits) }
 
-  let(:installments) do
-    traits = {
-      subscription_traits: [{ user: subscription_user }]
+  let(:installment_traits) do
+    {
+      subscription_traits: [{
+        user: subscription_user,
+        line_item_traits: [{
+          spree_line_item: root_order.line_items.first
+        }]
+      }]
     }
-
-    create_list(:installment, 2, traits)
   end
 
   context 'initialized with installments belonging to multiple users' do
@@ -218,6 +222,24 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
 
       it 'has a valid store credit payment' do
         expect(order.payments.valid.store_credits).to be_present
+      end
+    end
+
+    context 'the subscription has a shipping address' do
+      it_behaves_like 'a completed checkout'
+      let(:shipping_address) { create :address }
+      let(:installment_traits) do
+        {
+          subscription_traits: [{
+            shipping_address: shipping_address,
+            user: subscription_user,
+            line_item_traits: [{ spree_line_item: root_order.line_items.first }]
+          }]
+        }
+      end
+
+      it 'ships to the subscription address' do
+        expect(subject.ship_address).to eq shipping_address
       end
     end
   end
