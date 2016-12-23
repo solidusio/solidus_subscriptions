@@ -21,6 +21,7 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
       expect(subject).to have_attributes(
         user: user,
         line_items: subscription_line_items,
+        shipping_address: subscription_line_item.spree_line_item.order.ship_address,
         store: store
       )
     end
