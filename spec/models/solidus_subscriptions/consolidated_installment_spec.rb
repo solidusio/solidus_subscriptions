@@ -2,16 +2,15 @@ require 'rails_helper'
 
 RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
   let(:consolidated_installment) { described_class.new(installments) }
-  let(:root_order) { create :completed_order_with_pending_payment }
-  let(:subscription_user) { create :user }
+
+  let(:subscription_user) do
+    ccs = build_list(:credit_card, 1, gateway_customer_profile_id: 'BGS-123', default: true)
+    create :user, :subscription_user, credit_cards: ccs
+  end
+
   let(:installments) do
     traits = {
-      subscription_traits: [{
-        user: subscription_user,
-        line_item_traits: [{
-          spree_line_item: root_order.line_items.first
-        }]
-      }]
+      subscription_traits: [{ user: subscription_user }]
     }
 
     create_list(:installment, 2, traits)
@@ -98,39 +97,6 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
 
       it 'creates no order' do
         expect { subject }.to_not change { Spree::Order.count }
-      end
-    end
-
-    context 'the user has addresss and active card' do
-      let(:credit_card) { create(:credit_card, gateway_customer_profile_id: 'BGS-123', default: true) }
-
-      before do
-        consolidated_installment.user.credit_cards << credit_card
-        consolidated_installment.user.update ship_address: create(:address)
-      end
-
-      it_behaves_like 'a completed checkout'
-
-      it 'uses the root order address' do
-        expect(order.ship_address).to eq consolidated_installment.user.ship_address
-      end
-
-      it 'uses the root orders last payment method' do
-        source = order.payments.last.source
-        expect(source).to eq credit_card
-      end
-    end
-
-    context 'the user has no address or active card' do
-      it_behaves_like 'a completed checkout'
-
-      it 'uses the root order address' do
-        expect(order.ship_address).to eq consolidated_installment.root_order.ship_address
-      end
-
-      it 'uses the root orders last payment method' do
-        source = order.payments.last.source
-        expect(source).to eq consolidated_installment.root_order.payments.last.source
       end
     end
 
@@ -266,7 +232,7 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
       expect(subject).to have_attributes(
         user: user,
         email: user.email,
-        store: root_order.store
+        store: installments.first.subscription.store
       )
     end
 

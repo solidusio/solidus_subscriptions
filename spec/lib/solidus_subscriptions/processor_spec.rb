@@ -6,7 +6,7 @@ RSpec.describe SolidusSubscriptions::Processor, :checkout do
 
   let(:user) do
     ccs = build_list(:credit_card, 1, gateway_customer_profile_id: 'BGS-123', default: true)
-    build :user, credit_cards: ccs
+    build :user, :subscription_user, credit_cards: ccs
   end
 
   let!(:actionable_subscriptions) { create_list(:subscription, 2, :actionable, user: user) }

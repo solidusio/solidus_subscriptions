@@ -31,8 +31,7 @@ module SolidusSubscriptions
       end
 
       if line_item
-        line_item.quantity += new_item.quantity
-        line_item.tap(&:save!)
+        line_item.increment!(:quantity, new_item.quantity)
       else
         order.line_items << new_item
       end
