@@ -6,7 +6,7 @@
 <title>
   Class: SolidusSubscriptions::LineItemBuilder
   
-    &mdash; Documentation by YARD 0.9.5
+    &mdash; Documentation by YARD 0.9.6
   
 </title>
 
@@ -28,7 +28,7 @@
   </head>
   <body>
     <div class="nav_wrap">
-      <iframe id="nav" src="../class_list.html"></iframe>
+      <iframe id="nav" src="../class_list.html?1"></iframe>
       <div id="resizer"></div>
     </div>
 
@@ -58,8 +58,6 @@
 </div>
         <div class="clear"></div>
       </div>
-
-      <iframe id="search_frame" src="../class_list.html"></iframe>
 
       <div id="content"><h1>Class: SolidusSubscriptions::LineItemBuilder
   
@@ -388,11 +386,11 @@
       <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/line_item_builder.rb', line 21</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_line_item'>line_item</span>
-  <span class='id identifier rubyid_variant'>variant</span> <span class='op'>=</span> <span class='const'>Spree</span><span class='op'>::</span><span class='const'>Variant</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span><span class='lparen'>(</span><span class='id identifier rubyid_subscription_line_item'>subscription_line_item</span><span class='period'>.</span><span class='id identifier rubyid_subscribable_id'>subscribable_id</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_raise'>raise</span> <span class='const'>UnsubscribableError</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_variant'>variant</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_variant'>variant</span><span class='period'>.</span><span class='id identifier rubyid_subscribable?'>subscribable?</span>
+  <span class='id identifier rubyid_variant'>variant</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../Spree.html" title="Spree (module)">Spree</a></span></span><span class='op'>::</span><span class='const'>Variant</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span><span class='lparen'>(</span><span class='id identifier rubyid_subscription_line_item'>subscription_line_item</span><span class='period'>.</span><span class='id identifier rubyid_subscribable_id'>subscribable_id</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_raise'>raise</span> <span class='const'><span class='object_link'><a href="UnsubscribableError.html" title="SolidusSubscriptions::UnsubscribableError (class)">UnsubscribableError</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="UnsubscribableError.html#initialize-instance_method" title="SolidusSubscriptions::UnsubscribableError#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_variant'>variant</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_variant'>variant</span><span class='period'>.</span><span class='id identifier rubyid_subscribable?'>subscribable?</span>
   <span class='kw'>return</span> <span class='kw'>unless</span> <span class='id identifier rubyid_variant'>variant</span><span class='period'>.</span><span class='id identifier rubyid_can_supply?'>can_supply?</span><span class='lparen'>(</span><span class='id identifier rubyid_subscription_line_item'>subscription_line_item</span><span class='period'>.</span><span class='id identifier rubyid_quantity'>quantity</span><span class='rparen'>)</span>
 
-  <span class='const'>Spree</span><span class='op'>::</span><span class='const'>LineItem</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='label'>variant:</span> <span class='id identifier rubyid_variant'>variant</span><span class='comma'>,</span> <span class='label'>quantity:</span> <span class='id identifier rubyid_subscription_line_item'>subscription_line_item</span><span class='period'>.</span><span class='id identifier rubyid_quantity'>quantity</span><span class='rparen'>)</span>
+  <span class='const'><span class='object_link'><a href="../Spree.html" title="Spree (module)">Spree</a></span></span><span class='op'>::</span><span class='const'>LineItem</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='label'>variant:</span> <span class='id identifier rubyid_variant'>variant</span><span class='comma'>,</span> <span class='label'>quantity:</span> <span class='id identifier rubyid_subscription_line_item'>subscription_line_item</span><span class='period'>.</span><span class='id identifier rubyid_quantity'>quantity</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -404,9 +402,9 @@
 </div>
 
       <div id="footer">
-  Generated on Mon Oct 17 14:49:48 2016 by
+  Generated on Mon Jan  9 14:06:31 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.5 (ruby-2.3.0).
+  0.9.6 (ruby-2.3.0).
 </div>
 
     </div>

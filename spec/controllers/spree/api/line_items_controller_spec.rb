@@ -40,7 +40,7 @@ RSpec.describe Spree::Api::LineItemsController, type: :controller do
         {
           subscription_line_item: {
             quantity: 2,
-            max_installments: 3,
+            end_date: '1990/10/12',
             subscribable_id: variant.id,
             interval_length: 30,
             interval_units: "day"
@@ -82,7 +82,7 @@ RSpec.describe Spree::Api::LineItemsController, type: :controller do
         },
         subscription_line_item: {
           quantity: 2,
-          max_installments: 3,
+          end_date: '1990/10/12',
           subscribable_id: variant.id,
           interval_length: 30,
           interval_units: "day"

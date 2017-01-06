@@ -6,7 +6,7 @@
 <title>
   Class: SolidusSubscriptions::Dispatcher
   
-    &mdash; Documentation by YARD 0.9.5
+    &mdash; Documentation by YARD 0.9.6
   
 </title>
 
@@ -28,7 +28,7 @@
   </head>
   <body>
     <div class="nav_wrap">
-      <iframe id="nav" src="../class_list.html"></iframe>
+      <iframe id="nav" src="../class_list.html?1"></iframe>
       <div id="resizer"></div>
     </div>
 
@@ -58,8 +58,6 @@
 </div>
         <div class="clear"></div>
       </div>
-
-      <iframe id="search_frame" src="../class_list.html"></iframe>
 
       <div id="content"><h1>Class: SolidusSubscriptions::Dispatcher
   
@@ -141,6 +139,35 @@
 </li>
 
     
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#order-instance_method" title="#order (instance method)">#<strong>order</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute order.</p>
+</div></span>
+  
+</li>
+
+    
   </ul>
 
 
@@ -179,7 +206,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">#<strong>initialize</strong>(installments)  &#x21d2; SolidusSubscriptions::FailureDispatcher </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">#<strong>initialize</strong>(installments, order = nil)  &#x21d2; SolidusSubscriptions::FailureDispatcher </a>
     
 
     
@@ -211,7 +238,7 @@
     <div class="method_details first">
   <h3 class="signature first" id="initialize-instance_method">
   
-    #<strong>initialize</strong>(installments)  &#x21d2; <tt><span class='object_link'><a href="FailureDispatcher.html" title="SolidusSubscriptions::FailureDispatcher (class)">SolidusSubscriptions::FailureDispatcher</a></span></tt> 
+    #<strong>initialize</strong>(installments, order = nil)  &#x21d2; <tt><span class='object_link'><a href="FailureDispatcher.html" title="SolidusSubscriptions::FailureDispatcher (class)">SolidusSubscriptions::FailureDispatcher</a></span></tt> 
   
 
   
@@ -256,13 +283,15 @@
 
 11
 12
-13</pre>
+13
+14</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/dispatcher.rb', line 11</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_installments'>installments</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_installments'>installments</span><span class='comma'>,</span> <span class='id identifier rubyid_order'>order</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
   <span class='ivar'>@installments</span> <span class='op'>=</span> <span class='id identifier rubyid_installments'>installments</span>
+  <span class='ivar'>@order</span> <span class='op'>=</span> <span class='id identifier rubyid_order'>order</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -317,6 +346,49 @@
 </table>
 </div>
     
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="order-instance_method">
+  
+    #<strong>order</strong>  &#x21d2; <tt>Object</tt>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the value of attribute order</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+3
+4
+5</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/dispatcher.rb', line 3</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_order'>order</span>
+  <span class='ivar'>@order</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
   </div>
 
 
@@ -339,12 +411,12 @@
       <pre class="lines">
 
 
-15
 16
-17</pre>
+17
+18</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/dispatcher.rb', line 15</span>
+      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/dispatcher.rb', line 16</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_dispatch'>dispatch</span>
   <span class='id identifier rubyid_notify'>notify</span>
@@ -359,9 +431,9 @@
 </div>
 
       <div id="footer">
-  Generated on Mon Oct 17 14:49:48 2016 by
+  Generated on Mon Jan  9 14:06:31 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.5 (ruby-2.3.0).
+  0.9.6 (ruby-2.3.0).
 </div>
 
     </div>

@@ -18,7 +18,7 @@ cart page alongside Spree::LineItems.
     "interval_length": 1,
     "interval_units": "month", // one of: day, week, month, year
 
-    "max_installments": 12   // Stop processing after this many subscription orders (null for ad nauseam)
+    "end_date": "2012/12/12"   // Stop processing the subscription after this date (null for ad nauseam)
   }
 }
 ```
@@ -27,7 +27,7 @@ This endpoint accepts the default subscription_line_item_attributes (which are
 configurable) except for the :subscribable_id. These atrributes are:
 - `:quantity`
 - `:interval`
-- `:max_installments`
+- `:end_date`
 
 ### Example response:
 ```js
@@ -39,7 +39,7 @@ configurable) except for the :subscribable_id. These atrributes are:
   "interval_length": 1,
   "interval_units": "month",
   "interval": 2592000,
-  "max_installments": 12,
+  "end_date": "2012/12/12",
   "subscribable_id": 2,
   "created_at": "2016-09-21T18:56:31.000Z",
   "updated_at": "2016-09-21T18:56:31.980Z"

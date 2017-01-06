@@ -62,8 +62,8 @@ module SolidusSubscriptions
     # be modified by the user. This locks these attributes from being passed
     # in to the orders controller (or the api controller).
 
-    # Ie. if a store does not want to allow users to configure the number of
-    # installments they will receive. Add this to an initializer:
+    # Ie. if a store does not want to allow users to configure the end date of
+    # a subscription. Add this to an initializer:
 
     # ```
     # SolidusSubscriptions::Config.subscription_line_item_attributes = [
@@ -73,7 +73,6 @@ module SolidusSubscriptions
     #   :subscribable_id
     # ]
     # ```
-    #
     # This configuration also easily allows the gem to be customized to track
     # more information on the subcriptions line items.
     mattr_accessor(:subscription_line_item_attributes) do
@@ -82,7 +81,7 @@ module SolidusSubscriptions
         :subscribable_id,
         :interval_length,
         :interval_units,
-        :max_installments
+        :end_date
       ]
     end
 

@@ -109,7 +109,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
     context 'the subscription can be deactivated' do
       let(:traits) do
-        [{ max_installments: 1 }]
+        [{ end_date: Date.current.yesterday }]
       end
 
       it 'is inactive' do

@@ -49,7 +49,7 @@ To subscribe to a variant include the following parameters when posting to
       interval_length: 1,       // The time between subscription activations.
       interval_units: "month", // A plural qualifier for length.
                                 // Can be one of "day", "week", "month", or "year".
-      max_installments: 12      // Stop processing after this many subscription orders.
+      end_date: '2011/12/13'     // Stop processing after this date
                                 // (use null to process the subscription ad nauseam)
     }
   }

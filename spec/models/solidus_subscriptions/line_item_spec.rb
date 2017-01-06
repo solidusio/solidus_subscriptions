@@ -9,8 +9,6 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
 
   it { is_expected.to validate_numericality_of(:quantity).is_greater_than(0) }
   it { is_expected.to validate_numericality_of(:interval_length).is_greater_than(0) }
-  it { is_expected.to validate_numericality_of(:max_installments).is_greater_than(0) }
-  it { is_expected.to validate_numericality_of(:max_installments).allow_nil }
 
   describe "#interval" do
     let(:line_item) { create :subscription_line_item, :with_subscription }
@@ -40,7 +38,7 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
         "spree_line_item_id" => line_item.spree_line_item.id,
         "subscription_id" => line_item.subscription_id,
         "quantity" => line_item.quantity,
-        "max_installments" => line_item.max_installments,
+        "end_date" => line_item.end_date,
         "subscribable_id" => line_item.subscribable_id,
         "created_at" => line_item.created_at,
         "updated_at" => line_item.updated_at,

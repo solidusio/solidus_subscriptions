@@ -42,7 +42,7 @@ SolidusSubscriptions::Config.subscription_line_item_attributes = [
   :subscribable_id,
   :interval_length,
   :interval_units,
-  :max_installments
+  :end_date
 ]
 
 # SolidusSubscriptions::Subscription attributes which are allowed to

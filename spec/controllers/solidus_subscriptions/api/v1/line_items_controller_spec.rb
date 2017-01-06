@@ -44,7 +44,7 @@ RSpec.describe SolidusSubscriptions::Api::V1::LineItemsController, type: :contro
         let(:params) do
           {
             id: line.id,
-            subscription_line_item: { max_installments: "lots" },
+            subscription_line_item: { interval_length: -1 },
             checkout_id: order.number,
             order_token: order.guest_token
           }
@@ -70,7 +70,7 @@ RSpec.describe SolidusSubscriptions::Api::V1::LineItemsController, type: :contro
         let(:params) do
           {
             id: line.id,
-            subscription_line_item: { max_installments: "lots" },
+            subscription_line_item: { interval_length: -1 },
             token: user.spree_api_key
           }
         end
