@@ -71,11 +71,10 @@ module SolidusSubscriptions
     # subscription orders. It is a frozen duplicate of the current order and
     # cannot be saved
     def dummy_order
-      if spree_line_item
-        spree_line_item.order.dup.freeze
-      else
-        Spree::Order.create.freeze
-      end
+      order = spree_line_item ? spree_line_item.order.dup : Spree::Order.create
+      order.ship_address = subscription.shipping_address || subscription.user.ship_address if subscription
+
+      order.freeze
     end
 
     # A place holder for calculating dynamic values needed to display in the cart
