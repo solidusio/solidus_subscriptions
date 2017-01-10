@@ -6,7 +6,7 @@
 <title>
   Class: Spree::Admin::SubscriptionsController
   
-    &mdash; Documentation by YARD 0.9.6
+    &mdash; Documentation by YARD 0.9.7
   
 </title>
 
@@ -368,8 +368,8 @@
     <span class='id identifier rubyid_accessible_by'>accessible_by</span><span class='lparen'>(</span><span class='id identifier rubyid_current_ability'>current_ability</span><span class='comma'>,</span> <span class='symbol'>:index</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_ransack'>ransack</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:q</span><span class='rbracket'>]</span><span class='rparen'>)</span>
 
   <span class='ivar'>@subscriptions</span> <span class='op'>=</span> <span class='ivar'>@search</span><span class='period'>.</span><span class='id identifier rubyid_result'>result</span><span class='lparen'>(</span><span class='label'>distinct:</span> <span class='kw'>true</span><span class='rparen'>)</span><span class='period'>.</span>
-    <span class='id identifier rubyid_includes'>includes</span><span class='lparen'>(</span><span class='symbol'>:line_item</span><span class='comma'>,</span> <span class='symbol'>:user</span><span class='rparen'>)</span><span class='period'>.</span>
-    <span class='id identifier rubyid_joins'>joins</span><span class='lparen'>(</span><span class='symbol'>:line_item</span><span class='comma'>,</span> <span class='symbol'>:user</span><span class='rparen'>)</span><span class='period'>.</span>
+    <span class='id identifier rubyid_includes'>includes</span><span class='lparen'>(</span><span class='symbol'>:line_items</span><span class='comma'>,</span> <span class='symbol'>:user</span><span class='rparen'>)</span><span class='period'>.</span>
+    <span class='id identifier rubyid_joins'>joins</span><span class='lparen'>(</span><span class='symbol'>:line_items</span><span class='comma'>,</span> <span class='symbol'>:user</span><span class='rparen'>)</span><span class='period'>.</span>
     <span class='id identifier rubyid_page'>page</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:page</span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='period'>.</span>
     <span class='id identifier rubyid_per'>per</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:per_page</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='const'><span class='object_link'><a href="../../Spree.html" title="Spree (module)">Spree</a></span></span><span class='op'>::</span><span class='const'>Config</span><span class='lbracket'>[</span><span class='symbol'>:orders_per_page</span><span class='rbracket'>]</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
@@ -401,7 +401,7 @@
       <pre class="code"><span class="info file"># File 'app/controllers/spree/admin/subscriptions_controller.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_new'>new</span>
-  <span class='ivar'>@subscription</span><span class='period'>.</span><span class='id identifier rubyid_build_line_item'>build_line_item</span>
+  <span class='ivar'>@subscription</span><span class='period'>.</span><span class='id identifier rubyid_line_items'>line_items</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -457,9 +457,9 @@
 </div>
 
       <div id="footer">
-  Generated on Mon Jan  9 14:06:31 2017 by
+  Generated on Thu Jan 12 16:03:46 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.6 (ruby-2.3.0).
+  0.9.7 (ruby-2.3.0).
 </div>
 
     </div>

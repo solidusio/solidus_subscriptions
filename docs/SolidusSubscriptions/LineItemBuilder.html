@@ -6,7 +6,7 @@
 <title>
   Class: SolidusSubscriptions::LineItemBuilder
   
-    &mdash; Documentation by YARD 0.9.6
+    &mdash; Documentation by YARD 0.9.7
   
 </title>
 
@@ -109,7 +109,7 @@
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#subscription_line_item-instance_method" title="#subscription_line_item (instance method)">#<strong>subscription_line_item</strong>  &#x21d2; Object </a>
+      <a href="#subscription_line_items-instance_method" title="#subscription_line_items (instance method)">#<strong>subscription_line_items</strong>  &#x21d2; Object </a>
     
 
     
@@ -129,7 +129,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute subscription_line_item.</p>
+<p>Returns the value of attribute subscription_line_items.</p>
 </div></span>
   
 </li>
@@ -151,7 +151,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">#<strong>initialize</strong>(subscription_line_item)  &#x21d2; SolidusSubscriptions::LineItemBuilder </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">#<strong>initialize</strong>(subscription_line_items)  &#x21d2; SolidusSubscriptions::LineItemBuilder </a>
     
 
     
@@ -177,7 +177,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#line_item-instance_method" title="#line_item (instance method)">#<strong>line_item</strong>  &#x21d2; Spree::LineItem </a>
+      <a href="#spree_line_items-instance_method" title="#spree_line_items (instance method)">#<strong>spree_line_items</strong>  &#x21d2; Array&lt;Spree::LineItem&gt; </a>
     
 
     
@@ -208,7 +208,7 @@
     <div class="method_details first">
   <h3 class="signature first" id="initialize-instance_method">
   
-    #<strong>initialize</strong>(subscription_line_item)  &#x21d2; <tt><span class='object_link'><a href="" title="SolidusSubscriptions::LineItemBuilder (class)">SolidusSubscriptions::LineItemBuilder</a></span></tt> 
+    #<strong>initialize</strong>(subscription_line_items)  &#x21d2; <tt><span class='object_link'><a href="" title="SolidusSubscriptions::LineItemBuilder (class)">SolidusSubscriptions::LineItemBuilder</a></span></tt> 
   
 
   
@@ -228,10 +228,10 @@
   
     <li>
       
-        <span class='name'>subscription_line_item</span>
+        <span class='name'>subscription_line_items</span>
       
       
-        <span class='type'>(<tt><span class='object_link'><a href="LineItem.html" title="SolidusSubscriptions::LineItem (class)">SolidusSubscriptions::LineItem</a></span></tt>)</span>
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="LineItem.html" title="SolidusSubscriptions::LineItem (class)">SolidusSubscriptions::LineItem</a></span>&gt;</tt>)</span>
       
       
       
@@ -258,8 +258,8 @@
     <td>
       <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/line_item_builder.rb', line 13</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_subscription_line_item'>subscription_line_item</span><span class='rparen'>)</span>
-  <span class='ivar'>@subscription_line_item</span> <span class='op'>=</span> <span class='id identifier rubyid_subscription_line_item'>subscription_line_item</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_subscription_line_items'>subscription_line_items</span><span class='rparen'>)</span>
+  <span class='ivar'>@subscription_line_items</span> <span class='op'>=</span> <span class='id identifier rubyid_subscription_line_items'>subscription_line_items</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -274,9 +274,9 @@
       
       <span id=""></span>
       <div class="method_details first">
-  <h3 class="signature first" id="subscription_line_item-instance_method">
+  <h3 class="signature first" id="subscription_line_items-instance_method">
   
-    #<strong>subscription_line_item</strong>  &#x21d2; <tt>Object</tt>  <span class="extras">(readonly)</span>
+    #<strong>subscription_line_items</strong>  &#x21d2; <tt>Object</tt>  <span class="extras">(readonly)</span>
   
 
   
@@ -285,7 +285,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute subscription_line_item</p>
+<p>Returns the value of attribute subscription_line_items</p>
 
 
   </div>
@@ -306,8 +306,8 @@
     <td>
       <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/line_item_builder.rb', line 5</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_subscription_line_item'>subscription_line_item</span>
-  <span class='ivar'>@subscription_line_item</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_subscription_line_items'>subscription_line_items</span>
+  <span class='ivar'>@subscription_line_items</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -322,9 +322,9 @@
 
     
       <div class="method_details first">
-  <h3 class="signature first" id="line_item-instance_method">
+  <h3 class="signature first" id="spree_line_items-instance_method">
   
-    #<strong>line_item</strong>  &#x21d2; <tt>Spree::LineItem</tt> 
+    #<strong>spree_line_items</strong>  &#x21d2; <tt>Array&lt;Spree::LineItem&gt;</tt> 
   
 
   
@@ -347,20 +347,7 @@
     <li>
       
       
-        <span class='type'>(<tt>Spree::LineItem</tt>)</span>
-      
-      
-      
-    </li>
-  
-</ul>
-<p class="tag_title">Raises:</p>
-<ul class="raise">
-  
-    <li>
-      
-      
-        <span class='type'>(<tt><span class='object_link'><a href="UnsubscribableError.html" title="SolidusSubscriptions::UnsubscribableError (class)">UnsubscribableError</a></span></tt>)</span>
+        <span class='type'>(<tt>Array&lt;Spree::LineItem&gt;</tt>)</span>
       
       
       
@@ -380,17 +367,29 @@
 24
 25
 26
-27</pre>
+27
+28
+29
+30
+31
+32
+33</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/line_item_builder.rb', line 21</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_line_item'>line_item</span>
-  <span class='id identifier rubyid_variant'>variant</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="../Spree.html" title="Spree (module)">Spree</a></span></span><span class='op'>::</span><span class='const'>Variant</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span><span class='lparen'>(</span><span class='id identifier rubyid_subscription_line_item'>subscription_line_item</span><span class='period'>.</span><span class='id identifier rubyid_subscribable_id'>subscribable_id</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_raise'>raise</span> <span class='const'><span class='object_link'><a href="UnsubscribableError.html" title="SolidusSubscriptions::UnsubscribableError (class)">UnsubscribableError</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="UnsubscribableError.html#initialize-instance_method" title="SolidusSubscriptions::UnsubscribableError#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_variant'>variant</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_variant'>variant</span><span class='period'>.</span><span class='id identifier rubyid_subscribable?'>subscribable?</span>
-  <span class='kw'>return</span> <span class='kw'>unless</span> <span class='id identifier rubyid_variant'>variant</span><span class='period'>.</span><span class='id identifier rubyid_can_supply?'>can_supply?</span><span class='lparen'>(</span><span class='id identifier rubyid_subscription_line_item'>subscription_line_item</span><span class='period'>.</span><span class='id identifier rubyid_quantity'>quantity</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_spree_line_items'>spree_line_items</span>
+  <span class='id identifier rubyid_line_items'>line_items</span> <span class='op'>=</span> <span class='id identifier rubyid_subscription_line_items'>subscription_line_items</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_subscription_line_item'>subscription_line_item</span><span class='op'>|</span>
+    <span class='id identifier rubyid_variant'>variant</span> <span class='op'>=</span> <span class='id identifier rubyid_subscribables'>subscribables</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='id identifier rubyid_subscription_line_item'>subscription_line_item</span><span class='period'>.</span><span class='id identifier rubyid_subscribable_id'>subscribable_id</span><span class='rparen'>)</span>
 
-  <span class='const'><span class='object_link'><a href="../Spree.html" title="Spree (module)">Spree</a></span></span><span class='op'>::</span><span class='const'>LineItem</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='label'>variant:</span> <span class='id identifier rubyid_variant'>variant</span><span class='comma'>,</span> <span class='label'>quantity:</span> <span class='id identifier rubyid_subscription_line_item'>subscription_line_item</span><span class='period'>.</span><span class='id identifier rubyid_quantity'>quantity</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='const'><span class='object_link'><a href="UnsubscribableError.html" title="SolidusSubscriptions::UnsubscribableError (class)">UnsubscribableError</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="UnsubscribableError.html#initialize-instance_method" title="SolidusSubscriptions::UnsubscribableError#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_variant'>variant</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_variant'>variant</span><span class='period'>.</span><span class='id identifier rubyid_subscribable?'>subscribable?</span>
+    <span class='kw'>next</span> <span class='kw'>unless</span> <span class='id identifier rubyid_variant'>variant</span><span class='period'>.</span><span class='id identifier rubyid_can_supply?'>can_supply?</span><span class='lparen'>(</span><span class='id identifier rubyid_subscription_line_item'>subscription_line_item</span><span class='period'>.</span><span class='id identifier rubyid_quantity'>quantity</span><span class='rparen'>)</span>
+
+    <span class='const'><span class='object_link'><a href="../Spree.html" title="Spree (module)">Spree</a></span></span><span class='op'>::</span><span class='const'>LineItem</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='label'>variant:</span> <span class='id identifier rubyid_variant'>variant</span><span class='comma'>,</span> <span class='label'>quantity:</span> <span class='id identifier rubyid_subscription_line_item'>subscription_line_item</span><span class='period'>.</span><span class='id identifier rubyid_quantity'>quantity</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># Either all line items for an installment are fullfilled or none are
+</span>  <span class='id identifier rubyid_line_items'>line_items</span><span class='period'>.</span><span class='id identifier rubyid_all?'>all?</span> <span class='op'>?</span> <span class='id identifier rubyid_line_items'>line_items</span> <span class='op'>:</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -402,9 +401,9 @@
 </div>
 
       <div id="footer">
-  Generated on Mon Jan  9 14:06:31 2017 by
+  Generated on Thu Jan 12 16:03:46 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.6 (ruby-2.3.0).
+  0.9.7 (ruby-2.3.0).
 </div>
 
     </div>

@@ -19,7 +19,7 @@ RSpec.describe SolidusSubscriptions::ProcessInstallmentsJob do
     subject { described_class.new.perform(installments) }
 
     it 'processes the consolidated installment' do
-      expect_any_instance_of(SolidusSubscriptions::ConsolidatedInstallment).
+      expect_any_instance_of(SolidusSubscriptions::Checkout).
         to receive(:process).once
 
       subject

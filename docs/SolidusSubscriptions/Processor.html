@@ -6,7 +6,7 @@
 <title>
   Class: SolidusSubscriptions::Processor
   
-    &mdash; Documentation by YARD 0.9.6
+    &mdash; Documentation by YARD 0.9.7
   
 </title>
 
@@ -283,13 +283,13 @@ instance.</p>
       <pre class="lines">
 
 
-50
 51
 52
-53</pre>
+53
+54</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/solidus_subscriptions/processor.rb', line 50</span>
+      <pre class="code"><span class="info file"># File 'lib/solidus_subscriptions/processor.rb', line 51</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_users'>users</span><span class='rparen'>)</span>
   <span class='ivar'>@users</span> <span class='op'>=</span> <span class='id identifier rubyid_users'>users</span>
@@ -344,12 +344,12 @@ instance.</p>
       <pre class="lines">
 
 
-42
 43
-44</pre>
+44
+45</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/solidus_subscriptions/processor.rb', line 42</span>
+      <pre class="code"><span class="info file"># File 'lib/solidus_subscriptions/processor.rb', line 43</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_users'>users</span>
   <span class='ivar'>@users</span>
@@ -393,12 +393,12 @@ user, and schedule a processing job for the group as a batch</p>
       <pre class="lines">
 
 
-14
 15
-16</pre>
+16
+17</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/solidus_subscriptions/processor.rb', line 14</span>
+      <pre class="code"><span class="info file"># File 'lib/solidus_subscriptions/processor.rb', line 15</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_run'>run</span>
   <span class='id identifier rubyid_batched_users_to_be_processed'>batched_users_to_be_processed</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_batch'>batch</span><span class='op'>|</span> <span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_batch'>batch</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_build_jobs'>build_jobs</span> <span class='rbrace'>}</span>
@@ -441,15 +441,31 @@ instance</p>
       <pre class="lines">
 
 
-57
 58
-59</pre>
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/solidus_subscriptions/processor.rb', line 57</span>
+      <pre class="code"><span class="info file"># File 'lib/solidus_subscriptions/processor.rb', line 58</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_build_jobs'>build_jobs</span>
-  <span class='id identifier rubyid_users'>users</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_user'>user</span><span class='op'>|</span> <span class='const'><span class='object_link'><a href="ProcessInstallmentsJob.html" title="SolidusSubscriptions::ProcessInstallmentsJob (class)">ProcessInstallmentsJob</a></span></span><span class='period'>.</span><span class='id identifier rubyid_perform_later'>perform_later</span> <span class='id identifier rubyid_installments'>installments</span><span class='lparen'>(</span><span class='id identifier rubyid_user'>user</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+  <span class='id identifier rubyid_users'>users</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_user'>user</span><span class='op'>|</span>
+    <span class='id identifier rubyid_installemts_by_address_and_user'>installemts_by_address_and_user</span> <span class='op'>=</span> <span class='id identifier rubyid_installments'>installments</span><span class='lparen'>(</span><span class='id identifier rubyid_user'>user</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_group_by'>group_by</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_i'>i</span><span class='op'>|</span>
+      <span class='id identifier rubyid_i'>i</span><span class='period'>.</span><span class='id identifier rubyid_subscription'>subscription</span><span class='period'>.</span><span class='id identifier rubyid_shipping_address_id'>shipping_address_id</span>
+    <span class='kw'>end</span>
+
+    <span class='id identifier rubyid_installemts_by_address_and_user'>installemts_by_address_and_user</span><span class='period'>.</span><span class='id identifier rubyid_values'>values</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_grouped_installments'>grouped_installments</span><span class='op'>|</span>
+      <span class='const'><span class='object_link'><a href="ProcessInstallmentsJob.html" title="SolidusSubscriptions::ProcessInstallmentsJob (class)">ProcessInstallmentsJob</a></span></span><span class='period'>.</span><span class='id identifier rubyid_perform_later'>perform_later</span> <span class='id identifier rubyid_grouped_installments'>grouped_installments</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:id</span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -461,9 +477,9 @@ instance</p>
 </div>
 
       <div id="footer">
-  Generated on Mon Jan  9 14:06:31 2017 by
+  Generated on Thu Jan 12 16:03:46 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.6 (ruby-2.3.0).
+  0.9.7 (ruby-2.3.0).
 </div>
 
     </div>

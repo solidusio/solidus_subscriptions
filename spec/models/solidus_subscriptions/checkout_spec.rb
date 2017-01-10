@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
+RSpec.describe SolidusSubscriptions::Checkout do
   let(:consolidated_installment) { described_class.new(installments) }
   let(:root_order) { create :completed_order_with_pending_payment }
   let(:subscription_user) do

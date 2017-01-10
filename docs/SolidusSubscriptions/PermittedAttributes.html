@@ -6,7 +6,7 @@
 <title>
   Module: SolidusSubscriptions::PermittedAttributes
   
-    &mdash; Documentation by YARD 0.9.6
+    &mdash; Documentation by YARD 0.9.7
   
 </title>
 
@@ -199,7 +199,7 @@
 
 <span class='kw'>def</span> <span class='id identifier rubyid_subscription_attributes'>subscription_attributes</span>
   <span class='const'><span class='object_link'><a href="Config.html" title="SolidusSubscriptions::Config (module)">Config</a></span></span><span class='period'>.</span><span class='id identifier rubyid_subscription_attributes'>subscription_attributes</span> <span class='op'>|</span> <span class='lbracket'>[</span>
-    <span class='lbrace'>{</span> <span class='label'>line_item_attributes:</span> <span class='id identifier rubyid_nested'>nested</span><span class='lparen'>(</span><span class='id identifier rubyid_subscription_line_item_attributes'>subscription_line_item_attributes</span><span class='rparen'>)</span> <span class='op'>-</span> <span class='lbracket'>[</span><span class='symbol'>:subscribable_id</span><span class='rbracket'>]</span> <span class='rbrace'>}</span>
+    <span class='lbrace'>{</span> <span class='label'>line_items_attributes:</span> <span class='id identifier rubyid_nested'>nested</span><span class='lparen'>(</span><span class='id identifier rubyid_subscription_line_item_attributes'>subscription_line_item_attributes</span><span class='rparen'>)</span> <span class='op'>-</span> <span class='lbracket'>[</span><span class='symbol'>:subscribable_id</span><span class='rbracket'>]</span> <span class='rbrace'>}</span>
   <span class='rbracket'>]</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -230,7 +230,7 @@
       <pre class="code"><span class="info file"># File 'lib/solidus_subscriptions/permitted_attributes.rb', line 19</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_subscription_line_item_attributes'>subscription_line_item_attributes</span>
-  <span class='const'><span class='object_link'><a href="Config.html" title="SolidusSubscriptions::Config (module)">Config</a></span></span><span class='period'>.</span><span class='id identifier rubyid_subscription_line_item_attributes'>subscription_line_item_attributes</span>
+  <span class='lbracket'>[</span><span class='const'><span class='object_link'><a href="Config.html" title="SolidusSubscriptions::Config (module)">Config</a></span></span><span class='period'>.</span><span class='id identifier rubyid_subscription_line_item_attributes'>subscription_line_item_attributes</span><span class='rbracket'>]</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -288,9 +288,9 @@
 </div>
 
       <div id="footer">
-  Generated on Mon Jan  9 14:06:30 2017 by
+  Generated on Thu Jan 12 16:03:46 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.6 (ruby-2.3.0).
+  0.9.7 (ruby-2.3.0).
 </div>
 
     </div>
