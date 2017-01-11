@@ -33,7 +33,7 @@ RSpec.describe "Subscription endpoints", type: :request do
     before { Timecop.freeze(Date.parse("2016-09-26")) }
     after  { Timecop.return }
 
-    let(:expected_date) { "2016-10-27" }
+    let(:expected_date) { "2016-10-27T00:00:00.000Z" }
 
     it "returns the updated record", :aggregate_failures do
       post solidus_subscriptions.skip_api_v1_subscription_path(subscription), token: user.spree_api_key

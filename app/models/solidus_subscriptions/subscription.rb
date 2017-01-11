@@ -154,7 +154,8 @@ module SolidusSubscriptions
     #   eligible to be processed.
     def next_actionable_date
       return nil unless active?
-      (actionable_date || Time.zone.now) + interval
+      new_date = (actionable_date || Time.zone.now)
+      (new_date + interval).beginning_of_minute
     end
 
     # Advance the actionable date to the next_actionable_date value. Will modify

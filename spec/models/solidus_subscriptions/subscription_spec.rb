@@ -47,7 +47,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
     let(:total_skips) { 0 }
     let(:successive_skips) { 0 }
-    let(:expected_date) { 1.month.from_now.to_date }
+    let(:expected_date) { 1.month.from_now.beginning_of_minute }
 
     let(:subscription) do
       create(

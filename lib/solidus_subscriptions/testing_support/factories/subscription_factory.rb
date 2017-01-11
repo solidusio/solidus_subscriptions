@@ -17,12 +17,12 @@ FactoryGirl.define do
 
     trait :actionable do
       with_line_item
-      actionable_date { Time.zone.now.yesterday }
+      actionable_date { Time.zone.now.yesterday.beginning_of_minute }
     end
 
     trait :not_actionable do
       with_line_item
-      actionable_date { Time.zone.now.tomorrow }
+      actionable_date { Time.zone.now.tomorrow.beginning_of_minute }
     end
 
     trait(:pending_cancellation) do
