@@ -21,7 +21,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     subject { installment.out_of_stock }
 
     let(:expected_date) do
-      Date.current + SolidusSubscriptions::Config.reprocessing_interval
+      (DateTime.current + SolidusSubscriptions::Config.reprocessing_interval).beginning_of_minute
     end
 
     it { is_expected.to be_a SolidusSubscriptions::InstallmentDetail }
@@ -73,7 +73,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     let(:order) { create :order }
 
     let(:expected_date) do
-      Date.current + SolidusSubscriptions::Config.reprocessing_interval
+      (DateTime.current + SolidusSubscriptions::Config.reprocessing_interval).beginning_of_minute
     end
 
     it { is_expected.to be_a SolidusSubscriptions::InstallmentDetail }
@@ -128,7 +128,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     let(:order) { create :order }
 
     let(:expected_date) do
-      Date.current + SolidusSubscriptions::Config.reprocessing_interval
+      (DateTime.current + SolidusSubscriptions::Config.reprocessing_interval).beginning_of_minute
     end
 
     it { is_expected.to be_a SolidusSubscriptions::InstallmentDetail }

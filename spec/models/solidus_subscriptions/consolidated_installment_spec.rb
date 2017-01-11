@@ -110,7 +110,7 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
         variant.stock_items.update_all(count_on_hand: 0, backorderable: false)
       end
 
-      let(:expected_date) { Date.current + SolidusSubscriptions::Config.reprocessing_interval }
+      let(:expected_date) { (DateTime.current + SolidusSubscriptions::Config.reprocessing_interval).beginning_of_minute }
 
       it 'creates a failed installment detail' do
         subject
@@ -135,7 +135,7 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
 
     context 'the payment fails' do
       let(:credit_card) { create(:credit_card, default: true) }
-      let(:expected_date) { Date.current + SolidusSubscriptions::Config.reprocessing_interval }
+      let(:expected_date) { (DateTime.current + SolidusSubscriptions::Config.reprocessing_interval).beginning_of_minute }
 
       before do
         consolidated_installment.user.credit_cards << credit_card
@@ -195,7 +195,7 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
     end
 
     context 'there is an aribitrary failure' do
-      let(:expected_date) { Date.current + SolidusSubscriptions::Config.reprocessing_interval }
+      let(:expected_date) { (DateTime.current + SolidusSubscriptions::Config.reprocessing_interval).beginning_of_minute }
 
       before do
         allow(consolidated_installment).to receive(:populate).and_raise('arbitrary runtime error')
