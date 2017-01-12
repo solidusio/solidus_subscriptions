@@ -22,7 +22,7 @@ module SolidusSubscriptions
     belongs_to(
       :subscription,
       class_name: 'SolidusSubscriptions::Subscription',
-      inverse_of: :line_item
+      inverse_of: :line_items
     )
 
     enum interval_units: {
@@ -81,7 +81,7 @@ module SolidusSubscriptions
     # A place holder for calculating dynamic values needed to display in the cart
     # it is frozen and cannot be saved
     def dummy_subscription
-      Subscription.new(line_item: dup).freeze
+      Subscription.new(line_items: [dup]).freeze
     end
 
     def update_actionable_date_if_interval_changed

@@ -4,7 +4,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
   it { is_expected.to have_many :installments }
   it { is_expected.to belong_to :user }
   it { is_expected.to belong_to :store }
-  it { is_expected.to have_one :line_item }
+  it { is_expected.to have_many :line_items }
 
   it { is_expected.to validate_presence_of :user }
   it { is_expected.to validate_presence_of :skip_count }
@@ -12,7 +12,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
   it { is_expected.to validate_numericality_of(:skip_count).is_greater_than_or_equal_to(0) }
   it { is_expected.to validate_numericality_of(:successive_skip_count).is_greater_than_or_equal_to(0) }
 
-  it { is_expected.to accept_nested_attributes_for :line_item }
+  it { is_expected.to accept_nested_attributes_for :line_items }
 
   describe '#cancel' do
     subject { subscription.cancel }
@@ -195,10 +195,10 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
     subject { subscription.line_item_builder }
 
     let(:subscription) { create :subscription, :with_line_item }
-    let(:line_item) { subscription.line_item }
+    let(:line_items) { subscription.line_items }
 
     it { is_expected.to be_a SolidusSubscriptions::LineItemBuilder }
-    it { is_expected.to have_attributes(subscription_line_items: [line_item]) }
+    it { is_expected.to have_attributes(subscription_line_items: line_items) }
   end
 
   describe '#processing_state' do

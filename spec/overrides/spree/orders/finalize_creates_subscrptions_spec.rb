@@ -23,7 +23,7 @@ RSpec.describe Spree::Orders::FinalizeCreatesSubscriptions do
       expect(subscription).to have_attributes(
         user_id: order.user_id,
         actionable_date: expected_actionable_date,
-        line_item: subscription_line_item
+        line_items: [subscription_line_item]
       )
     end
   end

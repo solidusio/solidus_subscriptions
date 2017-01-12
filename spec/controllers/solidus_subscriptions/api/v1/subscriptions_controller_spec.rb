@@ -43,10 +43,10 @@ RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :co
 
     let(:subscription_params) do
       {
-        line_item_attributes: {
-          id: subscription.line_item.id,
+        line_items_attributes: [{
+          id: subscription.line_items.first.id,
           quantity: 6
-        }
+        }]
       }
     end
 
@@ -57,10 +57,10 @@ RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :co
       context 'when the params are not valid' do
         let(:subscription_params) do
           {
-            line_item_attributes: {
-              id: subscription.line_item.id,
+            line_items_attributes: [{
+              id: subscription.line_items.first.id,
               quantity: -6
-            }
+            }]
           }
         end
 

@@ -9,7 +9,7 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
     let(:user) { subscription_line_items.first.order.user }
     let(:store) { subscription_line_items.first.order.store }
 
-    it { is_expected.to be_a Array }
+    it { is_expected.to be_a SolidusSubscriptions::Subscription }
 
     it 'creates the correct number of subscritpions' do
       expect { subject }.
@@ -18,10 +18,9 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
     end
 
     it 'creates subscriptions with the correct attributes' do
-      subscription = subject.first
-      expect(subscription).to have_attributes(
+      expect(subject).to have_attributes(
         user: user,
-        line_item: subscription_line_item,
+        line_items: subscription_line_items,
         store: store
       )
     end

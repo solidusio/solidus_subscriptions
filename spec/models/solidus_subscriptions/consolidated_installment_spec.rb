@@ -28,7 +28,7 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
 
   describe '#process', :checkout do
     subject(:order) { consolidated_installment.process }
-    let(:subscription_line_item) { installments.first.subscription.line_item }
+    let(:subscription_line_item) { installments.first.subscription.line_items.first }
 
     shared_examples 'a completed checkout' do
       it { is_expected.to be_a Spree::Order }
@@ -101,11 +101,11 @@ RSpec.describe SolidusSubscriptions::ConsolidatedInstallment do
     end
 
     context 'the variant is out of stock' do
-      let(:subscription_line_item) { installments.last.subscription.line_item }
+      let(:subscription_line_item) { installments.last.subscription.line_items.first }
 
       # Remove stock for 1 variant in the consolidated installment
       before do
-        subscribable_id = installments.first.subscription.line_item.subscribable_id
+        subscribable_id = installments.first.subscription.line_items.first.subscribable_id
         variant = Spree::Variant.find(subscribable_id)
         variant.stock_items.update_all(count_on_hand: 0, backorderable: false)
       end
