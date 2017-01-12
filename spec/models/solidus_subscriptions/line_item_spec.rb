@@ -80,6 +80,26 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
         expect(subject.variant_id).to eq line_item.subscribable_id
       end
     end
+
+    context 'with an associated subscription' do
+      context 'the associated subscription has an address' do
+        let(:line_item) do
+          create(:subscription_line_item, :with_subscription, subscription_traits: [:with_address])
+        end
+
+        it 'uses the subscription shipping address' do
+          expect(subject.order.ship_address).to eq line_item.subscription.shipping_address
+        end
+      end
+
+      context 'the associated subscription has no address' do
+        let(:line_item) { create(:subscription_line_item, :with_subscription) }
+
+        it 'uses the subscription users shipping address' do
+          expect(subject.order.ship_address).to eq line_item.subscription.user.ship_address
+        end
+      end
+    end
   end
 
   describe "#update_actionable_date_if_interval_changed" do

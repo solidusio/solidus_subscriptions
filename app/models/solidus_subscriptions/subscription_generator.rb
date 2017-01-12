@@ -12,10 +12,16 @@ module SolidusSubscriptions
     def self.activate(subscription_line_items)
       return if subscription_line_items.empty?
 
-      user = subscription_line_items.first.order.user
-      store = subscription_line_items.first.order.store
+      order = subscription_line_items.first.order
 
-      Subscription.create!(user: user, line_items: subscription_line_items, store: store) do |sub|
+      subscription_attributes = {
+        user: order.user,
+        line_items: subscription_line_items,
+        store: order.store,
+        shipping_address: order.ship_address
+      }
+
+      Subscription.create!(subscription_attributes) do |sub|
         sub.actionable_date = sub.next_actionable_date
       end
     end

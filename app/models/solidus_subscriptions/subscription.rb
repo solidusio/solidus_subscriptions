@@ -9,11 +9,12 @@ module SolidusSubscriptions
     has_many :line_items, class_name: 'SolidusSubscriptions::LineItem'
     has_many :installments, class_name: 'SolidusSubscriptions::Installment'
     belongs_to :store, class_name: 'Spree::Store'
+    belongs_to :shipping_address, class_name: 'Spree::Address'
 
     validates :user, presence: :true
     validates :skip_count, :successive_skip_count, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
-    accepts_nested_attributes_for :line_items
+    accepts_nested_attributes_for :line_items, :shipping_address
 
     # The following methods are delegated to the associated
     # SolidusSubscriptions::LineItem

@@ -46,7 +46,17 @@ RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :co
         line_items_attributes: [{
           id: subscription.line_items.first.id,
           quantity: 6
-        }]
+        }],
+        shipping_address_attributes: {
+          firstname: 'Ash',
+          lastname: 'Ketchum',
+          address1: '1 Rainbow Road',
+          city: 'Palette Town',
+          country_id: create(:country).id,
+          state_id: create(:state).id,
+          phone: '999-999-999',
+          zipcode: '10001'
+        }
       }
     end
 
