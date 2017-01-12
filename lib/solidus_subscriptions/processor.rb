@@ -55,7 +55,7 @@ module SolidusSubscriptions
     # Create `ProcessInstallmentsJob`s for the users used to initalize the
     # instance
     def build_jobs
-      users.map { |user| ProcessInstallmentsJob.perform_later installments(user) }
+      users.map { |user| ProcessInstallmentsJob.perform_later installments(user).map(&:id) }
     end
 
     private
@@ -63,6 +63,7 @@ module SolidusSubscriptions
     def subscriptions_by_id
       @subscriptions_by_id ||= Subscription.
         actionable.
+        includes(:line_item, :user).
         where(user_id: user_ids).
         group_by(&:user_id)
     end
@@ -80,8 +81,8 @@ module SolidusSubscriptions
     end
 
     def new_installments(user)
-      subscriptions_by_id.fetch(user.id, []).map do |sub|
-        ActiveRecord::Base.transaction do
+      ActiveRecord::Base.transaction do
+        subscriptions_by_id.fetch(user.id, []).map do |sub|
           sub.successive_skip_count = 0
           sub.advance_actionable_date
           sub.cancel! if sub.pending_cancellation?

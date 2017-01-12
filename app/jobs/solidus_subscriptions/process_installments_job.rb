@@ -7,12 +7,15 @@ module SolidusSubscriptions
 
      # Process a collection of installments
      #
-     # @param installments [Array<SolidusSubscriptions::Installment>] The
+     # @param installment_ids [Array<Integer>] The ids of the
      #   installments to be processed together and fulfilled by the same order
      #
      # @return [Spree::Order] The order which fulfills the list of installments
-     def perform(installments)
-       return if installments.empty?
+     def perform(installment_ids)
+       return if installment_ids.empty?
+
+       installments = SolidusSubscriptions::Installment.where(id: installment_ids).
+         includes(subscription: [:line_item, :user])
        ConsolidatedInstallment.new(installments).process
      end
   end
