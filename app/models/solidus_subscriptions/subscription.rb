@@ -173,7 +173,7 @@ module SolidusSubscriptions
     #
     # @return [SolidusSubscriptions::LineItemBuilder]
     def line_item_builder
-      LineItemBuilder.new(line_item)
+      LineItemBuilder.new([line_item])
     end
 
     # The state of the last attempt to process an installment associated to

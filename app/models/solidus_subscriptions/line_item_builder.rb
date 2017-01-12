@@ -1,29 +1,44 @@
-# This class is responsible for taking a SubscriptionLineItem and building
-# it into a Spree::LineItem which can be added to an order
+# This class is responsible for taking SubscriptionLineItems and building
+# them into Spree::LineItems which can be added to an order
 module SolidusSubscriptions
   class LineItemBuilder
-    attr_reader :subscription_line_item
+    attr_reader :subscription_line_items
 
     # Get a new instance of a LineItemBuilder
     #
-    # @param subscription_line_item [SolidusSubscriptions::LineItem] The
+    # @param subscription_line_items[Array<SolidusSubscriptions::LineItem>] The
     #   subscription line item to be converted into a Spree::LineItem
     #
     # @return [SolidusSubscriptions::LineItemBuilder]
-    def initialize(subscription_line_item)
-      @subscription_line_item = subscription_line_item
+    def initialize(subscription_line_items)
+      @subscription_line_items = subscription_line_items
     end
 
     # Get a new (unpersisted) Spree::LineItem which matches the details of
     # :subscription_line_item
     #
-    # @return [Spree::LineItem]
-    def line_item
-      variant = Spree::Variant.find(subscription_line_item.subscribable_id)
-      raise UnsubscribableError.new(variant) unless variant.subscribable?
-      return unless variant.can_supply?(subscription_line_item.quantity)
+    # @return [Array<Spree::LineItem>]
+    def spree_line_items
+      line_items = subscription_line_items.map do |subscription_line_item|
+        variant = subscribables.fetch(subscription_line_item.subscribable_id)
 
-      Spree::LineItem.new(variant: variant, quantity: subscription_line_item.quantity)
+        raise UnsubscribableError.new(variant) unless variant.subscribable?
+        next unless variant.can_supply?(subscription_line_item.quantity)
+
+        Spree::LineItem.new(variant: variant, quantity: subscription_line_item.quantity)
+      end
+
+      # Either all line items for an installment are fullfilled or none are
+      line_items.all? ? line_items : []
+    end
+
+    private
+
+    def subscribables
+      return @subscribables if @subscribables
+
+      ids = subscription_line_items.map(&:subscribable_id)
+      @subscribables ||= Spree::Variant.find(ids).index_by(&:id)
     end
   end
 end

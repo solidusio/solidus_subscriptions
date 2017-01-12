@@ -198,7 +198,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
     let(:line_item) { subscription.line_item }
 
     it { is_expected.to be_a SolidusSubscriptions::LineItemBuilder }
-    it { is_expected.to have_attributes(subscription_line_item: line_item) }
+    it { is_expected.to have_attributes(subscription_line_items: [line_item]) }
   end
 
   describe '#processing_state' do
