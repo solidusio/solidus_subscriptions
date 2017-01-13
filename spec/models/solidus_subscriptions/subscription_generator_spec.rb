@@ -26,4 +26,21 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
       )
     end
   end
+
+  describe '.group' do
+    subject { described_class.group(subscription_line_items) }
+
+    let(:monthly_subscriptions) { build_stubbed_list :subscription_line_item, 2 }
+    let(:bimonthly_subscriptions) { build_stubbed_list :subscription_line_item, 2, interval_length: 2 }
+    let(:weekly_subscriptions) { build_stubbed_list :subscription_line_item, 2, interval_units: :week }
+    let(:expiring_subscriptions) { build_stubbed_list :subscription_line_item, 2, end_date: DateTime.current.tomorrow }
+
+    let(:subscription_line_items) { monthly_subscriptions + bimonthly_subscriptions + weekly_subscriptions + expiring_subscriptions }
+
+    it { is_expected.to be_a Array }
+    it { is_expected.to include monthly_subscriptions }
+    it { is_expected.to include bimonthly_subscriptions }
+    it { is_expected.to include weekly_subscriptions }
+    it { is_expected.to include expiring_subscriptions }
+  end
 end
