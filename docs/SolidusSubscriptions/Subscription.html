@@ -470,13 +470,13 @@ the record.</p>
       <pre class="lines">
 
 
-165
 166
 167
-168</pre>
+168
+169</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 165</span>
+      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 166</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_advance_actionable_date'>advance_actionable_date</span>
   <span class='id identifier rubyid_update!'>update!</span> <span class='label'>actionable_date:</span> <span class='id identifier rubyid_next_actionable_date'>next_actionable_date</span>
@@ -662,12 +662,12 @@ can generate the appropriate line item for the subscribable object</p>
       <pre class="lines">
 
 
-175
 176
-177</pre>
+177
+178</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 175</span>
+      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 176</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_line_item_builder'>line_item_builder</span>
   <span class='const'><span class='object_link'><a href="LineItemBuilder.html" title="SolidusSubscriptions::LineItemBuilder (class)">LineItemBuilder</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="LineItemBuilder.html#initialize-instance_method" title="SolidusSubscriptions::LineItemBuilder#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_line_items'>line_items</span><span class='rparen'>)</span>
@@ -726,14 +726,16 @@ current actionable_date this subscription will be eligible to be processed.</p>
 155
 156
 157
-158</pre>
+158
+159</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 155</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_next_actionable_date'>next_actionable_date</span>
   <span class='kw'>return</span> <span class='kw'>nil</span> <span class='kw'>unless</span> <span class='id identifier rubyid_active?'>active?</span>
-  <span class='lparen'>(</span><span class='id identifier rubyid_actionable_date'>actionable_date</span> <span class='op'>||</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_zone'>zone</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span><span class='rparen'>)</span> <span class='op'>+</span> <span class='id identifier rubyid_interval'>interval</span>
+  <span class='id identifier rubyid_new_date'>new_date</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_actionable_date'>actionable_date</span> <span class='op'>||</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_zone'>zone</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span><span class='rparen'>)</span>
+  <span class='lparen'>(</span><span class='id identifier rubyid_new_date'>new_date</span> <span class='op'>+</span> <span class='id identifier rubyid_interval'>interval</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_beginning_of_minute'>beginning_of_minute</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -787,13 +789,13 @@ fulfilled.</p>
       <pre class="lines">
 
 
-185
 186
 187
-188</pre>
+188
+189</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 185</span>
+      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 186</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_processing_state'>processing_state</span>
   <span class='kw'>return</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>pending</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_installments'>installments</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
@@ -849,7 +851,7 @@ fulfilled.</p>
 </div>
 
       <div id="footer">
-  Generated on Thu Jan 12 16:03:46 2017 by
+  Generated on Fri Jan 13 11:28:35 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.7 (ruby-2.3.0).
 </div>
