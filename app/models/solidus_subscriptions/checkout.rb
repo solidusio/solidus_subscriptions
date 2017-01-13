@@ -3,14 +3,14 @@
 # intallments. This is to group together subscriptions being
 # processed on the same day for a specific user
 module SolidusSubscriptions
-  class ConsolidatedInstallment
+  class Checkout
     # @return [Array<Installment>] The collection of installments to be used
     #   when generating a new order
     attr_reader :installments
 
     delegate :user, to: :subscription
 
-    # Get a new instance of a ConsolidatedInstallment
+    # Get a new instance of a Checkout
     #
     # @param installments [Array<Installment>] The collection of installments
     # to be used when generating a new order

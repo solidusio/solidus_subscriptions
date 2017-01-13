@@ -6,7 +6,7 @@
 <title>
   Class: SolidusSubscriptions::Api::V1::SubscriptionsController
   
-    &mdash; Documentation by YARD 0.9.6
+    &mdash; Documentation by YARD 0.9.7
   
 </title>
 
@@ -296,7 +296,7 @@
 
 <span class='kw'>def</span> <span class='id identifier rubyid_update'>update</span>
   <span class='kw'>if</span> <span class='ivar'>@subscription</span><span class='period'>.</span><span class='id identifier rubyid_update'>update</span><span class='lparen'>(</span><span class='id identifier rubyid_subscription_params'>subscription_params</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_render'>render</span> <span class='label'>json:</span> <span class='ivar'>@subscription</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span><span class='lparen'>(</span><span class='label'>include:</span> <span class='symbol'>:line_item</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_render'>render</span> <span class='label'>json:</span> <span class='ivar'>@subscription</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span><span class='lparen'>(</span><span class='label'>include:</span> <span class='lbracket'>[</span><span class='symbol'>:line_items</span><span class='comma'>,</span> <span class='symbol'>:shipping_address</span><span class='rbracket'>]</span><span class='rparen'>)</span>
   <span class='kw'>else</span>
     <span class='id identifier rubyid_render'>render</span> <span class='label'>json:</span> <span class='ivar'>@subscription</span><span class='period'>.</span><span class='id identifier rubyid_errors'>errors</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span><span class='comma'>,</span> <span class='label'>status:</span> <span class='int'>422</span>
   <span class='kw'>end</span>
@@ -311,9 +311,9 @@
 </div>
 
       <div id="footer">
-  Generated on Mon Jan  9 14:06:31 2017 by
+  Generated on Thu Jan 12 16:03:47 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.6 (ruby-2.3.0).
+  0.9.7 (ruby-2.3.0).
 </div>
 
     </div>

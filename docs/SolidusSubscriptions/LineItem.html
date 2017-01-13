@@ -6,7 +6,7 @@
 <title>
   Class: SolidusSubscriptions::LineItem
   
-    &mdash; Documentation by YARD 0.9.6
+    &mdash; Documentation by YARD 0.9.7
   
 </title>
 
@@ -291,12 +291,12 @@ subscription orders. It is frozen and cannot be saved</p>
       <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/line_item.rb', line 58</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_dummy_line_item'>dummy_line_item</span>
-  <span class='id identifier rubyid_dummy_subscription'>dummy_subscription</span><span class='period'>.</span><span class='id identifier rubyid_line_item_builder'>line_item_builder</span><span class='period'>.</span><span class='id identifier rubyid_line_item'>line_item</span><span class='period'>.</span><span class='id identifier rubyid_tap'>tap</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_li'>li</span><span class='op'>|</span>
-    <span class='kw'>next</span> <span class='kw'>unless</span> <span class='id identifier rubyid_li'>li</span>
-    <span class='id identifier rubyid_li'>li</span><span class='period'>.</span><span class='id identifier rubyid_order'>order</span> <span class='op'>=</span> <span class='id identifier rubyid_dummy_order'>dummy_order</span>
-    <span class='id identifier rubyid_li'>li</span><span class='period'>.</span><span class='id identifier rubyid_validate'>validate</span>
-  <span class='kw'>end</span><span class='period'>.</span>
-  <span class='id identifier rubyid_freeze'>freeze</span>
+  <span class='id identifier rubyid_li'>li</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="LineItemBuilder.html" title="SolidusSubscriptions::LineItemBuilder (class)">LineItemBuilder</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="LineItemBuilder.html#initialize-instance_method" title="SolidusSubscriptions::LineItemBuilder#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='kw'>self</span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_spree_line_items'><span class='object_link'><a href="LineItemBuilder.html#spree_line_items-instance_method" title="SolidusSubscriptions::LineItemBuilder#spree_line_items (method)">spree_line_items</a></span></span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span>
+  <span class='kw'>return</span> <span class='kw'>unless</span> <span class='id identifier rubyid_li'>li</span>
+
+  <span class='id identifier rubyid_li'>li</span><span class='period'>.</span><span class='id identifier rubyid_order'>order</span> <span class='op'>=</span> <span class='id identifier rubyid_dummy_order'>dummy_order</span>
+  <span class='id identifier rubyid_li'>li</span><span class='period'>.</span><span class='id identifier rubyid_validate'>validate</span>
+  <span class='id identifier rubyid_li'>li</span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -397,9 +397,9 @@ subscription orders. It is frozen and cannot be saved</p>
 </div>
 
       <div id="footer">
-  Generated on Mon Jan  9 14:06:31 2017 by
+  Generated on Thu Jan 12 16:03:46 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.6 (ruby-2.3.0).
+  0.9.7 (ruby-2.3.0).
 </div>
 
     </div>
