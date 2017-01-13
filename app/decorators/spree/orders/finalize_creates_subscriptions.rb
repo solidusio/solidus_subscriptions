@@ -6,7 +6,10 @@ module Spree
   module Orders
     module FinalizeCreatesSubscriptions
       def finalize!
-        SolidusSubscriptions::SubscriptionGenerator.activate(subscription_line_items)
+        SolidusSubscriptions::SubscriptionGenerator.group(subscription_line_items).each do |line_items|
+          SolidusSubscriptions::SubscriptionGenerator.activate(line_items)
+        end
+
         super
       end
     end
