@@ -6,7 +6,7 @@ RSpec.describe Spree::Orders::FinalizeCreatesSubscriptions do
 
     let(:order) { create :order, :with_subscription_line_items }
     let(:subscription_line_item) { order.subscription_line_items.last }
-    let(:expected_actionable_date) { (Date.current + subscription_line_item.interval).to_date }
+    let(:expected_actionable_date) { (DateTime.current + subscription_line_item.interval).beginning_of_minute }
 
     around { |e| Timecop.freeze { e.run } }
 
