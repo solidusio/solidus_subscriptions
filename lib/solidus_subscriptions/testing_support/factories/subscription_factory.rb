@@ -1,6 +1,8 @@
 FactoryGirl.define do
   factory :subscription, class: 'SolidusSubscriptions::Subscription' do
     store
+    interval_length 1
+    interval_units :month
 
     user do
       ccs = build_list(:credit_card, 1, gateway_customer_profile_id: 'BGS-123', default: true)
