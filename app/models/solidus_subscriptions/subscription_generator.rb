@@ -17,12 +17,14 @@ module SolidusSubscriptions
       return if subscription_line_items.empty?
 
       order = subscription_line_items.first.order
+      configuration = subscription_configuration(subscription_line_items.first)
 
       subscription_attributes = {
         user: order.user,
         line_items: subscription_line_items,
         store: order.store,
-        shipping_address: order.ship_address
+        shipping_address: order.ship_address,
+        **configuration.to_h
       }
 
       Subscription.create!(subscription_attributes) do |sub|
