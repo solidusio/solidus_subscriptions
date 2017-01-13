@@ -6,7 +6,7 @@
 <title>
   Module: SolidusSubscriptions::SubscriptionGenerator
   
-    &mdash; Documentation by YARD 0.9.5
+    &mdash; Documentation by YARD 0.9.6
   
 </title>
 
@@ -28,7 +28,7 @@
   </head>
   <body>
     <div class="nav_wrap">
-      <iframe id="nav" src="../class_list.html"></iframe>
+      <iframe id="nav" src="../class_list.html?1"></iframe>
       <div id="resizer"></div>
     </div>
 
@@ -58,8 +58,6 @@
 </div>
         <div class="clear"></div>
       </div>
-
-      <iframe id="search_frame" src="../class_list.html"></iframe>
 
       <div id="content"><h1>Module: SolidusSubscriptions::SubscriptionGenerator
   
@@ -209,7 +207,7 @@
   <span class='id identifier rubyid_subscription_line_items'>subscription_line_items</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_subscription_line_item'>subscription_line_item</span><span class='op'>|</span>
     <span class='id identifier rubyid_user'>user</span> <span class='op'>=</span> <span class='id identifier rubyid_subscription_line_item'>subscription_line_item</span><span class='period'>.</span><span class='id identifier rubyid_order'>order</span><span class='period'>.</span><span class='id identifier rubyid_user'>user</span>
 
-    <span class='const'>Subscription</span><span class='period'>.</span><span class='id identifier rubyid_create!'>create!</span><span class='lparen'>(</span><span class='label'>user:</span> <span class='id identifier rubyid_user'>user</span><span class='comma'>,</span> <span class='label'>line_item:</span> <span class='id identifier rubyid_subscription_line_item'>subscription_line_item</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_sub'>sub</span><span class='op'>|</span>
+    <span class='const'><span class='object_link'><a href="Subscription.html" title="SolidusSubscriptions::Subscription (class)">Subscription</a></span></span><span class='period'>.</span><span class='id identifier rubyid_create!'>create!</span><span class='lparen'>(</span><span class='label'>user:</span> <span class='id identifier rubyid_user'>user</span><span class='comma'>,</span> <span class='label'>line_item:</span> <span class='id identifier rubyid_subscription_line_item'>subscription_line_item</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_sub'>sub</span><span class='op'>|</span>
       <span class='id identifier rubyid_sub'>sub</span><span class='period'>.</span><span class='id identifier rubyid_actionable_date'>actionable_date</span> <span class='op'>=</span> <span class='id identifier rubyid_sub'>sub</span><span class='period'>.</span><span class='id identifier rubyid_next_actionable_date'>next_actionable_date</span>
     <span class='kw'>end</span>
   <span class='kw'>end</span>
@@ -224,9 +222,9 @@
 </div>
 
       <div id="footer">
-  Generated on Mon Oct 17 14:49:48 2016 by
+  Generated on Mon Jan  9 14:06:30 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.5 (ruby-2.3.0).
+  0.9.6 (ruby-2.3.0).
 </div>
 
     </div>

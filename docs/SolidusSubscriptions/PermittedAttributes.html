@@ -6,7 +6,7 @@
 <title>
   Module: SolidusSubscriptions::PermittedAttributes
   
-    &mdash; Documentation by YARD 0.9.5
+    &mdash; Documentation by YARD 0.9.6
   
 </title>
 
@@ -28,7 +28,7 @@
   </head>
   <body>
     <div class="nav_wrap">
-      <iframe id="nav" src="../class_list.html"></iframe>
+      <iframe id="nav" src="../class_list.html?1"></iframe>
       <div id="resizer"></div>
     </div>
 
@@ -58,8 +58,6 @@
 </div>
         <div class="clear"></div>
       </div>
-
-      <iframe id="search_frame" src="../class_list.html"></iframe>
 
       <div id="content"><h1>Module: SolidusSubscriptions::PermittedAttributes
   
@@ -200,7 +198,7 @@
       <pre class="code"><span class="info file"># File 'lib/solidus_subscriptions/permitted_attributes.rb', line 23</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_subscription_attributes'>subscription_attributes</span>
-  <span class='lbracket'>[</span>
+  <span class='const'><span class='object_link'><a href="Config.html" title="SolidusSubscriptions::Config (module)">Config</a></span></span><span class='period'>.</span><span class='id identifier rubyid_subscription_attributes'>subscription_attributes</span> <span class='op'>|</span> <span class='lbracket'>[</span>
     <span class='lbrace'>{</span> <span class='label'>line_item_attributes:</span> <span class='id identifier rubyid_nested'>nested</span><span class='lparen'>(</span><span class='id identifier rubyid_subscription_line_item_attributes'>subscription_line_item_attributes</span><span class='rparen'>)</span> <span class='op'>-</span> <span class='lbracket'>[</span><span class='symbol'>:subscribable_id</span><span class='rbracket'>]</span> <span class='rbrace'>}</span>
   <span class='rbracket'>]</span>
 <span class='kw'>end</span></pre>
@@ -232,7 +230,7 @@
       <pre class="code"><span class="info file"># File 'lib/solidus_subscriptions/permitted_attributes.rb', line 19</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_subscription_line_item_attributes'>subscription_line_item_attributes</span>
-  <span class='const'>Config</span><span class='period'>.</span><span class='id identifier rubyid_subscription_line_item_attributes'>subscription_line_item_attributes</span>
+  <span class='const'><span class='object_link'><a href="Config.html" title="SolidusSubscriptions::Config (module)">Config</a></span></span><span class='period'>.</span><span class='id identifier rubyid_subscription_line_item_attributes'>subscription_line_item_attributes</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -270,13 +268,13 @@
       <pre class="code"><span class="info file"># File 'lib/solidus_subscriptions/permitted_attributes.rb', line 7</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_update_spree_permiteed_attributes'>update_spree_permiteed_attributes</span>
-  <span class='const'>Spree</span><span class='op'>::</span><span class='const'>PermittedAttributes</span><span class='period'>.</span><span class='id identifier rubyid_line_item_attributes'>line_item_attributes</span> <span class='op'>&lt;&lt;</span> <span class='lbrace'>{</span>
+  <span class='const'><span class='object_link'><a href="../Spree.html" title="Spree (module)">Spree</a></span></span><span class='op'>::</span><span class='const'>PermittedAttributes</span><span class='period'>.</span><span class='id identifier rubyid_line_item_attributes'>line_item_attributes</span> <span class='op'>&lt;&lt;</span> <span class='lbrace'>{</span>
     <span class='label'>subscription_line_items_attributes:</span> <span class='id identifier rubyid_nested'>nested</span><span class='lparen'>(</span>
       <span class='id identifier rubyid_subscription_line_item_attributes'>subscription_line_item_attributes</span>
     <span class='rparen'>)</span>
   <span class='rbrace'>}</span>
 
-  <span class='const'>Spree</span><span class='op'>::</span><span class='const'>PermittedAttributes</span><span class='period'>.</span><span class='id identifier rubyid_user_attributes'>user_attributes</span> <span class='op'>&lt;&lt;</span> <span class='lbrace'>{</span>
+  <span class='const'><span class='object_link'><a href="../Spree.html" title="Spree (module)">Spree</a></span></span><span class='op'>::</span><span class='const'>PermittedAttributes</span><span class='period'>.</span><span class='id identifier rubyid_user_attributes'>user_attributes</span> <span class='op'>&lt;&lt;</span> <span class='lbrace'>{</span>
     <span class='label'>subscriptions_attributes:</span> <span class='id identifier rubyid_nested'>nested</span><span class='lparen'>(</span><span class='id identifier rubyid_subscription_attributes'>subscription_attributes</span><span class='rparen'>)</span>
   <span class='rbrace'>}</span>
 <span class='kw'>end</span></pre>
@@ -290,9 +288,9 @@
 </div>
 
       <div id="footer">
-  Generated on Mon Oct 17 14:49:48 2016 by
+  Generated on Mon Jan  9 14:06:30 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.5 (ruby-2.3.0).
+  0.9.6 (ruby-2.3.0).
 </div>
 
     </div>

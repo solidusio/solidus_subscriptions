@@ -6,7 +6,7 @@
 <title>
   Class: SolidusSubscriptions::Api::V1::LineItemsController
   
-    &mdash; Documentation by YARD 0.9.5
+    &mdash; Documentation by YARD 0.9.6
   
 </title>
 
@@ -28,7 +28,7 @@
   </head>
   <body>
     <div class="nav_wrap">
-      <iframe id="nav" src="../../../class_list.html"></iframe>
+      <iframe id="nav" src="../../../class_list.html?1"></iframe>
       <div id="resizer"></div>
     </div>
 
@@ -58,8 +58,6 @@
 </div>
         <div class="clear"></div>
       </div>
-
-      <iframe id="search_frame" src="../../../class_list.html"></iframe>
 
       <div id="content"><h1>Class: SolidusSubscriptions::Api::V1::LineItemsController
   
@@ -193,7 +191,9 @@
 17
 18
 19
-20</pre>
+20
+21
+22</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'app/controllers/solidus_subscriptions/api/v1/line_items_controller.rb', line 14</span>
@@ -203,6 +203,8 @@
   <span class='kw'>return</span> <span class='id identifier rubyid_render'>render</span> <span class='label'>json:</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='label'>status:</span> <span class='int'>400</span> <span class='kw'>if</span> <span class='ivar'>@line_item</span><span class='period'>.</span><span class='id identifier rubyid_order'>order</span><span class='period'>.</span><span class='id identifier rubyid_complete?'>complete?</span>
 
   <span class='ivar'>@line_item</span><span class='period'>.</span><span class='id identifier rubyid_destroy!'>destroy!</span>
+  <span class='ivar'>@line_item</span><span class='period'>.</span><span class='id identifier rubyid_order'>order</span><span class='period'>.</span><span class='id identifier rubyid_update!'>update!</span>
+
   <span class='id identifier rubyid_render'>render</span> <span class='label'>json:</span> <span class='ivar'>@line_item</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -255,9 +257,9 @@
 </div>
 
       <div id="footer">
-  Generated on Mon Oct 17 14:49:48 2016 by
+  Generated on Mon Jan  9 14:06:31 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.5 (ruby-2.3.0).
+  0.9.6 (ruby-2.3.0).
 </div>
 
     </div>

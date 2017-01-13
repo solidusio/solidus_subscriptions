@@ -18,7 +18,7 @@ subscription.
         // line item attributes
         "subscription_line_items_attributes": [{
           "quantity": 1,          // How many to include in the subscription orders
-          "max_installments": 12, // How many times to process the subscriptions (null for ad nauseam)
+          "end_date": "2012/12/12", // How many times to process the subscriptions (null for ad nauseam)
           "interval_length": 1,
           "interval_units": "month", // one of: day, week, month, year
           "subscribable_id": 1234 // What item to include in the subscription order
@@ -32,5 +32,5 @@ This endpoint accepts the default subscription_line_item_attributes (which are
 configurable) except for the :subscribable_id. These atrributes are:
 - `:quantity`
 - `:interval`
-- `:max_installments`
+- `:end_date`
 - `:subscribable_id`

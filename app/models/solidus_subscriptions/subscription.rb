@@ -19,8 +19,8 @@ module SolidusSubscriptions
     # The following methods are delegated to the associated
     # SolidusSubscriptions::LineItem
     #
-    # :interval, :quantity, :subscribable_id, :max_installments
-    delegate :interval, :max_installments, to: :line_item
+    # :interval, :quantity, :subscribable_id, :end_date
+    delegate :interval, :quantity, :subscribable_id, :end_date, to: :line_item
 
     # Find all subscriptions that are "actionable"; that is, ones that have an
     # actionable_date in the past and are not invalid or canceled.
@@ -137,14 +137,13 @@ module SolidusSubscriptions
 
     # This method determines if a subscription can be deactivated. A deactivated
     # subscription will not be processed. By default a subscription can be
-    # deactivated if the number of max_installments defined on the
-    # subscription_line_item is equal to the number of installments associated
-    # to the subscription. In this case the subscription has been fulfilled and
-    # should not be processed again. Subscriptions without a max_installment
+    # deactivated if the end_date defined on
+    # subscription_line_item is less than the current date
+    # In this case the subscription has been fulfilled and
+    # should not be processed again. Subscriptions without an end_date
     # value cannot be deactivated.
     def can_be_deactivated?
-      return false if line_item.max_installments.nil?
-      installments.count >= line_item.max_installments
+      active? && line_item.end_date && actionable_date > line_item.end_date
     end
 
     # Get the date after the current actionable_date where this subscription

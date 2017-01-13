@@ -6,7 +6,7 @@
 <title>
   Class: SolidusSubscriptions::FailureDispatcher
   
-    &mdash; Documentation by YARD 0.9.5
+    &mdash; Documentation by YARD 0.9.6
   
 </title>
 
@@ -28,7 +28,7 @@
   </head>
   <body>
     <div class="nav_wrap">
-      <iframe id="nav" src="../class_list.html"></iframe>
+      <iframe id="nav" src="../class_list.html?1"></iframe>
       <div id="resizer"></div>
     </div>
 
@@ -58,8 +58,6 @@
 </div>
         <div class="clear"></div>
       </div>
-
-      <iframe id="search_frame" src="../class_list.html"></iframe>
 
       <div id="content"><h1>Class: SolidusSubscriptions::FailureDispatcher
   
@@ -112,7 +110,7 @@
   <h2>Instance Attribute Summary</h2>
   
   <h3 class="inherited">Attributes inherited from <span class='object_link'><a href="Dispatcher.html" title="SolidusSubscriptions::Dispatcher (class)">Dispatcher</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="Dispatcher.html#installments-instance_method" title="SolidusSubscriptions::Dispatcher#installments (method)">#installments</a></span></p>
+  <p class="inherited"><span class='object_link'><a href="Dispatcher.html#installments-instance_method" title="SolidusSubscriptions::Dispatcher#installments (method)">#installments</a></span>, <span class='object_link'><a href="Dispatcher.html#order-instance_method" title="SolidusSubscriptions::Dispatcher#order (method)">#order</a></span></p>
 
 
   
@@ -211,13 +209,17 @@
 5
 6
 7
-8</pre>
+8
+9
+10</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/failure_dispatcher.rb', line 5</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_dispatch'>dispatch</span>
-  <span class='id identifier rubyid_installments'>installments</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:failed</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_order'>order</span><span class='period'>.</span><span class='id identifier rubyid_touch'>touch</span> <span class='symbol'>:completed_at</span>
+  <span class='id identifier rubyid_order'>order</span><span class='period'>.</span><span class='id identifier rubyid_cancel!'>cancel!</span>
+  <span class='id identifier rubyid_installments'>installments</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_i'>i</span><span class='op'>|</span> <span class='id identifier rubyid_i'>i</span><span class='period'>.</span><span class='id identifier rubyid_failed!'>failed!</span><span class='lparen'>(</span><span class='id identifier rubyid_order'>order</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
   <span class='kw'>super</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -240,15 +242,15 @@
       <pre class="lines">
 
 
-10
-11
 12
 13
 14
-15</pre>
+15
+16
+17</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/failure_dispatcher.rb', line 10</span>
+      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/failure_dispatcher.rb', line 12</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_message'>message</span>
   <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>
@@ -266,9 +268,9 @@
 </div>
 
       <div id="footer">
-  Generated on Mon Oct 17 14:49:48 2016 by
+  Generated on Mon Jan  9 14:06:31 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.5 (ruby-2.3.0).
+  0.9.6 (ruby-2.3.0).
 </div>
 
     </div>

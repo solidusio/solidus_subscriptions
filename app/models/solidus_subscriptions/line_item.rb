@@ -34,7 +34,6 @@ module SolidusSubscriptions
 
     validates :subscribable_id, presence: :true
     validates :quantity, :interval_length, numericality: { greater_than: 0 }
-    validates :max_installments, numericality: { greater_than: 0 }, allow_blank: true
 
     before_save :update_actionable_date_if_interval_changed
 

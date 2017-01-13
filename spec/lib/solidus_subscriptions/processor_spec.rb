@@ -14,6 +14,17 @@ RSpec.describe SolidusSubscriptions::Processor, :checkout do
     create_list(:subscription, 2, :pending_cancellation, user: user)
   end
 
+  let!(:expiring_subscriptions) do
+    create_list(
+      :subscription,
+      2,
+      :actionable,
+      :with_line_item,
+      user: user,
+      line_item_traits: [{ end_date: Date.current.tomorrow }]
+    )
+  end
+
   let!(:future_subscriptions) { create_list(:subscription, 2, :not_actionable) }
   let!(:canceled_subscriptions) { create_list(:subscription, 2, :canceled) }
   let!(:inactive) { create_list(:subscription, 2, :inactive) }
@@ -34,7 +45,7 @@ RSpec.describe SolidusSubscriptions::Processor, :checkout do
   shared_examples 'a subscription order' do
     let(:order_variant_ids) { Spree::Order.last.variant_ids }
     let(:expected_ids) do
-      subs = actionable_subscriptions + pending_cancellation_subscriptions
+      subs = actionable_subscriptions + pending_cancellation_subscriptions + expiring_subscriptions
       subs_ids = subs.flat_map { |s| s.line_items.pluck(:subscribable_id) }
       inst_ids = failed_installments.flat_map { |i| i.subscription.line_items.pluck(:subscribable_id) }
 
@@ -73,6 +84,14 @@ RSpec.describe SolidusSubscriptions::Processor, :checkout do
       expect { subject }.
         to change { subs.reload.state }.
         from('pending_cancellation').to('canceled')
+    end
+
+    it 'deactivates expired subscriptions' do
+      sub = expiring_subscriptions.first
+
+      expect { subject }.
+        to change { sub.reload.state }.
+        from('active').to('inactive')
     end
 
     context 'the subscriptions have different shipping addresses' do

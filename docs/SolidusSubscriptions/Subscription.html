@@ -6,7 +6,7 @@
 <title>
   Class: SolidusSubscriptions::Subscription
   
-    &mdash; Documentation by YARD 0.9.5
+    &mdash; Documentation by YARD 0.9.6
   
 </title>
 
@@ -28,7 +28,7 @@
   </head>
   <body>
     <div class="nav_wrap">
-      <iframe id="nav" src="../class_list.html"></iframe>
+      <iframe id="nav" src="../class_list.html?1"></iframe>
       <div id="resizer"></div>
     </div>
 
@@ -58,8 +58,6 @@
 </div>
         <div class="clear"></div>
       </div>
-
-      <iframe id="search_frame" src="../class_list.html"></iframe>
 
       <div id="content"><h1>Class: SolidusSubscriptions::Subscription
   
@@ -374,15 +372,15 @@ subscrtipion.</p>
       <pre class="lines">
 
 
-56
-57
-58</pre>
+66
+67
+68</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 56</span>
+      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 66</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_processing_states'>processing_states</span>
-  <span class='const'>PROCESSING_STATES</span>
+  <span class='const'><span class='object_link'><a href="#PROCESSING_STATES-constant" title="SolidusSubscriptions::Subscription::PROCESSING_STATES (constant)">PROCESSING_STATES</a></span></span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -404,12 +402,12 @@ subscrtipion.</p>
       <pre class="lines">
 
 
-52
-53
-54</pre>
+62
+63
+64</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 52</span>
+      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 62</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_ransackable_scopes'>ransackable_scopes</span><span class='lparen'>(</span><span class='id identifier rubyid__auth_object'>_auth_object</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
   <span class='lbracket'>[</span><span class='symbol'>:in_processing_state</span><span class='rbracket'>]</span>
@@ -472,13 +470,13 @@ the record.</p>
       <pre class="lines">
 
 
-149
-150
-151
-152</pre>
+165
+166
+167
+168</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 149</span>
+      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 165</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_advance_actionable_date'>advance_actionable_date</span>
   <span class='id identifier rubyid_update!'>update!</span> <span class='label'>actionable_date:</span> <span class='id identifier rubyid_next_actionable_date'>next_actionable_date</span>
@@ -548,17 +546,17 @@ still be processed.</p>
       <pre class="lines">
 
 
-107
-108
-109
-110</pre>
+123
+124
+125
+126</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 107</span>
+      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 123</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_can_be_canceled?'>can_be_canceled?</span>
   <span class='kw'>return</span> <span class='kw'>true</span> <span class='kw'>if</span> <span class='id identifier rubyid_actionable_date'>actionable_date</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-  <span class='lparen'>(</span><span class='id identifier rubyid_actionable_date'>actionable_date</span> <span class='op'>-</span> <span class='const'>Config</span><span class='period'>.</span><span class='id identifier rubyid_minimum_cancellation_notice'>minimum_cancellation_notice</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_future?'>future?</span>
+  <span class='lparen'>(</span><span class='id identifier rubyid_actionable_date'>actionable_date</span> <span class='op'>-</span> <span class='const'><span class='object_link'><a href="Config.html" title="SolidusSubscriptions::Config (module)">Config</a></span></span><span class='period'>.</span><span class='id identifier rubyid_minimum_cancellation_notice'>minimum_cancellation_notice</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_future?'>future?</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -579,11 +577,10 @@ still be processed.</p>
     
 <p>This method determines if a subscription can be deactivated. A deactivated
 subscription will not be processed. By default a subscription can be
-deactivated if the number of max_installments defined on the
-subscription_line_item is equal to the number of installments associated to
-the subscription. In this case the subscription has been fulfilled and
-should not be processed again. Subscriptions without a max_installment
-value cannot be deactivated.</p>
+deactivated if the end_date defined on subscription_line_item is less than
+the current date In this case the subscription has been fulfilled and
+should not be processed again. Subscriptions without an end_date value
+cannot be deactivated.</p>
 
 
   </div>
@@ -610,17 +607,17 @@ value cannot be deactivated.</p>
       <pre class="lines">
 
 
-128
-129
-130
-131</pre>
+144
+145
+146
+147</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 128</span>
+      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 144</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_can_be_deactivated?'>can_be_deactivated?</span>
-  <span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='id identifier rubyid_line_item'>line_item</span><span class='period'>.</span><span class='id identifier rubyid_max_installments'>max_installments</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-  <span class='id identifier rubyid_installments'>installments</span><span class='period'>.</span><span class='id identifier rubyid_count'>count</span> <span class='op'>&gt;=</span> <span class='id identifier rubyid_line_item'>line_item</span><span class='period'>.</span><span class='id identifier rubyid_max_installments'>max_installments</span>
+  <span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='id identifier rubyid_line_item'>line_item</span><span class='period'>.</span><span class='id identifier rubyid_end_date'>end_date</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='const'>Date</span><span class='period'>.</span><span class='id identifier rubyid_current'>current</span> <span class='op'>&gt;</span> <span class='id identifier rubyid_line_item'>line_item</span><span class='period'>.</span><span class='id identifier rubyid_end_date'>end_date</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -667,15 +664,15 @@ can generate the appropriate line item for the subscribable object</p>
       <pre class="lines">
 
 
-159
-160
-161</pre>
+175
+176
+177</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 159</span>
+      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 175</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_line_item_builder'>line_item_builder</span>
-  <span class='const'>LineItemBuilder</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_line_item'>line_item</span><span class='rparen'>)</span>
+  <span class='const'><span class='object_link'><a href="LineItemBuilder.html" title="SolidusSubscriptions::LineItemBuilder (class)">LineItemBuilder</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="LineItemBuilder.html#initialize-instance_method" title="SolidusSubscriptions::LineItemBuilder#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_line_item'>line_item</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -728,13 +725,13 @@ current actionable_date this subscription will be eligible to be processed.</p>
       <pre class="lines">
 
 
-139
-140
-141
-142</pre>
+155
+156
+157
+158</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 139</span>
+      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 155</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_next_actionable_date'>next_actionable_date</span>
   <span class='kw'>return</span> <span class='kw'>nil</span> <span class='kw'>unless</span> <span class='id identifier rubyid_active?'>active?</span>
@@ -792,13 +789,13 @@ fulfilled.</p>
       <pre class="lines">
 
 
-169
-170
-171
-172</pre>
+185
+186
+187
+188</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 169</span>
+      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 185</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_processing_state'>processing_state</span>
   <span class='kw'>return</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>pending</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_installments'>installments</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
@@ -824,17 +821,17 @@ fulfilled.</p>
       <pre class="lines">
 
 
-112
-113
-114
-115
-116
-117
-118
-119</pre>
+128
+129
+130
+131
+132
+133
+134
+135</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 112</span>
+      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription.rb', line 128</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_skip'>skip</span>
   <span class='id identifier rubyid_check_successive_skips_exceeded'>check_successive_skips_exceeded</span>
@@ -854,9 +851,9 @@ fulfilled.</p>
 </div>
 
       <div id="footer">
-  Generated on Mon Oct 17 14:49:48 2016 by
+  Generated on Mon Jan  9 14:06:31 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.5 (ruby-2.3.0).
+  0.9.6 (ruby-2.3.0).
 </div>
 
     </div>

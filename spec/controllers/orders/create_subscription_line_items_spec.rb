@@ -45,7 +45,7 @@ RSpec.describe Spree::Controllers::Orders::CreateSubscriptionLineItems, type: :c
         {
           subscription_line_item: {
             quantity: 2,
-            max_installments: 3,
+            end_date: Date.parse('2000/10/11'),
             subscribable_id: variant.id,
             interval_length: 30,
             interval_units: "day"

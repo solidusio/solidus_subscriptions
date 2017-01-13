@@ -6,7 +6,7 @@
 <title>
   Class: SolidusSubscriptions::Processor
   
-    &mdash; Documentation by YARD 0.9.5
+    &mdash; Documentation by YARD 0.9.6
   
 </title>
 
@@ -28,7 +28,7 @@
   </head>
   <body>
     <div class="nav_wrap">
-      <iframe id="nav" src="../class_list.html"></iframe>
+      <iframe id="nav" src="../class_list.html?1"></iframe>
       <div id="resizer"></div>
     </div>
 
@@ -58,8 +58,6 @@
 </div>
         <div class="clear"></div>
       </div>
-
-      <iframe id="search_frame" src="../class_list.html"></iframe>
 
       <div id="content"><h1>Class: SolidusSubscriptions::Processor
   
@@ -451,7 +449,7 @@ instance</p>
       <pre class="code"><span class="info file"># File 'lib/solidus_subscriptions/processor.rb', line 57</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_build_jobs'>build_jobs</span>
-  <span class='id identifier rubyid_users'>users</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_user'>user</span><span class='op'>|</span> <span class='const'>ProcessInstallmentsJob</span><span class='period'>.</span><span class='id identifier rubyid_perform_later'>perform_later</span> <span class='id identifier rubyid_installments'>installments</span><span class='lparen'>(</span><span class='id identifier rubyid_user'>user</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+  <span class='id identifier rubyid_users'>users</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_user'>user</span><span class='op'>|</span> <span class='const'><span class='object_link'><a href="ProcessInstallmentsJob.html" title="SolidusSubscriptions::ProcessInstallmentsJob (class)">ProcessInstallmentsJob</a></span></span><span class='period'>.</span><span class='id identifier rubyid_perform_later'>perform_later</span> <span class='id identifier rubyid_installments'>installments</span><span class='lparen'>(</span><span class='id identifier rubyid_user'>user</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -463,9 +461,9 @@ instance</p>
 </div>
 
       <div id="footer">
-  Generated on Mon Oct 17 14:49:48 2016 by
+  Generated on Mon Jan  9 14:06:31 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.5 (ruby-2.3.0).
+  0.9.6 (ruby-2.3.0).
 </div>
 
     </div>

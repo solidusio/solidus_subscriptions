@@ -95,6 +95,7 @@ module SolidusSubscriptions
           sub.successive_skip_count = 0
           sub.advance_actionable_date
           sub.cancel! if sub.pending_cancellation?
+          sub.deactivate! if sub.can_be_deactivated?
           sub.installments.create!
         end
       end
