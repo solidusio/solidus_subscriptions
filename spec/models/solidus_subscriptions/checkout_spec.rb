@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe SolidusSubscriptions::Checkout do
-  let(:consolidated_installment) { described_class.new(installments) }
+  let(:checkout) { described_class.new(installments) }
   let(:root_order) { create :completed_order_with_pending_payment }
   let(:subscription_user) do
     ccs = build_list(:credit_card, 1, gateway_customer_profile_id: 'BGS-123', default: true)
@@ -21,7 +21,7 @@ RSpec.describe SolidusSubscriptions::Checkout do
   end
 
   context 'initialized with installments belonging to multiple users' do
-    subject { consolidated_installment }
+    subject { checkout }
     let(:installments) { build_stubbed_list :installment, 2 }
 
     it 'raises an error' do
@@ -31,7 +31,7 @@ RSpec.describe SolidusSubscriptions::Checkout do
   end
 
   describe '#process', :checkout do
-    subject(:order) { consolidated_installment.process }
+    subject(:order) { checkout.process }
     let(:subscription_line_item) { installments.first.subscription.line_items.first }
 
     shared_examples 'a completed checkout' do
@@ -127,7 +127,7 @@ RSpec.describe SolidusSubscriptions::Checkout do
 
       it 'removes the installment from the list of installments' do
         expect { subject }.
-          to change { consolidated_installment.installments.length }.
+          to change { checkout.installments.length }.
           by(-1)
       end
 
@@ -142,7 +142,7 @@ RSpec.describe SolidusSubscriptions::Checkout do
       let(:expected_date) { (DateTime.current + SolidusSubscriptions::Config.reprocessing_interval).beginning_of_minute }
 
       before do
-        consolidated_installment.user.credit_cards << credit_card
+        checkout.user.credit_cards << credit_card
       end
 
       it { is_expected.to be_nil }
@@ -202,7 +202,7 @@ RSpec.describe SolidusSubscriptions::Checkout do
       let(:expected_date) { (DateTime.current + SolidusSubscriptions::Config.reprocessing_interval).beginning_of_minute }
 
       before do
-        allow(consolidated_installment).to receive(:populate).and_raise('arbitrary runtime error')
+        allow(checkout).to receive(:populate).and_raise('arbitrary runtime error')
       end
 
       it 'advances the installment actionable dates', :aggregate_failures do
@@ -245,7 +245,7 @@ RSpec.describe SolidusSubscriptions::Checkout do
   end
 
   describe '#order' do
-    subject { consolidated_installment.order }
+    subject { checkout.order }
     let(:user) { installments.first.subscription.user }
 
     it { is_expected.to be_a Spree::Order }
@@ -259,7 +259,7 @@ RSpec.describe SolidusSubscriptions::Checkout do
     end
 
     it 'is the same instance any time its called' do
-      order = consolidated_installment.order
+      order = checkout.order
       expect(subject).to equal order
     end
   end
