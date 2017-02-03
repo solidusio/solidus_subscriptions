@@ -90,6 +90,22 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
       actionable_date = installment.reload.actionable_date
       expect(actionable_date).to eq expected_date
     end
+
+    context 'the reprocessing interval is set to nil' do
+      around do |e|
+        interval, SolidusSubscriptions::Config.reprocessing_interval = [SolidusSubscriptions::Config.reprocessing_interval, nil]
+
+        e.run
+
+        SolidusSubscriptions::Config.reprocessing_interval = interval
+      end
+
+      it 'does not advance the installment actionable_date' do
+        subject
+        actionable_date = installment.reload.actionable_date
+        expect(actionable_date).to be_nil
+      end
+    end
   end
 
   describe '#unfulfilled?' do
