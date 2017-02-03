@@ -242,6 +242,24 @@ RSpec.describe SolidusSubscriptions::Checkout do
         expect(subject.ship_address).to eq shipping_address
       end
     end
+
+    context 'there are multiple associated subscritpion line items' do
+      it_behaves_like 'a completed checkout' do
+        let(:quantity) { subscription_line_items.length }
+      end
+
+      let(:installments) { create_list(:installment, 1, installment_traits) }
+      let(:subscription_line_items) { create_list(:subscription_line_item, 2, quantity: 1) }
+
+      let(:installment_traits) do
+        {
+          subscription_traits: [{
+            user: subscription_user,
+            line_items: subscription_line_items
+          }]
+        }
+      end
+    end
   end
 
   describe '#order' do
