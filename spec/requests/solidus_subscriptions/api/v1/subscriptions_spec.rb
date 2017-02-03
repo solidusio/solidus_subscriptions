@@ -7,7 +7,7 @@ RSpec.describe "Subscription endpoints", type: :request do
 
   describe "#cancel" do
     let(:subscription) do
-      create :subscription, actionable_date: (Date.current + 1.month), user: user
+      create :subscription, :with_line_item, actionable_date: (Date.current + 1.month), user: user
     end
 
     it "returns the canceled record", :aggregate_failures do
@@ -18,7 +18,7 @@ RSpec.describe "Subscription endpoints", type: :request do
 
     context 'when the miniumum notice has been past' do
       let(:subscription) do
-        create :subscription, actionable_date: Date.current, user: user
+        create :subscription, :with_line_item, actionable_date: Date.current, user: user
       end
 
       it "returns the record pending cancellation", :aggregate_failures do

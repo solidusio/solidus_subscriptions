@@ -3,6 +3,8 @@
 # behalf of a specific user.
 module SolidusSubscriptions
   class Subscription < ActiveRecord::Base
+    include Interval
+
     PROCESSING_STATES = [:pending, :failed, :success]
 
     belongs_to :user, class_name: Spree.user_class

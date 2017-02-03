@@ -69,10 +69,20 @@
 
   
   
+  <dl>
+      <dt>Extended by:</dt>
+      <dd><span class='object_link'><a href="" title="SolidusSubscriptions::SubscriptionGenerator (module)">SubscriptionGenerator</a></span></dd>
+  </dl>
+  
   
   
   
 
+  
+  <dl>
+    <dt>Included in:</dt>
+    <dd><span class='object_link'><a href="" title="SolidusSubscriptions::SubscriptionGenerator (module)">SubscriptionGenerator</a></span></dd>
+  </dl>
   
 
   
@@ -83,6 +93,16 @@
   
 </div>
 
+<h2>Defined Under Namespace</h2>
+<p class="children">
+  
+    
+  
+    
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="SubscriptionGenerator/SubscriptionConfiguration.html" title="SolidusSubscriptions::SubscriptionGenerator::SubscriptionConfiguration (class)">SubscriptionConfiguration</a></span>
+    
+  
+</p>
 
 
 
@@ -92,7 +112,7 @@
 
   
     <h2>
-      Class Method Summary
+      Instance Method Summary
       <small><a href="#" class="summary_toggle">collapse</a></small>
     </h2>
 
@@ -101,7 +121,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#activate-class_method" title="activate (class method)">.<strong>activate</strong>(subscription_line_items)  &#x21d2; SolidusSubscriptions::Subscription </a>
+      <a href="#activate-instance_method" title="#activate (instance method)">#<strong>activate</strong>(subscription_line_items)  &#x21d2; SolidusSubscriptions::Subscription </a>
     
 
     
@@ -123,19 +143,44 @@ items.</p>
 </li>
 
       
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#group-instance_method" title="#group (instance method)">#<strong>group</strong>(subscription_line_items)  &#x21d2; Array&lt;Array&lt;SolidusSubscriptions::LineItem&gt;&gt; </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Group a collection of line items by common subscription configuration
+options.</p>
+</div></span>
+  
+</li>
+
+      
     </ul>
   
 
 
 
-  <div id="class_method_details" class="method_details_list">
-    <h2>Class Method Details</h2>
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
 
     
       <div class="method_details first">
-  <h3 class="signature first" id="activate-class_method">
+  <h3 class="signature first" id="activate-instance_method">
   
-    .<strong>activate</strong>(subscription_line_items)  &#x21d2; <tt><span class='object_link'><a href="Subscription.html" title="SolidusSubscriptions::Subscription (class)">SolidusSubscriptions::Subscription</a></span></tt> 
+    #<strong>activate</strong>(subscription_line_items)  &#x21d2; <tt><span class='object_link'><a href="Subscription.html" title="SolidusSubscriptions::Subscription (class)">SolidusSubscriptions::Subscription</a></span></tt> 
   
 
   
@@ -194,10 +239,6 @@ items.</p>
       <pre class="lines">
 
 
-12
-13
-14
-15
 16
 17
 18
@@ -209,12 +250,16 @@ items.</p>
 24
 25
 26
-27</pre>
+27
+28
+29
+30
+31</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription_generator.rb', line 12</span>
+      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription_generator.rb', line 16</span>
 
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_activate'>activate</span><span class='lparen'>(</span><span class='id identifier rubyid_subscription_line_items'>subscription_line_items</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_activate'>activate</span><span class='lparen'>(</span><span class='id identifier rubyid_subscription_line_items'>subscription_line_items</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='kw'>if</span> <span class='id identifier rubyid_subscription_line_items'>subscription_line_items</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
 
   <span class='id identifier rubyid_order'>order</span> <span class='op'>=</span> <span class='id identifier rubyid_subscription_line_items'>subscription_line_items</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span><span class='period'>.</span><span class='id identifier rubyid_order'>order</span>
@@ -235,12 +280,94 @@ items.</p>
 </table>
 </div>
     
+      <div class="method_details ">
+  <h3 class="signature " id="group-instance_method">
+  
+    #<strong>group</strong>(subscription_line_items)  &#x21d2; <tt>Array&lt;Array&lt;<span class='object_link'><a href="LineItem.html" title="SolidusSubscriptions::LineItem (class)">SolidusSubscriptions::LineItem</a></span>&gt;&gt;</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Group a collection of line items by common subscription configuration
+options. Grouped subscription_line_items can belong to a single
+subscription.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>subscription_line_items</span>
+      
+      
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="LineItem.html" title="SolidusSubscriptions::LineItem (class)">SolidusSubscriptions::LineItem</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The subscription_line_items to be grouped.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;Array&lt;<span class='object_link'><a href="LineItem.html" title="SolidusSubscriptions::LineItem (class)">SolidusSubscriptions::LineItem</a></span>&gt;&gt;</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+41
+42
+43
+44
+45
+46</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/solidus_subscriptions/subscription_generator.rb', line 41</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_group'>group</span><span class='lparen'>(</span><span class='id identifier rubyid_subscription_line_items'>subscription_line_items</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_subscription_line_items'>subscription_line_items</span><span class='period'>.</span><span class='id identifier rubyid_group_by'>group_by</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_li'>li</span><span class='op'>|</span>
+    <span class='id identifier rubyid_subscription_configuration'>subscription_configuration</span><span class='lparen'>(</span><span class='id identifier rubyid_li'>li</span><span class='rparen'>)</span>
+  <span class='kw'>end</span><span class='period'>.</span>
+  <span class='id identifier rubyid_values'>values</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
   </div>
 
 </div>
 
       <div id="footer">
-  Generated on Thu Jan 12 16:03:46 2017 by
+  Generated on Fri Jan 13 11:28:35 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.7 (ruby-2.3.0).
 </div>

@@ -17,6 +17,8 @@
 # [Integer] :installments How many subscription orders should be placed
 module SolidusSubscriptions
   class LineItem < ActiveRecord::Base
+    include Interval
+
     belongs_to :spree_line_item, class_name: 'Spree::LineItem', inverse_of: :subscription_line_items
     has_one :order, through: :spree_line_item, class_name: 'Spree::Order'
     belongs_to(
@@ -25,24 +27,10 @@ module SolidusSubscriptions
       inverse_of: :line_items
     )
 
-    enum interval_units: {
-      day: 0,
-      week: 1,
-      month: 2,
-      year: 3
-    }
-
     validates :subscribable_id, presence: :true
     validates :quantity, :interval_length, numericality: { greater_than: 0 }
 
     before_save :update_actionable_date_if_interval_changed
-
-    # Calculates the number of seconds in the interval.
-    #
-    # @return [Integer] The number of seconds.
-    def interval
-      ActiveSupport::Duration.new(interval_length, { interval_units.pluralize.to_sym => interval_length })
-    end
 
     def next_actionable_date
       dummy_subscription.next_actionable_date
