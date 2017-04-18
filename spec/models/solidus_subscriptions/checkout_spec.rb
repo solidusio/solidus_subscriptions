@@ -4,8 +4,9 @@ RSpec.describe SolidusSubscriptions::Checkout do
   let(:checkout) { described_class.new(installments) }
   let(:root_order) { create :completed_order_with_pending_payment }
   let(:subscription_user) do
-    ccs = build_list(:credit_card, 1, gateway_customer_profile_id: 'BGS-123', default: true)
-    create :user, :subscription_user, credit_cards: ccs
+    create(:user, :subscription_user).tap do |user|
+      create(:credit_card, gateway_customer_profile_id: 'BGS-123', user: user, default: true)
+    end
   end
   let(:installments) { create_list(:installment, 2, installment_traits) }
 
@@ -138,12 +139,8 @@ RSpec.describe SolidusSubscriptions::Checkout do
     end
 
     context 'the payment fails' do
-      let(:credit_card) { create(:credit_card, default: true) }
+      let!(:credit_card) { create(:credit_card, user: checkout.user, default: true) }
       let(:expected_date) { (DateTime.current + SolidusSubscriptions::Config.reprocessing_interval).beginning_of_minute }
-
-      before do
-        checkout.user.credit_cards << credit_card
-      end
 
       it { is_expected.to be_nil }
 

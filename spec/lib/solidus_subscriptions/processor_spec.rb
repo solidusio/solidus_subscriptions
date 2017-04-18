@@ -4,9 +4,10 @@ RSpec.describe SolidusSubscriptions::Processor, :checkout do
   include ActiveJob::TestHelper
   around { |e| perform_enqueued_jobs { e.run } }
 
-  let(:user) do
-    ccs = build_list(:credit_card, 1, gateway_customer_profile_id: 'BGS-123', default: true)
-    build :user, :subscription_user, credit_cards: ccs
+  let!(:user) do
+    create(:user, :subscription_user).tap do |user|
+      create(:credit_card, gateway_customer_profile_id: 'BGS-123', user: user, default: true)
+    end
   end
 
   let!(:actionable_subscriptions) { create_list(:subscription, 2, :actionable, user: user) }
