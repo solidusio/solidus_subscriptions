@@ -8,7 +8,9 @@ actionable date to prevent further processing.
 
 ### Example params
 
+```json
 {
+  "token": "userapitoken",
   "id": 1
 }
 ```
@@ -63,7 +65,7 @@ HTTP/1.1 200 OK
     "spree_line_item_id": 1,
     "subscription_id": 1,
     "quantity": 5,
-    "end_date": '2012/12/12',
+    "end_date": "2012/12/12",
     "subscribable_id": 2,
     "created_at": "2016-09-26T23:50:32.923Z",
     "updated_at": "2016-09-26T23:51:05.784Z",
@@ -104,7 +106,7 @@ HTTP/1.1 200 OK
     "spree_line_item_id": 1,
     "subscription_id": 1,
     "quantity": 5,
-    "end_date": '2012/12/12',
+    "end_date": "2012/12/12",
     "subscribable_id": 2,
     "created_at": "2016-09-26T23:50:32.923Z",
     "updated_at": "2016-09-26T23:51:05.784Z",
