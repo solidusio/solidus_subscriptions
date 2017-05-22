@@ -41,7 +41,7 @@ Make changes to the Subscription object or the subscription line item object
 {
   "token": "userapitoken",
   "id": 1,
-  "line_item_attributes": {
+  "line_items_attributes": {
     "quantity": 5,
     "interval_length": 1,
     "interval_units": "month"
