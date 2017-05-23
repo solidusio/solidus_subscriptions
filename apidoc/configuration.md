@@ -8,10 +8,11 @@ behaviour of the gem:
 
 # The gateway the `ConsolidatedInstallment` will use when charging recurring
 # orders. We highly recommend setting this to a specific value
-SolidusSubscriptions::Config.default_gateway { my_gateway }
+SolidusSubscriptions::Config.default_gateway = my_gateway
 
 # Defines how long the system will wait before allowing a failed installment to
-# be reprocessed by the `Processor`
+# be reprocessed by the `Processor`. Set to nil to stop reprocessing failedx
+# installments
 SolidusSubscriptions::Config.reprocessing_interval = 1.days
 
 # Maximum number of times a user can skip their subscription before it
@@ -43,14 +44,6 @@ SolidusSubscriptions::Config.subscription_line_item_attributes = [
   :interval_length,
   :interval_units,
   :end_date
-]
-
-# SolidusSubscriptions::Subscription attributes which are allowed to
-# be updated from user data
-
-SolidusSubscriptions::Config.subscription_attributes = [
-  :actionable_date,
-  shipping_address_attributes: Spree::PermittedAttributes.address_attributes
 ]
 
 # Dispatchers (processing callbacks)

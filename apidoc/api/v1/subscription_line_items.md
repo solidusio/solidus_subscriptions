@@ -18,7 +18,7 @@ cart page alongside Spree::LineItems.
     "interval_length": 1,
     "interval_units": "month", // one of: day, week, month, year
 
-    "end_date": "2012/12/12"   // Stop processing the subscription after this date (null for ad nauseam)
+    "end_date": "2012/12/12"   // Stop processing after this date (null for ad nauseam)
   }
 }
 ```
