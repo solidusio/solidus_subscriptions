@@ -12,8 +12,6 @@ module SolidusSubscriptions
         month: 2,
         year: 3
       }
-
-      base.validates :interval_length, numericality: { greater_than: 0 }
     end
 
     # Calculates the number of seconds in the interval.
