@@ -9,34 +9,7 @@
 <% end %>
 
 <% content_for :sidebar do %>
-  <dl>
-    <dt><%= t('.customer') %></dt>
-    <dd>
-      <%= link_to @subscription.user.email, spree.admin_user_path(@subscription.user) %>
-    </dd>
-
-    <dt><%= t('.status') %></dt>
-    <dd>
-      <%= content_tag :span, class: "state #{ @subscription.state }" do %>
-        <%= @subscription.human_state_name %>
-      <% end %>
-    </dd>
-
-    <dt><%= t('.fulfillment_status') %></dt>
-    <dd>
-      <%= content_tag :span,  class: "state #{ @subscription.processing_state }" do %>
-        <%= @subscription.class.human_attribute_name("processing_state.#{ @subscription.processing_state }") %>
-      <% end %>
-    </dd>
-
-    <dt><%= t('.revenue') %></dt>
-    <dd>
-      <%= @subscription.line_item.dummy_line_item.try(:display_price) %>
-    </dd>
-
-    <dt><%= t('.interval') %></dt>
-    <dd><%= @subscription.line_item.interval.inspect %></dd>
-  </dl>
+  <%= render 'spree/admin/subscriptions/legacy_sidebar' if @subscription.respond_to?(:line_item) %>
 <% end %>
 
 <%= form_for @subscription, url: spree.admin_subscription_path(@subscription) do |f| %>
