@@ -11,7 +11,7 @@ RSpec.describe Spree::Api::UsersController, type: :controller do
   let!(:subscription) { create :subscription, :with_line_item, user: user }
 
   describe 'patch /update' do
-    subject { patch :update, params }
+    subject { patch :update, params: params }
 
     let(:params) do
       {

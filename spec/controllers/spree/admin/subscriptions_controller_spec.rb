@@ -17,7 +17,7 @@ RSpec.describe Spree::Admin::SubscriptionsController, type: :controller do
   end
 
   describe 'POST cancel' do
-    subject { delete :cancel, id: subscription.id }
+    subject { delete :cancel, params: { id: subscription.id } }
     context 'the subscription can be canceled' do
       let(:subscription) { create :subscription, :actionable }
 
@@ -50,7 +50,7 @@ RSpec.describe Spree::Admin::SubscriptionsController, type: :controller do
   end
 
   describe 'POST activate' do
-    subject { post :activate, id: subscription.id }
+    subject { post :activate, params: { id: subscription.id } }
 
     context 'the subscription can be activated' do
       let(:subscription) { create :subscription, :canceled, :with_line_item }
@@ -84,7 +84,7 @@ RSpec.describe Spree::Admin::SubscriptionsController, type: :controller do
   end
 
   describe 'POST skip' do
-    subject { post :skip, id: subscription.id }
+    subject { post :skip, params: { id: subscription.id } }
 
     let(:subscription) { create :subscription, :actionable, :with_line_item }
     let!(:expected_date) { subscription.next_actionable_date }
