@@ -105,6 +105,25 @@ RSpec.describe SolidusSubscriptions::Checkout do
       end
     end
 
+    context 'Altered checkout flow' do
+      before do
+        Spree::Order.remove_checkout_step(:delivery)
+      end
+
+      it 'has a payment' do
+        expect(order.payments.valid).to be_present
+      end
+
+      it 'has the correct totals' do
+        expect(order).to have_attributes(
+                           total: 39.98,
+                           shipment_total: 0
+                         )
+      end
+
+      it { is_expected.to be_complete }
+    end
+
     context 'the variant is out of stock' do
       let(:subscription_line_item) { installments.last.subscription.line_items.first }
 
