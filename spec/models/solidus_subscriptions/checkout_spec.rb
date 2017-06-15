@@ -105,28 +105,30 @@ RSpec.describe SolidusSubscriptions::Checkout do
       end
     end
 
-    context 'Altered checkout flow' do
-      before do
-        @old_checkout_flow = Spree::Order.checkout_flow
-        Spree::Order.remove_checkout_step(:delivery)
-      end
+    if Gem::Specification.all.find{ |gem| gem.name == 'solidus' }.version >= Gem::Version.new('1.3.0')
+      context 'Altered checkout flow' do
+        before do
+          @old_checkout_flow = Spree::Order.checkout_flow
+          Spree::Order.remove_checkout_step(:delivery)
+        end
 
-      after do
-        Spree::Order.checkout_flow(&@old_checkout_flow)
-      end
+        after do
+          Spree::Order.checkout_flow(&@old_checkout_flow)
+        end
 
-      it 'has a payment' do
-        expect(order.payments.valid).to be_present
-      end
+        it 'has a payment' do
+          expect(order.payments.valid).to be_present
+        end
 
-      it 'has the correct totals' do
-        expect(order).to have_attributes(
-          total: 39.98,
-          shipment_total: 0
-        )
-      end
+        it 'has the correct totals' do
+          expect(order).to have_attributes(
+            total: 39.98,
+            shipment_total: 0
+          )
+        end
 
-      it { is_expected.to be_complete }
+        it { is_expected.to be_complete }
+      end
     end
 
     context 'the variant is out of stock' do
