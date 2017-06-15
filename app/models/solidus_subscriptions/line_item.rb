@@ -71,7 +71,7 @@ module SolidusSubscriptions
     end
 
     def update_actionable_date_if_interval_changed
-      if subscription && (interval_length_changed? || interval_units_changed?)# && !self.new_record?
+      if subscription && (interval_length_changed? || interval_units_changed?)
         base_date = if subscription.installments.any?
           subscription.installments.last.created_at
         else
