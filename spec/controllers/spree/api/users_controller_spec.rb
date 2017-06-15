@@ -38,7 +38,7 @@ RSpec.describe Spree::Api::UsersController, type: :controller do
 
     it 'updates the subscription line items' do
       subject
-      line_item = subscription.line_items(true).first
+      line_item = subscription.line_items.reload.first
 
       expect(line_item).to have_attributes(line_item_attributes)
     end
