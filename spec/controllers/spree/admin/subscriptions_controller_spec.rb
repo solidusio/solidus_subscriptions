@@ -1,5 +1,4 @@
 require 'rails_helper'
-
 RSpec.describe Spree::Admin::SubscriptionsController, type: :controller do
   routes { Spree::Core::Engine.routes }
   stub_authorization!
@@ -14,6 +13,32 @@ RSpec.describe Spree::Admin::SubscriptionsController, type: :controller do
     subject { get :new }
 
     it { is_expected.to be_successful }
+  end
+
+  describe 'GET :edit' do
+    subject { get :edit, params: { id: subscription.id } }
+    let(:subscription) { create :subscription, :actionable }
+
+    it { is_expected.to be_successful }
+  end
+
+  describe 'PUT :update' do
+    subject { put :update, params: subscription_params }
+
+    let(:expected_date) { DateTime.parse('2001/11/12') }
+    let(:subscription) { create :subscription, :actionable }
+    let(:subscription_params) do
+      {
+        id: subscription.id,
+        subscription: { actionable_date: expected_date }
+      }
+    end
+
+    it { is_expected.to redirect_to admin_subscriptions_path }
+
+    it 'updates the subscription attributes', :aggregate_failures do
+      expect { subject }.to change { subscription.reload.actionable_date }.to expected_date
+    end
   end
 
   describe 'POST cancel' do
