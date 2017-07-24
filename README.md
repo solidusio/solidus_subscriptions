@@ -11,7 +11,7 @@ Sponsored by [Goby](https://www.goby.co) - Electrify your routine!
 Add solidus_subscriptions to your Gemfile:
 
 ```ruby
-gem 'solidus_subscriptions', git: 'https://github.com/solidus-contrib/solidus_subscriptions/'
+gem 'solidus_subscriptions', github: 'solidusio-contrib/solidus_subscriptions'
 ```
 
 Bundle your dependencies and run the installation generator:
