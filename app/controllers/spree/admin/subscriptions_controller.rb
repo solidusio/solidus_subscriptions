@@ -1,7 +1,7 @@
 module Spree
   module Admin
     class SubscriptionsController < ResourceController
-      skip_before_filter :load_resource, only: :index
+      skip_before_action :load_resource, only: :index
 
       def index
         @search = SolidusSubscriptions::Subscription.

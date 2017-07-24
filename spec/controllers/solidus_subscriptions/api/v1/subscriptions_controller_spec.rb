@@ -32,7 +32,7 @@ RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :co
   end
 
   describe 'PATCH :update' do
-    subject { patch :update, params }
+    subject { patch :update, params: params }
     let(:params) do
       {
         id: subscription.id,
@@ -86,14 +86,14 @@ RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :co
 
   describe "POST :skip" do
     let(:params) { { id: subscription.id, token: user.spree_api_key } }
-    subject { post :skip, params }
+    subject { post :skip, params: params }
 
     it_behaves_like "an authenticated subscription"
   end
 
   describe "POST :cancel" do
     let(:params) { { id: subscription.id, token: user.spree_api_key } }
-    subject { post :cancel, params }
+    subject { post :cancel, params: params }
 
     it_behaves_like "an authenticated subscription"
   end

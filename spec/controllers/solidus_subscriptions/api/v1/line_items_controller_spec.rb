@@ -16,7 +16,7 @@ RSpec.describe SolidusSubscriptions::Api::V1::LineItemsController, type: :contro
         token: user.spree_api_key
       }
     end
-    subject { post :update, params }
+    subject { post :update, params: params }
 
     context 'guest user' do
       let(:order) { create :order }
@@ -87,7 +87,7 @@ RSpec.describe SolidusSubscriptions::Api::V1::LineItemsController, type: :contro
 
   describe "#destroy" do
     let(:params) { { id: line.id, order_id: order.id, token: user.spree_api_key } }
-    subject { delete :destroy, params }
+    subject { delete :destroy, params: params }
 
     context "when the order is not ours" do
       let(:order) { create :order, user: create(:user) }
