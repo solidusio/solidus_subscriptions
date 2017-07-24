@@ -1,0 +1,81 @@
+<% new ||= false %>
+
+<fieldset class="no-border-top">
+  <fieldset class="index no-border-bottom">
+    <legend><%= t('.subscription') %></legend>
+
+    <% if new %>
+      <div class="row">
+        <div class="field twelve columns">
+          <%= f.label :user_id, Spree.t(:user), class: "required" %>
+          <%= f.collection_select :user_id,  Spree::User.all, :id, :email, {}, class: "select2 fullwidth" %>
+        </div>
+
+      </div>
+    <% end %>
+  </fieldset>
+
+  <%= f.fields_for :line_item, @line_item do |lf| %>
+    <div class="row">
+      <%= content_tag :div, class: "field alpha three columns" do %>
+        <%= f.label :actionable_date %>
+        <%= f.text_field :actionable_date, class: "fullwidth datepicker" %>
+      <% end %>
+
+      <div class='field three columns'>
+        <%= lf.label :inverval_length %>
+        <%= lf.number_field :interval_length, class: "fullwidth" %>
+      </div>
+
+      <div class='field three columns'>
+        <%= lf.label :interval_units %>
+        <%
+          unit_values = SolidusSubscriptions::LineItem.interval_units.keys
+          units = unit_values.map do |unit|
+            [
+              unit,
+              SolidusSubscriptions::LineItem.human_attribute_name("interval_units.#{ unit }")
+            ]
+          end
+        %>
+
+        <div>
+          <% units.each_with_index do |(value, name), i| %>
+            <div>
+              <%= lf.label :interval_units, for: "interval_units_#{ value }", class: 'fullwidth' do %>
+                <%= lf.radio_button :interval_units, value, id: "interval_units_#{ value }" %>
+                <%= name %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="field omega three columns">
+        <%= lf.label :end_date %>
+        <%= lf.date_field :end_date, class: "required", class: "fullwidth" %>
+      </div>
+    </div>
+
+    <fieldset class='no-border-bottom'>
+      <legend><%= t('.subscription_line_item') %></legend>
+
+      <div class="row">
+        <div class='field alpha two columns'>
+          <%= lf.label :quantity %>
+          <%= lf.number_field :quantity, min: 1, class: "fullwidth" %>
+        </div>
+
+        <div class="field columns ten omega">
+          <%= lf.label :subscribable_id %>
+          <%= lf.collection_select :subscribable_id, Spree::Variant.where(subscribable: true), :id, :pretty_name, {}, { class: "fullwidth select2" } %>
+        </div>
+      </div>
+
+    </fieldset>
+  <% end %>
+
+  <div class="filter-actions" data-hook='buttons'>
+    <%= f.button type: :submit %>
+  </div>
+</fieldset>

@@ -28,7 +28,8 @@ module SolidusSubscriptions
     )
 
     validates :subscribable_id, presence: :true
-    validates :quantity, :interval_length, numericality: { greater_than: 0 }
+    validates :quantity, numericality: { greater_than: 0 }
+    validates :interval_length, numericality: { greater_than: 0 }, unless: -> { subscription }
 
     before_update :update_actionable_date_if_interval_changed
 
@@ -71,7 +72,7 @@ module SolidusSubscriptions
     end
 
     def update_actionable_date_if_interval_changed
-      if subscription && (interval_length_changed? || interval_units_changed?)
+      if persisted? && subscription && (interval_length_changed? || interval_units_changed?)
         base_date = if subscription.installments.any?
           subscription.installments.last.created_at
         else
