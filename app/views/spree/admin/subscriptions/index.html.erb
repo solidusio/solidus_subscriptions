@@ -100,10 +100,10 @@
       <tr>
         <th><%= sort_link(@search, :created_at, SolidusSubscriptions::Subscription.human_attribute_name(:created_at)) %></th>
         <th><%= sort_link(@search, :user_email, SolidusSubscriptions::Subscription.human_attribute_name(:user)) %></th>
-        <th><%= sort_link(@search, :actionable_date, SolidusSubscriptions::Subscription.human_attribute_name(:actionable_date)) %></th>
+        <th><%= sort_link(@search, :actionable_date, [:actionable_date, 'id asc'], SolidusSubscriptions::Subscription.human_attribute_name(:actionable_date)) %></th>
         <th><%= sort_link(@search, :line_item_interval_length, SolidusSubscriptions::Subscription.human_attribute_name(:interval)) %></th>
-        <th><%= sort_link(@search, :state, SolidusSubscriptions::Subscription.human_attribute_name(:state)) %></th>
-        <th><%= sort_link(@search, :processing_state, SolidusSubscriptions::Subscription.human_attribute_name(:processing_state)) %></th>
+        <th><%= sort_link(@search, :state, [:state, 'id asc'], SolidusSubscriptions::Subscription.human_attribute_name(:state)) %></th>
+        <th><%= sort_link(@search, :processing_state, [:processing_state, 'id asc'], SolidusSubscriptions::Subscription.human_attribute_name(:processing_state)) %></th>
         <th class='actions'></th>
       </tr>
     </thead>
