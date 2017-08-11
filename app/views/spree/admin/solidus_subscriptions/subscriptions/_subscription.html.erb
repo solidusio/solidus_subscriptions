@@ -27,11 +27,12 @@
     <% if subscription.state_events.include?(:cancel) %>
       <%=
         link_to_with_icon(
-          :pause,
+          :stop,
           t('.cancel'),
           spree.cancel_admin_subscription_path(subscription),
           no_text: true,
-          method: :delete
+          method: :delete,
+          data: { confirm: t('.cancel_alert') }
         )
       %>
     <% end %>
