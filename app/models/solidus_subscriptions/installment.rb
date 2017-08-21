@@ -10,6 +10,11 @@ module SolidusSubscriptions
       inverse_of: :installments
     )
 
+    has_many(
+      :installment_promotions,
+      class_name: 'SolidusSubscriptions::InstallmentPromotion'
+    )
+
     validates :subscription, presence: true
 
     scope :fulfilled, (lambda do

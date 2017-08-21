@@ -130,6 +130,19 @@ module SolidusSubscriptions
 
     def apply_promotions
       Spree::PromotionHandler::Cart.new(order).activate
+
+      installment_promotions = installments.flat_map do |installment|
+        installment_promotions = installment.intallment_promotions
+      end
+
+      installment_promotions.each do |installment_promotion|
+        if installment_promotion.promotion.eligible?(order, installment_promotion.promotion_code)
+          installment_promotion.promotion.activate(order: order, promotion_code: installment_promotion.promotion_code)
+        end
+      end
+
+
+      SolidusSubscriptions::PromotionHandler::Installment.new(order).activate
       order.updater.update # reload totals
     end
 
