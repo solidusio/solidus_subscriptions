@@ -174,7 +174,7 @@ RSpec.describe SolidusSubscriptions::Checkout do
         subject
 
         details = installments.map do |installments|
-          installments.details(true).last
+          installments.details.reload.last
         end
 
         expect(details).to all be_failed && have_attributes(

@@ -1,5 +1,4 @@
-# The LineItem class is responsible for associating Line items to subscriptions.
-# It tracks the following values:
+# The LineItem class is responsible for associating Line items to subscriptions.  # It tracks the following values:
 #
 # [Spree::LineItem] :spree_line_item The spree object which created this instance
 #
@@ -28,9 +27,10 @@ module SolidusSubscriptions
     )
 
     validates :subscribable_id, presence: :true
-    validates :quantity, :interval_length, numericality: { greater_than: 0 }
+    validates :quantity, numericality: { greater_than: 0 }
+    validates :interval_length, numericality: { greater_than: 0 }, unless: -> { subscription }
 
-    before_save :update_actionable_date_if_interval_changed
+    before_update :update_actionable_date_if_interval_changed
 
     def next_actionable_date
       dummy_subscription.next_actionable_date
@@ -52,6 +52,10 @@ module SolidusSubscriptions
       li.freeze
     end
 
+    def interval
+      subscription.try!(:interval) || super
+    end
+
     private
 
     # Get a placeholder order for calculating the values of future
@@ -67,11 +71,11 @@ module SolidusSubscriptions
     # A place holder for calculating dynamic values needed to display in the cart
     # it is frozen and cannot be saved
     def dummy_subscription
-      Subscription.new(line_items: [dup]).freeze
+      Subscription.new(line_items: [dup], interval_length: interval_length, interval_units: interval_units).freeze
     end
 
     def update_actionable_date_if_interval_changed
-      if subscription && (interval_length_changed? || interval_units_changed?)
+      if persisted? && subscription && (interval_length_changed? || interval_units_changed?)
         base_date = if subscription.installments.any?
           subscription.installments.last.created_at
         else

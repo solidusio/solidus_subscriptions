@@ -8,21 +8,23 @@ module SolidusSubscriptions
     PROCESSING_STATES = [:pending, :failed, :success]
 
     belongs_to :user, class_name: Spree.user_class
-    has_many :line_items, class_name: 'SolidusSubscriptions::LineItem'
+    has_many :line_items, class_name: 'SolidusSubscriptions::LineItem', inverse_of: :subscription
     has_many :installments, class_name: 'SolidusSubscriptions::Installment'
     belongs_to :store, class_name: 'Spree::Store'
     belongs_to :shipping_address, class_name: 'Spree::Address'
 
     validates :user, presence: :true
     validates :skip_count, :successive_skip_count, presence: true, numericality: { greater_than_or_equal_to: 0 }
+    validates :interval_length, numericality: { greater_than: 0 }
 
-    accepts_nested_attributes_for :line_items, :shipping_address
+    accepts_nested_attributes_for :shipping_address
+    accepts_nested_attributes_for :line_items, allow_destroy: true
 
     # The following methods are delegated to the associated
     # SolidusSubscriptions::LineItem
     #
-    # :interval, :quantity, :subscribable_id, :end_date
-    delegate :interval, :quantity, :subscribable_id, :end_date, to: :line_item
+    # :quantity, :subscribable_id
+    delegate :quantity, :subscribable_id, to: :line_item
 
     # Find all subscriptions that are "actionable"; that is, ones that have an
     # actionable_date in the past and are not invalid or canceled.

@@ -1,4 +1,4 @@
-class CreateSolidusSubscriptionsLineItems < ActiveRecord::Migration
+class CreateSolidusSubscriptionsLineItems < SolidusSupport::Migration[4.2]
   def change
     create_table :solidus_subscriptions_line_items do |t|
       t.references :spree_line_item, index: true, foreign_key: true, null: false

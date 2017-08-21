@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
   s.test_files = Dir['test/**/*']
 
   s.add_dependency 'solidus'
+  s.add_dependency "solidus_support"
   s.add_dependency 'deface'
   s.add_dependency 'state_machines'
   s.add_dependency 'i18n'

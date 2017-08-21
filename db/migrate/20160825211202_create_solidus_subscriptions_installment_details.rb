@@ -1,4 +1,4 @@
-class CreateSolidusSubscriptionsInstallmentDetails < ActiveRecord::Migration
+class CreateSolidusSubscriptionsInstallmentDetails < SolidusSupport::Migration[4.2]
   def change
     create_table :solidus_subscriptions_installment_details do |t|
       t.references :installment, null: false

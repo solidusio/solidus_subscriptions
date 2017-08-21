@@ -1,4 +1,4 @@
-class AddAddressIdToSolidusSubscriptionsSubscriptions < ActiveRecord::Migration
+class AddAddressIdToSolidusSubscriptionsSubscriptions < SolidusSupport::Migration[4.2]
   def change
     add_reference :solidus_subscriptions_subscriptions, :shipping_address
     add_index :solidus_subscriptions_subscriptions, :shipping_address_id, name: :index_subscription_shipping_address_id

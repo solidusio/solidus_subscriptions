@@ -23,6 +23,7 @@ en:
         subscriptions:
           subscription:
             cancel: Cancel
+            cancel_alert: "Are you sure you want to cancel this subscription?"
             activate: Activate
             skip: Skip One
 

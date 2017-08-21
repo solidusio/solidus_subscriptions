@@ -33,7 +33,8 @@ module SolidusSubscriptions
         config.menu_items << config.class::MenuItem.new(
           [:subscriptions],
           'repeat',
-          url: :admin_subscriptions_path
+          url: :admin_subscriptions_path,
+          condition: ->{ can?(:admin, SolidusSubscriptions::Subscription) }
         )
       end
     end
