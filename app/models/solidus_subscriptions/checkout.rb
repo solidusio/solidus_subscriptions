@@ -114,7 +114,7 @@ module SolidusSubscriptions
     end
 
     def active_card
-      user.credit_cards.default.last
+      user.wallet.default_wallet_payment_source
     end
 
     def create_payment
