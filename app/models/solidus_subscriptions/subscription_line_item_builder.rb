@@ -9,7 +9,7 @@ module SolidusSubscriptions
 
       # Rerun the promotion handler to pickup subscription promotions
       Spree::PromotionHandler::Cart.new(line_item.order).activate
-      line_item.order.update!
+      line_item.order.recalculate
     end
 
     def subscription_params

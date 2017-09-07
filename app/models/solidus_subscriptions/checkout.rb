@@ -65,7 +65,7 @@ module SolidusSubscriptions
     private
 
     def checkout
-      order.update!
+      order.recalculate
       apply_promotions
 
       order.checkout_steps[0...-1].each do

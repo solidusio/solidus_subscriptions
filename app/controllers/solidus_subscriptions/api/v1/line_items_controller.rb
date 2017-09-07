@@ -16,7 +16,7 @@ class SolidusSubscriptions::Api::V1::LineItemsController < Spree::Api::BaseContr
     return render json: {}, status: 400 if @line_item.order.complete?
 
     @line_item.destroy!
-    @line_item.order.update!
+    @line_item.order.recalculate
 
     render json: @line_item.to_json
   end
