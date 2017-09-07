@@ -28,7 +28,7 @@ module SolidusSubscriptions
         Spree::LineItem.new(variant: variant, quantity: subscription_line_item.quantity)
       end
 
-      # Either all line items for an installment are fullfilled or none are
+      # Either all line items for an installment are fulfilled or none are
       line_items.all? ? line_items : []
     end
 

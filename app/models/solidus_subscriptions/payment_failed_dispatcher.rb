@@ -1,4 +1,4 @@
-# This service class is intented to provide callback behaviour to handle
+# This service class is intended to provide callback behaviour to handle
 # the case where a subscription order cannot be processed because a payment
 # failed
 module SolidusSubscriptions

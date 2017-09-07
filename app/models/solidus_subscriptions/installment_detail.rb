@@ -1,5 +1,5 @@
 # This class represents a single attempt to fulfill an installment. It will
-# indicate the result of that attept.
+# indicate the result of that attempt.
 module SolidusSubscriptions
   class InstallmentDetail < ActiveRecord::Base
     belongs_to(

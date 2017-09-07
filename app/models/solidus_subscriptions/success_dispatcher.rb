@@ -1,4 +1,4 @@
-# This service class is intented to provide callback behaviour to handle
+# This service class is intended to provide callback behaviour to handle
 # an installment successfully being processed
 module SolidusSubscriptions
   class SuccessDispatcher < Dispatcher
