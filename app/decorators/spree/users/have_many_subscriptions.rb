@@ -15,4 +15,6 @@ module Spree
   end
 end
 
-Spree.user_class.prepend(Spree::Users::HaveManySubscritptions)
+Spree::UserClassHandle.new.to_s.constantize.prepend(
+  Spree::Users::HaveManySubscritptions
+)
