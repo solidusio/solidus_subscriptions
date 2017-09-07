@@ -1,6 +1,6 @@
 # This class takes a collection of installments and populates a new spree
 # order with the correct contents based on the subscriptions associated to the
-# intallments. This is to group together subscriptions being
+# installments. This is to group together subscriptions being
 # processed on the same day for a specific user
 module SolidusSubscriptions
   class Checkout
@@ -65,7 +65,7 @@ module SolidusSubscriptions
     private
 
     def checkout
-      order.update!
+      order.recalculate
       apply_promotions
 
       order.checkout_steps[0...-1].each do
