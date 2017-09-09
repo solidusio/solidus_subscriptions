@@ -1,3 +1,5 @@
+This is currently a fork of https://github.com/solidusio-contrib/solidus_subscriptions.  It supports the alpha version of the gem on rubygems until such a time that an official gem is released.
+
 # SolidusSubscriptions
 
 A Solidus extension for subscriptions. **Important note**: this is
