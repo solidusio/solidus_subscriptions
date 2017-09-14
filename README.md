@@ -13,7 +13,7 @@ Sponsored by [Goby](https://www.goby.co) - Electrify your routine!
 Add solidus_subscriptions to your Gemfile:
 
 ```ruby
-gem 'solidus_subscriptions-alpha', '~> 0.0.1', require: 'solidus_subcriptions'
+gem 'solidus_subscriptions-alpha', '~> 0.0.1', require: 'solidus_subscriptions'
 ```
 
 Bundle your dependencies and run the installation generator:
