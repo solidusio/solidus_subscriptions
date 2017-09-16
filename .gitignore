@@ -14,3 +14,6 @@ pkg
 *.swp
 spec/dummy
 .bundle
+.byebug_history
+*.sublime-project
+*.sublime-workspace

@@ -1,3 +1,5 @@
+This is currently a fork of https://github.com/solidusio-contrib/solidus_subscriptions.  It supports the alpha version of the gem on rubygems until such a time that an official gem is released.
+
 # SolidusSubscriptions
 
 A Solidus extension for subscriptions. **Important note**: this is
@@ -11,7 +13,7 @@ Sponsored by [Goby](https://www.goby.co) - Electrify your routine!
 Add solidus_subscriptions to your Gemfile:
 
 ```ruby
-gem 'solidus_subscriptions', github: 'solidusio-contrib/solidus_subscriptions'
+gem 'solidus_subscriptions-alpha', '~> 0.0.1', require: 'solidus_subscriptions'
 ```
 
 Bundle your dependencies and run the installation generator:
