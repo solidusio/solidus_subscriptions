@@ -165,7 +165,14 @@ RSpec.describe SolidusSubscriptions::Checkout do
     end
 
     context 'the payment fails' do
-      let!(:credit_card) { create(:credit_card, user: checkout.user, default: true) }
+      let!(:credit_card) { 
+        card = create(:credit_card, user: checkout.user, default: true) 
+        if SolidusSupport.solidus_gem_version >= Gem::Version.new("2.2.0")
+          wallet_payment_source = checkout.user.wallet.add(card)
+          checkout.user.wallet.default_wallet_payment_source = wallet_payment_source
+        end
+        card
+      }
       let(:expected_date) { (DateTime.current + SolidusSubscriptions::Config.reprocessing_interval).beginning_of_minute }
 
       it { is_expected.to be_nil }
