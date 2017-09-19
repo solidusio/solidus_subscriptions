@@ -114,7 +114,11 @@ module SolidusSubscriptions
     end
 
     def active_card
-      user.wallet.default_wallet_payment_source
+      if SolidusSupport.solidus_gem_version <  Gem::Version.new("2.2.0")
+        user.credit_cards.default.last
+      else
+        user.wallet.default_wallet_payment_source.payment_source
+      end
     end
 
     def create_payment
