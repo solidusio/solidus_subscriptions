@@ -68,10 +68,10 @@ module SolidusSubscriptions
       order.update!
       apply_promotions
 
-      order.checkout_steps[0...-1].each do
+      order.checkout_steps.count.times do
         order.ship_address = ship_address if order.state == "address"
         create_payment if order.state == "payment"
-        order.next!
+        order.next! if order.next_transition.present?
       end
 
       # Do this as a separate "quiet" transition so that it returns true or
