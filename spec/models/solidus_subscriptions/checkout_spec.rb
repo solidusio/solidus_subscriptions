@@ -109,7 +109,7 @@ RSpec.describe SolidusSubscriptions::Checkout do
       context 'Altered checkout flow' do
         before do
           @old_checkout_flow = Spree::Order.checkout_flow
-          Spree::Order.remove_checkout_step(:delivery)
+          Spree::Order.remove_checkout_step(:confirm)
         end
 
         after do
@@ -117,17 +117,34 @@ RSpec.describe SolidusSubscriptions::Checkout do
         end
 
         it 'has a payment' do
+          Spree::Order.state_machine do
+            event :complete do
+              transition to: :complete, from: [:payment]
+            end
+          end
           expect(order.payments.valid).to be_present
         end
 
         it 'has the correct totals' do
+          Spree::Order.state_machine do
+            event :complete do
+              transition to: :complete, from: [:payment]
+            end
+          end          
           expect(order).to have_attributes(
-            total: 39.98,
-            shipment_total: 0
+            total: 49.98,
+            shipment_total: 10
           )
         end
 
-        it { is_expected.to be_complete }
+        it do 
+          Spree::Order.state_machine do
+            event :complete do
+              transition to: :complete, from: [:payment]
+            end
+          end  
+          is_expected.to be_complete 
+        end
       end
     end
 
