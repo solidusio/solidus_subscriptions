@@ -30,4 +30,6 @@ module Spree
   end
 end
 
-Spree::OrdersController.prepend(Spree::Controllers::Orders::CreateSubscriptionLineItems)
+if defined?(Spree::Frontend::Engine)
+  Spree::OrdersController.prepend(Spree::Controllers::Orders::CreateSubscriptionLineItems)
+end
