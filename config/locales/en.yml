@@ -57,12 +57,11 @@ en:
         name: Subscription Order
         description: Order fulfills a subscription
 
-    products:
-      cart_form:
-        quantity: I want
-        quantity_suffix: items
-        interval_length: every
-        subscription_fields: Subscription Settings
+    subscriptions_cart_form:
+      quantity: I want
+      quantity_suffix: items
+      interval_length: every
+      subscription_fields: Subscription Settings
 
   activerecord:
     attributes:

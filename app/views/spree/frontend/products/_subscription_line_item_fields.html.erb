@@ -1,13 +1,13 @@
-<%= content_tag :h3, t('.subscription_fields') %>
+<%= content_tag :h3, t('spree.subscriptions_cart_form.subscription_fields') %>
 <%= fields_for :'subscription_line_item', SolidusSubscriptions::LineItem.new do |ff| %>
   <div>
-    <%= ff.label :quantity, t('.quantity') %>
+    <%= ff.label :quantity, t('spree.subscriptions_cart_form.quantity') %>
     <%= ff.number_field :quantity %>
-    <%= ff.label :quantity, t('.quantity_suffix') %>
+    <%= ff.label :quantity, t('spree.subscriptions_cart_form.quantity_suffix') %>
   </div>
 
   <div>
-    <%= ff.label :interval_length, t('.interval_length') %>
+    <%= ff.label :interval_length, t('spree.subscriptions_cart_form.interval_length') %>
     <%= ff.number_field :interval_length %>
 
     <%= ff.collection_radio_buttons :interval_units, SolidusSubscriptions::LineItem.interval_units.to_a, :first, :first %>
