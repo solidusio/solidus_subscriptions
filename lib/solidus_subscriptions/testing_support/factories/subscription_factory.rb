@@ -6,7 +6,9 @@ FactoryGirl.define do
 
     user do
       create(:user, :subscription_user).tap do |user|
-        create(:credit_card, gateway_customer_profile_id: 'BGS-123', user: user, default: true)
+        cc = create(:credit_card, gateway_customer_profile_id: 'BGS-123', user: user)
+        wallet_cc = user.wallet.add(cc)
+        user.wallet.default_wallet_payment_source = wallet_cc
       end
     end
 
