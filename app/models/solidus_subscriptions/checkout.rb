@@ -65,12 +65,11 @@ module SolidusSubscriptions
     private
 
     def checkout
-      order.update!
+      order.recalculate
       apply_promotions
 
       order.checkout_steps[0...-1].each do
         order.ship_address = ship_address if order.state == "address"
-        create_payment if order.state == "payment"
         order.next!
       end
 
@@ -114,15 +113,7 @@ module SolidusSubscriptions
     end
 
     def active_card
-      user.credit_cards.default.last
-    end
-
-    def create_payment
-      order.payments.create(
-        source: active_card,
-        amount: order.total,
-        payment_method: Config.default_gateway
-      )
+      user.wallet.default_wallet_payment_source
     end
 
     def apply_promotions

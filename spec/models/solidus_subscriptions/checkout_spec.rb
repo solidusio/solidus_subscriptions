@@ -5,7 +5,9 @@ RSpec.describe SolidusSubscriptions::Checkout do
   let(:root_order) { create :completed_order_with_pending_payment }
   let(:subscription_user) do
     create(:user, :subscription_user).tap do |user|
-      create(:credit_card, gateway_customer_profile_id: 'BGS-123', user: user, default: true)
+      cc = create(:credit_card, gateway_customer_profile_id: 'BGS-123', user: user)
+      wallet_cc = user.wallet.add(cc)
+      user.wallet.default_wallet_payment_source = wallet_cc
     end
   end
   let(:installments) { create_list(:installment, 2, installment_traits) }
@@ -165,7 +167,13 @@ RSpec.describe SolidusSubscriptions::Checkout do
     end
 
     context 'the payment fails' do
-      let!(:credit_card) { create(:credit_card, user: checkout.user, default: true) }
+      let!(:credit_card) do
+        cc = create(:credit_card, user: checkout.user)
+        wallet_cc = checkout.user.wallet.add(cc)
+        checkout.user.wallet.default_wallet_payment_source = wallet_cc
+
+        cc
+      end
       let(:expected_date) { (DateTime.current + SolidusSubscriptions::Config.reprocessing_interval).beginning_of_minute }
 
       it { is_expected.to be_nil }
@@ -241,7 +249,10 @@ RSpec.describe SolidusSubscriptions::Checkout do
 
     context 'the user has store credit' do
       it_behaves_like 'a completed checkout'
-      let!(:store_credit) { create :store_credit, user: subscription_user }
+      let!(:store_credit) do
+        create :store_credit_payment_method
+        create :store_credit, user: subscription_user
+      end
 
       it 'has a valid store credit payment' do
         expect(order.payments.valid.store_credits).to be_present

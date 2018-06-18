@@ -32,7 +32,7 @@ RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :co
   end
 
   describe 'PATCH :update' do
-    subject { patch :update, params: params }
+    subject { patch :update, params: params, format: :json }
     let(:params) do
       {
         id: subscription.id,
@@ -40,6 +40,8 @@ RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :co
         subscription: subscription_params
       }
     end
+
+    let!(:state) { create :state }
 
     let(:subscription_params) do
       {
@@ -52,8 +54,8 @@ RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :co
           lastname: 'Ketchum',
           address1: '1 Rainbow Road',
           city: 'Palette Town',
-          country_id: create(:country).id,
-          state_id: create(:state).id,
+          country_id: state.country.id,
+          state_id: state.id,
           phone: '999-999-999',
           zipcode: '10001'
         }
