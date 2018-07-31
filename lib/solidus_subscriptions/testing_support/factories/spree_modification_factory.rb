@@ -1,4 +1,4 @@
-FactoryGirl.modify do
+FactoryBot.modify do
   factory :user do
     trait :subscription_user do
       bill_address

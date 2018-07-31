@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :subscription_line_item, class: 'SolidusSubscriptions::LineItem' do
     subscribable_id { create(:variant, subscribable: true).id }
     quantity 1
