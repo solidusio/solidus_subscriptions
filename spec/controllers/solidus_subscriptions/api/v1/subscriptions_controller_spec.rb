@@ -41,6 +41,9 @@ RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :co
       }
     end
 
+    let(:address_country) { create(:country) }
+    let(:address_state) { create(:state, country: address_country) }
+
     let(:subscription_params) do
       {
         line_items_attributes: [{
@@ -52,8 +55,8 @@ RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :co
           lastname: 'Ketchum',
           address1: '1 Rainbow Road',
           city: 'Palette Town',
-          country_id: create(:country).id,
-          state_id: create(:state).id,
+          country_id: address_country.id,
+          state_id: address_state.id,
           phone: '999-999-999',
           zipcode: '10001'
         }

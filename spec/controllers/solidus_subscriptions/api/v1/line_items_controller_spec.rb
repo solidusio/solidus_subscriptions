@@ -13,7 +13,8 @@ RSpec.describe SolidusSubscriptions::Api::V1::LineItemsController, type: :contro
       {
         id: line.id,
         subscription_line_item: { quantity: 21 },
-        token: user.spree_api_key
+        token: user.spree_api_key,
+        format: :json
       }
     end
     subject { post :update, params: params }
@@ -71,7 +72,8 @@ RSpec.describe SolidusSubscriptions::Api::V1::LineItemsController, type: :contro
           {
             id: line.id,
             subscription_line_item: { interval_length: -1 },
-            token: user.spree_api_key
+            token: user.spree_api_key,
+            format: :json
           }
         end
 
@@ -86,7 +88,14 @@ RSpec.describe SolidusSubscriptions::Api::V1::LineItemsController, type: :contro
   end
 
   describe "#destroy" do
-    let(:params) { { id: line.id, order_id: order.id, token: user.spree_api_key } }
+    let(:params) {
+      {
+        id: line.id,
+        order_id: order.id,
+        token: user.spree_api_key,
+        format: :json
+      }
+    }
     subject { delete :destroy, params: params }
 
     context "when the order is not ours" do

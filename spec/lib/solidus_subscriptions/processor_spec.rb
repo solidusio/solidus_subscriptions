@@ -4,11 +4,14 @@ RSpec.describe SolidusSubscriptions::Processor, :checkout do
   include ActiveJob::TestHelper
   around { |e| perform_enqueued_jobs { e.run } }
 
-  let!(:user) do
-    create(:user, :subscription_user).tap do |user|
-      create(:credit_card, gateway_customer_profile_id: 'BGS-123', user: user, default: true)
-    end
-  end
+  let!(:user) { create(:user, :subscription_user) }
+  let!(:credit_card) {
+    card = create(:credit_card, gateway_customer_profile_id: 'BGS-123', user: user)
+    wallet_payment_source = user.wallet.add(card)
+    user.wallet.default_wallet_payment_source = wallet_payment_source
+    user.save
+    card
+  }
 
   let!(:actionable_subscriptions) { create_list(:subscription, 2, :actionable, user: user) }
   let!(:pending_cancellation_subscriptions) do
