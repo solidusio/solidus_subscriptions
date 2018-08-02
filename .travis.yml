@@ -24,11 +24,6 @@ env:
     - SOLIDUS_BRANCH=v2.3 DB=mysql
     - SOLIDUS_BRANCH=master DB=mysql
 
-before_install:
-  - rvm @default,@global do gem uninstall bundler -x
-  - gem install bundler --version '~> 1.13.0'
-  - bundle --version
-
 before_script:
   - bundle exec rake test_app
 
