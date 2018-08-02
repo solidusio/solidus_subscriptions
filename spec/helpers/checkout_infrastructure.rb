@@ -3,11 +3,11 @@
 module CheckoutInfrastructure
   def self.extended(base)
     base.before(:all) do
-      create :credit_card_payment_method
+      payment_method = create :credit_card_payment_method
       create :country
       create :shipping_method
 
-      SolidusSubscriptions::Config.default_gateway { Spree::Gateway::Bogus.last }
+      SolidusSubscriptions::Config.default_gateway { payment_method }
     end
 
     base.after(:all) do
