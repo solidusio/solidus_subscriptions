@@ -65,7 +65,11 @@ module SolidusSubscriptions
     private
 
     def checkout
-      order.update!
+      if Spree.solidus_gem_version >= Gem::Version.new('2.4.0')
+        order.recalculate
+      else
+        order.update!
+      end
       apply_promotions
 
       order.checkout_steps[0...-1].each do
@@ -114,7 +118,7 @@ module SolidusSubscriptions
     end
 
     def active_card
-      if SolidusSupport.solidus_gem_version <  Gem::Version.new("2.2.0")
+      if SolidusSupport.solidus_gem_version < Gem::Version.new("2.2.0")
         user.credit_cards.default.last
       else
         user.wallet.default_wallet_payment_source.payment_source
