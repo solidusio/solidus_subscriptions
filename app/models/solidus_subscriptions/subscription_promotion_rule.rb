@@ -25,7 +25,7 @@ module SolidusSubscriptions
     end
 
     # Certain actions create adjustments on line items. In this case, only
-    # line items with associated subscription_line_itms are eligible to be
+    # line items with associated subscription_line_items are eligible to be
     # adjusted. Will only return true # if :line_item has an associated
     # subscription.
     #
