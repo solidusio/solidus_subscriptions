@@ -7,7 +7,7 @@ module SolidusSubscriptions
 
     PROCESSING_STATES = [:pending, :failed, :success]
 
-    belongs_to :user, class_name: Spree.user_class
+    belongs_to :user, class_name: Spree.user_class.to_s
     has_many :line_items, class_name: 'SolidusSubscriptions::LineItem', inverse_of: :subscription
     has_many :installments, class_name: 'SolidusSubscriptions::Installment'
     belongs_to :store, class_name: 'Spree::Store'
