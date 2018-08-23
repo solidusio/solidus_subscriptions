@@ -1,7 +1,7 @@
 Dir[File.join(File.dirname(__FILE__), 'helpers/**/*.rb')].each { |f| require f }
 
 RSpec.configure do |config|
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
 
   # Infer an example group's spec type from the file location.
   config.infer_spec_type_from_file_location!

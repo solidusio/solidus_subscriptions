@@ -4,7 +4,7 @@ module SolidusSubscriptions
   class OrderBuilder
     attr_reader :order
 
-    # Get a new instance of a OrderBuilder
+    # Get a new instance of an OrderBuilder
     #
     # @param order [Spree::Order] The order to be built
     #
@@ -13,7 +13,7 @@ module SolidusSubscriptions
       @order = order
     end
 
-    # Add line items for to an order. If the order already
+    # Add line items to an order. If the order already
     # has a line item for a given variant_id, update the quantity. Otherwise
     # add the line item to the order.
     #

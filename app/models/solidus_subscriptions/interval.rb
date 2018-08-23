@@ -1,5 +1,5 @@
 # This module is intended to be included into any active record
-# modle which needs to be aware of how intervals and stored and
+# model which needs to be aware of how intervals are stored and
 # calculated in the db.
 #
 # Base models must have the following fields: interval_length (integer) and interval_units (integer)

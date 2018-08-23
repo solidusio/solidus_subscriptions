@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :subscription, class: 'SolidusSubscriptions::Subscription' do
     store
     interval_length 1

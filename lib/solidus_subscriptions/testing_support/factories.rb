@@ -1,4 +1,4 @@
-require 'factory_girl'
+require 'factory_bot'
 require 'spree/testing_support/factories'
 
 factory_path = "#{File.dirname(__FILE__)}/factories/**/*_factory.rb"

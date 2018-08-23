@@ -1,4 +1,4 @@
-# The subscription class is responsable for grouping together the
+# The subscription class is responsible for grouping together the
 # information required for the system to place a subscriptions order on
 # behalf of a specific user.
 module SolidusSubscriptions
@@ -34,7 +34,7 @@ module SolidusSubscriptions
     end)
 
     # Find subscriptions based on their processing state. This state is not a
-    # model attrubute.
+    # model attribute.
     #
     # @param state [Symbol] One of :pending, :success, or failed
     #
@@ -109,7 +109,7 @@ module SolidusSubscriptions
 
     # This method determines if a subscription may be canceled. Canceled
     # subcriptions will not be processed. By default subscriptions may always be
-    # canceled. If this method is overriden to return false, the subscription
+    # canceled. If this method is overridden to return false, the subscription
     # will be moved to the :pending_cancellation state until it is canceled
     # again and this condition is true.
     #
@@ -123,7 +123,7 @@ module SolidusSubscriptions
     #
     # If a user cancels this subscription less than 10 days before it will
     # be processed the subscription will be bumped into the
-    # :pending_cancellation state instead of being canceled. Susbcriptions
+    # :pending_cancellation state instead of being canceled. Subscriptions
     # pending cancellation will still be processed.
     def can_be_canceled?
       return true if actionable_date.nil?
@@ -182,7 +182,7 @@ module SolidusSubscriptions
     end
 
     # The state of the last attempt to process an installment associated to
-    # this subscrtipion
+    # this subscription
     #
     # @return [String] pending if the no installments have been processed,
     #   failed if the last installment has not been fulfilled and, success
