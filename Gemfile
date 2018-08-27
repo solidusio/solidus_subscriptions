@@ -9,6 +9,8 @@ if branch != 'master' && branch < 'v2.0'
   gem "rails_test_params_backport", group: :test
 end
 
+gem 'rails', '<= 5.2.0'
+
 gem 'pg', '~> 0.21'
 gem 'mysql2'
 gem 'listen'
