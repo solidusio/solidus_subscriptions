@@ -19,6 +19,12 @@ module SolidusSubscriptions
       order = subscription_line_items.first.order
       configuration = subscription_configuration(subscription_line_items.first)
 
+      # If the order was a guest checkout, we need to create a User
+      unless order.user
+        order.user = SolidusSubscriptions::UserGenerator.find_or_create(order)
+        order.save
+      end
+
       subscription_attributes = {
         user: order.user,
         line_items: subscription_line_items,
