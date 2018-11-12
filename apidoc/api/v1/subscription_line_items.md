@@ -2,7 +2,7 @@
 SolidusSubscriptions::LineItems are analogous to Spree::LineItem. They indicate
 the details of a subscription prior to a purchase being made.
 
-## PATCH `/api/v1/line_item/:id`
+## PATCH `/subscriptions/api/v1/line_item/:id`
 *Authentication Required*
 
 Update the details of a specific SolidusSubscriptions::LineItem. e.g. From the

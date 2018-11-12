@@ -1,6 +1,6 @@
 # Subscriptions
 
-## POST `/api/v1/subscriptions/:id`
+## POST `/subscriptions/api/v1/subscriptions/:id`
 *Authentication Required*
 
 Mark a subscription as canceled, by updating its state and removing its
@@ -30,7 +30,7 @@ HTTP/1.1 200 OK
 }
 ```
 
-## PATCH `/api/v1/subscriptions/:id`
+## PATCH `/subscriptions/api/v1/subscriptions/:id`
 *Authentication Required*
 
 Make changes to the Subscription object or the subscription line item object
@@ -76,7 +76,7 @@ HTTP/1.1 200 OK
 
 ```
 
-## POST `/api/v1/subscriptions/:id/skip`
+## POST `/subscriptions/api/v1/subscriptions/:id/skip`
 *Authentication Required*
 
 Advance the subscription by one extra interval, thereby skipping the next
