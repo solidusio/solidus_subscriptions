@@ -121,7 +121,7 @@ module SolidusSubscriptions
       if SolidusSupport.solidus_gem_version < Gem::Version.new("2.2.0")
         user.credit_cards.default.last
       else
-        user.wallet.default_wallet_payment_source.payment_source
+        subscription.wallet_payment_source.try(:payment_source) || user.wallet.default_wallet_payment_source.payment_source
       end
     end
 
