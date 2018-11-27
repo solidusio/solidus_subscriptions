@@ -276,8 +276,32 @@ RSpec.describe SolidusSubscriptions::Checkout do
         }
       end
 
-      it 'ships to the subscription address' do
+      it 'ships to the subscription ship_address' do
         expect(subject.ship_address).to eq shipping_address
+      end
+    end
+
+    context 'the subscription has a billing address' do
+      it_behaves_like 'a completed checkout'
+      let(:installment_traits) do
+        {
+          subscription_traits: [{
+            billing_address: billing_address,
+            user: subscription_user,
+            line_item_traits: [{ spree_line_item: root_order.line_items.first }]
+          }]
+        }
+      end
+      let(:billing_address) { create :address }
+
+      before { subscription_user.addresses << billing_address }
+
+      it 'bills to the subscription bill_address' do
+        expect(subject.bill_address).to eq billing_address
+      end
+
+      it 'does not duplicate the bill address to the users addresses' do
+        expect(subject.user.addresses.where(address1: billing_address.address1).count).to eq 1
       end
     end
 

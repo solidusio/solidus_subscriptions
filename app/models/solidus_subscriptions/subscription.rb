@@ -12,6 +12,7 @@ module SolidusSubscriptions
     has_many :installments, class_name: 'SolidusSubscriptions::Installment'
     belongs_to :store, class_name: 'Spree::Store'
     belongs_to :shipping_address, class_name: 'Spree::Address'
+    belongs_to :billing_address, class_name: 'Spree::Address'
     belongs_to :wallet_payment_source, class_name: 'Spree::WalletPaymentSource'
 
     validates :user, presence: :true
@@ -19,6 +20,7 @@ module SolidusSubscriptions
     validates :interval_length, numericality: { greater_than: 0 }
 
     accepts_nested_attributes_for :shipping_address
+    accepts_nested_attributes_for :billing_address
     accepts_nested_attributes_for :line_items, allow_destroy: true
     accepts_nested_attributes_for :wallet_payment_source
 

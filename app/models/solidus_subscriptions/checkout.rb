@@ -56,7 +56,7 @@ module SolidusSubscriptions
     def order
       @order ||= Spree::Order.create(
         user: user,
-        email: user.email,
+        email: subscription.email || user.email,
         store: subscription.store || Spree::Store.default,
         subscription_order: true
       )
@@ -73,7 +73,10 @@ module SolidusSubscriptions
       apply_promotions
 
       order.checkout_steps[0...-1].each do
-        order.ship_address = ship_address if order.state == "address"
+        if order.state == "address"
+          order.bill_address = bill_address
+          order.ship_address = ship_address
+        end
         create_payment if order.state == "payment"
         order.next!
       end
@@ -115,6 +118,10 @@ module SolidusSubscriptions
 
     def ship_address
       subscription.shipping_address || user.ship_address
+    end
+
+    def bill_address
+      subscription.billing_address || ship_address
     end
 
     def active_card
