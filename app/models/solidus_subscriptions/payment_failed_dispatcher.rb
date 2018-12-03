@@ -6,6 +6,8 @@ module SolidusSubscriptions
     def dispatch
       order.touch :completed_at
       order.cancel!
+      order.completed_at = nil
+      order.save
 
       installments.each { |i| i.payment_failed!(order) }
       super

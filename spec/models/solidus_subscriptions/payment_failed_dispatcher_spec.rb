@@ -26,5 +26,10 @@ RSpec.describe SolidusSubscriptions::PaymentFailedDispatcher do
     it 'cancels the order' do
       expect { subject }.to change { order.state }.to 'canceled'
     end
+
+    it 'does not set completed_at' do
+      subject
+      expect(order.reload.completed_at).to be_nil
+    end
   end
 end

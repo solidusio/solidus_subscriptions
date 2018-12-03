@@ -65,7 +65,7 @@ RSpec.feature 'Subscription purchase cycle', type: :feature do
   end
 
   def fill_in_payment_info
-    fill_in "Card Number", with: "4111 1111 1111 1111"
+    fill_in "Card Number", with: "1"
     fill_in "Expiration", with: "01/25"
     fill_in "Card Code", with: "123"
   end
