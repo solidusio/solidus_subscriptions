@@ -9,42 +9,42 @@
 <% end %>
 
 <% content_for :table_filter_title do %>
-  <%= Spree.t(:search) %>
+  <%= I18n.t(:search) %>
 <% end %>
 
 <% content_for :table_filter do %>
   <%= search_form_for [:admin, @search] do |f| %>
     <div class='field-block alpha four columns'>
       <div class="date-range-filter field">
-        <%= label_tag :q_created_at_gt, Spree.t(:date_range) %>
+        <%= label_tag :q_created_at_gt, I18n.t(:date_range) %>
         <div class="date-range-fields">
-          <%= f.text_field :created_at_gt, class: 'datepicker datepicker-from', placeholder: Spree.t(:start) %>
+          <%= f.text_field :created_at_gt, class: 'datepicker datepicker-from', placeholder: I18n.t(:start) %>
 
           <span class="range-divider">
             <i class="fa fa-arrow-right"></i>
           </span>
 
-          <%= f.text_field :created_at_lt, class: 'datepicker datepicker-to', placeholder: Spree.t(:stop) %>
+          <%= f.text_field :created_at_lt, class: 'datepicker datepicker-to', placeholder: I18n.t(:stop) %>
         </div>
       </div>
 
       <div class="date-range-filter field">
         <%= label_tag :q_actionable_date_gt, SolidusSubscriptions::Subscription.human_attribute_name(:actionable_date) %>
         <div class="date-range-fields">
-          <%= f.text_field :actionable_date_gt, class: 'datepicker datepicker-from', placeholder: Spree.t(:start) %>
+          <%= f.text_field :actionable_date_gt, class: 'datepicker datepicker-from', placeholder: I18n.t(:start) %>
 
           <span class="range-divider">
             <i class="fa fa-arrow-right"></i>
           </span>
 
-          <%= f.text_field :actionable_date_lt, class: 'datepicker datepicker-to', placeholder: Spree.t(:stop) %>
+          <%= f.text_field :actionable_date_lt, class: 'datepicker datepicker-to', placeholder: I18n.t(:stop) %>
         </div>
       </div>
     </div>
 
     <div class="four columns">
       <div class="field">
-        <%= label_tag :q_state_eq, Spree.t(:status) %>
+        <%= label_tag :q_state_eq, I18n.t(:status) %>
         <%= f.select :state_eq, SolidusSubscriptions::Subscription.state_machines[:state].states.map {|s| [s.human_name, s.value]}, {include_blank: true}, class: 'select2 fullwidth' %>
       </div>
     </div>
@@ -83,7 +83,7 @@
     <div class="clearfix"></div>
 
     <div class="actions filter-actions">
-      <div><%= button Spree.t(:filter_results) %></div>
+      <div><%= button I18n.t(:filter_results) %></div>
     </div>
   <% end %>
 <% end %>
