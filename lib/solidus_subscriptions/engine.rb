@@ -39,6 +39,10 @@ module SolidusSubscriptions
       end
     end
 
+    initializer 'Money localization setup' do
+      Money.locale_backend = :i18n
+    end
+
     def self.activate
       Dir.glob(File.join(File.dirname(__FILE__), '../../app/decorators/**/*.rb')) do |c|
         Rails.configuration.cache_classes ? require(c) : load(c)
