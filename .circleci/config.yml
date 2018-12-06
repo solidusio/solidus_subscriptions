@@ -12,8 +12,8 @@ jobs:
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
-      - image: circleci/mysql:5.7
-      - image: circleci/postgres:10.0
+      # - image: circleci/mysql:5.7
+      # - image: circleci/postgres:10.0
 
     working_directory: ~/repo
 
