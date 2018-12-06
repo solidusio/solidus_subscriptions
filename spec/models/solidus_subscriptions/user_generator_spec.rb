@@ -27,7 +27,7 @@ RSpec.describe SolidusSubscriptions::UserGenerator do
       end
 
       context 'and user already has an account' do
-        let!(:existing_user) { create(:user, email: guest_email)}
+        let!(:existing_user) { create(:user, email: guest_email) }
 
         it { is_expected.to eq(existing_user) }
       end

@@ -30,12 +30,12 @@ module SolidusSubscriptions
       user_attrs = {
         email: order.email,
         password: initial_password,
-        password_confirmation: initial_password,
+        password_confirmation: initial_password
       }
       Spree.user_class.create!(user_attrs)
     end
 
-    def friendly_token(length=20)
+    def friendly_token(length = 20)
       SecureRandom.base64(length).tr('+/=', '-_ ').strip.delete("\n")
     end
   end
