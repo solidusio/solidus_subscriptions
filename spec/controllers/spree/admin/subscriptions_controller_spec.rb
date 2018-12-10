@@ -3,13 +3,34 @@ RSpec.describe Spree::Admin::SubscriptionsController, type: :request do
   extend Spree::TestingSupport::AuthorizationHelpers::Request
   stub_authorization!
 
-  describe 'get /admin/subscriptions' do
+  describe 'get :index' do
     subject do
       get spree.admin_subscriptions_path
       response
     end
 
     it { is_expected.to be_successful }
+
+    context 'with a frozen time' do
+      before { Timecop.freeze(2018, 11, 10) }
+
+      context 'with subscription data' do
+        let(:subscription_line_items) { create_list(:subscription_line_item, 5) }
+        let!(:recurring_subscription) { create(:subscription, actionable_date: Date.current, line_items: subscription_line_items[0..1], interval_length: 2, interval_units: :week) }
+        let!(:inactive_subscription) { create(:subscription, actionable_date: Date.tomorrow, state: :canceled, line_items: [subscription_line_items[2]]) }
+        let!(:today_subscription) { create(:subscription, actionable_date: Date.current, line_items: [subscription_line_items[3]]) }
+        let!(:tomorrow_subscription) { create(:subscription, actionable_date: Date.tomorrow, line_items: [subscription_line_items[4]]) }
+
+        before { subject }
+
+        it 'assigns quick stats' do
+          expect(assigns(:total_active_subs)).to eq 3
+          expect(assigns(:monthly_recurring_revenue)).to eq 60.0 # revenue of all active subscriptions with one recurring
+          expect(assigns(:todays_recurring_revenue)).to eq 30.0 # revenue of recurring and today subscription
+          expect(assigns(:tomorrows_recurring_revenue)).to eq 10.0 # revenue of tomorrow subscription
+        end
+      end
+    end
   end
 
   describe 'GET :new' do

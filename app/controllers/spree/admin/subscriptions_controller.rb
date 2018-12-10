@@ -2,6 +2,7 @@ module Spree
   module Admin
     class SubscriptionsController < ResourceController
       skip_before_action :load_resource, only: :index
+      before_action :gather_stats, only: :index
 
       def index
         @search = SolidusSubscriptions::Subscription.
@@ -60,6 +61,34 @@ module Spree
 
       def model_class
         ::SolidusSubscriptions::Subscription
+      end
+
+      def gather_stats
+        @total_active_subs = model_class.where.not(state: ['canceled', 'incavtive']).count
+        @monthly_recurring_revenue = recurring_revenue(Date.current.beginning_of_month..Date.current.end_of_month)
+        @todays_recurring_revenue = recurring_revenue(Date.current.beginning_of_day..Date.current.end_of_day)
+        @tomorrows_recurring_revenue = recurring_revenue(Date.tomorrow.beginning_of_day..Date.tomorrow.end_of_day)
+      end
+
+      def recurring_revenue(range)
+        subscriptions = model_class.actionable_between(range)
+        subscriptions.reduce(0.0) do |total_revenue, subscription|
+          total_revenue + subscription.total_revenue * recurrence_multiplier(subscription, range)
+        end.to_f
+      end
+
+      def recurrence_multiplier(subscription, range)
+        multiplier = 1
+        future_actionable_date = subscription.next_actionable_date
+
+        return multiplier if range.first.is_a? ActiveSupport::TimeWithZone
+
+        while range.include?(future_actionable_date)
+          future_actionable_date += subscription.interval
+          multiplier += 1
+        end
+
+        multiplier
       end
     end
   end

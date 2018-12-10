@@ -37,6 +37,11 @@ module SolidusSubscriptions
         where.not(state: ["canceled", "inactive"])
     end)
 
+    scope :actionable_between, (lambda do |date_range|
+      where(actionable_date: date_range).
+        where.not(state: ['canceled', 'inactive'])
+    end)
+
     # Find subscriptions based on their processing state. This state is not a
     # model attribute.
     #
@@ -194,6 +199,12 @@ module SolidusSubscriptions
     def processing_state
       return 'pending' if installments.empty?
       installments.last.fulfilled? ? 'success' : 'failed'
+    end
+
+    def total_revenue
+      line_items.reduce(0.0) do |total_cost, line_item|
+        total_cost + line_item.spree_line_item.total_before_tax
+      end
     end
 
     private

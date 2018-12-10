@@ -14,4 +14,9 @@ gem 'pg', '~> 0.21'
 gem 'mysql2'
 gem 'listen'
 
+group :test do
+  gem 'rails-controller-testing'
+  gem 'timecop'
+end
+
 gemspec
