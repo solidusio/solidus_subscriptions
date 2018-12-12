@@ -74,7 +74,7 @@ module Spree
         subscriptions = model_class.actionable_between(range)
         subscriptions.reduce(0.0) do |total_revenue, subscription|
           total_revenue + subscription.total_revenue * recurrence_multiplier(subscription, range)
-        end.to_f
+        end.to_f.round(2)
       end
 
       def recurrence_multiplier(subscription, range)

@@ -29,6 +29,14 @@ RSpec.describe Spree::Admin::SubscriptionsController, type: :request do
           expect(assigns(:tomorrows_recurring_revenue)).to eq 10.0 # revenue of tomorrow subscription
         end
 
+        it 'rounds the stats to 2 digits' do
+          subscription_line_items.each { |line_item| line_item.spree_line_item.update(price: 0.10123e2) }
+          subject
+          expect(assigns(:monthly_recurring_revenue)).to eq 60.72 # revenue of all active subscriptions with one recurring
+          expect(assigns(:todays_recurring_revenue)).to eq 30.36 # revenue of recurring and today subscription
+          expect(assigns(:tomorrows_recurring_revenue)).to eq 10.12 # revenue of tomorrow subscription
+        end
+
         context 'with a subscription line item that has no spree line item' do
           before { today_subscription.line_items.first.update(spree_line_item: nil) }
 
