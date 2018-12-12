@@ -203,7 +203,7 @@ module SolidusSubscriptions
 
     def total_revenue
       line_items.reduce(0.0) do |total_cost, line_item|
-        total_cost + line_item.spree_line_item.total_before_tax
+        total_cost + line_item.spree_line_item.try(:total_before_tax).to_f
       end
     end
 

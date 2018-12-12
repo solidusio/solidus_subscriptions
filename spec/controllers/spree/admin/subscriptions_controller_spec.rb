@@ -21,13 +21,21 @@ RSpec.describe Spree::Admin::SubscriptionsController, type: :request do
         let!(:today_subscription) { create(:subscription, actionable_date: Date.current, line_items: [subscription_line_items[3]]) }
         let!(:tomorrow_subscription) { create(:subscription, actionable_date: Date.tomorrow, line_items: [subscription_line_items[4]]) }
 
-        before { subject }
-
         it 'assigns quick stats' do
+          subject
           expect(assigns(:total_active_subs)).to eq 3
           expect(assigns(:monthly_recurring_revenue)).to eq 60.0 # revenue of all active subscriptions with one recurring
           expect(assigns(:todays_recurring_revenue)).to eq 30.0 # revenue of recurring and today subscription
           expect(assigns(:tomorrows_recurring_revenue)).to eq 10.0 # revenue of tomorrow subscription
+        end
+
+        context 'with a subscription line item that has no spree line item' do
+          before { today_subscription.line_items.first.update(spree_line_item: nil) }
+
+          it 'does not blow up' do
+            subject
+            expect(assigns(:todays_recurring_revenue)).to eq 20.0
+          end
         end
       end
     end
