@@ -1,6 +1,8 @@
 class SolidusSubscriptions::Api::V1::SubscriptionsController < Spree::Api::BaseController
   before_action :load_subscription, only: [:cancel, :update, :skip]
 
+  protect_from_forgery unless: -> { request.format.json? }
+
   def update
     if @subscription.update(subscription_params)
       render json: @subscription.to_json(include: [:line_items, :shipping_address])
