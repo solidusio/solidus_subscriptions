@@ -1,7 +1,16 @@
 require 'rails_helper'
+
 RSpec.describe Spree::Admin::SubscriptionsController, type: :request do
   extend Spree::TestingSupport::AuthorizationHelpers::Request
   stub_authorization!
+
+  before do
+    ActionController::Base.allow_forgery_protection = false
+  end
+
+  after do
+    ActionController::Base.allow_forgery_protection = true
+  end
 
   describe 'get /admin/subscriptions' do
     subject do
