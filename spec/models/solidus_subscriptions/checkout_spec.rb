@@ -113,7 +113,7 @@ RSpec.describe SolidusSubscriptions::Checkout do
       end
     end
 
-    if Gem::Specification.all.find{ |gem| gem.name == 'solidus' }.version >= Gem::Version.new('1.4.0')
+    if Gem::Specification.find_by_name('solidus').version >= Gem::Version.new('1.4.0')
       context 'Altered checkout flow' do
         before do
           @old_checkout_flow = Spree::Order.checkout_flow

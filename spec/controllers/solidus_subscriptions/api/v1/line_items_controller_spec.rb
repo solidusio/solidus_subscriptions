@@ -35,7 +35,7 @@ RSpec.describe SolidusSubscriptions::Api::V1::LineItemsController, type: :contro
       context "with valid params" do
         let(:json_body) { JSON.parse(subject.body) }
 
-        it { is_expected.to be_success }
+        it { is_expected.to be_successful }
         it "returns the updated record" do
           expect(json_body["quantity"]).to eq 21
         end
@@ -61,7 +61,7 @@ RSpec.describe SolidusSubscriptions::Api::V1::LineItemsController, type: :contro
       context "with valid params" do
         let(:json_body) { JSON.parse(subject.body) }
 
-        it { is_expected.to be_success }
+        it { is_expected.to be_successful }
         it "returns the updated record" do
           expect(json_body["quantity"]).to eq 21
         end
@@ -110,7 +110,7 @@ RSpec.describe SolidusSubscriptions::Api::V1::LineItemsController, type: :contro
 
     context "when the order is ours and incomplete" do
       let(:order) { create :order, user: user }
-      it { is_expected.to be_success }
+      it { is_expected.to be_successful }
     end
   end
 end

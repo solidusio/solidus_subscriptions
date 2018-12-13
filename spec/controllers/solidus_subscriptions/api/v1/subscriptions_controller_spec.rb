@@ -17,7 +17,7 @@ RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :co
         )
       end
 
-      it { is_expected.to be_success }
+      it { is_expected.to be_successful }
     end
 
     context "when the subscription belongs to someone else" do
@@ -65,7 +65,7 @@ RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :co
 
     context 'when the subscription belongs to the user' do
       let!(:subscription) { create :subscription, :with_line_item, user: user }
-      it { is_expected.to be_success }
+      it { is_expected.to be_successful }
 
       context 'when the params are not valid' do
         let(:subscription_params) do

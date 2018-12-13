@@ -1,4 +1,4 @@
-<%= Spree.t(:no_resource, resource: resource.model_name.human.pluralize) %>
+<%= I18n.t('spree.no_resource', resource: resource.model_name.human.pluralize) %>
 <% if can? :create, resource %>
-  <%= link_to Spree.t(:create_one), new_resource_url %>
+  <%= link_to I18n.t('spree.create_one'), new_resource_url %>
 <% end %>
