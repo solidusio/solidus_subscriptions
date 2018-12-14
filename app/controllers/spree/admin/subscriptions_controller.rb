@@ -64,10 +64,14 @@ module Spree
       end
 
       def gather_stats
-        @total_active_subs = model_class.where.not(state: ['canceled', 'incavtive']).count
-        @monthly_recurring_revenue = recurring_revenue(Date.current.beginning_of_month..Date.current.end_of_month)
-        @todays_recurring_revenue = recurring_revenue(Date.current.beginning_of_day..Date.current.end_of_day)
-        @tomorrows_recurring_revenue = recurring_revenue(Date.tomorrow.beginning_of_day..Date.tomorrow.end_of_day)
+        this_month_range = Time.zone.now.beginning_of_month..Time.zone.now.end_of_month
+        today_range = Time.zone.now.beginning_of_day..Time.zone.now.end_of_day
+        tomorrow_range = Time.zone.tomorrow.beginning_of_day..Time.zone.tomorrow.end_of_day
+
+        @total_active_subs = model_class.where.not(state: ['canceled', 'inactive']).count
+        @monthly_recurring_revenue = recurring_revenue(this_month_range)
+        @todays_recurring_revenue = recurring_revenue(today_range)
+        @tomorrows_recurring_revenue = recurring_revenue(tomorrow_range)
       end
 
       def recurring_revenue(range)

@@ -17,14 +17,14 @@ RSpec.describe Spree::Admin::SubscriptionsController, type: :request do
       context 'with subscription data' do
         let(:subscription_line_items) { create_list(:subscription_line_item, 5) }
         let!(:recurring_subscription) { create(:subscription, actionable_date: Date.current, line_items: subscription_line_items[0..1], interval_length: 2, interval_units: :week) }
-        let!(:inactive_subscription) { create(:subscription, actionable_date: Date.tomorrow, state: :canceled, line_items: [subscription_line_items[2]]) }
+        let!(:canceled_subscription) { create(:subscription, actionable_date: Date.tomorrow, state: :canceled, line_items: [subscription_line_items[2]]) }
         let!(:today_subscription) { create(:subscription, actionable_date: Date.current, line_items: [subscription_line_items[3]]) }
         let!(:tomorrow_subscription) { create(:subscription, actionable_date: Date.tomorrow, line_items: [subscription_line_items[4]]) }
 
         it 'assigns quick stats' do
           subject
           expect(assigns(:total_active_subs)).to eq 3
-          expect(assigns(:monthly_recurring_revenue)).to eq 60.0 # revenue of all active subscriptions with one recurring
+          expect(assigns(:monthly_recurring_revenue)).to eq 40.0 # revenue of all active subscriptions with one recurring
           expect(assigns(:todays_recurring_revenue)).to eq 30.0 # revenue of recurring and today subscription
           expect(assigns(:tomorrows_recurring_revenue)).to eq 10.0 # revenue of tomorrow subscription
         end
@@ -32,7 +32,7 @@ RSpec.describe Spree::Admin::SubscriptionsController, type: :request do
         it 'rounds the stats to 2 digits' do
           subscription_line_items.each { |line_item| line_item.spree_line_item.update(price: 0.10123e2) }
           subject
-          expect(assigns(:monthly_recurring_revenue)).to eq 60.72 # revenue of all active subscriptions with one recurring
+          expect(assigns(:monthly_recurring_revenue)).to eq 40.48 # revenue of all active subscriptions with one recurring
           expect(assigns(:todays_recurring_revenue)).to eq 30.36 # revenue of recurring and today subscription
           expect(assigns(:tomorrows_recurring_revenue)).to eq 10.12 # revenue of tomorrow subscription
         end
