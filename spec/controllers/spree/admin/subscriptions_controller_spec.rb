@@ -15,15 +15,17 @@ RSpec.describe Spree::Admin::SubscriptionsController, type: :request do
       before { Timecop.freeze(2018, 11, 10) }
 
       context 'with subscription data' do
-        let(:subscription_line_items) { create_list(:subscription_line_item, 5) }
+        let(:subscription_line_items) { create_list(:subscription_line_item, 6) }
         let!(:recurring_subscription) { create(:subscription, actionable_date: Date.current, line_items: subscription_line_items[0..1], interval_length: 2, interval_units: :week) }
         let!(:canceled_subscription) { create(:subscription, actionable_date: Date.tomorrow, state: :canceled, line_items: [subscription_line_items[2]]) }
         let!(:today_subscription) { create(:subscription, actionable_date: Date.current, line_items: [subscription_line_items[3]]) }
         let!(:tomorrow_subscription) { create(:subscription, actionable_date: Date.tomorrow, line_items: [subscription_line_items[4]]) }
+        let!(:next_month_sub) { create(:subscription, actionable_date: Date.current.next_month, line_items: [subscription_line_items[5]]) }
 
         it 'assigns quick stats' do
           subject
-          expect(assigns(:total_active_subs)).to eq 3
+          expect(assigns(:total_active_subs)).to eq 4
+          expect(assigns(:total_active_subs_this_month)).to eq 3
           expect(assigns(:monthly_recurring_revenue)).to eq 40.0 # revenue of all active subscriptions with one recurring
           expect(assigns(:todays_recurring_revenue)).to eq 30.0 # revenue of recurring and today subscription
           expect(assigns(:tomorrows_recurring_revenue)).to eq 10.0 # revenue of tomorrow subscription
