@@ -5,9 +5,11 @@ FactoryBot.define do
     interval_units :month
 
     user do
-      create(:user, :subscription_user).tap do |user|
-        create(:credit_card, gateway_customer_profile_id: 'BGS-123', user: user, default: true)
-      end
+      new_user = create(:user, :subscription_user)
+      card = create(:credit_card, gateway_customer_profile_id: 'BGS-123', user: new_user)
+      wallet_payment_source = new_user.wallet.add(card)
+      new_user.wallet.default_wallet_payment_source = wallet_payment_source
+      new_user
     end
 
     trait :with_line_item do
