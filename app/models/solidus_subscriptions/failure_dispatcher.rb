@@ -6,6 +6,7 @@ module SolidusSubscriptions
       order.touch :completed_at
       order.cancel!
       order.completed_at = nil
+      order.frontend_viewable = false
       order.save
       installments.each { |i| i.failed!(order) }
       super

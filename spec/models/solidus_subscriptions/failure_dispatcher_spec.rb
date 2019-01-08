@@ -27,5 +27,10 @@ RSpec.describe SolidusSubscriptions::FailureDispatcher do
       subject
       expect(order.reload.completed_at).to be_nil
     end
+
+    it 'sets frontend_viewable to false' do
+      subject
+      expect(order.frontend_viewable).to be_falsey
+    end
   end
 end
