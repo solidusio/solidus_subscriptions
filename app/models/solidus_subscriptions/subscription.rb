@@ -24,6 +24,8 @@ module SolidusSubscriptions
     accepts_nested_attributes_for :line_items, allow_destroy: true
     accepts_nested_attributes_for :wallet_payment_source
 
+    after_update :create_payment_method_profile
+
     # The following methods are delegated to the associated
     # SolidusSubscriptions::LineItem
     #
@@ -227,6 +229,11 @@ module SolidusSubscriptions
 
     def line_item
       line_items.first
+    end
+
+    def create_payment_method_profile
+      payment = OpenStruct.new(source: self.wallet_payment_source.payment_source)
+      payment.source.payment_method.create_profile(payment)
     end
   end
 end
