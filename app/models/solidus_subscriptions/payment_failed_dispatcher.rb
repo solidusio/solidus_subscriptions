@@ -6,7 +6,6 @@ module SolidusSubscriptions
     def dispatch
       order.touch :completed_at
       order.cancel!
-      order.completed_at = nil
       order.frontend_viewable = false
       order.save
 

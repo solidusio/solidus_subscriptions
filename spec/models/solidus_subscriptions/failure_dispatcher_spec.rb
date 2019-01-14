@@ -23,9 +23,9 @@ RSpec.describe SolidusSubscriptions::FailureDispatcher do
       expect { subject }.to change { order.state }.to 'canceled'
     end
 
-    it 'does not set completed_at' do
+    it 'sets completed_at' do
       subject
-      expect(order.reload.completed_at).to be_nil
+      expect(order.reload.completed_at).to be_present
     end
 
     it 'sets frontend_viewable to false' do
