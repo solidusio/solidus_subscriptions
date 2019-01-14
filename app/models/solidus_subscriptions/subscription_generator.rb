@@ -30,7 +30,7 @@ module SolidusSubscriptions
         line_items: subscription_line_items,
         store: order.store,
         shipping_address: order.ship_address,
-        **configuration.to_h
+        **configuration.to_h,
       }
 
       Subscription.create!(subscription_attributes) do |sub|
@@ -49,8 +49,7 @@ module SolidusSubscriptions
     def group(subscription_line_items)
       subscription_line_items.group_by do |li|
         subscription_configuration(li)
-      end.
-      values
+      end.values
     end
 
     private
@@ -59,7 +58,7 @@ module SolidusSubscriptions
       SubscriptionConfiguration.new(
         subscription_line_item.interval_length,
         subscription_line_item.interval_units,
-        subscription_line_item.end_date
+        subscription_line_item.end_date,
       )
     end
   end

@@ -6,13 +6,13 @@ module Spree
 
       def index
         @search = SolidusSubscriptions::Subscription.
-          accessible_by(current_ability, :index).ransack(params[:q])
+                  accessible_by(current_ability, :index).ransack(params[:q])
 
         @subscriptions = @search.result(distinct: true).
-          includes(:line_items, :user).
-          joins(:line_items, :user).
-          page(params[:page]).
-          per(params[:per_page] || Spree::Config[:orders_per_page])
+                         includes(:line_items, :user).
+                         joins(:line_items, :user).
+                         page(params[:page]).
+                         per(params[:per_page] || Spree::Config[:orders_per_page])
       end
 
       def new
@@ -25,11 +25,11 @@ module Spree
           @subscription.cancel
         end
 
-        if @subscription.errors.none?
-          notice = I18n.t('spree.admin.subscriptions.successfully_canceled')
-        else
-          notice = @subscription.errors.full_messages.to_sentence
-        end
+        notice = if @subscription.errors.none?
+                   I18n.t('spree.admin.subscriptions.successfully_canceled')
+                 else
+                   @subscription.errors.full_messages.to_sentence
+                 end
 
         redirect_to spree.admin_subscriptions_path, notice: notice
       end
@@ -37,11 +37,11 @@ module Spree
       def activate
         @subscription.activate
 
-        if @subscription.errors.none?
-          notice = I18n.t('spree.admin.subscriptions.successfully_activated')
-        else
-          notice = @subscription.errors.full_messages.to_sentence
-        end
+        notice = if @subscription.errors.none?
+                   I18n.t('spree.admin.subscriptions.successfully_activated')
+                 else
+                   @subscription.errors.full_messages.to_sentence
+                 end
 
         redirect_to spree.admin_subscriptions_path, notice: notice
       end

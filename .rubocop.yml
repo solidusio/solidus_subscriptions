@@ -1,207 +1,189 @@
-# Relaxed.Ruby.Style
-
 AllCops:
+  TargetRubyVersion: 2.5
+
   Exclude:
-    - 'spec/dummy/**/*'
-    - 'vendor/bundle/**/*'
-  TargetRubyVersion: 2.1
-
-# Sometimes I believe this reads better
-# This also causes spacing issues on multi-line fixes
-Style/BracesAroundHashParameters:
-  Enabled: false
-
-# We use class vars and will have to continue doing so for compatability
-Style/ClassVars:
-  Enabled: false
-
-# We need these names for backwards compatability
-Style/PredicateName:
-  Enabled: false
-
-Style/AccessorMethodName:
-  Enabled: false
-
-# This has been used for customization
-Style/MutableConstant:
-  Enabled: false
-
-Style/ClassAndModuleChildren:
-  Enabled: false
-
-Style/GuardClause:
-  Enabled: false
-
-Style/WordArray:
-  Enabled: false
-
-Style/ConditionalAssignment:
-  Enabled: false
-
-Performance/Count:
-  Enabled: false
-
-Style/RaiseArgs:
-  Enabled: false
-
-Style/OpMethod:
-  Enabled: false
-
-# We can use good judgement here
-Style/RegexpLiteral:
-  Enabled: false
-
-# Unicode comments are useful
-Style/AsciiComments:
-  Enabled: false
-
-Lint/EndAlignment:
-  Enabled: false
-
-Style/ElseAlignment:
-  Enabled: false
-
-Style/IndentationWidth:
-  Enabled: false
-
-Style/AlignParameters:
-  Enabled: false
-
-Style/ClosingParenthesisIndentation:
-  Enabled: false
-
-Style/MultilineMethodCallIndentation:
-  Enabled: false
-
-Style/IndentArray:
-  Enabled: false
-
-Style/IndentHash:
-  Enabled: false
-
-Style/AlignHash:
-  Enabled: false
-
-# From http://relaxed.ruby.style/
+    - Gemfile*
+    - bin/*
+    - config/*.rb
+    - config/**/*.rb
+    - db/migrate/*.rb
+    - lib/tasks/*.rake
+    - node_modules/*
+    - node_modules/**/*
+    - Rakefile
+    - spec/*.rb
+    - spec/**/*.rb
+    - test/*.rb
+    - vendor/**/*
+    - lib/solidus_subscriptions/testing_support/factories/**/*.rb
+    - app/mailers/application_mailer.rb
+    - solidus_subscriptions.gemspec
+    - lib/generators/solidus_subscriptions/install/install_generator.rb
+    - lib/solidus_subscriptions/config.rb
+    - spec/dummy/**/**
 
 Style/Alias:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#stylealias
+  StyleGuide: https://relaxed.ruby.style/#stylealias
+
+Style/AsciiComments:
+  Enabled: false
+  StyleGuide: https://relaxed.ruby.style/#styleasciicomments
 
 Style/BeginBlock:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#stylebeginblock
+  StyleGuide: https://relaxed.ruby.style/#stylebeginblock
 
 Style/BlockDelimiters:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#styleblockdelimiters
+  EnforcedStyle: semantic
+  StyleGuide: https://relaxed.ruby.style/#styleblockdelimiters
+
+Style/CommentAnnotation:
+  Enabled: false
+  StyleGuide: https://relaxed.ruby.style/#stylecommentannotation
 
 Style/Documentation:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#styledocumentation
+  StyleGuide: https://relaxed.ruby.style/#styledocumentation
 
-Style/DotPosition:
+Layout/DotPosition:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#styledotposition
+  StyleGuide: https://relaxed.ruby.style/#layoutdotposition
 
 Style/DoubleNegation:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#styledoublenegation
+  StyleGuide: https://relaxed.ruby.style/#styledoublenegation
 
 Style/EndBlock:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#styleendblock
+  StyleGuide: https://relaxed.ruby.style/#styleendblock
 
 Style/FormatString:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#styleformatstring
+  StyleGuide: https://relaxed.ruby.style/#styleformatstring
 
 Style/IfUnlessModifier:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#styleifunlessmodifier
+  StyleGuide: https://relaxed.ruby.style/#styleifunlessmodifier
 
 Style/Lambda:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#stylelambda
+  StyleGuide: https://relaxed.ruby.style/#stylelambda
 
 Style/ModuleFunction:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#stylemodulefunction
+  StyleGuide: https://relaxed.ruby.style/#stylemodulefunction
 
 Style/MultilineBlockChain:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#stylemultilineblockchain
+  StyleGuide: https://relaxed.ruby.style/#stylemultilineblockchain
 
 Style/NegatedIf:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#stylenegatedif
+  StyleGuide: https://relaxed.ruby.style/#stylenegatedif
 
 Style/NegatedWhile:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#stylenegatedwhile
+  StyleGuide: https://relaxed.ruby.style/#stylenegatedwhile
 
 Style/ParallelAssignment:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#styleparallelassignment
+  StyleGuide: https://relaxed.ruby.style/#styleparallelassignment
 
 Style/PercentLiteralDelimiters:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#stylepercentliteraldelimiters
+  StyleGuide: https://relaxed.ruby.style/#stylepercentliteraldelimiters
 
 Style/PerlBackrefs:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#styleperlbackrefs
+  StyleGuide: https://relaxed.ruby.style/#styleperlbackrefs
 
 Style/Semicolon:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#stylesemicolon
+  StyleGuide: https://relaxed.ruby.style/#stylesemicolon
 
 Style/SignalException:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#stylesignalexception
+  StyleGuide: https://relaxed.ruby.style/#stylesignalexception
 
 Style/SingleLineBlockParams:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#stylesinglelineblockparams
+  StyleGuide: https://relaxed.ruby.style/#stylesinglelineblockparams
 
 Style/SingleLineMethods:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#stylesinglelinemethods
+  StyleGuide: https://relaxed.ruby.style/#stylesinglelinemethods
 
-Style/SpaceBeforeBlockBraces:
+Layout/SpaceBeforeBlockBraces:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#stylespacebeforeblockbraces
+  StyleGuide: https://relaxed.ruby.style/#layoutspacebeforeblockbraces
 
-Style/SpaceInsideParens:
+Layout/SpaceInsideParens:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#stylespaceinsideparens
+  StyleGuide: https://relaxed.ruby.style/#layoutspaceinsideparens
 
 Style/SpecialGlobalVars:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#stylespecialglobalvars
+  StyleGuide: https://relaxed.ruby.style/#stylespecialglobalvars
 
 Style/StringLiterals:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#stylestringliterals
+  StyleGuide: https://relaxed.ruby.style/#stylestringliterals
 
-Style/SymbolProc:
+Style/TrailingCommaInArguments:
   Enabled: false
+  StyleGuide: https://relaxed.ruby.style/#styletrailingcommainarguments
+
+Style/TrailingCommaInArrayLiteral:
+  Enabled: true
+  EnforcedStyleForMultiline: consistent_comma
+  StyleGuide: https://relaxed.ruby.style/#styletrailingcommainarrayliteral
+
+Style/TrailingCommaInHashLiteral:
+  Enabled: true
+  EnforcedStyleForMultiline: consistent_comma
+  StyleGuide: https://relaxed.ruby.style/#styletrailingcommainhashliteral
 
 Style/WhileUntilModifier:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#stylewhileuntilmodifier
+  StyleGuide: https://relaxed.ruby.style/#stylewhileuntilmodifier
+
+Style/WordArray:
+  Enabled: false
+  StyleGuide: https://relaxed.ruby.style/#stylewordarray
 
 Lint/AmbiguousRegexpLiteral:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#lintambiguousregexpliteral
+  StyleGuide: https://relaxed.ruby.style/#lintambiguousregexpliteral
 
 Lint/AssignmentInCondition:
   Enabled: false
-  StyleGuide: http://relaxed.ruby.style/#lintassignmentincondition
+  StyleGuide: https://relaxed.ruby.style/#lintassignmentincondition
 
-Lint/HandleExceptions:
+Lint/UnusedMethodArgument:
   Exclude:
-    - 'Rakefile'
+    - app/jobs/orders_canceled_job.rb
+    - app/jobs/checkouts_create_job.rb
+    - app/jobs/themes_publish_job.rb
+    - app/jobs/orders_fulfilled_job.rb
+    - app/jobs/checkouts_delete_job.rb
+    - app/jobs/checkouts_update_job.rb
+    - app/jobs/app_uninstalled_job.rb
+    - app/jobs/customers_enable_job.rb
+    - app/jobs/order_transactions_create_job.rb
+    - app/jobs/orders_delete_job.rb
+    - app/jobs/themes_update_job.rb
+    - app/jobs/customers_create_job.rb
+    - app/jobs/customers_delete_job.rb
+    - app/jobs/orders_create_job.rb
+    - app/jobs/customers_update_job.rb
+    - app/jobs/orders_updated_job.rb
+    - app/jobs/orders_partially_fulfilled_job.rb
+    - app/jobs/customers_disable_job.rb
+    - app/jobs/carts_update_job.rb
+    - app/jobs/carts_create_job.rb
+    - app/jobs/orders_paid_job.rb
 
 Metrics/AbcSize:
   Enabled: false
@@ -228,4 +210,39 @@ Metrics/ParameterLists:
   Enabled: false
 
 Metrics/PerceivedComplexity:
+  Enabled: false
+
+
+# There are some cops that go beyond formatting, and fixing them
+# may involve touching code in more involved ways. I want to enable
+# and correct those individually, to ensure that we don't introduce
+# bugs in our quest for clean code.
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/GuardClause:
+  Enabled: false
+
+Style/RaiseArgs:
+  Enabled: false
+
+Style/SymbolArray:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Exclude:
+    - app/decorators/spree/controllers/api/line_items/create_subscription_line_items.rb
+    - app/controllers/solidus_subscriptions/api/v1/line_items_controller.rb
+    - app/controllers/solidus_subscriptions/api/v1/subscriptions_controller.rb
+
+Style/AndOr:
+  Exclude:
+    - app/controllers/shopify_app/webhooks_controller.rb
+
+Style/ColonMethodCall:
+  Exclude:
+    - app/controllers/shopify_app/sessions_controller.rb
+
+Naming/MemoizedInstanceVariableName:
   Enabled: false

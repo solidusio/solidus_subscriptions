@@ -71,18 +71,18 @@ module SolidusSubscriptions
 
     def subscriptions_by_id
       @subscriptions_by_id ||= Subscription.
-        actionable.
-        includes(:line_items, :user).
-        where(user_id: user_ids).
-        group_by(&:user_id)
+                               actionable.
+                               includes(:line_items, :user).
+                               where(user_id: user_ids).
+                               group_by(&:user_id)
     end
 
     def retry_installments
       @failed_installments ||= Installment.
-        actionable.
-        includes(:subscription).
-        where(solidus_subscriptions_subscriptions: { user_id: user_ids }).
-        group_by { |i| i.subscription.user_id }
+                               actionable.
+                               includes(:subscription).
+                               where(solidus_subscriptions_subscriptions: { user_id: user_ids }).
+                               group_by { |i| i.subscription.user_id }
     end
 
     def installments(user)

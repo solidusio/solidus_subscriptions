@@ -30,7 +30,7 @@ module SolidusSubscriptions
       user_attrs = {
         email: order.email,
         password: initial_password,
-        password_confirmation: initial_password
+        password_confirmation: initial_password,
       }
       Spree.user_class.create!(user_attrs)
     end

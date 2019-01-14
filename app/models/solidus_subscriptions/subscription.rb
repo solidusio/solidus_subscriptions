@@ -5,7 +5,7 @@ module SolidusSubscriptions
   class Subscription < ActiveRecord::Base
     include Interval
 
-    PROCESSING_STATES = [:pending, :failed, :success]
+    PROCESSING_STATES = [:pending, :failed, :success].freeze
 
     belongs_to :user, class_name: Spree.user_class.to_s
     has_many :line_items, class_name: 'SolidusSubscriptions::LineItem', inverse_of: :subscription
@@ -15,7 +15,7 @@ module SolidusSubscriptions
     belongs_to :billing_address, class_name: 'Spree::Address'
     belongs_to :wallet_payment_source, class_name: 'Spree::WalletPaymentSource'
 
-    validates :user, presence: :true
+    validates :user, presence: true
     validates :skip_count, :successive_skip_count, presence: true, numericality: { greater_than_or_equal_to: 0 }
     validates :interval_length, numericality: { greater_than: 0 }
 
@@ -98,8 +98,7 @@ module SolidusSubscriptions
     #   will no longer be processed
     state_machine :state, initial: :active do
       event :cancel do
-        transition [:active, :pending_cancellation] => :canceled,
-          if: ->(subscription) { subscription.can_be_canceled? }
+        transition [:active, :pending_cancellation] => :canceled, if: ->(subscription) { subscription.can_be_canceled? }
 
         transition active: :pending_cancellation
       end
@@ -107,8 +106,7 @@ module SolidusSubscriptions
       after_transition to: :canceled, do: :advance_actionable_date
 
       event :deactivate do
-        transition active: :inactive,
-          if: ->(subscription) { subscription.can_be_deactivated? }
+        transition active: :inactive, if: ->(subscription) { subscription.can_be_deactivated? }
       end
 
       event :activate do
@@ -138,6 +136,7 @@ module SolidusSubscriptions
     # pending cancellation will still be processed.
     def can_be_canceled?
       return true if actionable_date.nil?
+
       (actionable_date - Config.minimum_cancellation_notice).future?
     end
 
@@ -169,6 +168,7 @@ module SolidusSubscriptions
     #   eligible to be processed.
     def next_actionable_date
       return nil unless active?
+
       new_date = (actionable_date || Time.zone.now)
       (new_date + interval).beginning_of_minute
     end
@@ -200,6 +200,7 @@ module SolidusSubscriptions
     #   if the last installment was fulfilled.
     def processing_state
       return 'pending' if installments.empty?
+
       installments.last.fulfilled? ? 'success' : 'failed'
     end
 
@@ -232,8 +233,9 @@ module SolidusSubscriptions
     end
 
     def create_payment_method_profile
-      payment = OpenStruct.new(source: self.wallet_payment_source&.payment_source)
-      return if payment.source.nil?
+      return if wallet_payment_source&.payment_source.nil?
+
+      payment = OpenStruct.new(source: wallet_payment_source.payment_source)
       payment.source.payment_method.create_profile(payment)
     end
   end

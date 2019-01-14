@@ -8,11 +8,11 @@ module SolidusSubscriptions
         Spree::PermittedAttributes.line_item_attributes << {
           subscription_line_items_attributes: nested(
             subscription_line_item_attributes
-          )
+          ),
         }
 
         Spree::PermittedAttributes.user_attributes << {
-          subscriptions_attributes: nested(subscription_attributes)
+          subscriptions_attributes: nested(subscription_attributes),
         }
       end
 
@@ -22,7 +22,7 @@ module SolidusSubscriptions
 
       def subscription_attributes
         Config.subscription_attributes | [
-          { line_items_attributes: nested(subscription_line_item_attributes) - [:subscribable_id] }
+          { line_items_attributes: nested(subscription_line_item_attributes) - [:subscribable_id] },
         ]
       end
 

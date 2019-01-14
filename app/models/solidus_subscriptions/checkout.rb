@@ -105,6 +105,7 @@ module SolidusSubscriptions
       end
 
       return if installments.empty?
+
       order_builder.add_line_items(order_line_items)
     end
 

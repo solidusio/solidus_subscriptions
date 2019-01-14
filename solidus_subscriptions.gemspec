@@ -1,4 +1,3 @@
-# encoding: UTF-8
 $:.push File.expand_path('../lib', __FILE__)
 require 'solidus_subscriptions/version'
 
@@ -35,7 +34,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'rspec-activemodel-mocks'
   s.add_development_dependency 'rspec-rails', '~> 3.5'
-  s.add_development_dependency 'rubocop', '0.37.2'
+  s.add_development_dependency 'rubocop', '0.60.0'
   s.add_development_dependency 'rubocop-rspec', '1.4.0'
   s.add_development_dependency 'sass-rails'
   s.add_development_dependency 'selenium-webdriver'
