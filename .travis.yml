@@ -20,7 +20,6 @@ before_script:
   - bundle exec rake test_app
 
 script:
-  - bundle exec rubocop
   - bundle exec rspec
 
 rvm:
