@@ -32,7 +32,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'rspec-activemodel-mocks'
   s.add_development_dependency 'rspec-rails', '~> 3.5'
-  s.add_development_dependency 'rubocop', '0.37.2'
+  s.add_development_dependency 'rubocop', '~> 0.49.0'
   s.add_development_dependency 'rubocop-rspec', '1.4.0'
   s.add_development_dependency 'sass-rails'
   s.add_development_dependency 'shoulda-matchers', '~> 3.1'
