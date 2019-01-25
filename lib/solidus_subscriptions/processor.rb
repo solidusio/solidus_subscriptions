@@ -57,11 +57,11 @@ module SolidusSubscriptions
     # instance
     def build_jobs
       users.map do |user|
-        installemts_by_address_and_user = installments(user).group_by do |i|
+        installments_by_address_and_user = installments(user).group_by do |i|
           i.subscription.shipping_address_id
         end
 
-        installemts_by_address_and_user.values.each do |grouped_installments|
+        installments_by_address_and_user.values.each do |grouped_installments|
           ProcessInstallmentsJob.perform_later grouped_installments.map(&:id)
         end
       end
@@ -96,8 +96,8 @@ module SolidusSubscriptions
           sub.advance_actionable_date
           sub.cancel! if sub.pending_cancellation?
           sub.deactivate! if sub.can_be_deactivated?
-          sub.installments.create!
-        end
+          sub.installments.create! if sub.installments.actionable.empty?
+        end.compact
       end
     end
 
