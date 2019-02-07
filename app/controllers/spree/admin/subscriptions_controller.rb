@@ -8,11 +8,18 @@ module Spree
         @search = SolidusSubscriptions::Subscription.
                   accessible_by(current_ability, :index).ransack(params[:q])
 
-        @subscriptions = @search.result(distinct: true).
-                         includes(:line_items, :user).
-                         joins(:line_items, :user).
-                         page(params[:page]).
-                         per(params[:per_page] || Spree::Config[:orders_per_page])
+        respond_to do |format|
+          format.html do
+            @subscriptions = @search.result(distinct: true).
+                             includes(:line_items, :user).
+                             joins(:line_items, :user).
+                             page(params[:page]).
+                             per(params[:per_page] || Spree::Config[:orders_per_page])
+          end
+          format.csv do
+            send_data(SolidusSubscriptions::DownloadService.to_csv(search: @search), filename: "subscribers.csv")
+          end
+        end
       end
 
       def new
