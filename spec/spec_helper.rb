@@ -1,5 +1,7 @@
 Dir[File.join(File.dirname(__FILE__), 'helpers/**/*.rb')].each { |f| require f }
 
+FactoryBot.use_parent_strategy = false
+
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 
