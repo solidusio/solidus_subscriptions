@@ -5,6 +5,7 @@ module Spree
       before_action :gather_stats, only: :index
 
       def index
+        params[:q].permit!
         @search = SolidusSubscriptions::Subscription.
                   accessible_by(current_ability, :index).ransack(params[:q])
 
