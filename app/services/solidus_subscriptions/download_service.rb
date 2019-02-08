@@ -4,13 +4,15 @@ module SolidusSubscriptions
   class DownloadService
     class << self
       def to_csv(search:)
-        if search
-          subscriptions = search.result(distinct: true).
-                          includes(:line_items, :user).
-                          joins(:line_items, :user)
-        else
-          subscriptions = []
-        end
+        subscriptions =
+          if search
+            search
+              .result(distinct: true)
+              .includes(:line_items, :user)
+              .joins(:line_items, :user)
+          else
+            []
+          end
 
         CSV.generate(csv_options) do |csv|
           subscriptions.each do |subscription|
