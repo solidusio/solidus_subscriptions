@@ -3,14 +3,15 @@ require 'rails_helper'
 RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
   describe '.activate' do
     subject { described_class.activate(subscription_line_items) }
+    let(:user) { create(:user) }
+    let(:store) { create(:store) }
 
+    let(:order) { create(:order, store: store, user: user)}
     let(:subscription_line_item) { subscription_line_items.first }
-    let(:user) { subscription_line_items.first.order.user }
-    let(:store) { subscription_line_items.first.order.store }
 
     it { is_expected.to be_a SolidusSubscriptions::Subscription }
 
-    let(:subscription_line_items) { build_list :subscription_line_item, 2 }
+    let(:subscription_line_items) { build_list :subscription_line_item, 2, order: order }
 
     it 'creates the correct number of subscriptions' do
       expect { subject }.

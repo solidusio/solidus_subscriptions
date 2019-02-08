@@ -1,14 +1,9 @@
 source 'https://rubygems.org'
 
-branch = ENV.fetch('SOLIDUS_BRANCH', 'v2.7')
-gem 'solidus', github: 'solidusio/solidus', branch: branch
+gem 'solidus', github: 'geminimvp/solidus', branch: "gemini_master_v271"
 # Provides basic authentication functionality for testing parts of your engine
 gem 'solidus_auth_devise', '~> 1.0'
-gem 'rails', '< 5.2.2'
-
-if branch != 'master' && branch < 'v2.0'
-  gem "rails_test_params_backport", group: :test
-end
+gem 'rails', '5.2.2'
 
 gem 'pg', '~> 0.21'
 gem 'mysql2'

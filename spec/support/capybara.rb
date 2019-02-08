@@ -2,6 +2,8 @@ require 'capybara/rspec'
 require 'capybara-screenshot/rspec'
 require 'chromedriver-helper'
 
+Chromedriver.set_version '2.45'
+
 RSpec.configure do |_config|
   Capybara.server_port = 8888 + ENV['TEST_ENV_NUMBER'].to_i
   Capybara.javascript_driver = :selenium
