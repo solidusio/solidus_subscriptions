@@ -5,12 +5,12 @@ module Spree
       before_action :gather_stats, only: :index
 
       def index
-        params[:q].permit!
         @search = SolidusSubscriptions::Subscription.
                   accessible_by(current_ability, :index).ransack(params[:q])
 
         respond_to do |format|
           format.html do
+            params[:q].permit! if params[:q].present?
             @subscriptions = @search.result(distinct: true).
                              includes(:line_items, :user).
                              joins(:line_items, :user).
