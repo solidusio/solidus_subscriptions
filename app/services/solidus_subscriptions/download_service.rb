@@ -11,7 +11,9 @@ module SolidusSubscriptions
               .includes(:line_items, :user)
               .joins(:line_items, :user)
           else
-            []
+            SolidusSubscriptions::Subscription
+              .includes(:line_items, :user)
+              .joins(:line_items, :user)
           end
 
         CSV.generate(csv_options) do |csv|
