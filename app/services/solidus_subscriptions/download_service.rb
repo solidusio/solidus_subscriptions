@@ -10,23 +10,21 @@ module SolidusSubscriptions
               .result(distinct: true)
               .includes(:line_items, :user)
               .joins(:line_items, :user)
+              .where('solidus_subscriptions_line_items.spree_line_item_id is not null')
           else
             SolidusSubscriptions::Subscription
               .includes(:line_items, :user)
               .joins(:line_items, :user)
+              .where('solidus_subscriptions_line_items.spree_line_item_id is not null')
+              .distinct('id')
           end
 
         CSV.generate(csv_options) do |csv|
           subscriptions.each do |subscription|
             user = subscription.user
             line_item = subscription.line_items.first.spree_line_item
-            unless line_item.present?
-              warn "no spree line item for this sub, skipping"
-              next
-            end
 
             order = line_item.order
-
             ship_address = subscription.shipping_address || order.ship_address
 
             subscription_data = [

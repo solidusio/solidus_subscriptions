@@ -75,7 +75,7 @@ module Spree
         this_month_range = Time.zone.now.beginning_of_month..Time.zone.now.end_of_month
         today_range = Time.zone.now.beginning_of_day..Time.zone.now.end_of_day
         tomorrow_range = Time.zone.tomorrow.beginning_of_day..Time.zone.tomorrow.end_of_day
-        active_subs = model_class.where.not(state: ['canceled', 'inactive'])
+        active_subs = model_class.joins(:line_items).where('solidus_subscriptions_line_items.spree_line_item_id is not null').where(state: 'active').distinct("id")
 
         @total_active_subs = active_subs.count
         @total_active_subs_this_month = active_subs.where(actionable_date: this_month_range).count
