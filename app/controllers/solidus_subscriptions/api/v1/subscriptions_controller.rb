@@ -3,6 +3,7 @@ class SolidusSubscriptions::Api::V1::SubscriptionsController < Spree::Api::BaseC
 
   def update
     if @subscription.update(subscription_params)
+      persist_subscription_addresses(@subscription)
       render json: @subscription.to_json(include: [:line_items, :shipping_address, :billing_address, :wallet_payment_source])
     else
       render json: @subscription.errors.to_json, status: 422
@@ -44,5 +45,12 @@ class SolidusSubscriptions::Api::V1::SubscriptionsController < Spree::Api::BaseC
 
   def line_item_attributes
     SolidusSubscriptions::Config.subscription_line_item_attributes - [:subscribable_id] + [:id]
+  end
+
+  def persist_subscription_addresses(subscription)
+    return unless subscription.billing_address || subscription.shipping_address
+
+    addresses = OpenStruct.new(ship_address: subscription.shipping_address, bill_address: subscription.billing_address)
+    subscription.user.persist_order_address(addresses)
   end
 end
