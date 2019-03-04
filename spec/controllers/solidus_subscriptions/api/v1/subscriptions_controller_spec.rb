@@ -79,6 +79,13 @@ RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :co
 
         it { is_expected.to have_http_status(:unprocessable_entity) }
       end
+
+      context 'when an address is being updated' do
+        it 'persists the address to the users address book' do
+          expect { subject }.to change { user.addresses.count }.by(1)
+          expect(user.addresses.last).to eq(subscription.reload.shipping_address)
+        end
+      end
     end
 
     context 'when the subscription belongs to someone else' do
