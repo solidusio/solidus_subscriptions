@@ -2,5 +2,8 @@ require 'solidus'
 require 'solidus_support'
 require "solidus_subscriptions/ability"
 require 'solidus_subscriptions/engine'
+require 'solidus_subscriptions/permission_sets/base'
+require 'solidus_subscriptions/permission_sets/subscription_display'
+require 'solidus_subscriptions/permission_sets/subscription_management'
 require 'deface'
 require 'state_machines'
