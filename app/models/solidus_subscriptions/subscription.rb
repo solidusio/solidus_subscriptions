@@ -210,6 +210,12 @@ module SolidusSubscriptions
       end
     end
 
+    def total_cost
+      line_items.reduce(0.0) do |total_cost, line_item|
+        total_cost + line_item.spree_line_item.try(:total).to_f
+      end
+    end
+
     private
 
     def check_successive_skips_exceeded
