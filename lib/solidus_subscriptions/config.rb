@@ -81,7 +81,8 @@ module SolidusSubscriptions
         :subscribable_id,
         :interval_length,
         :interval_units,
-        :end_date
+        :end_date,
+        spree_line_item_attributes: [:id, :quantity, :variant_id]
       ]
     end
 
