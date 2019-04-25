@@ -1,0 +1,86 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+es-MX:
+  time:
+    formats:
+      human:
+  solidus_subscriptions:
+    subscription:
+      actionable_date: "Fecha de Acción"
+    installment_details:
+      out_of_stock: >
+        Esta cuota no pudo ser procesada debido a valores insuficientes.
+      success: Esta entrega ha sido procesada con éxito!
+      failed: Esta entrega no pudo ser procesada
+      payment_failed: El pago de esta cuota falló
+
+  spree:
+    new_subscription: Nueva Suscripcion
+    admin:
+      solidus_subscriptions:
+        subscriptions:
+          subscription:
+            cancel: Cancelar
+            cancel_alert: "¿Seguro que quieres cancelar esta suscripción?"
+            activate: Activar
+            skip: Saltar Uno
+
+      subscriptions:
+        successfully_canceled: Suscripción Cancelada!
+        successfully_activated: Suscripción Activada!
+        successfully_skipped: Suscripción retrasada hasta %{date}
+        index:
+          new_subscription: Nueva Suscripción
+        edit:
+          back: Volver a la lista de Suscripciones
+          title: Editar Suscripción
+          customer: Cliente
+          status: Estatus
+          fulfillment_status: Estado de Cumplimiento
+          revenue: Ingresos
+          interval: Intervalo
+        new:
+          back: Regresar a la lista de Suscripciones
+          title: Crear una Suscripción
+        form:
+          subscription: Suscripción
+          subscription_line_item: Elementos de la Suscripción
+      tab:
+        subscriptions: Suscripciones
+
+    promotion_rule_types:
+      subscription_promotion_rule:
+        name: Suscripción
+        description: El pedido contiene una suscripción
+      subscription_order_promotion_rule:
+        name: Orden de la Suscripción
+        description: El pedido cumple con una Suscripción.
+
+    products:
+      cart_form:
+        quantity: Quiero
+        quantity_suffix: Artículos
+        interval_length: cada
+        subscription_fields: Ajustes de Suscripción
+
+  activerecord:
+    attributes:
+      solidus_subscriptions/line_item/interval_units:
+        day: Dias
+        week: Semanas
+        month: Meses
+        year: Años
+      solidus_subscriptions/subscription/processing_state:
+        pending: nuevo
+        success: éxito
+        failed: falla
+
+    errors:
+      models:
+        solidus_subscriptions/subscription:
+          attributes:
+            successive_skip_count:
+              exceeded: "Esta suscripción ha superado el máximo configurado sucesivamente. saltarse el límite se puede volver a omitir después de la próxima vez que sea procesada."
+            skip_count:
+              exceeded: "Esta suscripción ha superado el máximo configurado en omitir. Ya no se puede omitir."
