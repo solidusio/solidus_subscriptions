@@ -4,7 +4,11 @@ class SolidusSubscriptions::Api::V1::SubscriptionsController < Spree::Api::BaseC
   def update
     if @subscription.update(subscription_params)
       persist_subscription_addresses(@subscription)
-      render json: @subscription.to_json(include: [:line_items, :shipping_address, :billing_address, :wallet_payment_source])
+      if params[:full_json]
+        render json: SubscriptionSerializer.new(@subscription).to_json(include: '**')
+      else
+        render json: @subscription.to_json(include: [:line_items, :wallet_payment_source, :shipping_address, :billing_address])
+      end
     else
       render json: @subscription.errors.to_json, status: 422
     end
@@ -46,7 +50,7 @@ class SolidusSubscriptions::Api::V1::SubscriptionsController < Spree::Api::BaseC
   end
 
   def line_item_attributes
-    SolidusSubscriptions::Config.subscription_line_item_attributes - [:subscribable_id] + [:id]
+    SolidusSubscriptions::Config.subscription_line_item_attributes + [:id]
   end
 
   def persist_subscription_addresses(subscription)

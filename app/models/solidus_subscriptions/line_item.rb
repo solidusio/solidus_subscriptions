@@ -30,6 +30,8 @@ module SolidusSubscriptions
     validates :quantity, numericality: { greater_than: 0 }
     validates :interval_length, numericality: { greater_than: 0 }, unless: -> { subscription }
 
+    accepts_nested_attributes_for :spree_line_item
+
     before_update :update_actionable_date_if_interval_changed
 
     def next_actionable_date
