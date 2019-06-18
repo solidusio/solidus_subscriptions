@@ -24,7 +24,6 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'capybara'
   s.add_development_dependency 'capybara-screenshot'
-  s.add_development_dependency 'chromedriver-helper'
   s.add_development_dependency 'coffee-rails'
   s.add_development_dependency 'database_cleaner'
   s.add_development_dependency 'factory_bot'
@@ -44,5 +43,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'sqlite3', '~> 1.3.6'
   s.add_development_dependency 'timecop'
   s.add_development_dependency 'versioncake'
+  s.add_development_dependency 'webdrivers'
   s.add_development_dependency 'yard'
 end

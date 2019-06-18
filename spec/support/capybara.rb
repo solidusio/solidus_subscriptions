@@ -1,21 +1,23 @@
 require 'capybara/rspec'
 require 'capybara-screenshot/rspec'
-require 'chromedriver-helper'
+require 'webdrivers'
+Webdrivers::Chromedriver.update
 
-Chromedriver.set_version '2.45'
+RSpec.configure do |config|
+  config.include Rack::Test::Methods, type: :requests
 
-RSpec.configure do |_config|
   Capybara.server_port = 8888 + ENV['TEST_ENV_NUMBER'].to_i
+
   Capybara.javascript_driver = :selenium
   Capybara.register_driver :selenium do |app|
-    capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-      chromeOptions: {
-        args: %w[ headless disable-gpu ]
-      }
+    driver_options = Selenium::WebDriver::Chrome::Options.new(
+      args: %w[ headless disable-gpu window-size=1280,1024 ]
     )
-    Capybara::Selenium::Driver.new(app,
-                                   browser: :chrome,
-                                   desired_capabilities: capabilities
-                                  )
-  end
+
+    Capybara::Selenium::Driver.new(
+			app,
+			browser: :chrome,
+      options: driver_options
+		)
+	end
 end
