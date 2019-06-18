@@ -19,10 +19,12 @@ module SolidusSubscriptions
     private
 
     def existing_user(order)
-      # I tried using `find_by` here but that has a strange conflict with
-      # using `stub_authorization` in specs. `stub_authorization` adds an
-      # `allow` on `Spree::User` that specifically targets `find_by`.
-      Spree.user_class.where(email: order.email).first
+      user_attrs = { email: order.email }.tap do |u_attrs|
+        if user_team_enabled?
+          u_attrs[:team_id] = order.store.team_id
+        end
+      end
+      Spree.user_class.where(user_attrs).take
     end
 
     def create_stub_user(order)
@@ -32,11 +34,23 @@ module SolidusSubscriptions
         password: initial_password,
         password_confirmation: initial_password,
       }
+      if user_team_enabled?
+        user_attrs[:team_id] = order.store.team_id
+      end
       Spree.user_class.create!(user_attrs)
     end
 
     def friendly_token(length = 20)
       SecureRandom.base64(length).tr('+/=', '-_ ').strip.delete("\n")
+    end
+
+    # NOTE: this is not a great long-term solution for the problem of
+    # "how do I account for teams in a way that handles the case where
+    # the model has no Team attribute at all?"
+    # Please use extreme caution when adapting this pattern elsewhere,
+    # as it also introduces 2-way dependency on engine_storefront.
+    def user_team_enabled?
+      Spree.user_class.new.respond_to?(:team_id)
     end
   end
 end
