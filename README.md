@@ -1,8 +1,8 @@
 # SolidusSubscriptions
 
-A Solidus extension for subscriptions. **Important note**: this is
-**PRE-RELEASE** software and is currently a work-in-progress. There are **no
-guarantees** this will work for your store!
+[![CircleCI](https://circleci.com/gh/solidusio-contrib/solidus_subscriptions/tree/master.svg?style=svg)](https://circleci.com/gh/solidusio-contrib/solidus_subscriptions/tree/master)
+
+A Solidus extension for subscriptions.
 
 Sponsored by [Goby](https://www.goby.co) - Electrify your routine!
 
