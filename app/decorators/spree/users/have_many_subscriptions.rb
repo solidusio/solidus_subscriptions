@@ -1,7 +1,7 @@
 # Spree::Users maintain a list of the subscriptions associated with them
 module Spree
   module Users
-    module HaveManySubscritptions
+    module HaveManySubscriptions
       def self.prepended(base)
         base.has_many(
           :subscriptions,
@@ -15,4 +15,4 @@ module Spree
   end
 end
 
-Spree.user_class.prepend(Spree::Users::HaveManySubscritptions)
+Spree.user_class.prepend(Spree::Users::HaveManySubscriptions)
