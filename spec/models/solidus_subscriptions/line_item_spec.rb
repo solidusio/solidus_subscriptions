@@ -33,7 +33,7 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
     let(:line_item) { create(:subscription_line_item, :with_subscription) }
 
     let(:expected_hash) do
-      {
+      hash = {
         "id" => line_item.id,
         "spree_line_item_id" => line_item.spree_line_item.id,
         "subscription_id" => line_item.subscription_id,
@@ -45,6 +45,7 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
         "interval_units" => line_item.interval_units,
         "interval_length" => line_item.interval_length
       }
+      Rails.gem_version >= Gem::Version.new('6.0.0') ? hash.as_json : hash
     end
 
     it 'includes the attribute values' do
@@ -52,7 +53,7 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
     end
 
     it 'includes the dummy lineitem' do
-      expect(subject['dummy_line_item']).to be_a Spree::LineItem
+      expect(subject).to have_key('dummy_line_item')
     end
   end
 

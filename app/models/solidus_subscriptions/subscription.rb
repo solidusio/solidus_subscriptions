@@ -11,7 +11,7 @@ module SolidusSubscriptions
     has_many :line_items, class_name: 'SolidusSubscriptions::LineItem', inverse_of: :subscription
     has_many :installments, class_name: 'SolidusSubscriptions::Installment'
     belongs_to :store, class_name: 'Spree::Store'
-    belongs_to :shipping_address, class_name: 'Spree::Address'
+    belongs_to :shipping_address, class_name: 'Spree::Address', optional: true
 
     validates :user, presence: :true
     validates :skip_count, :successive_skip_count, presence: true, numericality: { greater_than_or_equal_to: 0 }
