@@ -7,7 +7,7 @@ module SolidusSubscriptions
     belongs_to(
       :subscription,
       class_name: 'SolidusSubscriptions::Subscription',
-      inverse_of: :installments
+      inverse_of: :installments,
     )
 
     validates :subscription, presence: true

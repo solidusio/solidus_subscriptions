@@ -18,12 +18,18 @@ module SolidusSubscriptions
   class LineItem < ActiveRecord::Base
     include Interval
 
-    belongs_to :spree_line_item, class_name: 'Spree::LineItem', inverse_of: :subscription_line_items
+    belongs_to(
+      :spree_line_item,
+      class_name: 'Spree::LineItem',
+      inverse_of: :subscription_line_items,
+      optional: true,
+    )
     has_one :order, through: :spree_line_item, class_name: 'Spree::Order'
     belongs_to(
       :subscription,
       class_name: 'SolidusSubscriptions::Subscription',
-      inverse_of: :line_items
+      inverse_of: :line_items,
+      optional: true
     )
 
     validates :subscribable_id, presence: :true
