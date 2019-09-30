@@ -7,7 +7,7 @@
     <% if new %>
       <div class="row">
         <div class="field twelve columns">
-          <%= f.label :user_id, Spree.t(:user), class: "required" %>
+          <%= f.label :user_id, I18n.t(:user, scope: :spree), class: "required" %>
           <%= f.collection_select :user_id,  Spree::User.all, :id, :email, {}, class: "select2 fullwidth" %>
         </div>
 
