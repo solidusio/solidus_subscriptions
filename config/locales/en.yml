@@ -28,9 +28,9 @@ en:
             skip: Skip One
 
       subscriptions:
-        successfully_canceled: Subsciption Canceled!
-        successfully_activated: Subsciption Activated!
-        successfully_skipped: Subsciption delayed until %{date}
+        successfully_canceled: Subscription Canceled!
+        successfully_activated: Subscription Activated!
+        successfully_skipped: Subscription delayed until %{date}
         index:
           new_subscription: New Subscription
         edit:
