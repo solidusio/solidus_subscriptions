@@ -35,7 +35,7 @@ en:
           new_subscription: New Subscription
         edit:
           back: Back to Subscriptions List
-          title: Edit a Susbcription
+          title: Edit a Subscription
           customer: Customer
           status: Status
           fulfillment_status: Fulfillment Status
@@ -43,7 +43,7 @@ en:
           interval: Interval
         new:
           back: Back to Subscriptions List
-          title: Create a Susbcription
+          title: Create a Subscription
         form:
           subscription: Subscription
           subscription_line_item: Subscription Line Item
