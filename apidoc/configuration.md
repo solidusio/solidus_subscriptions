@@ -52,7 +52,7 @@ SolidusSubscriptions::Config.subscription_line_item_attributes = [
 # subclass from the the dispatcher you are replacing, and call super
 # from within the #dispatch method (if you override it)
 
-# This handler is called when a susbcription order is successfully placed.
+# This handler is called when a subscription order is successfully placed.
 SolidusSubscriptions::Config.success_dispatcher_class = ::SolidusSubscriptions::SuccessDispatcher
 
 # This handler is called when an order cant be placed for a group of installments
