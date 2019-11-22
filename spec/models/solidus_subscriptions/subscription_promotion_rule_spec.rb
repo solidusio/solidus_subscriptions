@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'spec_helper'
 
 RSpec.describe SolidusSubscriptions::SubscriptionPromotionRule do
   let(:rule) { described_class.new }

@@ -1,4 +1,4 @@
-require "rails_helper"
+require 'spec_helper'
 
 RSpec.describe "Subscription endpoints", type: :request do
   let(:json_resp) { JSON.parse(response.body) }

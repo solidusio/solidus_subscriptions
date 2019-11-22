@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'spec_helper'
 
 RSpec.describe Spree::Orders::SubscriptionLineItemsAssociation, type: :model do
   subject { Spree::Order.new }

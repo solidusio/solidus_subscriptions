@@ -1,4 +1,4 @@
-require "rails_helper"
+require 'spec_helper'
 
 RSpec.describe Spree::Variant, type: :model do
   let(:variant) { build_stubbed :variant }

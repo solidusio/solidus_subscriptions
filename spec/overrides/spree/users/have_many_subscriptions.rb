@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'spec_helper'
 
 RSpec.describe Spree::Users::HaveManySubscritptions, type: :model do
   subject { Spree::User.new }

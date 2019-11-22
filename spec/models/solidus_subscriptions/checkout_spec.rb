@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'spec_helper'
 
 RSpec.describe SolidusSubscriptions::Checkout do
   let(:checkout) { described_class.new(installments) }

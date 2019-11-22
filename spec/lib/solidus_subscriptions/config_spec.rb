@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'spec_helper'
 
 RSpec.describe SolidusSubscriptions::Config do
   before { described_class.instance_variable_set('@gateway', nil) }

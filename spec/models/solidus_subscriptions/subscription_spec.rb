@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'spec_helper'
 
 RSpec.describe SolidusSubscriptions::Subscription, type: :model do
   it { is_expected.to have_many :installments }

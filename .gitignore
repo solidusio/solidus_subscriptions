@@ -14,3 +14,4 @@ pkg
 *.swp
 spec/dummy
 .bundle
+spec/examples.txt

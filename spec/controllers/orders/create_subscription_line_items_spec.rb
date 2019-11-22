@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'spec_helper'
 
 RSpec.describe Spree::Controllers::Orders::CreateSubscriptionLineItems, type: :controller do
   controller(Spree::OrdersController) {}

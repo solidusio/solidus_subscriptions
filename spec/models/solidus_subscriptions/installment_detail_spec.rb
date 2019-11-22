@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'spec_helper'
 
 RSpec.describe SolidusSubscriptions::InstallmentDetail, type: :model do
   it { is_expected.to belong_to :installment }

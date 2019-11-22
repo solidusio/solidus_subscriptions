@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'spec_helper'
 
 RSpec.describe SolidusSubscriptions::ProcessInstallmentsJob do
   let(:root_order) { create :completed_order_with_pending_payment }

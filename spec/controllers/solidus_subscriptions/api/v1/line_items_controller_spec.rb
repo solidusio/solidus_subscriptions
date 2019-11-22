@@ -1,4 +1,4 @@
-require "rails_helper"
+require 'spec_helper'
 
 RSpec.describe SolidusSubscriptions::Api::V1::LineItemsController, type: :controller do
   routes { SolidusSubscriptions::Engine.routes }

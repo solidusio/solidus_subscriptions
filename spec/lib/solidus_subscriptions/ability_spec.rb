@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'spec_helper'
 require "cancan/matchers"
 
 RSpec.describe SolidusSubscriptions::Ability do
