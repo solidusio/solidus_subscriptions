@@ -1,12 +1,10 @@
-inherit_gem:
-  relaxed-rubocop: .rubocop.yml
+require:
+  - solidus_extension_dev_tools/rubocop
 
-require: rubocop-rspec
+inherit_gem:
+  solidus_extension_dev_tools: .rubocop.extension.yml
 
 AllCops:
-  TargetRubyVersion: 2.3
-
   Exclude:
-    - 'coverage/**/*'
-    - 'spec/dummy/**/*'
-    - 'vendor/bundle/**/*'
+    - spec/dummy/**/*
+    - vendor/**/*
