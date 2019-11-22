@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'spec_helper'
 
 RSpec.describe Spree::Orders::FinalizeCreatesSubscriptions do
   describe '#finalize!' do

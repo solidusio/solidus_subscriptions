@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'spec_helper'
 
 RSpec.feature 'Subscriptions admin link', type: :feature do
   stub_authorization!

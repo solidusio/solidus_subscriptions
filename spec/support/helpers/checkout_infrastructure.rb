@@ -16,3 +16,7 @@ module CheckoutInfrastructure
     end
   end
 end
+
+RSpec.configure do |config|
+  config.extend CheckoutInfrastructure, :checkout
+end

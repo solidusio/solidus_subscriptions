@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'spec_helper'
 
 RSpec.describe SolidusSubscriptions::OutOfStockDispatcher do
   let(:dispatcher) { described_class.new(installments) }

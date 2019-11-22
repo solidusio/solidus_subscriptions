@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'spec_helper'
 
 RSpec.describe SolidusSubscriptions::Checkout do
   let(:checkout) { described_class.new(installments) }
@@ -26,7 +26,7 @@ RSpec.describe SolidusSubscriptions::Checkout do
 
   before do
     SolidusSubscriptions::Config.default_gateway { payment_method }
-    Spree::Variant.all.each { |v| v.update_attributes(subscribable: true) }
+    Spree::Variant.all.each { |v| v.update(subscribable: true) }
   end
 
   context 'initialized with installments belonging to multiple users' do

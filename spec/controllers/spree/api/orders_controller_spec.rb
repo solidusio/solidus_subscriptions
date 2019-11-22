@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'spec_helper'
 require 'spree/api/testing_support/helpers'
 
 RSpec.describe Spree::Api::OrdersController, type: :controller do

@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'spec_helper'
 
 RSpec.describe SolidusSubscriptions::LineItemBuilder do
   let(:builder) { described_class.new subscription_line_items }
