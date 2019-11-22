@@ -26,7 +26,7 @@ RSpec.describe SolidusSubscriptions::Checkout do
 
   before do
     SolidusSubscriptions::Config.default_gateway { payment_method }
-    Spree::Variant.all.each { |v| v.update_attributes(subscribable: true) }
+    Spree::Variant.all.each { |v| v.update(subscribable: true) }
   end
 
   context 'initialized with installments belonging to multiple users' do
