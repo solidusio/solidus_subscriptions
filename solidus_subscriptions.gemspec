@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'rspec-activemodel-mocks'
   s.add_development_dependency 'shoulda-matchers', '~> 3.1'
-  s.add_development_dependency 'solidus_extension_dev_tools'
+  s.add_development_dependency 'solidus_dev_support'
   s.add_development_dependency 'timecop'
   s.add_development_dependency 'versioncake'
   s.add_development_dependency 'yard'
