@@ -1,0 +1,5 @@
+bump:
+  recurse: false
+  file: 'lib/solidus_subscriptions/version.rb'
+  message: Bump SolidusSubscriptions to %{version}
+  tag: true

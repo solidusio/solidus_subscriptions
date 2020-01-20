@@ -1,1 +1,17 @@
-bundle exec pry -r ./spec/dummy/config/environment.rb
+#!/usr/bin/env ruby
+
+# frozen_string_literal: true
+
+require "bundler/setup"
+require "solidus_subscriptions"
+
+# You can add fixtures and/or initialization code here to make experimenting
+# with your gem easier. You can also use a different console, if you like.
+$LOAD_PATH.unshift(*Dir["#{__dir__}/../app/*"])
+
+# (If you use this, don't forget to add pry to your Gemfile!)
+# require "pry"
+# Pry.start
+
+require "irb"
+IRB.start(__FILE__)
