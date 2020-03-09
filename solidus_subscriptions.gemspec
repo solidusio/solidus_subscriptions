@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'i18n'
   s.add_dependency 'solidus'
   s.add_dependency 'solidus_core', ['>= 2.0.0', '< 3']
-  s.add_dependency 'solidus_support', '~> 0.4.0'
+  s.add_dependency 'solidus_support', '>= 0.4', '< 0.6'
   s.add_dependency 'state_machines'
 
   s.add_development_dependency 'rspec-activemodel-mocks'
