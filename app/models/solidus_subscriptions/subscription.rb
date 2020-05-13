@@ -12,6 +12,7 @@ module SolidusSubscriptions
     has_many :installments, class_name: 'SolidusSubscriptions::Installment'
     belongs_to :store, class_name: 'Spree::Store'
     belongs_to :shipping_address, class_name: 'Spree::Address', optional: true
+    belongs_to :original_order, class_name: 'Spree::Order', optional: true
 
     validates :user, presence: :true
     validates :skip_count, :successive_skip_count, presence: true, numericality: { greater_than_or_equal_to: 0 }
@@ -64,6 +65,9 @@ module SolidusSubscriptions
       joins(:installments).merge(Installment.unfulfilled)
     end)
 
+    scope :active, -> { where(state: 'active') }
+    scope :inactive, -> { where(state: %w[canceled inactive pending_cancellation]) }
+
     def self.ransackable_scopes(_auth_object = nil)
       [:in_processing_state]
     end
@@ -105,6 +109,7 @@ module SolidusSubscriptions
       end
 
       after_transition to: :active, do: :advance_actionable_date
+      after_transition to: :canceled, do: :assign_closed_at_date
     end
 
     # This method determines if a subscription may be canceled. Canceled
@@ -190,6 +195,11 @@ module SolidusSubscriptions
     def processing_state
       return 'pending' if installments.empty?
       installments.last.fulfilled? ? 'success' : 'failed'
+    end
+
+    def assign_closed_at_date
+      self.closed_at = Time.zone.now
+      save
     end
 
     private

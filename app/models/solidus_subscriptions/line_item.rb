@@ -38,6 +38,8 @@ module SolidusSubscriptions
 
     before_update :update_actionable_date_if_interval_changed
 
+    delegate :name, :price, to: :product, prefix: true
+
     def next_actionable_date
       dummy_subscription.next_actionable_date
     end
@@ -60,6 +62,22 @@ module SolidusSubscriptions
 
     def interval
       subscription.try!(:interval) || super
+    end
+
+    def variant
+      @variant ||= ::Spree::Variant.find(subscribable_id)
+    end
+
+    def product
+      @product ||= variant.product
+    end
+
+    def variant_name
+      result = [product.name]
+      variant.ordered_option_values.each do |option_value|
+        result << option_value.presentation
+      end
+      result.join(', ')
     end
 
     private

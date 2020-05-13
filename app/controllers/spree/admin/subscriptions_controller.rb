@@ -2,6 +2,7 @@ module Spree
   module Admin
     class SubscriptionsController < ResourceController
       skip_before_action :load_resource, only: :index
+      before_action :set_store_id, only: [:create]
 
       def index
         @search = SolidusSubscriptions::Subscription.
@@ -57,6 +58,10 @@ module Spree
       end
 
       private
+
+      def set_store_id
+        params[:subscription].merge!(store_id: ::Spree::Store.default.id)
+      end
 
       def model_class
         ::SolidusSubscriptions::Subscription

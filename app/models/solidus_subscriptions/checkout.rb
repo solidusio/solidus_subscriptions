@@ -54,11 +54,15 @@ module SolidusSubscriptions
     #
     # @return [Spree::Order]
     def order
+      original_order = subscription.original_order
+
       @order ||= Spree::Order.create(
         user: user,
         email: user.email,
         store: subscription.store || Spree::Store.default,
-        subscription_order: true
+        subscription_order: true,
+        order_type: original_order.order_type,
+        dsr_id: original_order.dsr_id
       )
     end
 

@@ -24,6 +24,8 @@ module SolidusSubscriptions
         line_items: subscription_line_items,
         store: order.store,
         shipping_address: order.ship_address,
+        # keep original order id
+        original_order_id: order.id,
         **configuration.to_h
       }
 
