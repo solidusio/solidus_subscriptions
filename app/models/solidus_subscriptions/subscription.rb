@@ -68,6 +68,8 @@ module SolidusSubscriptions
     scope :active, -> { where(state: 'active') }
     scope :inactive, -> { where(state: %w[canceled inactive pending_cancellation]) }
 
+    delegate :email, :full_name, :first_name, :last_name, :dsr_id, to: :user, prefix: true, allow_nil: true
+
     def self.ransackable_scopes(_auth_object = nil)
       [:in_processing_state]
     end
@@ -98,6 +100,8 @@ module SolidusSubscriptions
       end
 
       after_transition to: :canceled, do: :advance_actionable_date
+      after_transition to: :canceled, do: :assign_closed_at_date
+      after_transition to: :canceled, do: :send_cancel_email
 
       event :deactivate do
         transition active: :inactive,
@@ -109,7 +113,6 @@ module SolidusSubscriptions
       end
 
       after_transition to: :active, do: :advance_actionable_date
-      after_transition to: :canceled, do: :assign_closed_at_date
     end
 
     # This method determines if a subscription may be canceled. Canceled
@@ -200,6 +203,12 @@ module SolidusSubscriptions
     def assign_closed_at_date
       self.closed_at = Time.zone.now
       save
+    end
+
+    def send_cancel_email
+      if Config.subscription_email_class.present?
+        Config.subscription_email_class.cancel_email(self).deliver_later
+      end
     end
 
     private

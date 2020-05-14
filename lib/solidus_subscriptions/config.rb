@@ -32,6 +32,8 @@ module SolidusSubscriptions
         @out_of_stock_dispatcher_class ||= ::SolidusSubscriptions::OutOfStockDispatcher
       end
 
+      attr_accessor :subscription_email_class
+
       def default_gateway(&block)
         return @gateway.call unless block_given?
         @gateway = block
