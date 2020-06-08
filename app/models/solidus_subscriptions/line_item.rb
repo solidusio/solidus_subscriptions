@@ -37,6 +37,8 @@ module SolidusSubscriptions
     validates :interval_length, numericality: { greater_than: 0 }, unless: -> { subscription }
 
     before_update :update_actionable_date_if_interval_changed
+    after_update :update_spree_line_item_quanity, if: -> { saved_change_to_quantity? }
+    after_destroy :update_spree_line_item_quanity
 
     delegate :name, :price, to: :product, prefix: true
 
@@ -80,6 +82,14 @@ module SolidusSubscriptions
       result.join(', ')
     end
 
+    def quantity=(value)
+      if value.to_i.zero?
+        destroy!
+      else
+        super
+      end
+    end
+
     private
 
     # Get a placeholder order for calculating the values of future
@@ -117,6 +127,12 @@ module SolidusSubscriptions
 
         subscription.actionable_date = new_date
       end
+    end
+
+    def update_spree_line_item_quanity
+      return unless spree_line_item
+
+      spree_line_item.update(quantity: spree_line_item.subscription_line_items.reload.map(&:quantity).sum)
     end
   end
 end
