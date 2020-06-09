@@ -76,7 +76,7 @@ module SolidusSubscriptions
       end
       apply_promotions
 
-      order.checkout_steps[0...-1].each do
+      %w[address delivery payment].each do
         order.ship_address = ship_address if order.state == "address"
         create_payment if order.state == "payment"
         order.next!
