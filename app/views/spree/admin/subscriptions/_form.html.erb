@@ -1,58 +1,51 @@
 <% new ||= false %>
 
-<fieldset class="no-border-top">
-  <fieldset class="index no-border-bottom">
-    <legend><%= t('.subscription') %></legend>
-
+<fieldset data-hook="new_subscription">
+  <legend><%= t('.subscription') %></legend>
+  <div data-hook="admin_subscription_form_fields">
     <% if new %>
-      <div class="row">
-        <div class="field twelve columns">
-          <%= f.label :user_id, I18n.t('spree.user'), class: "required" %>
-          <%= f.collection_select :user_id,  Spree::User.all, :id, :email, {}, class: "select2 fullwidth" %>
+      <div class="field">
+        <%= f.label :user_id, I18n.t('spree.user'), class: "required" %>
+        <%= f.collection_select :user_id,  Spree::User.all, :id, :email, {}, class: "select2 fullwidth" %>
+      </div>
+    <% end %>
+
+    <div class="field">
+      <%= f.label :actionable_date %>
+      <%= f.text_field :actionable_date, class: "form-control fullwidth datepicker" %>
+    </div>
+
+    <div class="row">
+      <div class="col-6">
+
+        <div class="field">
+          <%= f.label :inverval_length %>
+          <%= f.number_field :interval_length, class: "form-control fullwidth" %>
         </div>
 
       </div>
-    <% end %>
-  </fieldset>
 
-  <div class="row">
-    <%= content_tag :div, class: "field alpha three columns" do %>
-      <%= f.label :actionable_date %>
-      <%= f.text_field :actionable_date, class: "fullwidth datepicker" %>
-    <% end %>
+      <div class="col-6">
+        <div class="field">
+          <%
+            unit_values = SolidusSubscriptions::LineItem.interval_units.keys
+            units = unit_values.map do |unit|
+              [
+                SolidusSubscriptions::LineItem.human_attribute_name("interval_units.#{unit}"),
+                unit,
+              ]
+            end
+          %>
 
-    <div class='field three columns'>
-      <%= f.label :inverval_length %>
-      <%= f.number_field :interval_length, class: "fullwidth" %>
-    </div>
-
-    <div class='field three columns'>
-      <%= f.label :interval_units %>
-      <%
-        unit_values = SolidusSubscriptions::LineItem.interval_units.keys
-        units = unit_values.map do |unit|
-          [
-            unit,
-            SolidusSubscriptions::LineItem.human_attribute_name("interval_units.#{ unit }")
-          ]
-        end
-      %>
-
-      <div>
-        <% units.each_with_index do |(value, name), i| %>
-          <div>
-            <%= f.label :interval_units, for: "interval_units_#{ value }", class: 'fullwidth' do %>
-              <%= f.radio_button :interval_units, value, id: "interval_units_#{ value }" %>
-              <%= name %>
-            <% end %>
-          </div>
-        <% end %>
+          <%= f.label :interval_units %>
+          <%= f.select(:interval_units, units, {}, class: 'fullwidth select2') %>
+        </div>
       </div>
     </div>
 
-    <div class="field omega three columns">
+    <div class="field">
       <%= f.label :end_date %>
-      <%= f.date_field :end_date, class: "required fullwidth" %>
+      <%= f.text_field :end_date, class: "fullwidth datepicker" %>
     </div>
   </div>
 
@@ -61,21 +54,18 @@
       <legend><%= t('.subscription_line_item') %></legend>
 
       <div class="row">
-        <div class='field alpha two columns'>
-          <%= lf.label :quantity %>
-          <%= lf.number_field :quantity, min: 1, class: "fullwidth" %>
-        </div>
-
-        <div class="field columns ten omega">
+        <div class="col-10">
           <%= lf.label :subscribable_id %>
           <%= lf.collection_select :subscribable_id, Spree::Variant.where(subscribable: true), :id, :pretty_name, {}, { class: "fullwidth select2" } %>
         </div>
-      </div>
 
+        <div class="col-2">
+          <%= lf.label :quantity %>
+          <%= lf.number_field :quantity, min: 1, class: "fullwidth" %>
+        </div>
+      </div>
     </fieldset>
   <% end %>
 
-  <div class="filter-actions" data-hook='buttons'>
-    <%= f.button type: :submit %>
-  </div>
+  <%= render partial: 'spree/admin/shared/new_resource_links' %>
 </fieldset>
