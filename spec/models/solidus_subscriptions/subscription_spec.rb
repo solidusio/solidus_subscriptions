@@ -59,7 +59,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       )
     end
 
-    around(:all) do |e|
+    around do |e|
       successive_skip_limit = SolidusSubscriptions::Config.maximum_successive_skips
       total_skip_limit = SolidusSubscriptions::Config.maximum_total_skips
 
