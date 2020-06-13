@@ -118,7 +118,7 @@ module SolidusSubscriptions
     end
 
     def active_card
-      if ::Spree.solidus_gem_version.solidus_gem_version < Gem::Version.new("2.2.0")
+      if ::Spree.solidus_gem_version < Gem::Version.new("2.2.0")
         user.credit_cards.default.last
       else
         user.wallet.default_wallet_payment_source.payment_source
