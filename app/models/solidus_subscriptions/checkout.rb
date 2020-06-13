@@ -54,10 +54,10 @@ module SolidusSubscriptions
     #
     # @return [Spree::Order]
     def order
-      @order ||= Spree::Order.create(
+      @order ||= ::Spree::Order.create(
         user: user,
         email: user.email,
-        store: subscription.store || Spree::Store.default,
+        store: subscription.store || ::Spree::Store.default,
         subscription_order: true
       )
     end
@@ -65,7 +65,7 @@ module SolidusSubscriptions
     private
 
     def checkout
-      if Spree.solidus_gem_version >= Gem::Version.new('2.4.0')
+      if ::Spree.solidus_gem_version >= Gem::Version.new('2.4.0')
         order.recalculate
       else
         order.update!
@@ -134,7 +134,7 @@ module SolidusSubscriptions
     end
 
     def apply_promotions
-      Spree::PromotionHandler::Cart.new(order).activate
+      ::Spree::PromotionHandler::Cart.new(order).activate
       order.updater.update # reload totals
     end
 

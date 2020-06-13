@@ -20,11 +20,11 @@ module SolidusSubscriptions
 
     belongs_to(
       :spree_line_item,
-      class_name: 'Spree::LineItem',
+      class_name: '::Spree::LineItem',
       inverse_of: :subscription_line_items,
       optional: true,
     )
-    has_one :order, through: :spree_line_item, class_name: 'Spree::Order'
+    has_one :order, through: :spree_line_item, class_name: '::Spree::Order'
     belongs_to(
       :subscription,
       class_name: 'SolidusSubscriptions::Subscription',
@@ -68,7 +68,7 @@ module SolidusSubscriptions
     # subscription orders. It is a frozen duplicate of the current order and
     # cannot be saved
     def dummy_order
-      order = spree_line_item ? spree_line_item.order.dup : Spree::Order.create
+      order = spree_line_item ? spree_line_item.order.dup : ::Spree::Order.create
       order.ship_address = subscription.shipping_address || subscription.user.ship_address if subscription
 
       order.freeze

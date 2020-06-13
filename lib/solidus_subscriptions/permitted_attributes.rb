@@ -5,13 +5,13 @@ module SolidusSubscriptions
   module PermittedAttributes
     class << self
       def update_spree_permiteed_attributes
-        Spree::PermittedAttributes.line_item_attributes << {
+        ::Spree::PermittedAttributes.line_item_attributes << {
           subscription_line_items_attributes: nested(
             subscription_line_item_attributes
           )
         }
 
-        Spree::PermittedAttributes.user_attributes << {
+        ::Spree::PermittedAttributes.user_attributes << {
           subscriptions_attributes: nested(subscription_attributes)
         }
       end

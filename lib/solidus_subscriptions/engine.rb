@@ -33,8 +33,8 @@ module SolidusSubscriptions
     end
 
     initializer 'subscriptions_backend' do
-      next unless Spree::Backend::Config.respond_to?(:menu_items)
-      Spree::Backend::Config.configure do |config|
+      next unless ::Spree::Backend::Config.respond_to?(:menu_items)
+      ::Spree::Backend::Config.configure do |config|
         config.menu_items << config.class::MenuItem.new(
           [:subscriptions],
           'repeat',
@@ -45,7 +45,7 @@ module SolidusSubscriptions
     end
 
     def self.activate
-      Spree::Ability.register_ability(SolidusSubscriptions::Ability)
+      ::Spree::Ability.register_ability(SolidusSubscriptions::Ability)
     end
 
     config.to_prepare(&method(:activate).to_proc)

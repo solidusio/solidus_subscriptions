@@ -1,5 +1,5 @@
 module SolidusSubscriptions
-  class SubscriptionPromotionRule < Spree::PromotionRule
+  class SubscriptionPromotionRule < ::Spree::PromotionRule
     # Promotion can be applied to an entire order. Will only be true
     # for Spree::Order
     #
@@ -8,7 +8,7 @@ module SolidusSubscriptions
     #
     # @return [Boolean]
     def applicable?(promotable)
-      promotable.is_a? Spree::Order
+      promotable.is_a? ::Spree::Order
     end
 
     # An order is eligible if it contains a line item with an associates
