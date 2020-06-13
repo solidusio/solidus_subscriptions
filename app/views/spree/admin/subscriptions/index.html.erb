@@ -13,79 +13,93 @@
 <% end %>
 
 <% content_for :table_filter do %>
-  <%= search_form_for [:admin, @search] do |f| %>
-    <div class='field-block alpha four columns'>
-      <div class="date-range-filter field">
-        <%= label_tag :q_created_at_gt, I18n.t('spree.date_range') %>
-        <div class="date-range-fields">
-          <%= f.text_field :created_at_gt, class: 'datepicker datepicker-from', placeholder: I18n.t('spree.start') %>
+  <div data-hook="admin_subscriptions_index_search">
+    <%= search_form_for [:admin, @search] do |f| %>
+      <div class="row">
+        <div class="field-block col-6">
+          <div class="date-range-filter field">
+            <%= label_tag :q_created_at_gt, I18n.t('spree.date_range') %>
+            <div class="date-range-fields input-group">
+              <%= f.text_field :created_at_gt, class: 'datepicker form-control datepicker-from', placeholder: I18n.t('spree.start') %>
 
-          <span class="range-divider">
-            <i class="fa fa-arrow-right"></i>
-          </span>
+              <div class="input-group-prepend input-group-append">
+                <span class="input-group-text range-divider">
+                  <i class="fa fa-arrow-right"></i>
+                </span>
+              </div>
 
-          <%= f.text_field :created_at_lt, class: 'datepicker datepicker-to', placeholder: I18n.t('spree.stop') %>
+              <%= f.text_field :created_at_lt, class: 'datepicker form-control datepicker-to', placeholder: I18n.t('spree.stop') %>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-block col-6">
+          <div class="date-range-filter field">
+            <%= label_tag :q_actionable_date_gt, SolidusSubscriptions::Subscription.human_attribute_name(:actionable_date) %>
+            <div class="date-range-fields input-group">
+              <%= f.text_field :actionable_date_gt, class: 'datepicker form-control datepicker-from', placeholder: I18n.t('spree.start') %>
+
+              <div class="input-group-prepend input-group-append">
+                <span class="input-group-text range-divider">
+                  <i class="fa fa-arrow-right"></i>
+                </span>
+              </div>
+
+              <%= f.text_field :actionable_date_lt, class: 'datepicker form-control datepicker-to', placeholder: I18n.t('spree.stop') %>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="date-range-filter field">
-        <%= label_tag :q_actionable_date_gt, SolidusSubscriptions::Subscription.human_attribute_name(:actionable_date) %>
-        <div class="date-range-fields">
-          <%= f.text_field :actionable_date_gt, class: 'datepicker datepicker-from', placeholder: I18n.t('spree.start') %>
+      <div class="row">
+        <div class="field-block col-4">
+          <div class="field">
+            <%= label_tag :q_user_email_cont, Spree::User.human_attribute_name(:email) %>
+            <%= f.text_field :user_email_cont, size: 25 %>
+          </div>
+        </div>
 
-          <span class="range-divider">
-            <i class="fa fa-arrow-right"></i>
-          </span>
+        <div class="field-block col-4">
+          <div class="field">
+            <%= label_tag :q_state_eq, I18n.t('spree.status') %>
+            <%= f.select :state_eq, SolidusSubscriptions::Subscription.state_machines[:state].states.map {|s| [s.human_name, s.value]}, {include_blank: true}, class: 'select2 fullwidth' %>
+          </div>
+        </div>
 
-          <%= f.text_field :actionable_date_lt, class: 'datepicker datepicker-to', placeholder: I18n.t('spree.stop') %>
+        <div class="field-block col-4">
+          <div class="field">
+            <%= label_tag :q_processing_state_eq, SolidusSubscriptions::Subscription.human_attribute_name(:processing_state) %>
+
+            <%
+              processing_states = SolidusSubscriptions::Subscription.processing_states.map do |state|
+                [
+                    SolidusSubscriptions::Subscription.human_attribute_name("processing_state.#{ state }"),
+                    state
+                ]
+              end
+            %>
+
+            <%=
+              f.select(
+                  :in_processing_state,
+                  options_for_select(processing_states),
+                  { include_blank: true },
+                  class: 'select2 fullwidth'
+              )
+            %>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="four columns">
-      <div class="field">
-        <%= label_tag :q_state_eq, I18n.t('spree.status') %>
-        <%= f.select :state_eq, SolidusSubscriptions::Subscription.state_machines[:state].states.map {|s| [s.human_name, s.value]}, {include_blank: true}, class: 'select2 fullwidth' %>
+      <div class="clearfix"></div>
+
+      <div class="actions filter-actions">
+        <div data-hook="admin_subscriptions_index_search_buttons">
+          <%= button_tag I18n.t('spree.filter_results'), class: 'btn btn-primary' %>
+        </div>
       </div>
-    </div>
-
-    <div class="four columns">
-      <div class="field">
-        <%= label_tag :q_user_email_cont, Spree::User.human_attribute_name(:email) %>
-        <%= f.text_field :user_email_cont, size: 25 %>
-      </div>
-    </div>
-
-    <div class="omega four columns">
-      <div class="field">
-        <%= label_tag :q_processing_state_eq, SolidusSubscriptions::Subscription.human_attribute_name(:processing_state) %>
-
-        <%
-          processing_states = SolidusSubscriptions::Subscription.processing_states.map do |state|
-            [
-              SolidusSubscriptions::Subscription.human_attribute_name("processing_state.#{ state }"),
-              state
-            ]
-          end
-        %>
-
-        <%=
-          f.select(
-            :in_processing_state,
-            options_for_select(processing_states),
-            { include_blank: true },
-            class: 'select2 fullwidth'
-          )
-        %>
-      </div>
-    </div>
-
-    <div class="clearfix"></div>
-
-    <div class="actions filter-actions">
-      <div><%= button_tag I18n.t('spree.filter_results') %></div>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 <% end %>
 
 <% if Spree.respond_to?(:solidus_version) && (Spree.solidus_gem_version <=> Gem::Version.new('1.3.0')) >= 0  %>
