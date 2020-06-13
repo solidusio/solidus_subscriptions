@@ -25,7 +25,7 @@ module SolidusSubscriptions
         raise UnsubscribableError.new(variant) unless variant.subscribable?
         next unless variant.can_supply?(subscription_line_item.quantity)
 
-        Spree::LineItem.new(variant: variant, quantity: subscription_line_item.quantity)
+        ::Spree::LineItem.new(variant: variant, quantity: subscription_line_item.quantity)
       end
 
       # Either all line items for an installment are fulfilled or none are
@@ -38,7 +38,7 @@ module SolidusSubscriptions
       return @subscribables if @subscribables
 
       ids = subscription_line_items.map(&:subscribable_id)
-      @subscribables ||= Spree::Variant.find(ids).index_by(&:id)
+      @subscribables ||= ::Spree::Variant.find(ids).index_by(&:id)
     end
   end
 end

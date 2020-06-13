@@ -1,42 +1,44 @@
 # frozen_string_literal: true
 
-$:.push File.expand_path('lib', __dir__)
-require 'solidus_subscriptions/version'
+require_relative 'lib/solidus_subscriptions/version'
 
-Gem::Specification.new do |s|
-  s.name        = 'solidus_subscriptions'
-  s.version     = SolidusSubscriptions::VERSION
-  s.summary     = 'Add subscription support to Solidus'
-  s.description = s.summary
-  s.license     = 'BSD-3-Clause'
+Gem::Specification.new do |spec|
+  spec.name = 'solidus_subscriptions'
+  spec.version = SolidusSubscriptions::VERSION
+  spec.authors = ['Solidus Team']
+  spec.email = 'contact@solidus.io'
 
-  s.author       = 'Solidus Team'
-  s.email        = 'contact@solidus.io'
+  spec.summary = 'Add subscription support to Solidus'
+  spec.description = 'Add subscription support to Solidus'
+  spec.homepage = 'https://github.com/solidusio-contrib/solidus_subscriptions'
+  spec.license = 'BSD-3-Clause'
 
-  if s.respond_to?(:metadata)
-    s.metadata["homepage_uri"] = s.homepage if s.homepage
-    s.metadata["source_code_uri"] = s.homepage if s.homepage
-  end
+  spec.metadata['homepage_uri'] = spec.homepage
+  spec.metadata['source_code_uri'] = 'https://github.com/solidusio-contrib/solidus_subscriptions'
+  spec.metadata['changelog_uri'] = 'https://github.com/solidusio-contrib/solidus_subscriptions/blob/master/CHANGELOG.md'
 
-  s.files = Dir.chdir(File.expand_path(__dir__)) do
-    `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
-  end
-  s.test_files = Dir['spec/**/*']
-  s.bindir = "exe"
-  s.executables = s.files.grep(%r{^exe/}) { |f| File.basename(f) }
-  s.require_paths = ["lib"]
+  spec.required_ruby_version = Gem::Requirement.new('~> 2.5')
 
-  s.add_dependency 'deface'
-  s.add_dependency 'i18n'
-  s.add_dependency 'solidus'
-  s.add_dependency 'solidus_core', ['>= 2.0.0', '< 3']
-  s.add_dependency 'solidus_support', '~> 0.5'
-  s.add_dependency 'state_machines'
+  # Specify which files should be added to the gem when it is released.
+  # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
+  files = Dir.chdir(__dir__) { `git ls-files -z`.split("\x0") }
 
-  s.add_development_dependency 'rspec-activemodel-mocks'
-  s.add_development_dependency 'shoulda-matchers', '~> 3.1'
-  s.add_development_dependency 'solidus_dev_support'
-  s.add_development_dependency 'timecop'
-  s.add_development_dependency 'versioncake'
-  s.add_development_dependency 'yard'
+  spec.files = files.grep_v(%r{^(test|spec|features)/})
+  spec.test_files = files.grep(%r{^(test|spec|features)/})
+  spec.bindir = "exe"
+  spec.executables = files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.require_paths = ["lib"]
+
+  spec.add_dependency 'solidus_core', ['>= 2.0.0', '< 3']
+  spec.add_dependency 'solidus_support', '~> 0.5'
+  spec.add_dependency 'deface'
+  spec.add_dependency 'i18n'
+  spec.add_dependency 'state_machines'
+
+  spec.add_development_dependency 'rspec-activemodel-mocks'
+  spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
+  spec.add_development_dependency 'solidus_dev_support'
+  spec.add_development_dependency 'timecop'
+  spec.add_development_dependency 'versioncake'
+  spec.add_development_dependency 'yard'
 end
