@@ -1,19 +1,24 @@
+# frozen_string_literal: true
+
+require 'spree/core'
+
+require 'solidus_subscriptions'
+require 'solidus_subscriptions/permitted_attributes'
+require 'solidus_subscriptions/config'
+require 'solidus_subscriptions/processor'
+
 module SolidusSubscriptions
   class Engine < Rails::Engine
-    require 'spree/core'
-    require 'solidus_subscriptions/permitted_attributes'
-    require 'solidus_subscriptions/config'
-    require 'solidus_subscriptions/processor'
+    include SolidusSupport::EngineExtensions
 
     isolate_namespace SolidusSubscriptions
+
     engine_name 'solidus_subscriptions'
 
     # use rspec for tests
     config.generators do |g|
       g.test_framework :rspec
     end
-
-    config.autoload_paths << config.root.join('app', 'jobs')
 
     initializer 'configure spree subcription permitted attributes', after: 'require subscription lib helpers' do
       PermittedAttributes.update_spree_permiteed_attributes
@@ -40,10 +45,6 @@ module SolidusSubscriptions
     end
 
     def self.activate
-      Dir.glob(File.join(File.dirname(__FILE__), '../../app/decorators/**/*.rb')) do |c|
-        Rails.configuration.cache_classes ? require(c) : load(c)
-      end
-
       Spree::Ability.register_ability(SolidusSubscriptions::Ability)
     end
 
