@@ -82,7 +82,7 @@
             <%=
               f.select(
                   :in_processing_state,
-                  options_for_select(processing_states),
+                  options_for_select(processing_states, params.dig(:q, :in_processing_state)),
                   { include_blank: true },
                   class: 'select2 fullwidth'
               )
