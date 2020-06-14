@@ -111,23 +111,78 @@
 <% if @subscriptions.any? %>
   <table id="listing_subscriptions" class="index">
     <thead>
-      <tr>
+      <tr data-hook="admin_subscriptions_index_headers">
         <th><%= sort_link(@search, :created_at, SolidusSubscriptions::Subscription.human_attribute_name(:created_at)) %></th>
         <th><%= sort_link(@search, :user_email, SolidusSubscriptions::Subscription.human_attribute_name(:user)) %></th>
         <th><%= sort_link(@search, :actionable_date, [:actionable_date, 'id asc'], SolidusSubscriptions::Subscription.human_attribute_name(:actionable_date)) %></th>
         <th><%= sort_link(@search, :line_item_interval_length, SolidusSubscriptions::Subscription.human_attribute_name(:interval)) %></th>
         <th><%= sort_link(@search, :state, [:state, 'id asc'], SolidusSubscriptions::Subscription.human_attribute_name(:state)) %></th>
         <th><%= sort_link(@search, :processing_state, [:processing_state, 'id asc'], SolidusSubscriptions::Subscription.human_attribute_name(:processing_state)) %></th>
-        <th class='actions'></th>
+        <th data-hook="admin_subscriptions_index_header_actions" class="actions"></th>
       </tr>
     </thead>
 
     <tbody>
-      <%= render @subscriptions %>
+      <% @subscriptions.each do |subscription| %>
+        <tr>
+          <td><%= l(subscription.created_at.to_date) %></td>
+          <td><%= link_to subscription.user.email, admin_user_path(subscription.user) %></td>
+          <td><%= subscription.actionable_date ? l(subscription.actionable_date.to_date) : '-' %></td>
+          <td><%= subscription.interval.inspect %></td>
+          <td><%= content_tag :span, subscription.human_state_name, class: "state #{ subscription.state }" %></td>
+          <td>
+            <span class="state <%= subscription.processing_state %>">
+              <%= subscription.class.human_attribute_name("processing_state.#{subscription.processing_state}") %>
+            </span>
+          </td>
+          <td class="actions">
+            <% if subscription.state_events.include?(:cancel) %>
+              <%=
+                link_to_with_icon(
+                    :stop,
+                    t('.cancel'),
+                    spree.cancel_admin_subscription_path(subscription),
+                    no_text: true,
+                    method: :delete,
+                    data: { confirm: t('.cancel_alert') }
+                )
+              %>
+            <% end %>
+
+            <% if subscription.state_events.include?(:activate) %>
+              <%=
+                link_to_with_icon(
+                    :play,
+                    t('.activate'),
+                    spree.activate_admin_subscription_path(subscription),
+                    no_text: true,
+                    method: :post
+                )
+              %>
+            <% end %>
+
+            <% if subscription.active? %>
+              <%=
+                link_to_with_icon(
+                    :'fast-forward',
+                    t('.skip'),
+                    spree.skip_admin_subscription_path(subscription),
+                    no_text: true,
+                    method: :post
+                )
+              %>
+            <% end %>
+
+            <%= link_to_edit(subscription, no_text: true) %>
+          </td>
+        </tr>
+      <% end %>
     </tbody>
   </table>
 <% else %>
-  <div class="alpha twelve columns no-objects-found">
-    <%= render 'spree/admin/shared/no_objects_found', resource: SolidusSubscriptions::Subscription, new_resource_url: spree.new_admin_subscription_path %>
+  <div class="no-objects-found">
+    <%= render 'spree/admin/shared/no_objects_found',
+        resource: SolidusSubscriptions::Subscription,
+        new_resource_url: spree.new_admin_subscription_path %>
   </div>
 <% end %>
