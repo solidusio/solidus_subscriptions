@@ -19,22 +19,17 @@ en:
   spree:
     new_subscription: New Subscription
     admin:
-      solidus_subscriptions:
-        subscriptions:
-          subscription:
-            cancel: Cancel
-            cancel_alert: "Are you sure you want to cancel this subscription?"
-            activate: Activate
-            skip: Skip One
-
       subscriptions:
         successfully_canceled: Subsciption Canceled!
         successfully_activated: Subsciption Activated!
         successfully_skipped: Subsciption delayed until %{date}
         index:
+          cancel: Cancel
+          cancel_alert: "Are you sure you want to cancel this subscription?"
+          activate: Activate
+          skip: Skip One
           new_subscription: New Subscription
         edit:
-          back: Back to Subscriptions List
           title: Edit a Susbcription
           customer: Customer
           status: Status

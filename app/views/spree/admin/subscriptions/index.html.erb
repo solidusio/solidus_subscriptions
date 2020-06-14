@@ -5,7 +5,7 @@
 <% end %>
 
 <% content_for :page_actions do %>
-  <li><%= link_to t('.new_subscription'), new_admin_subscription_path %></li>
+  <li><%= link_to t('.new_subscription'), new_admin_subscription_path, class: 'btn btn-primary' %></li>
 <% end %>
 
 <% content_for :table_filter_title do %>
@@ -13,79 +13,93 @@
 <% end %>
 
 <% content_for :table_filter do %>
-  <%= search_form_for [:admin, @search] do |f| %>
-    <div class='field-block alpha four columns'>
-      <div class="date-range-filter field">
-        <%= label_tag :q_created_at_gt, I18n.t('spree.date_range') %>
-        <div class="date-range-fields">
-          <%= f.text_field :created_at_gt, class: 'datepicker datepicker-from', placeholder: I18n.t('spree.start') %>
+  <div data-hook="admin_subscriptions_index_search">
+    <%= search_form_for [:admin, @search] do |f| %>
+      <div class="row">
+        <div class="field-block col-6">
+          <div class="date-range-filter field">
+            <%= label_tag :q_created_at_gt, I18n.t('spree.date_range') %>
+            <div class="date-range-fields input-group">
+              <%= f.text_field :created_at_gt, class: 'datepicker form-control datepicker-from', placeholder: I18n.t('spree.start') %>
 
-          <span class="range-divider">
-            <i class="fa fa-arrow-right"></i>
-          </span>
+              <div class="input-group-prepend input-group-append">
+                <span class="input-group-text range-divider">
+                  <i class="fa fa-arrow-right"></i>
+                </span>
+              </div>
 
-          <%= f.text_field :created_at_lt, class: 'datepicker datepicker-to', placeholder: I18n.t('spree.stop') %>
+              <%= f.text_field :created_at_lt, class: 'datepicker form-control datepicker-to', placeholder: I18n.t('spree.stop') %>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-block col-6">
+          <div class="date-range-filter field">
+            <%= label_tag :q_actionable_date_gt, SolidusSubscriptions::Subscription.human_attribute_name(:actionable_date) %>
+            <div class="date-range-fields input-group">
+              <%= f.text_field :actionable_date_gt, class: 'datepicker form-control datepicker-from', placeholder: I18n.t('spree.start') %>
+
+              <div class="input-group-prepend input-group-append">
+                <span class="input-group-text range-divider">
+                  <i class="fa fa-arrow-right"></i>
+                </span>
+              </div>
+
+              <%= f.text_field :actionable_date_lt, class: 'datepicker form-control datepicker-to', placeholder: I18n.t('spree.stop') %>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="date-range-filter field">
-        <%= label_tag :q_actionable_date_gt, SolidusSubscriptions::Subscription.human_attribute_name(:actionable_date) %>
-        <div class="date-range-fields">
-          <%= f.text_field :actionable_date_gt, class: 'datepicker datepicker-from', placeholder: I18n.t('spree.start') %>
+      <div class="row">
+        <div class="field-block col-4">
+          <div class="field">
+            <%= label_tag :q_user_email_cont, Spree::User.human_attribute_name(:email) %>
+            <%= f.text_field :user_email_cont, size: 25 %>
+          </div>
+        </div>
 
-          <span class="range-divider">
-            <i class="fa fa-arrow-right"></i>
-          </span>
+        <div class="field-block col-4">
+          <div class="field">
+            <%= label_tag :q_state_eq, I18n.t('spree.status') %>
+            <%= f.select :state_eq, SolidusSubscriptions::Subscription.state_machines[:state].states.map {|s| [s.human_name, s.value]}, {include_blank: true}, class: 'select2 fullwidth' %>
+          </div>
+        </div>
 
-          <%= f.text_field :actionable_date_lt, class: 'datepicker datepicker-to', placeholder: I18n.t('spree.stop') %>
+        <div class="field-block col-4">
+          <div class="field">
+            <%= label_tag :q_processing_state_eq, SolidusSubscriptions::Subscription.human_attribute_name(:processing_state) %>
+
+            <%
+              processing_states = SolidusSubscriptions::Subscription.processing_states.map do |state|
+                [
+                    SolidusSubscriptions::Subscription.human_attribute_name("processing_state.#{ state }"),
+                    state
+                ]
+              end
+            %>
+
+            <%=
+              f.select(
+                  :in_processing_state,
+                  options_for_select(processing_states, params.dig(:q, :in_processing_state)),
+                  { include_blank: true },
+                  class: 'select2 fullwidth'
+              )
+            %>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="four columns">
-      <div class="field">
-        <%= label_tag :q_state_eq, I18n.t('spree.status') %>
-        <%= f.select :state_eq, SolidusSubscriptions::Subscription.state_machines[:state].states.map {|s| [s.human_name, s.value]}, {include_blank: true}, class: 'select2 fullwidth' %>
+      <div class="clearfix"></div>
+
+      <div class="actions filter-actions">
+        <div data-hook="admin_subscriptions_index_search_buttons">
+          <%= button_tag I18n.t('spree.filter_results'), class: 'btn btn-primary' %>
+        </div>
       </div>
-    </div>
-
-    <div class="four columns">
-      <div class="field">
-        <%= label_tag :q_user_email_cont, Spree::User.human_attribute_name(:email) %>
-        <%= f.text_field :user_email_cont, size: 25 %>
-      </div>
-    </div>
-
-    <div class="omega four columns">
-      <div class="field">
-        <%= label_tag :q_processing_state_eq, SolidusSubscriptions::Subscription.human_attribute_name(:processing_state) %>
-
-        <%
-          processing_states = SolidusSubscriptions::Subscription.processing_states.map do |state|
-            [
-              SolidusSubscriptions::Subscription.human_attribute_name("processing_state.#{ state }"),
-              state
-            ]
-          end
-        %>
-
-        <%=
-          f.select(
-            :in_processing_state,
-            options_for_select(processing_states),
-            { include_blank: true },
-            class: 'select2 fullwidth'
-          )
-        %>
-      </div>
-    </div>
-
-    <div class="clearfix"></div>
-
-    <div class="actions filter-actions">
-      <div><%= button_tag I18n.t('spree.filter_results') %></div>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 <% end %>
 
 <% if Spree.respond_to?(:solidus_version) && (Spree.solidus_gem_version <=> Gem::Version.new('1.3.0')) >= 0  %>
@@ -97,23 +111,78 @@
 <% if @subscriptions.any? %>
   <table id="listing_subscriptions" class="index">
     <thead>
-      <tr>
+      <tr data-hook="admin_subscriptions_index_headers">
         <th><%= sort_link(@search, :created_at, SolidusSubscriptions::Subscription.human_attribute_name(:created_at)) %></th>
         <th><%= sort_link(@search, :user_email, SolidusSubscriptions::Subscription.human_attribute_name(:user)) %></th>
         <th><%= sort_link(@search, :actionable_date, [:actionable_date, 'id asc'], SolidusSubscriptions::Subscription.human_attribute_name(:actionable_date)) %></th>
         <th><%= sort_link(@search, :line_item_interval_length, SolidusSubscriptions::Subscription.human_attribute_name(:interval)) %></th>
         <th><%= sort_link(@search, :state, [:state, 'id asc'], SolidusSubscriptions::Subscription.human_attribute_name(:state)) %></th>
         <th><%= sort_link(@search, :processing_state, [:processing_state, 'id asc'], SolidusSubscriptions::Subscription.human_attribute_name(:processing_state)) %></th>
-        <th class='actions'></th>
+        <th data-hook="admin_subscriptions_index_header_actions" class="actions"></th>
       </tr>
     </thead>
 
     <tbody>
-      <%= render @subscriptions %>
+      <% @subscriptions.each do |subscription| %>
+        <tr>
+          <td><%= l(subscription.created_at.to_date) %></td>
+          <td><%= link_to subscription.user.email, admin_user_path(subscription.user) %></td>
+          <td><%= subscription.actionable_date ? l(subscription.actionable_date.to_date) : '-' %></td>
+          <td><%= subscription.interval.inspect %></td>
+          <td><%= content_tag :span, subscription.human_state_name, class: "state #{ subscription.state }" %></td>
+          <td>
+            <span class="state <%= subscription.processing_state %>">
+              <%= subscription.class.human_attribute_name("processing_state.#{subscription.processing_state}") %>
+            </span>
+          </td>
+          <td class="actions">
+            <% if subscription.state_events.include?(:cancel) %>
+              <%=
+                link_to_with_icon(
+                    :stop,
+                    t('.cancel'),
+                    spree.cancel_admin_subscription_path(subscription),
+                    no_text: true,
+                    method: :delete,
+                    data: { confirm: t('.cancel_alert') }
+                )
+              %>
+            <% end %>
+
+            <% if subscription.state_events.include?(:activate) %>
+              <%=
+                link_to_with_icon(
+                    :play,
+                    t('.activate'),
+                    spree.activate_admin_subscription_path(subscription),
+                    no_text: true,
+                    method: :post
+                )
+              %>
+            <% end %>
+
+            <% if subscription.active? %>
+              <%=
+                link_to_with_icon(
+                    :'fast-forward',
+                    t('.skip'),
+                    spree.skip_admin_subscription_path(subscription),
+                    no_text: true,
+                    method: :post
+                )
+              %>
+            <% end %>
+
+            <%= link_to_edit(subscription, no_text: true) %>
+          </td>
+        </tr>
+      <% end %>
     </tbody>
   </table>
 <% else %>
-  <div class="alpha twelve columns no-objects-found">
-    <%= render 'spree/admin/shared/no_objects_found', resource: SolidusSubscriptions::Subscription, new_resource_url: spree.new_admin_subscription_path %>
+  <div class="no-objects-found">
+    <%= render 'spree/admin/shared/no_objects_found',
+        resource: SolidusSubscriptions::Subscription,
+        new_resource_url: spree.new_admin_subscription_path %>
   </div>
 <% end %>
