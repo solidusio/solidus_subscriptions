@@ -1,5 +1,5 @@
 <% content_for(:page_title) { t('.title') } %>
 
 <%= form_for @subscription, url: spree.admin_subscriptions_url, class: "row" do |f| %>
-  <%= render "form", f: f, new: true %>
+  <%= render "form", f: f %>
 <% end %>

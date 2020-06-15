@@ -1,10 +1,8 @@
-<% new ||= false %>
-
 <fieldset data-hook="new_subscription">
   <legend><%= t('.subscription') %></legend>
 
   <div data-hook="admin_subscription_form_fields">
-    <% if new %>
+    <% if f.object.new_record? %>
       <div class="field">
         <%= f.label :user_id, I18n.t('spree.user'), class: "required" %>
         <%= f.collection_select :user_id,  Spree::User.all, :id, :email, {}, class: "select2 fullwidth" %>
