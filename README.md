@@ -2,9 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/solidusio-contrib/solidus_subscriptions/tree/master.svg?style=svg)](https://circleci.com/gh/solidusio-contrib/solidus_subscriptions/tree/master)
 
-A Solidus extension for subscriptions.
-
-Sponsored by [Goby](https://www.goby.co) - Electrify your routine!
+A Solidus extension to add subscriptions to your store.
 
 ## Installation
 
@@ -22,39 +20,51 @@ bundle exec rails g solidus_subscriptions:install
 ```
 
 ## Configuration
-This gem requires a gateway which supports credit cards in order to process
-subscription orders.
 
-Add this to specify the gateway used by the gem:
-an initializer.
+This gem requires a gateway which supports credit cards in order to process subscription orders.
+
+Add this to specify the gateway used by the gem: an initializer.
 
 ```ruby
 SolidusSubscriptions::Config.default_gateway { my_gateway }
 ```
 
+### Guest checkout
+
+Subscriptions require a user to be present to allow them to be managed after they are purchased.
+
+Because of this, you must disable guest checkout for orders which contain `subscription_line_items`.
+
+An example would be adding this to the registration page:
+
+```erb
+<%# spree/checkout/registration.html.erb %>
+<% if Spree::Config[:allow_guest_checkout] && current_order.subscription_line_items.empty? %>
+```
+
+This allows guests to add subscriptions to their carts as guests, but forces them to login or create
+an account before purchasing them.
+
 ## Usage
 
-### Purchasing Subscriptions
+### Purchasing subscriptions
 
-By default only Spree::Variants can be subscribed to. To subscribe to a variant, it must have the
-`:subscribable` attribute set to true.
+By default, only Spree::Variants can be subscribed to. To subscribe to a variant, it must have the
+`subscribable` attribute set to true.
 
-To subscribe to a variant include the following parameters when posting to `/orders/populate` (The
-add to cart button on the product page):
+To subscribe to a variant, include the following parameters when posting to `/orders/populate`:
 
-```js
-  {
-    // other add to cart params
-    subscription_line_item: {
-      quantity: 2,              // number of units in each subscription order.
-      subscribable_id: 1234,    // Which variant the subscription is for.
-      interval_length: 1,       // The time between subscription activations.
-      interval_units: "month", // A plural qualifier for length.
-                                // Can be one of "day", "week", "month", or "year".
-      end_date: '2011/12/13'     // Stop processing after this date
-                                // (use null to process the subscription ad nauseam)
-    }
+```json5
+{
+  // other add to cart params
+  subscription_line_item: {
+    quantity: 2,             // number of units in each subscription order
+    subscribable_id: 1234,   // which variant the subscription is for
+    interval_length: 1,      // time between subscription activations
+    interval_units: "month", // plural qualifier for length (day/week/month/year)
+    end_date: '2011/12/13'   // stop processing after this date (use null to process ad nauseam)
   }
+}
 ```
 
 This will associate a `SolidusSubscriptions::LineItem` to the line item being added to the cart.
@@ -67,60 +77,81 @@ useful to help you display the subscription line item with your existing cart in
 When the order is finalized, a `SolidusSubscriptions::Subscription` will be created for each group
 of subscription line items which can be fulfilled by a single subscription.
 
-#### Example:
+#### Example
 
-An order is finalized and has following associated subscription line items:
+An order is finalized and has the following associated subscription line items:
 
-1. { subscribable_id: 1, interval_length: 1, interval_units: 'month'}
-2. { subscribable_id: 2, interval_length: 1, interval_units: 'month' }
-3. { subscribable_id: 1, interval_length: 2, interval_units: 'month' }
+1. `{ subscribable_id: 1, interval_length: 1, interval_units: "month" }`
+2. `{ subscribable_id: 2, interval_length: 1, interval_units: "month" }`
+3. `{ subscribable_id: 1, interval_length: 2, interval_units: "month" }`
 
-This will generate 2 Subscriptions objects. The first related to subscription_line_items 1 & 2. The
-second  related to line item 3.
+This will generate 2 subscriptions: the first related to subscription line items 1 and 2, and the
+second related to subscription line item 3.
 
-### Processing Subscriptions
+### Processing subscriptions
 
 To process actionable subscriptions simply run:
 
-`bundle exec rake solidus_subscriptions:process`
-
-To schedule this task we suggest using the [Whenever](https://github.com/javan/whenever) gem.
-
-This task creates ActiveJobs which can be fulfilled by the queue library of your
-choice.
-
-### Guest Checkout
-
-Subscriptions require a user to be present to allow them to be managed after they are purchased.
-
-Because of this you must  disabling guest checkout for orders which contain `subscription_line_items`.
-
-An example of this would be adding this to the registration page:
-
-```erb
-<%# spree/checkout/registration.html.erb %>
-<% if Spree::Config[:allow_guest_checkout] && current_order.subscription_line_items.empty? %>
+```bash
+$ bundle exec rake solidus_subscriptions:process
 ```
 
-This allows guests to add subscriptions to their carts as guests, but forces them to login or create
-an account before purchasing them.
+The task creates ActiveJob jobs which can be fulfilled by your queue library of choice.
 
-## Testing
+We suggest using the [Whenever](https://github.com/javan/whenever) gem to schedule the task.
 
-First bundle your dependencies, then run `rake`. `rake` will default to building the dummy app if it
-does not exist, then it will run specs, and [Rubocop](https://github.com/bbatsov/rubocop) static
-code analysis. The dummy app can be regenerated by using `rake test_app`.
+## Development
+
+### Testing the extension
+
+First bundle your dependencies, then run `bin/rake`. `bin/rake` will default to building the dummy
+app if it does not exist, then it will run specs. The dummy app can be regenerated by using
+`bin/rake extension:test_app`.
 
 ```shell
 bundle
-bundle exec rake
+bin/rake
 ```
 
-When testing your applications integration with this extension you may use it's factories. Simply
-add this require statement to your spec_helper:
+To run [Rubocop](https://github.com/bbatsov/rubocop) static code analysis run
+
+```shell
+bundle exec rubocop
+```
+
+When testing your application's integration with this extension you may use its factories.
+Simply add this require statement to your spec_helper:
 
 ```ruby
-require 'solidus_subscriptions/testing_support/factories'
+require 'solidus_subscriptions/factories'
 ```
 
+### Running the sandbox
+
+To run this extension in a sandboxed Solidus application, you can run `bin/sandbox`. The path for
+the sandbox app is `./sandbox` and `bin/rails` will forward any Rails commands to
+`sandbox/bin/rails`.
+
+Here's an example:
+
+```shell
+$ bin/rails server
+=> Booting Puma
+=> Rails 6.0.2.1 application starting in development
+* Listening on tcp://127.0.0.1:3000
+Use Ctrl-C to stop
+```
+
+### Releasing new versions
+
+Your new extension version can be released using `gem-release` like this:
+
+```shell
+bundle exec gem bump -v VERSION --tag --push --remote upstream && gem release
+```
+
+## License
+
 Copyright (c) 2016 Stembolt, released under the New BSD License
+
+Originally sponsored by [Goby](https://www.goby.co).
