@@ -117,12 +117,15 @@ paths:
               schema:
                 type: object
                 properties:
-                  line_items_attributes:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/SubscriptionLineItem'
-                  shipping_address_attributes:
+                  subscription:
                     type: object
+                    properties:
+                      line_items_attributes:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SubscriptionLineItem'
+                      shipping_address_attributes:
+                        type: object
       operationId: patch-subscriptions-api-v1-subscriptions-id
   '/subscriptions/api/v1/subscriptions/{id}/activate':
     parameters:
