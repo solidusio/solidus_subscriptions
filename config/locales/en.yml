@@ -73,6 +73,11 @@ en:
       solidus_subscriptions/line_item:
         _destroy: Remove?
 
+    models:
+      solidus_subscriptions/subscription:
+        one: Subscription
+        other: Subscriptions
+
     errors:
       models:
         solidus_subscriptions/subscription:
