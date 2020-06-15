@@ -102,7 +102,7 @@ We suggest using the [Whenever](https://github.com/javan/whenever) gem to schedu
 
 ### API documentation
 
-You can find the API documentation [here](https://stoplight.io/p/docs/gh/solidusio-contrib/solidus_subscriptions/reference/solidus_subscriptions.v1.yaml?srn=gh/solidusio-contrib/solidus_subscriptions/reference/solidus_subscriptions.v1.yaml).
+You can find the API documentation [here](https://stoplight.io/p/docs/gh/solidusio-contrib/solidus_subscriptions?group=master).
 
 ## Development
 
