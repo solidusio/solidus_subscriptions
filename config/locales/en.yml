@@ -30,7 +30,7 @@ en:
           skip: Skip One
           new_subscription: New Subscription
         edit:
-          title: Edit a Susbcription
+          title: Edit a Subscription
           customer: Customer
           status: Status
           fulfillment_status: Fulfillment Status
@@ -70,6 +70,8 @@ en:
         pending: new
         success: success
         failed: failure
+      solidus_subscriptions/line_item:
+        _destroy: Remove?
 
     errors:
       models:
