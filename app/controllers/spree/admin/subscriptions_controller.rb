@@ -16,10 +16,12 @@ module Spree
 
       def new
         @subscription.line_items.new
+        @subscription.build_shipping_address unless @subscription.shipping_address
       end
 
       def edit
         @subscription.line_items.new
+        @subscription.build_shipping_address unless @subscription.shipping_address
       end
 
       def cancel
