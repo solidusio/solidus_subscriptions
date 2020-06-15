@@ -52,7 +52,7 @@ RSpec.describe Spree::Admin::SubscriptionsController, type: :request do
       }
     end
 
-    it { is_expected.to redirect_to spree.admin_subscriptions_path }
+    it { is_expected.to redirect_to spree.edit_admin_subscription_path(subscription) }
 
     it 'updates the subscription attributes', :aggregate_failures do
       expect { subject }.to change { subscription.reload.actionable_date }.to expected_date

@@ -65,6 +65,10 @@ module Spree
       def model_class
         ::SolidusSubscriptions::Subscription
       end
+
+      def location_after_save
+        edit_object_url(@subscription)
+      end
     end
   end
 end
