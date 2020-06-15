@@ -46,7 +46,7 @@
     </div>
 
     <div class="field">
-      <%= f.label :store_ids, plural_resource_name(Spree::Store) %>
+      <%= f.label :store_id %>
       <%= f.collection_select :store_id, Spree::Store.all, :id, :name, {}, class: 'fullwidth select2' %>
     </div>
   </div>
