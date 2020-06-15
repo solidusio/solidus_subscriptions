@@ -18,7 +18,7 @@ module SolidusSubscriptions
     validates :interval_length, numericality: { greater_than: 0 }
 
     accepts_nested_attributes_for :shipping_address
-    accepts_nested_attributes_for :line_items, allow_destroy: true
+    accepts_nested_attributes_for :line_items, allow_destroy: true, reject_if: -> (p) { p[:quantity].blank? }
 
     # The following methods are delegated to the associated
     # SolidusSubscriptions::LineItem
