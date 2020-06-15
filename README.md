@@ -100,6 +100,10 @@ The task creates ActiveJob jobs which can be fulfilled by your queue library of 
 
 We suggest using the [Whenever](https://github.com/javan/whenever) gem to schedule the task.
 
+### API documentation
+
+You can find the API documentation [here](https://stoplight.io/p/docs/gh/solidusio-contrib/solidus_subscriptions/reference/solidus_subscriptions.v1.yaml?srn=gh/solidusio-contrib/solidus_subscriptions/reference/solidus_subscriptions.v1.yaml).
+
 ## Development
 
 ### Testing the extension
