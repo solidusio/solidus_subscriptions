@@ -70,6 +70,8 @@ en:
         pending: new
         success: success
         failed: failure
+      solidus_subscriptions/line_item:
+        _destroy: Remove?
 
     errors:
       models:
