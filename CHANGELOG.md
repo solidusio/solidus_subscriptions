@@ -4,29 +4,27 @@
 
 [Full Changelog](https://github.com/solidusio-contrib/solidus_subscriptions/compare/a8a92654ba21b22bd3f8d07c3ae25e3604e7942a...HEAD)
 
+**Implemented enhancements:**
+
+- Allow admins to add subscription items when editing subscription [\#103](https://github.com/solidusio-contrib/solidus_subscriptions/pull/103) ([aldesantis](https://github.com/aldesantis))
+
 **Fixed bugs:**
 
-- \#Interval incorrectly builds interval [\#44](https://github.com/solidusio-contrib/solidus_subscriptions/issues/44)
+- Fix "Store must exist" when creating a subscription via the backend [\#102](https://github.com/solidusio-contrib/solidus_subscriptions/pull/102) ([aldesantis](https://github.com/aldesantis))
 
-**Closed issues:**
+**Deprecated:**
 
-- Dependabot couldn't find a Gemfile-local for this project [\#91](https://github.com/solidusio-contrib/solidus_subscriptions/issues/91)
-- Dependabot can't resolve your Ruby dependency files [\#90](https://github.com/solidusio-contrib/solidus_subscriptions/issues/90)
-- Dependabot can't resolve your Ruby dependency files [\#88](https://github.com/solidusio-contrib/solidus_subscriptions/issues/88)
-- Dependabot can't resolve your Ruby dependency files [\#87](https://github.com/solidusio-contrib/solidus_subscriptions/issues/87)
-- Dependabot can't resolve your Ruby dependency files [\#86](https://github.com/solidusio-contrib/solidus_subscriptions/issues/86)
-- Dependabot can't resolve your Ruby dependency files [\#85](https://github.com/solidusio-contrib/solidus_subscriptions/issues/85)
-- Dependabot can't resolve your Ruby dependency files [\#84](https://github.com/solidusio-contrib/solidus_subscriptions/issues/84)
-- Dependabot can't resolve your Ruby dependency files [\#82](https://github.com/solidusio-contrib/solidus_subscriptions/issues/82)
-- Unable to seed dummy store [\#22](https://github.com/solidusio-contrib/solidus_subscriptions/issues/22)
-- Solidus Subscriptions incompatible with solidus 2.3 [\#14](https://github.com/solidusio-contrib/solidus_subscriptions/issues/14)
-- Promo codes?  [\#8](https://github.com/solidusio-contrib/solidus_subscriptions/issues/8)
-- Default store subscription field views  [\#7](https://github.com/solidusio-contrib/solidus_subscriptions/issues/7)
-- There is no subscribable toggle for master variants  [\#6](https://github.com/solidusio-contrib/solidus_subscriptions/issues/6)
-- What is the plan? [\#1](https://github.com/solidusio-contrib/solidus_subscriptions/issues/1)
+- Update admin UI to match new backend guidelines [\#99](https://github.com/solidusio-contrib/solidus_subscriptions/pull/99) ([aldesantis](https://github.com/aldesantis))
+- Fix deprecated call to `SolidusSupport.solidus\_gem\_version` [\#97](https://github.com/solidusio-contrib/solidus_subscriptions/pull/97) ([aldesantis](https://github.com/aldesantis))
+
+**Removed:**
+
+- Remove checks on unsupported Solidus versions [\#101](https://github.com/solidusio-contrib/solidus_subscriptions/pull/101) ([aldesantis](https://github.com/aldesantis))
+- Remove legacy sidebar and form [\#100](https://github.com/solidusio-contrib/solidus_subscriptions/pull/100) ([aldesantis](https://github.com/aldesantis))
 
 **Merged pull requests:**
 
+- Reorganize and clean up readme [\#104](https://github.com/solidusio-contrib/solidus_subscriptions/pull/104) ([aldesantis](https://github.com/aldesantis))
 - Relax solidus\_support dependency [\#95](https://github.com/solidusio-contrib/solidus_subscriptions/pull/95) ([kennyadsl](https://github.com/kennyadsl))
 - Fix Dependabot looking for Gemfile-local [\#92](https://github.com/solidusio-contrib/solidus_subscriptions/pull/92) ([aldesantis](https://github.com/aldesantis))
 - Update solidus\_dev\_support [\#89](https://github.com/solidusio-contrib/solidus_subscriptions/pull/89) ([blocknotes](https://github.com/blocknotes))
