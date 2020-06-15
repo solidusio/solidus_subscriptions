@@ -1,0 +1,247 @@
+openapi: 3.0.0
+info:
+  title: solidus_subscriptions
+  version: '1.0'
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  '/api/orders/{order_id}/line_items':
+    parameters:
+      - schema:
+          type: string
+        name: order_id
+        in: path
+        required: true
+    post:
+      summary: Create Subscription Line Item
+      tags:
+        - Subscription Line Items
+      responses: {}
+      operationId: post-api-orders-order_id-line_items
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subscription_line_item:
+                  $ref: '#/components/schemas/SubscriptionLineItem'
+  '/subscriptions/api/v1/line_items/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    patch:
+      summary: Update Subscription Line Item
+      tags:
+        - Subscription Line Items
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionLineItemOutput'
+      operationId: patch-subscriptions-api-v1-line_item-id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subscription_line_item:
+                  $ref: '#/components/schemas/SubscriptionLineItem'
+    delete:
+      summary: Delete Subscription Line Item
+      operationId: delete-subscriptions-api-v1-line_item-id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionLineItemOutput'
+      description: ''
+      tags:
+        - Subscription Line Items
+  '/subscriptions/api/v1/subscriptions/:id/skip':
+    post:
+      summary: Skip Subscription
+      tags:
+        - Subscriptions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionOutput'
+      operationId: 'post-subscriptions-api-v1-subscriptions-:id-skip'
+  '/subscriptions/api/v1/subscriptions/{id}/cancel':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    post:
+      summary: Cancel Subscription
+      tags:
+        - Subscriptions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionOutput'
+      operationId: post-subscriptions-api-v1-subscriptions-id-cancel
+  '/subscriptions/api/v1/subscriptions/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    patch:
+      summary: Update Subscription
+      tags:
+        - Subscriptions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  line_items_attributes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SubscriptionLineItem'
+                  shipping_address_attributes:
+                    type: object
+      operationId: patch-subscriptions-api-v1-subscriptions-id
+  '/subscriptions/api/v1/subscriptions/{id}/activate':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    post:
+      summary: Activate Subscription
+      tags:
+        - Subscriptions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionOutput'
+      operationId: post-subscriptions-api-v1-subscriptions-id-activate
+components:
+  schemas:
+    SubscriptionLineItem:
+      title: SubscriptionLineItem
+      type: object
+      properties:
+        quantity:
+          type: integer
+          minimum: 1
+        end_date:
+          type: string
+          format: date
+        interval_length:
+          type: integer
+          minimum: 1
+        interval_units:
+          type: string
+          enum:
+            - day
+            - week
+            - month
+            - year
+        subscribable_id:
+          type: integer
+      required:
+        - quantity
+        - end_date
+        - interval_length
+        - interval_units
+        - subscribable_id
+      x-tags:
+        - Models
+    SubscriptionLineItemOutput:
+      title: SubscriptionLineItemOutput
+      allOf:
+        - $ref: '#/components/schemas/SubscriptionLineItem'
+        - type: object
+          properties:
+            id:
+              type: integer
+            spree_line_item_id:
+              type: integer
+            subscription_id:
+              type: integer
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+          required:
+            - id
+            - spree_line_item_id
+            - subscription_id
+            - created_at
+            - updated_at
+      x-tags:
+        - Models
+    Subscription:
+      title: Subscription
+      type: object
+      properties:
+        actionable_date:
+          type: string
+          format: date
+        user_id:
+          type:
+            - string
+            - integer
+      required:
+        - actionable_date
+        - user_id
+      x-tags:
+        - Models
+    SubscriptionOutput:
+      title: SubscriptionOutput
+      allOf:
+        - $ref: '#/components/schemas/Subscription'
+        - type: object
+          properties:
+            id:
+              type: integer
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+            state:
+              type: string
+              enum:
+                - active
+                - canceled
+                - pending_cancellation
+                - inactive
+          required:
+            - id
+            - created_at
+            - updated_at
+            - state
+      x-tags:
+        - Models
