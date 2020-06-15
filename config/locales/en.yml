@@ -41,7 +41,7 @@ en:
           title: Create a Susbcription
         form:
           subscription: Subscription
-          subscription_line_item: Subscription Line Item
+          subscription_line_items: Line Items
       tab:
         subscriptions: Subscriptions
     promotion_rule_types:

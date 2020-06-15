@@ -18,6 +18,10 @@ module Spree
         @subscription.line_items.new
       end
 
+      def edit
+        @subscription.line_items.new
+      end
+
       def cancel
         @subscription.transaction do
           @subscription.actionable_date = nil

@@ -1,9 +1,8 @@
-<% new ||= false %>
-
 <fieldset data-hook="new_subscription">
   <legend><%= t('.subscription') %></legend>
+
   <div data-hook="admin_subscription_form_fields">
-    <% if new %>
+    <% if f.object.new_record? %>
       <div class="field">
         <%= f.label :user_id, I18n.t('spree.user'), class: "required" %>
         <%= f.collection_select :user_id,  Spree::User.all, :id, :email, {}, class: "select2 fullwidth" %>
@@ -17,12 +16,10 @@
 
     <div class="row">
       <div class="col-6">
-
         <div class="field">
-          <%= f.label :inverval_length %>
+          <%= f.label :interval_length %>
           <%= f.number_field :interval_length, class: "form-control fullwidth" %>
         </div>
-
       </div>
 
       <div class="col-6">
@@ -49,23 +46,31 @@
     </div>
   </div>
 
-  <%= f.fields_for :line_items do |lf| %>
-    <fieldset class='no-border-bottom'>
-      <legend><%= t('.subscription_line_item') %></legend>
+  <fieldset class="no-border-bottom">
+    <legend><%= t('.subscription_line_items') %></legend>
 
+    <%= f.fields_for :line_items do |lf| %>
       <div class="row">
         <div class="col-10">
-          <%= lf.label :subscribable_id %>
-          <%= lf.collection_select :subscribable_id, Spree::Variant.where(subscribable: true), :id, :pretty_name, {}, { class: "fullwidth select2" } %>
+          <div class="field">
+            <%= lf.label :subscribable_id %>
+            <%= lf.collection_select :subscribable_id, Spree::Variant.where(subscribable: true), :id, :pretty_name, {}, { class: "fullwidth select2" } %>
+          </div>
         </div>
 
         <div class="col-2">
-          <%= lf.label :quantity %>
-          <%= lf.number_field :quantity, min: 1, class: "fullwidth" %>
+          <div class="field">
+            <%= lf.label :quantity %>
+            <%= lf.number_field :quantity, min: 1, class: "fullwidth" %>
+          </div>
         </div>
       </div>
-    </fieldset>
-  <% end %>
+    <% end %>
+  </fieldset>
 
-  <%= render partial: 'spree/admin/shared/new_resource_links' %>
+  <% if f.object.new_record? %>
+    <%= render partial: 'spree/admin/shared/new_resource_links' %>
+  <% else %>
+    <%= render partial: 'spree/admin/shared/edit_resource_links' %>
+  <% end %>
 </fieldset>
