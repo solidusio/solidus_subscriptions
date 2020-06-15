@@ -44,6 +44,11 @@
       <%= f.label :end_date %>
       <%= f.text_field :end_date, class: "fullwidth datepicker" %>
     </div>
+
+    <div class="field">
+      <%= f.label :store_ids, plural_resource_name(Spree::Store) %>
+      <%= f.collection_select :store_id, Spree::Store.all, :id, :name, {}, class: 'fullwidth select2' %>
+    </div>
   </div>
 
   <fieldset class="no-border-bottom">
