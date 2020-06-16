@@ -37,6 +37,7 @@ en:
           revenue: Revenue
           interval: Interval
           sidebar: Status
+          details: Details
         new:
           back: Back to Subscriptions List
           title: Create a Susbcription
