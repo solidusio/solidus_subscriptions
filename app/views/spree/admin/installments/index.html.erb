@@ -13,8 +13,8 @@
   <table id="listing_installments" class="index">
     <thead>
       <tr data-hook="admin_installments_index_headers">
-        <th><%= sort_link(@search, :actionable_date, SolidusSubscriptions::Installment.human_attribute_name(:actionable_date)) %></th>
         <th><%= sort_link(@search, :created_at, SolidusSubscriptions::Installment.human_attribute_name(:created_at)) %></th>
+        <th><%= sort_link(@search, :actionable_date, SolidusSubscriptions::Installment.human_attribute_name(:actionable_date)) %></th>
         <th><%= SolidusSubscriptions::Installment.human_attribute_name(:fulfilled) %></th>
         <th data-hook="admin_installments_index_header_actions" class="actions"></th>
       </tr>
@@ -23,8 +23,14 @@
     <tbody>
       <% @installments.each do |installment| %>
         <tr>
-          <td><%= l(installment.actionable_date.to_date) if installment.actionable_date %></td>
-          <td><%= l(installment.created_at.to_date) %></td>
+          <td><%= l(installment.created_at) %></td>
+          <td>
+            <% if installment.actionable_date %>
+              <%= l(installment.actionable_date)  %>
+            <% else %>
+              —
+            <% end %>
+          </td>
           <td><%= render 'state_pill', installment: installment %></td>
           <td class="actions"></td>
         </tr>
