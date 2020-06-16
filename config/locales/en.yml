@@ -38,6 +38,7 @@ en:
           interval: Interval
           sidebar: Status
           details: Details
+          installments: Installments
         new:
           back: Back to Subscriptions List
           title: Create a Susbcription
@@ -46,6 +47,9 @@ en:
           subscription_line_items: Line Items
       tab:
         subscriptions: Subscriptions
+      installments:
+        index:
+          title: Installments
     promotion_rule_types:
       subscription_promotion_rule:
         name: Subscription
@@ -74,11 +78,20 @@ en:
         failed: failure
       solidus_subscriptions/line_item:
         _destroy: Remove?
-
+      solidus_subscriptions/installment:
+        created_at: Creation date
+        actionable_date: Actionable date
+        state: State
+      solidus_subscriptions/installment/state:
+        fulfilled: Fulfilled
+        unfulfilled: Unfulfilled
     models:
       solidus_subscriptions/subscription:
         one: Subscription
         other: Subscriptions
+      solidus_subscriptions/installment:
+        one: Installment
+        other: Installments
 
     errors:
       models:

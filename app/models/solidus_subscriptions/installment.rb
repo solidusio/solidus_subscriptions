@@ -95,6 +95,13 @@ module SolidusSubscriptions
       details.where(success: true).exists?
     end
 
+    # Returns the state of this fulfillment
+    #
+    # @return [Symbol] :fulfilled/:unfulfilled
+    def state
+      fulfilled? ? :fulfilled : :unfulfilled
+    end
+
     # Mark this installment as having a failed payment
     #
     # @param order [Spree::Order] The order generated for this processing

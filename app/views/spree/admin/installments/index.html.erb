@@ -1,0 +1,35 @@
+<% content_for(:page_title, t('.title')) %>
+
+<%= render 'spree/admin/shared/subscription_breadcrumbs', subscription: @subscription %>
+<%= render 'spree/admin/shared/subscription_sidebar', subscription: @subscription %>
+<%= render 'spree/admin/shared/subscription_tabs', current: :installments %>
+
+<fieldset class="no-border-bottom">
+  <legend><%= t('spree.admin.installments.index.title') %></legend>
+
+  <%= paginate @installments, theme: 'solidus_admin' %>
+
+  <table id="listing_installments" class="index">
+    <thead>
+      <tr data-hook="admin_installments_index_headers">
+        <th><%= sort_link(@search, :actionable_date, SolidusSubscriptions::Installment.human_attribute_name(:actionable_date)) %></th>
+        <th><%= sort_link(@search, :created_at, SolidusSubscriptions::Installment.human_attribute_name(:created_at)) %></th>
+        <th><%= SolidusSubscriptions::Installment.human_attribute_name(:fulfilled) %></th>
+        <th data-hook="admin_installments_index_header_actions" class="actions"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @installments.each do |installment| %>
+        <tr>
+          <td><%= l(installment.actionable_date.to_date) if installment.actionable_date %></td>
+          <td><%= l(installment.created_at.to_date) %></td>
+          <td><%= render 'state_pill', installment: installment %></td>
+          <td class="actions"></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= paginate @installments, theme: 'solidus_admin' %>
+</fieldset>
