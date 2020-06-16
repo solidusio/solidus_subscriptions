@@ -1,0 +1,4 @@
+<% admin_breadcrumb(
+       link_to(plural_resource_name(SolidusSubscriptions::Subscription), admin_subscriptions_path),
+       link_to("#{subscription.id}", edit_admin_subscription_path(subscription))
+   ) %>

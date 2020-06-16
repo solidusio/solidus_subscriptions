@@ -1,5 +1,6 @@
 <% content_for(:page_title) { t('.title') } %>
 
+<%= render 'spree/admin/shared/subscription_breadcrumbs', subscription: @subscription %>
 <%= render 'spree/admin/shared/subscription_sidebar', subscription: @subscription %>
 
 <%= form_for @subscription, url: spree.admin_subscription_path(@subscription) do |f| %>
