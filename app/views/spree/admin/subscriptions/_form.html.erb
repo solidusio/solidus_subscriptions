@@ -51,6 +51,18 @@
     </div>
   </div>
 
+  <div class="js-customer-details">
+    <fieldset class="no-border-bottom">
+      <legend>Shipping Address</legend>
+
+      <div class="js-shipping-address">
+        <%= f.fields_for :shipping_address do |sa_form| %>
+          <%= render partial: 'spree/admin/shared/address_form', locals: { f: sa_form, type: "shipping" } %>
+        <% end %>
+      </div>
+    </fieldset>
+  </div>
+
   <fieldset class="no-border-bottom">
     <legend><%= t('.subscription_line_items') %></legend>
 
@@ -71,12 +83,10 @@
         </div>
 
         <div class="col-1">
-          <% if lf.object.persisted? %>
-            <div class="field align-center">
-              <%= lf.label :_destroy %>
-              <%= lf.check_box :_destroy, class: "form-control" %>
-            </div>
-          <% end %>
+          <div class="field align-center">
+            <%= lf.label :_destroy %>
+            <%= lf.check_box :_destroy, class: "form-control", disabled: lf.object.new_record? %>
+          </div>
         </div>
       </div>
     <% end %>
