@@ -6,7 +6,7 @@ module Spree
       skip_before_action :load_resource, only: :index
 
       def index
-        @search = collection.ransack(params[:q])
+        @search = collection.ransack((params[:q] || {}).reverse_merge(s: 'created_at desc'))
 
         @installments = @search.result(distinct: true).
           page(params[:page]).
