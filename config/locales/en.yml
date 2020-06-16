@@ -23,19 +23,23 @@ en:
         successfully_canceled: Subsciption Canceled!
         successfully_activated: Subsciption Activated!
         successfully_skipped: Subsciption delayed until %{date}
-        index:
+        actions:
           cancel: Cancel
           cancel_alert: "Are you sure you want to cancel this subscription?"
           activate: Activate
           skip: Skip One
+        index:
           new_subscription: New Subscription
         edit:
-          title: Edit a Subscription
+          title: Details
           customer: Customer
           status: Status
           fulfillment_status: Fulfillment Status
           revenue: Revenue
           interval: Interval
+          sidebar: Status
+          details: Details
+          installments: Installments
         new:
           back: Back to Subscriptions List
           title: Create a Susbcription
@@ -44,6 +48,9 @@ en:
           subscription_line_items: Line Items
       tab:
         subscriptions: Subscriptions
+      installments:
+        index:
+          title: Installments
     promotion_rule_types:
       subscription_promotion_rule:
         name: Subscription
@@ -72,11 +79,20 @@ en:
         failed: failure
       solidus_subscriptions/line_item:
         _destroy: Remove?
-
+      solidus_subscriptions/installment:
+        created_at: Creation date
+        actionable_date: Actionable date
+        state: State
+      solidus_subscriptions/installment/state:
+        fulfilled: Fulfilled
+        unfulfilled: Unfulfilled
     models:
       solidus_subscriptions/subscription:
         one: Subscription
         other: Subscriptions
+      solidus_subscriptions/installment:
+        one: Installment
+        other: Installments
 
     errors:
       models:

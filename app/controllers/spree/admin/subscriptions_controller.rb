@@ -36,7 +36,7 @@ module Spree
           notice = @subscription.errors.full_messages.to_sentence
         end
 
-        redirect_to spree.admin_subscriptions_path, notice: notice
+        redirect_back(fallback_location: spree.admin_subscriptions_path, notice: notice)
       end
 
       def activate
@@ -48,7 +48,7 @@ module Spree
           notice = @subscription.errors.full_messages.to_sentence
         end
 
-        redirect_to spree.admin_subscriptions_path, notice: notice
+        redirect_back(fallback_location: spree.admin_subscriptions_path, notice: notice)
       end
 
       def skip
@@ -59,7 +59,7 @@ module Spree
           date: @subscription.actionable_date
         )
 
-        redirect_to spree.admin_subscriptions_path, notice: notice
+        redirect_back(fallback_location: spree.admin_subscriptions_path, notice: notice)
       end
 
       private

@@ -1,0 +1,18 @@
+<% content_for :sidebar_title do %>
+  <%= t("spree.admin.subscriptions.edit.sidebar") %>
+<% end %>
+
+<% content_for :sidebar do %>
+  <nav class="menu">
+    <fieldset class="no-border-top no-border-bottom" data-hook="admin_user_lifetime_stats">
+      <dl id="user-lifetime-stats">
+        <dt><%= SolidusSubscriptions::Subscription.human_attribute_name(:created_at) %>:</dt>
+        <dd><%= l(subscription.created_at.to_date) %></dd>
+        <dt><%= SolidusSubscriptions::Subscription.human_attribute_name(:state) %>:</dt>
+        <dd><%= render 'spree/admin/subscriptions/state_pill', subscription: subscription %></dd>
+        <dt><%= SolidusSubscriptions::Subscription.human_attribute_name(:processing_state) %>:</dt>
+        <dd><%= render 'spree/admin/subscriptions/processing_state_pill', subscription: subscription %></dd>
+      </dl>
+    </fieldset>
+  </nav>
+<% end %>
