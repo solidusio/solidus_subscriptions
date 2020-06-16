@@ -2,7 +2,7 @@
 
 <%= render 'spree/admin/shared/subscription_breadcrumbs', subscription: @subscription %>
 <%= render 'spree/admin/shared/subscription_sidebar', subscription: @subscription %>
-<%= render 'spree/admin/shared/subscription_tabs', current: :installments %>
+<%= render 'spree/admin/shared/subscription_tabs', current: :installments, subscription: @subscription %>
 <%= render 'spree/admin/shared/subscription_actions', subscription: @subscription %>
 
 <fieldset class="no-border-bottom">
