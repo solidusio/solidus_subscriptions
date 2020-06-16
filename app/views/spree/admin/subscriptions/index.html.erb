@@ -57,7 +57,7 @@
 
         <div class="field-block col-4">
           <div class="field">
-            <%= label_tag :q_state_eq, I18n.t('spree.status') %>
+            <%= label_tag :q_state_eq, SolidusSubscriptions::Subscription.human_attribute_name(:state) %>
             <%= f.select :state_eq, SolidusSubscriptions::Subscription.state_machines[:state].states.map {|s| [s.human_name, s.value]}, {include_blank: true}, class: 'select2 fullwidth' %>
           </div>
         </div>
