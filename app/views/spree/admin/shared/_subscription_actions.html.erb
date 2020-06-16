@@ -1,0 +1,35 @@
+<% content_for :page_actions do %>
+  <% if subscription.state_events.include?(:cancel) %>
+    <%=
+      link_to(
+          t('spree.admin.subscriptions.actions.cancel'),
+          spree.cancel_admin_subscription_path(subscription),
+          method: :delete,
+          data: { confirm: t('spree.admin.subscriptions.actions.cancel_alert') },
+          class: 'btn btn-primary'
+      )
+    %>
+  <% end %>
+
+  <% if subscription.state_events.include?(:activate) %>
+    <%=
+      link_to(
+          t('spree.admin.subscriptions.actions.activate'),
+          spree.activate_admin_subscription_path(subscription),
+          method: :post,
+          class: 'btn btn-primary',
+      )
+    %>
+  <% end %>
+
+  <% if subscription.active? %>
+    <%=
+      link_to(
+          t('spree.admin.subscriptions.actions.skip'),
+          spree.skip_admin_subscription_path(subscription),
+          method: :post,
+          class: 'btn btn-default',
+      )
+    %>
+  <% end %>
+<% end %>

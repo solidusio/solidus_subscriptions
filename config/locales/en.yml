@@ -23,11 +23,12 @@ en:
         successfully_canceled: Subsciption Canceled!
         successfully_activated: Subsciption Activated!
         successfully_skipped: Subsciption delayed until %{date}
-        index:
+        actions:
           cancel: Cancel
           cancel_alert: "Are you sure you want to cancel this subscription?"
           activate: Activate
           skip: Skip One
+        index:
           new_subscription: New Subscription
         edit:
           title: Details
