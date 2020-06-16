@@ -36,6 +36,7 @@ en:
           fulfillment_status: Fulfillment Status
           revenue: Revenue
           interval: Interval
+          sidebar: Status
         new:
           back: Back to Subscriptions List
           title: Create a Susbcription
