@@ -1,81 +1,83 @@
-<fieldset data-hook="new_subscription">
-  <legend><%= t('.subscription') %></legend>
+<div data-hook="new_subscription">
+  <fieldset class="no-border-bottom">
+    <legend><%= t('.subscription') %></legend>
 
-  <div data-hook="admin_subscription_form_fields">
-    <% if f.object.new_record? %>
+    <div data-hook="admin_subscription_form_fields">
+      <% if f.object.new_record? %>
+        <div class="field">
+          <%= f.label :user_id, I18n.t('spree.user'), class: "required" %>
+          <%= f.collection_select :user_id,  Spree::User.all, :id, :email, {}, class: "select2 fullwidth" %>
+        </div>
+      <% end %>
+
       <div class="field">
-        <%= f.label :user_id, I18n.t('spree.user'), class: "required" %>
-        <%= f.collection_select :user_id,  Spree::User.all, :id, :email, {}, class: "select2 fullwidth" %>
+        <%= f.label :actionable_date %>
+        <%= f.text_field :actionable_date, class: "form-control fullwidth datepicker" %>
       </div>
-    <% end %>
 
-    <div class="field">
-      <%= f.label :actionable_date %>
-      <%= f.text_field :actionable_date, class: "form-control fullwidth datepicker" %>
-    </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="field">
+            <%= f.label :interval_length %>
+            <%= f.number_field :interval_length, class: "form-control fullwidth" %>
+          </div>
+        </div>
 
-    <div class="row">
-      <div class="col-6">
-        <div class="field">
-          <%= f.label :interval_length %>
-          <%= f.number_field :interval_length, class: "form-control fullwidth" %>
+        <div class="col-6">
+          <div class="field">
+            <%
+              unit_values = SolidusSubscriptions::LineItem.interval_units.keys
+              units = unit_values.map do |unit|
+                [
+                    SolidusSubscriptions::LineItem.human_attribute_name("interval_units.#{unit}"),
+                    unit,
+                ]
+              end
+            %>
+
+            <%= f.label :interval_units %>
+            <%= f.select(:interval_units, units, {}, class: 'fullwidth select2') %>
+          </div>
         </div>
       </div>
 
-      <div class="col-6">
-        <div class="field">
-          <%
-            unit_values = SolidusSubscriptions::LineItem.interval_units.keys
-            units = unit_values.map do |unit|
-              [
-                SolidusSubscriptions::LineItem.human_attribute_name("interval_units.#{unit}"),
-                unit,
-              ]
-            end
-          %>
+      <div class="field">
+        <%= f.label :end_date %>
+        <%= f.text_field :end_date, class: "fullwidth datepicker" %>
+      </div>
 
-          <%= f.label :interval_units %>
-          <%= f.select(:interval_units, units, {}, class: 'fullwidth select2') %>
-        </div>
+      <div class="field">
+        <%= f.label :store_id %>
+        <%= f.collection_select :store_id, Spree::Store.all, :id, :name, {}, class: 'fullwidth select2' %>
       </div>
     </div>
+  </fieldset>
 
-    <div class="field">
-      <%= f.label :end_date %>
-      <%= f.text_field :end_date, class: "fullwidth datepicker" %>
-    </div>
+  <fieldset class="no-border-bottom">
+    <legend>Shipping Address</legend>
 
-    <div class="field">
-      <%= f.label :store_id %>
-      <%= f.collection_select :store_id, Spree::Store.all, :id, :name, {}, class: 'fullwidth select2' %>
-    </div>
-  </div>
-
-  <div class="js-customer-details">
-    <fieldset class="no-border-bottom">
-      <legend>Shipping Address</legend>
-
+    <div class="js-customer-details">
       <div class="js-shipping-address">
         <%= f.fields_for :shipping_address do |sa_form| %>
           <%= render partial: 'spree/admin/shared/address_form', locals: { f: sa_form, type: "shipping" } %>
         <% end %>
       </div>
-    </fieldset>
-  </div>
+    </div>
+  </fieldset>
 
-  <fieldset class="no-border-bottom">
+  <fieldset>
     <legend><%= t('.subscription_line_items') %></legend>
 
     <%= f.fields_for :line_items do |lf| %>
       <div class="row">
-        <div class="col-10">
+        <div class="col-9">
           <div class="field">
             <%= lf.label :subscribable_id %>
             <%= lf.collection_select :subscribable_id, Spree::Variant.where(subscribable: true), :id, :pretty_name, {}, { class: "fullwidth select2" } %>
           </div>
         </div>
 
-        <div class="col-1">
+        <div class="col-2">
           <div class="field">
             <%= lf.label :quantity %>
             <%= lf.number_field :quantity, min: 1, class: "form-control fullwidth" %>
@@ -90,11 +92,11 @@
         </div>
       </div>
     <% end %>
-  </fieldset>
 
-  <% if f.object.new_record? %>
-    <%= render partial: 'spree/admin/shared/new_resource_links' %>
-  <% else %>
-    <%= render partial: 'spree/admin/shared/edit_resource_links' %>
-  <% end %>
-</fieldset>
+    <% if f.object.new_record? %>
+      <%= render partial: 'spree/admin/shared/new_resource_links' %>
+    <% else %>
+      <%= render partial: 'spree/admin/shared/edit_resource_links' %>
+    <% end %>
+  </fieldset>
+</div>
