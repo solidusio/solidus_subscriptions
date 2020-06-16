@@ -25,7 +25,7 @@ RSpec.describe SolidusSubscriptions::Processor, :checkout do
       :actionable,
       :with_line_item,
       user: user,
-      line_item_traits: [{ end_date: Date.current.tomorrow }]
+      end_date: Date.current.tomorrow,
     )
   end
 

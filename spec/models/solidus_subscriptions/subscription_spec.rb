@@ -100,16 +100,16 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
   describe '#deactivate' do
     subject { subscription.deactivate }
 
-    let(:traits) { [] }
+    let(:attributes) { {} }
     let(:subscription) do
-      create :subscription, :actionable, :with_line_item, line_item_traits: traits do |s|
+      create :subscription, :actionable, :with_line_item, attributes do |s|
         s.installments = build_list(:installment, 2)
       end
     end
 
     context 'the subscription can be deactivated' do
-      let(:traits) do
-        [{ end_date: Date.current.ago(2.days) }]
+      let(:attributes) do
+        { end_date: Date.current.ago(2.days) }
       end
 
       it 'is inactive' do

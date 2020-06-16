@@ -142,12 +142,12 @@ module SolidusSubscriptions
     # This method determines if a subscription can be deactivated. A deactivated
     # subscription will not be processed. By default a subscription can be
     # deactivated if the end_date defined on
-    # subscription_line_item is less than the current date
+    # the subscription is less than the current date
     # In this case the subscription has been fulfilled and
     # should not be processed again. Subscriptions without an end_date
     # value cannot be deactivated.
     def can_be_deactivated?
-      active? && line_item.end_date && actionable_date > line_item.end_date
+      active? && end_date && actionable_date > end_date
     end
 
     # Get the date after the current actionable_date where this subscription
