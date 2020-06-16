@@ -1,0 +1,9 @@
+<% state_class = {
+    success: 'active',
+    failed: 'error',
+    pending: 'inactive',
+}[subscription.processing_state.to_sym] %>
+
+<span class="pill pill-<%= state_class %>">
+  <%= subscription.class.human_attribute_name("processing_state.#{subscription.processing_state}") %>
+</span>

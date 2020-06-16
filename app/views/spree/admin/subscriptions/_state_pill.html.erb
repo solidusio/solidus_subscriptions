@@ -1,0 +1,10 @@
+<% state_class = {
+    active: 'active',
+    canceled: 'error',
+    pending_cancellation: 'warning',
+    inactive: 'inactive',
+}[subscription.state.to_sym] %>
+
+<span class="pill pill-<%= state_class %>">
+  <%= subscription.human_state_name %>
+</span>

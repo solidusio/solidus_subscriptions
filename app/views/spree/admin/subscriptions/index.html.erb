@@ -121,12 +121,8 @@
           <td><%= link_to subscription.user.email, admin_user_path(subscription.user) %></td>
           <td><%= subscription.actionable_date ? l(subscription.actionable_date.to_date) : '-' %></td>
           <td><%= subscription.interval.inspect %></td>
-          <td><%= content_tag :span, subscription.human_state_name, class: "state #{ subscription.state }" %></td>
-          <td>
-            <span class="state <%= subscription.processing_state %>">
-              <%= subscription.class.human_attribute_name("processing_state.#{subscription.processing_state}") %>
-            </span>
-          </td>
+          <td><%= render 'state_pill', subscription: subscription %></td>
+          <td><%= render 'processing_state_pill', subscription: subscription %></td>
           <td class="actions">
             <% if subscription.state_events.include?(:cancel) %>
               <%=
