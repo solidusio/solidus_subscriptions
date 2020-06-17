@@ -58,7 +58,7 @@ module SolidusSubscriptions
     def build_jobs
       users.map do |user|
         installemts_by_address_and_user = installments(user).group_by do |i|
-          i.subscription.shipping_address_id
+          [i.subscription.shipping_address_id, i.subscription.billing_address_id]
         end
 
         installemts_by_address_and_user.values.each do |grouped_installments|

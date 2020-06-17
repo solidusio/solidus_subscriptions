@@ -14,13 +14,11 @@ module Spree
       end
 
       def new
-        @subscription.line_items.new
-        @subscription.build_shipping_address unless @subscription.shipping_address
+        prepare_form
       end
 
       def edit
-        @subscription.line_items.new
-        @subscription.build_shipping_address unless @subscription.shipping_address
+        prepare_form
       end
 
       def cancel
@@ -69,6 +67,12 @@ module Spree
 
       def location_after_save
         edit_object_url(@subscription)
+      end
+
+      def prepare_form
+        @subscription.line_items.new
+        @subscription.build_shipping_address unless @subscription.shipping_address
+        @subscription.build_billing_address unless @subscription.billing_address
       end
     end
   end

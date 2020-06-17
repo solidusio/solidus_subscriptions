@@ -24,6 +24,7 @@ module SolidusSubscriptions
         line_items: subscription_line_items,
         store: order.store,
         shipping_address: order.ship_address,
+        billing_address: order.bill_address,
         **configuration.to_h
       }
 

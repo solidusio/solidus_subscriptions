@@ -115,18 +115,36 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  subscription:
-                    type: object
+                allOf:
+                  - type: object
                     properties:
-                      line_items_attributes:
+                      line_items:
                         type: array
                         items:
-                          $ref: '#/components/schemas/SubscriptionLineItem'
-                      shipping_address_attributes:
+                          $ref: '#/components/schemas/SubscriptionLineItemOutput'
+                      shipping_address:
                         type: object
+                      billing_address:
+                        type: object
+                  - $ref: '#/components/schemas/SubscriptionOutput'
       operationId: patch-subscriptions-api-v1-subscriptions-id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subscription:
+                  type: object
+                  properties:
+                    line_items_attributes:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/SubscriptionLineItem'
+                    shipping_address_attributes:
+                      type: object
+                    billing_address_attributes:
+                      type: object
   '/subscriptions/api/v1/subscriptions/{id}/activate':
     parameters:
       - schema:

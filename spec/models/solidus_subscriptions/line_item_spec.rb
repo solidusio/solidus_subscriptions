@@ -81,21 +81,31 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
     end
 
     context 'with an associated subscription' do
-      context 'the associated subscription has an address' do
+      context 'the associated subscription has a shipping address' do
         let(:line_item) do
-          create(:subscription_line_item, :with_subscription, subscription_traits: [:with_address])
+          create(:subscription_line_item, :with_subscription, subscription_traits: [:with_shipping_address])
         end
 
         it 'uses the subscription shipping address' do
           expect(subject.order.ship_address).to eq line_item.subscription.shipping_address
         end
+
+        it 'uses the subscription users billing address' do
+          expect(subject.order.bill_address).to eq line_item.subscription.user.bill_address
+        end
       end
 
-      context 'the associated subscription has no address' do
-        let(:line_item) { create(:subscription_line_item, :with_subscription) }
+      context 'the associated subscription has a billing address' do
+        let(:line_item) do
+          create(:subscription_line_item, :with_subscription, subscription_traits: [:with_billing_address])
+        end
 
         it 'uses the subscription users shipping address' do
           expect(subject.order.ship_address).to eq line_item.subscription.user.ship_address
+        end
+
+        it 'uses the subscription billing address' do
+          expect(subject.order.bill_address).to eq line_item.subscription.billing_address
         end
       end
     end

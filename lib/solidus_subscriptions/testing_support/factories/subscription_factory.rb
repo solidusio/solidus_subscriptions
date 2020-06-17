@@ -20,8 +20,12 @@ FactoryBot.define do
       line_items { build_list :subscription_line_item, 1, *line_item_traits }
     end
 
-    trait :with_address do
+    trait :with_shipping_address do
       association :shipping_address, factory: :address
+    end
+
+    trait :with_billing_address do
+      association :billing_address, factory: :address
     end
 
     trait :actionable do
