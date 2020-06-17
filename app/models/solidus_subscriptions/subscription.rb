@@ -22,12 +22,6 @@ module SolidusSubscriptions
     accepts_nested_attributes_for :billing_address
     accepts_nested_attributes_for :line_items, allow_destroy: true, reject_if: -> (p) { p[:quantity].blank? }
 
-    # The following methods are delegated to the associated
-    # SolidusSubscriptions::LineItem
-    #
-    # :quantity, :subscribable_id
-    delegate :quantity, :subscribable_id, to: :line_item
-
     # Find all subscriptions that are "actionable"; that is, ones that have an
     # actionable_date in the past and are not invalid or canceled.
     scope :actionable, (lambda do
@@ -210,10 +204,6 @@ module SolidusSubscriptions
       if skip_count >= Config.maximum_total_skips
         errors.add(:skip_count, :exceeded)
       end
-    end
-
-    def line_item
-      line_items.first
     end
   end
 end
