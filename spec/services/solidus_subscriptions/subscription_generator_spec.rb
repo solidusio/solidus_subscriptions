@@ -22,6 +22,7 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
       expect(subject).to have_attributes(
         user: user,
         shipping_address: subscription_line_item.spree_line_item.order.ship_address,
+        billing_address: subscription_line_item.spree_line_item.order.bill_address,
         interval_length: subscription_line_item.interval_length,
         interval_units: subscription_line_item.interval_units,
         end_date: subscription_line_item.end_date,
