@@ -36,8 +36,6 @@ module SolidusSubscriptions
     validates :quantity, numericality: { greater_than: 0 }
     validates :interval_length, numericality: { greater_than: 0 }, unless: -> { subscription }
 
-    before_update :update_actionable_date_if_interval_changed
-
     def as_json(**options)
       options[:methods] ||= [:dummy_line_item]
       super(options)
@@ -71,27 +69,6 @@ module SolidusSubscriptions
     # it is frozen and cannot be saved
     def dummy_subscription
       Subscription.new(line_items: [dup], interval_length: interval_length, interval_units: interval_units).freeze
-    end
-
-    def update_actionable_date_if_interval_changed
-      if persisted? && subscription && (interval_length_changed? || interval_units_changed?)
-        base_date = if subscription.installments.any?
-          subscription.installments.last.created_at
-        else
-          subscription.created_at
-        end
-
-        new_date = interval.since(base_date)
-
-        if new_date < Time.zone.now
-          # if the chosen base time plus the new interval is in the past, set
-          # the actionable_date to be now to avoid confusion and possible
-          # mis-processing.
-          new_date = Time.zone.now
-        end
-
-        subscription.actionable_date = new_date
-      end
     end
   end
 end
