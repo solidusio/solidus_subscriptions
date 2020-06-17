@@ -19,16 +19,6 @@ bundle
 bundle exec rails g solidus_subscriptions:install
 ```
 
-## Configuration
-
-This gem requires a gateway which supports credit cards in order to process subscription orders.
-
-Add this to specify the gateway used by the gem: an initializer.
-
-```ruby
-SolidusSubscriptions::Config.default_gateway { my_gateway }
-```
-
 ### Guest checkout
 
 Subscriptions require a user to be present to allow them to be managed after they are purchased.
