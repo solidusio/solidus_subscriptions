@@ -44,11 +44,11 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
   end
 
   describe '#skip' do
-    subject { subscription.skip }
+    subject { subscription.skip&.to_date }
 
     let(:total_skips) { 0 }
     let(:successive_skips) { 0 }
-    let(:expected_date) { 1.month.from_now.beginning_of_minute }
+    let(:expected_date) { 1.month.from_now.to_date }
 
     let(:subscription) do
       create(
