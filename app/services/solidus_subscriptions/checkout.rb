@@ -131,7 +131,7 @@ module SolidusSubscriptions
       order.payments.create(
         source: active_card,
         amount: order.total,
-        payment_method: Config.default_gateway
+        payment_method: active_card.payment_method,
       )
     end
 

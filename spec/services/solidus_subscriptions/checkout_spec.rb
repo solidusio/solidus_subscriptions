@@ -25,7 +25,6 @@ RSpec.describe SolidusSubscriptions::Checkout do
   end
 
   before do
-    SolidusSubscriptions::Config.default_gateway { payment_method }
     Spree::Variant.all.each { |v| v.update(subscribable: true) }
   end
 

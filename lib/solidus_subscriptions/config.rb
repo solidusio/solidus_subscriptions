@@ -31,11 +31,6 @@ module SolidusSubscriptions
       def out_of_stock_dispatcher_class
         @out_of_stock_dispatcher_class ||= ::SolidusSubscriptions::OutOfStockDispatcher
       end
-
-      def default_gateway(&block)
-        return @gateway.call unless block_given?
-        @gateway = block
-      end
     end
 
     # Maximum number of times a user can skip their subscription before it
