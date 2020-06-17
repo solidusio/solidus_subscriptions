@@ -135,16 +135,18 @@ paths:
               type: object
               properties:
                 subscription:
-                  type: object
-                  properties:
-                    line_items_attributes:
-                      type: array
-                      items:
-                        $ref: '#/components/schemas/SubscriptionLineItem'
-                    shipping_address_attributes:
-                      type: object
-                    billing_address_attributes:
-                      type: object
+                  allOf:
+                    - type: object
+                      properties:
+                        line_items_attributes:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/SubscriptionLineItem'
+                        shipping_address_attributes:
+                          type: object
+                        billing_address_attributes:
+                          type: object
+                    - $ref: '#/components/schemas/Subscription'
   '/subscriptions/api/v1/subscriptions/{id}/activate':
     parameters:
       - schema:
@@ -225,19 +227,29 @@ components:
     Subscription:
       title: Subscription
       type: object
+      x-tags:
+        - Models
       properties:
         actionable_date:
           type: string
           format: date
-        user_id:
-          type:
-            - string
-            - integer
+        interval_units:
+          type: string
+          enum:
+            - day
+            - week
+            - month
+            - year
+        interval_length:
+          type: string
+        end_date:
+          type: string
+          format: date
       required:
         - actionable_date
-        - user_id
-      x-tags:
-        - Models
+        - interval_units
+        - interval_length
+        - end_date
     SubscriptionOutput:
       title: SubscriptionOutput
       allOf:
@@ -259,10 +271,20 @@ components:
                 - canceled
                 - pending_cancellation
                 - inactive
+            user_id:
+              type: integer
+            processing_state:
+              type: string
+              enum:
+                - pending
+                - success
+                - failed
           required:
             - id
             - created_at
             - updated_at
             - state
+            - user_id
+            - processing_state
       x-tags:
         - Models

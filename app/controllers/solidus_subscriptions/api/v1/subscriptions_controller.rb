@@ -35,6 +35,9 @@ class SolidusSubscriptions::Api::V1::SubscriptionsController < Spree::Api::BaseC
 
   def subscription_params
     params.require(:subscription).permit(
+      :interval_units,
+      :interval_length,
+      :end_date,
       line_items_attributes: line_item_attributes,
       shipping_address_attributes: Spree::PermittedAttributes.address_attributes,
       billing_address_attributes: Spree::PermittedAttributes.address_attributes,
