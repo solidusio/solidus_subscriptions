@@ -70,6 +70,7 @@ module SolidusSubscriptions
     def dummy_order
       order = spree_line_item ? spree_line_item.order.dup : ::Spree::Order.create
       order.ship_address = subscription.shipping_address || subscription.user.ship_address if subscription
+      order.bill_address = subscription.billing_address || subscription.user.bill_address if subscription
 
       order.freeze
     end
