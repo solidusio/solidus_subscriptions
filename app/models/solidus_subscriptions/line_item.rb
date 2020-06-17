@@ -38,12 +38,8 @@ module SolidusSubscriptions
 
     before_update :update_actionable_date_if_interval_changed
 
-    def next_actionable_date
-      dummy_subscription.next_actionable_date
-    end
-
     def as_json(**options)
-      options[:methods] ||= [:dummy_line_item, :next_actionable_date]
+      options[:methods] ||= [:dummy_line_item]
       super(options)
     end
 
@@ -56,10 +52,6 @@ module SolidusSubscriptions
       li.order = dummy_order
       li.validate
       li.freeze
-    end
-
-    def interval
-      subscription.try!(:interval) || super
     end
 
     private
