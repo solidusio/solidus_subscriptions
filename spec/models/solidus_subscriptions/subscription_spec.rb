@@ -44,11 +44,11 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
   end
 
   describe '#skip' do
-    subject { subscription.skip }
+    subject { subscription.skip&.to_date }
 
     let(:total_skips) { 0 }
     let(:successive_skips) { 0 }
-    let(:expected_date) { 1.month.from_now.beginning_of_minute }
+    let(:expected_date) { 1.month.from_now.to_date }
 
     let(:subscription) do
       create(
@@ -279,5 +279,53 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
   describe '.processing_states' do
     subject { described_class.processing_states }
     it { is_expected.to match_array [:pending, :success, :failed] }
+  end
+
+  describe "#update_actionable_date_if_interval_changed" do
+    context "with installments" do
+      context "when the last installment date would cause the interval to be in the past" do
+        it "sets the actionable_date to the current day" do
+          subscription = create(:subscription, actionable_date: Time.zone.parse('2016-08-22'))
+          create(:installment, subscription: subscription, created_at: Time.zone.parse('2016-07-22'))
+
+          subscription.update!(interval_length: 1, interval_units: 'month')
+
+          expect(subscription.actionable_date.to_date).to eq(Time.zone.today)
+        end
+      end
+
+      context "when the last installment date would cause the interval to be in the future" do
+        it "sets the actionable_date to an interval from the last installment" do
+          subscription = create(:subscription, actionable_date: Time.zone.parse('2016-08-22'))
+          create(:installment, subscription: subscription, created_at: 4.days.ago)
+
+          subscription.update!(interval_length: 1, interval_units: 'month')
+
+          expect(subscription.actionable_date.to_date).to eq((4.days.ago + 1.month).to_date)
+        end
+      end
+    end
+
+    context "when there are no installments" do
+      context "when the subscription creation date would cause the interval to be in the past" do
+        it "sets the actionable_date to the current day" do
+          subscription = create(:subscription, created_at: Time.zone.parse('2016-08-22'))
+
+          subscription.update!(interval_length: 1, interval_units: 'month')
+
+          expect(subscription.actionable_date.to_date).to eq(Time.zone.today)
+        end
+      end
+
+      context "when the subscription creation date would cause the interval to be in the future" do
+        it "sets the actionable_date to one interval past the subscription creation date" do
+          subscription = create(:subscription, created_at: 4.days.ago)
+
+          subscription.update!(interval_length: 1, interval_units: 'month')
+
+          expect(subscription.actionable_date.to_date).to eq((4.days.ago + 1.month).to_date)
+        end
+      end
+    end
   end
 end

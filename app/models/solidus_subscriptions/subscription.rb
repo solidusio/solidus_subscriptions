@@ -22,11 +22,7 @@ module SolidusSubscriptions
     accepts_nested_attributes_for :billing_address
     accepts_nested_attributes_for :line_items, allow_destroy: true, reject_if: -> (p) { p[:quantity].blank? }
 
-    # The following methods are delegated to the associated
-    # SolidusSubscriptions::LineItem
-    #
-    # :quantity, :subscribable_id
-    delegate :quantity, :subscribable_id, to: :line_item
+    before_update :update_actionable_date_if_interval_changed
 
     # Find all subscriptions that are "actionable"; that is, ones that have an
     # actionable_date in the past and are not invalid or canceled.
@@ -212,8 +208,25 @@ module SolidusSubscriptions
       end
     end
 
-    def line_item
-      line_items.first
+    def update_actionable_date_if_interval_changed
+      if persisted? && (interval_length_previously_changed? || interval_units_previously_changed?)
+        base_date = if installments.any?
+          installments.last.created_at
+        else
+          created_at
+        end
+
+        new_date = interval.since(base_date)
+
+        if new_date < Time.zone.now
+          # if the chosen base time plus the new interval is in the past, set
+          # the actionable_date to be now to avoid confusion and possible
+          # mis-processing.
+          new_date = Time.zone.now
+        end
+
+        self.actionable_date = new_date
+      end
     end
   end
 end
