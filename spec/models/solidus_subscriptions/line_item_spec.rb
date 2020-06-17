@@ -81,9 +81,9 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
     end
 
     context 'with an associated subscription' do
-      context 'the associated subscription has an address' do
+      context 'the associated subscription has a shipping address' do
         let(:line_item) do
-          create(:subscription_line_item, :with_subscription, subscription_traits: [:with_address])
+          create(:subscription_line_item, :with_subscription, subscription_traits: [:with_shipping_address])
         end
 
         it 'uses the subscription shipping address' do
