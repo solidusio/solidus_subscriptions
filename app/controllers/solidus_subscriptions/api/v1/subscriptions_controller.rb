@@ -5,7 +5,7 @@ class SolidusSubscriptions::Api::V1::SubscriptionsController < Spree::Api::BaseC
 
   def update
     if @subscription.update(subscription_params)
-      render json: @subscription.to_json(include: [:line_items, :shipping_address])
+      render json: @subscription.to_json(include: [:line_items, :shipping_address, :billing_address])
     else
       render json: @subscription.errors.to_json, status: 422
     end
@@ -36,7 +36,8 @@ class SolidusSubscriptions::Api::V1::SubscriptionsController < Spree::Api::BaseC
   def subscription_params
     params.require(:subscription).permit(
       line_items_attributes: line_item_attributes,
-      shipping_address_attributes: Spree::PermittedAttributes.address_attributes
+      shipping_address_attributes: Spree::PermittedAttributes.address_attributes,
+      billing_address_attributes: Spree::PermittedAttributes.address_attributes,
     )
   end
 

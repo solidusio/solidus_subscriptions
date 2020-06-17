@@ -59,6 +59,16 @@ RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :co
           state_id: address_state.id,
           phone: '999-999-999',
           zipcode: '10001'
+        },
+        billing_address_attributes: {
+          firstname: 'Ash',
+          lastname: 'Ketchum',
+          address1: '1 Rainbow Road',
+          city: 'Palette Town',
+          country_id: address_country.id,
+          state_id: address_state.id,
+          phone: '999-999-999',
+          zipcode: '10001'
         }
       }
     end
