@@ -64,11 +64,5 @@ module SolidusSubscriptions
 
       order.freeze
     end
-
-    # A place holder for calculating dynamic values needed to display in the cart
-    # it is frozen and cannot be saved
-    def dummy_subscription
-      Subscription.new(line_items: [dup], interval_length: interval_length, interval_units: interval_units).freeze
-    end
   end
 end
