@@ -19,6 +19,24 @@ module Spree
 
       def edit
         prepare_form
+        load_payment_methods
+      end
+
+      def update
+        load_payment_methods
+
+        @subscription.assign_attributes(permitted_resource_params)
+
+        if @subscription.payment_method&.source_required?
+          @subscription.payment_source = @subscription
+            .payment_method
+            .payment_source_class
+            .find_by(id: params[:subscription][:payment_source_id])
+        else
+          @subscription.payment_source = nil
+        end
+
+        super
       end
 
       def cancel
@@ -70,9 +88,13 @@ module Spree
       end
 
       def prepare_form
-        @subscription.line_items.new
         @subscription.build_shipping_address unless @subscription.shipping_address
         @subscription.build_billing_address unless @subscription.billing_address
+        @subscription.line_items.build
+      end
+
+      def load_payment_methods
+        @payment_methods = Spree::PaymentMethod.active.available_to_admin.ordered_by_position
       end
     end
   end

@@ -40,6 +40,7 @@ en:
           sidebar: Status
           details: Details
           installments: Installments
+          payment: Payment
         new:
           back: Back to Subscriptions List
           title: Create a Susbcription
