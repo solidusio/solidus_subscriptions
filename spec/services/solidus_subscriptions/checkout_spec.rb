@@ -293,8 +293,50 @@ RSpec.describe SolidusSubscriptions::Checkout do
         }
       end
 
-      it 'ships to the subscription address' do
+      it 'bills to the subscription address' do
         expect(subject.bill_address).to eq billing_address
+      end
+    end
+
+    context 'the subscription has a payment method' do
+      it_behaves_like 'a completed checkout'
+      let(:payment_method) { create :check_payment_method }
+      let(:installment_traits) do
+        {
+          subscription_traits: [{
+            payment_method: payment_method,
+            user: subscription_user,
+            line_item_traits: [{ spree_line_item: root_order.line_items.first }]
+          }]
+        }
+      end
+
+      it 'pays with the payment method' do
+        expect(subject.payments.valid.first.payment_method).to eq payment_method
+      end
+    end
+
+    context 'the subscription has a payment method and a source' do
+      it_behaves_like 'a completed checkout'
+      let(:payment_method) { create :credit_card_payment_method }
+      let(:payment_source) { create :credit_card, payment_method: payment_method, user: subscription_user }
+      let(:installment_traits) do
+        {
+          subscription_traits: [{
+            payment_method: payment_method,
+            payment_source: payment_source,
+            user: subscription_user,
+            line_item_traits: [{ spree_line_item: root_order.line_items.first }]
+          }]
+        }
+      end
+
+      it 'pays with the payment method' do
+        expect(subject.payments.valid.first.payment_method).to eq payment_method
+      end
+
+      it 'pays with the payment source' do
+        expect(subject.payments.valid.first.source).to eq payment_source
       end
     end
 
