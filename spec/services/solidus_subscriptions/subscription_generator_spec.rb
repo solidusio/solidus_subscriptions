@@ -24,7 +24,25 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
         interval_length: subscription_line_item.interval_length,
         interval_units: subscription_line_item.interval_units,
         end_date: subscription_line_item.end_date,
-        store: subscription_line_item.order.store
+        store: subscription_line_item.order.store,
+      )
+    end
+
+    it 'copies the payment method from the order' do
+      subscription_line_item = build(:subscription_line_item)
+      payment_method = create(:credit_card_payment_method)
+      payment_source = create(:credit_card, payment_method: payment_method)
+      create(:payment,
+        order: subscription_line_item.spree_line_item.order,
+        source: payment_source,
+        payment_method: payment_method,
+      )
+
+      subscription = described_class.activate([subscription_line_item])
+
+      expect(subscription).to have_attributes(
+        payment_method: payment_method,
+        payment_source: payment_source,
       )
     end
   end
