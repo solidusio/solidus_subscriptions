@@ -13,15 +13,20 @@ module SolidusSubscriptions
     belongs_to :store, class_name: '::Spree::Store'
     belongs_to :shipping_address, class_name: '::Spree::Address', optional: true
     belongs_to :billing_address, class_name: '::Spree::Address', optional: true
+    belongs_to :payment_method, class_name: '::Spree::PaymentMethod', optional: true
+    belongs_to :payment_source, polymorphic: true, optional: true
 
     validates :user, presence: :true
     validates :skip_count, :successive_skip_count, presence: true, numericality: { greater_than_or_equal_to: 0 }
     validates :interval_length, numericality: { greater_than: 0 }
+    validates :payment_method, presence: true, if: -> { payment_source }
+    validates :payment_source, presence: true, if: -> { payment_method&.source_required? }
 
     accepts_nested_attributes_for :shipping_address
     accepts_nested_attributes_for :billing_address
     accepts_nested_attributes_for :line_items, allow_destroy: true, reject_if: -> (p) { p[:quantity].blank? }
 
+    before_validation :set_payment_method
     before_update :update_actionable_date_if_interval_changed
 
     # Find all subscriptions that are "actionable"; that is, ones that have an
@@ -145,7 +150,7 @@ module SolidusSubscriptions
     # should not be processed again. Subscriptions without an end_date
     # value cannot be deactivated.
     def can_be_deactivated?
-      active? && end_date && actionable_date > end_date
+      active? && end_date && actionable_date && actionable_date > end_date
     end
 
     # Get the date after the current actionable_date where this subscription
@@ -190,6 +195,26 @@ module SolidusSubscriptions
       installments.last.fulfilled? ? 'success' : 'failed'
     end
 
+    def payment_method_to_use
+      payment_method || user.wallet.default_wallet_payment_source&.payment_source&.payment_method
+    end
+
+    def payment_source_to_use
+      if payment_method
+        payment_source
+      else
+        user.wallet.default_wallet_payment_source&.payment_source
+      end
+    end
+
+    def shipping_address_to_use
+      shipping_address || user.ship_address
+    end
+
+    def billing_address_to_use
+      billing_address || user.bill_address
+    end
+
     private
 
     def check_successive_skips_exceeded
@@ -226,6 +251,12 @@ module SolidusSubscriptions
         end
 
         self.actionable_date = new_date
+      end
+    end
+
+    def set_payment_method
+      if payment_source
+        self.payment_method = payment_source.payment_method
       end
     end
   end

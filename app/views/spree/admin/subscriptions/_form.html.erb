@@ -53,6 +53,39 @@
     </div>
   </fieldset>
 
+  <% if @subscription.persisted? && @subscription.user %>
+    <div class="js-edit-subscription-payment">
+      <fieldset class="no-border-bottom">
+        <legend><%= t('spree.admin.subscriptions.edit.payment') %></legend>
+
+        <div class="field">
+          <%= f.label :payment_method %>
+          <%= f.select :payment_method_id, @payment_methods.map { |pm| [pm.name, pm.id] }, { include_blank: true }, class: 'select2 fullwidth' %>
+        </div>
+
+        <div class="field">
+          <%= f.label :payment_source %>
+          <%= f.select :payment_source_id, nil, {}, class: 'select2 fullwidth' do %>
+            <option<% if @subscription.payment_source.nil? %> selected<% end %>></option>
+            <% @subscription.user.wallet_payment_sources.select { |wps| wps.payment_source.reusable? }.each do |wps| %>
+              <option
+                value="<%= wps.payment_source_id %>"
+                data-js-payment-method-id="<%= wps.payment_source.payment_method.id %>"
+                <% if @subscription.payment_source == wps.payment_source %> selected<% end %>
+              >
+                <% if wps.payment_source.respond_to?(:display_number) %>
+                  <%= wps.payment_source.display_number %> (<%= wps.payment_source.gateway_customer_profile_id %>)
+                <% else %>
+                  <%= wps.payment_source.gateway_customer_profile_id %>
+                <% end %>
+              </option>
+            <% end %>
+          <% end %>
+        </div>
+      </fieldset>
+    </div>
+  <% end %>
+
   <div class="row">
     <div class="col-6">
       <fieldset class="no-border-bottom">

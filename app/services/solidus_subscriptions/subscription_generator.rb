@@ -25,6 +25,8 @@ module SolidusSubscriptions
         store: order.store,
         shipping_address: order.ship_address,
         billing_address: order.bill_address,
+        payment_source: order.payments.valid.last&.payment_source,
+        payment_method: order.payments.valid.last&.payment_method,
         **configuration.to_h
       }
 

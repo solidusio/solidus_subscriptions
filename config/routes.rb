@@ -22,7 +22,6 @@ Spree::Core::Engine.routes.draw do
       delete :cancel, on: :member
       post :activate, on: :member
       post :skip, on: :member
-
       resources :installments, only: [:index, :show]
     end
   end

@@ -116,22 +116,26 @@ module SolidusSubscriptions
     end
 
     def ship_address
-      subscription.shipping_address || user.ship_address
+      subscription.shipping_address_to_use
     end
 
     def bill_address
-      subscription.billing_address || user.bill_address
+      subscription.billing_address_to_use
     end
 
-    def active_card
-      user.wallet.default_wallet_payment_source.payment_source
+    def payment_source
+      subscription.payment_source_to_use
+    end
+
+    def payment_method
+      subscription.payment_method_to_use
     end
 
     def create_payment
       order.payments.create(
-        source: active_card,
+        source: payment_source,
         amount: order.total,
-        payment_method: active_card.payment_method,
+        payment_method: payment_method,
       )
     end
 

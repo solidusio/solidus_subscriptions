@@ -281,6 +281,143 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
     it { is_expected.to match_array [:pending, :success, :failed] }
   end
 
+  describe '#payment_source_to_use' do
+    context 'when the subscription has a payment method without source' do
+      it 'returns nil' do
+        payment_method = create(:check_payment_method)
+
+        subscription = create(:subscription, payment_method: payment_method)
+
+        expect(subscription.payment_source_to_use).to eq(nil)
+      end
+    end
+
+    context 'when the subscription has a payment method with a source' do
+      it 'returns the source on the subscription' do
+        user = create(:user)
+        payment_method = create(:credit_card_payment_method)
+        payment_source = create(:credit_card,
+          payment_method: payment_method,
+          gateway_customer_profile_id: 'BGS-123',
+          user: user,
+        )
+
+        subscription = create(:subscription,
+          user: user,
+          payment_method: payment_method,
+          payment_source: payment_source,
+        )
+
+        expect(subscription.payment_source_to_use).to eq(payment_source)
+      end
+    end
+
+    context 'when the subscription has no payment method' do
+      it "returns the default source from the user's wallet" do
+        user = create(:user)
+        payment_source = create(:credit_card, gateway_customer_profile_id: 'BGS-123', user: user)
+        wallet_payment_source = user.wallet.add(payment_source)
+        user.wallet.default_wallet_payment_source = wallet_payment_source
+
+        subscription = create(:subscription, user: user)
+
+        expect(subscription.payment_source_to_use).to eq(payment_source)
+      end
+    end
+  end
+
+  describe '#payment_method_to_use' do
+    context 'when the subscription has a payment method without source' do
+      it 'returns the payment method on the subscription' do
+        payment_method = create(:check_payment_method)
+        subscription = create(:subscription, payment_method: payment_method)
+
+        expect(subscription.payment_method_to_use).to eq(payment_method)
+      end
+    end
+
+    context 'when the subscription has a payment method with a source' do
+      it 'returns the payment method on the subscription' do
+        user = create(:user)
+        payment_method = create(:credit_card_payment_method)
+        payment_source = create(:credit_card,
+          payment_method: payment_method,
+          gateway_customer_profile_id: 'BGS-123',
+          user: user,
+        )
+
+        subscription = create(:subscription,
+          user: user,
+          payment_method: payment_method,
+          payment_source: payment_source,
+        )
+
+        expect(subscription.payment_method_to_use).to eq(payment_method)
+      end
+    end
+
+    context 'when the subscription has no payment method' do
+      it "returns the method from the default source in the user's wallet" do
+        user = create(:user)
+        payment_source = create(:credit_card, gateway_customer_profile_id: 'BGS-123', user: user)
+        wallet_payment_source = user.wallet.add(payment_source)
+        user.wallet.default_wallet_payment_source = wallet_payment_source
+
+        subscription = create(:subscription, user: user)
+
+        expect(subscription.payment_method_to_use).to eq(payment_source.payment_method)
+      end
+    end
+  end
+
+  describe '#billing_address_to_use' do
+    context 'when the subscription has a billing address' do
+      it 'returns the billing address on the subscription' do
+        billing_address = create(:bill_address)
+
+        subscription = create(:subscription, billing_address: billing_address)
+
+        expect(subscription.billing_address_to_use).to eq(billing_address)
+      end
+    end
+
+    context 'when the subscription has no billing address' do
+      it 'returns the billing address on the user' do
+        user = create(:user)
+        billing_address = create(:bill_address)
+        user.bill_address = billing_address
+
+        subscription = create(:subscription, user: user)
+
+        expect(subscription.billing_address_to_use).to eq(billing_address)
+      end
+    end
+  end
+
+  describe '#shipping_address_to_use' do
+    context 'when the subscription has a shipping address' do
+      it 'returns the shipping address on the subscription' do
+        shipping_address = create(:ship_address)
+
+        subscription = create(:subscription, shipping_address: shipping_address)
+
+        expect(subscription.shipping_address_to_use).to eq(shipping_address)
+      end
+    end
+
+    context 'when the subscription has no shipping address' do
+      it 'returns the shipping address on the user' do
+        user = create(:user)
+        shipping_address = create(:ship_address)
+        user.ship_address = shipping_address
+
+        subscription = create(:subscription, user: user)
+
+        expect(subscription.shipping_address_to_use).to eq(shipping_address)
+      end
+    end
+  end
+
   describe "#update_actionable_date_if_interval_changed" do
     context "with installments" do
       context "when the last installment date would cause the interval to be in the past" do
