@@ -1,4 +1,4 @@
-class AddPaymentMethodToSubscriptions < ActiveRecord::Migration[6.0]
+class AddPaymentMethodToSubscriptions < ActiveRecord::Migration[5.2]
   def change
     add_reference(
       :solidus_subscriptions_subscriptions,
