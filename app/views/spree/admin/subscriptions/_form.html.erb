@@ -86,30 +86,30 @@
     </div>
   <% end %>
 
-  <div class="row">
-    <div class="col-6">
-      <fieldset class="no-border-bottom">
-        <legend align="center"><%= t('spree.shipping_address') %></legend>
+  <div class="js-customer-details">
+    <div class="row">
+      <div class="col-6">
+        <fieldset class="no-border-bottom">
+          <legend align="center"><%= t('spree.shipping_address') %></legend>
 
-        <div class="js-customer-details">
           <div class="js-shipping-address">
             <%= f.fields_for :shipping_address do |sa_form| %>
               <%= render partial: 'spree/admin/shared/address_form', locals: { f: sa_form, type: "shipping" } %>
             <% end %>
           </div>
-        </div>
-      </fieldset>
-    </div>
+        </fieldset>
+      </div>
 
-    <div class="col-6">
-      <fieldset class="no-border-bottom">
-        <legend align="center"><%= t('spree.billing_address') %></legend>
-        <div class="js-billing-address">
-          <%= f.fields_for :billing_address do |ba_form| %>
-            <%= render partial: 'spree/admin/shared/address_form', locals: { f: ba_form, type: "billing" } %>
-          <% end %>
-        </div>
-      </fieldset>
+      <div class="col-6">
+        <fieldset class="no-border-bottom">
+          <legend align="center"><%= t('spree.billing_address') %></legend>
+          <div class="js-billing-address">
+            <%= f.fields_for :billing_address do |ba_form| %>
+              <%= render partial: 'spree/admin/shared/address_form', locals: { f: ba_form, type: "billing" } %>
+            <% end %>
+          </div>
+        </fieldset>
+      </div>
     </div>
   </div>
 
