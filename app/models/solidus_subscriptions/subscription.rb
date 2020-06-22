@@ -24,7 +24,7 @@ module SolidusSubscriptions
 
     accepts_nested_attributes_for :shipping_address
     accepts_nested_attributes_for :billing_address
-    accepts_nested_attributes_for :line_items, allow_destroy: true, reject_if: -> (p) { p[:quantity].blank? }
+    accepts_nested_attributes_for :line_items, allow_destroy: true, reject_if: ->(p) { p[:quantity].blank? }
 
     before_validation :set_payment_method
     before_update :update_actionable_date_if_interval_changed

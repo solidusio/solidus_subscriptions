@@ -35,8 +35,7 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
       create(:payment,
         order: subscription_line_item.spree_line_item.order,
         source: payment_source,
-        payment_method: payment_method,
-      )
+        payment_method: payment_method,)
 
       subscription = described_class.activate([subscription_line_item])
 

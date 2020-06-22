@@ -299,14 +299,12 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
         payment_source = create(:credit_card,
           payment_method: payment_method,
           gateway_customer_profile_id: 'BGS-123',
-          user: user,
-        )
+          user: user,)
 
         subscription = create(:subscription,
           user: user,
           payment_method: payment_method,
-          payment_source: payment_source,
-        )
+          payment_source: payment_source,)
 
         expect(subscription.payment_source_to_use).to eq(payment_source)
       end
@@ -343,14 +341,12 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
         payment_source = create(:credit_card,
           payment_method: payment_method,
           gateway_customer_profile_id: 'BGS-123',
-          user: user,
-        )
+          user: user,)
 
         subscription = create(:subscription,
           user: user,
           payment_method: payment_method,
-          payment_source: payment_source,
-        )
+          payment_source: payment_source,)
 
         expect(subscription.payment_method_to_use).to eq(payment_method)
       end

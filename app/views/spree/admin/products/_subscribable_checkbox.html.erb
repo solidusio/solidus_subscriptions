@@ -1,0 +1,8 @@
+<div data-hook="admin_product_form_subscribable">
+  <%= f.field_container :subscribable do %>
+    <label>
+      <%= f.check_box :subscribable %>
+      <%= Spree::Product.human_attribute_name(:subscribable) %>
+    </label>
+  <% end %>
+</div>
