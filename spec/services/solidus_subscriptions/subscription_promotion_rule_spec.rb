@@ -26,7 +26,7 @@ RSpec.describe SolidusSubscriptions::SubscriptionPromotionRule do
       it { is_expected.to be_truthy }
     end
 
-    context 'when the order contains a line item with a subscription' do
+    context 'when the order does not contain a line item with a subscription' do
       let(:line_items) { build_list(:line_item, 1) }
       it { is_expected.to be_falsy }
     end
