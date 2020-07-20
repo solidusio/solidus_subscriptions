@@ -62,6 +62,7 @@ module SolidusSubscriptions
         store: subscription.store || Spree::Store.default,
         subscription_order: true,
         order_type: original_order.order_type,
+        source: original_order.source,
         dsr_id: original_order.dsr_id
       )
     end
