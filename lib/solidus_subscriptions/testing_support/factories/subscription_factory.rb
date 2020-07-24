@@ -17,7 +17,7 @@ FactoryBot.define do
         line_item_traits { [] }
       end
 
-      line_items { build_list :subscription_line_item, 1, *line_item_traits }
+      line_items { [association(:subscription_line_item, *line_item_traits)] }
     end
 
     trait :with_shipping_address do

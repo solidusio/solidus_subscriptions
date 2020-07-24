@@ -3,11 +3,11 @@ FactoryBot.define do
     transient {
       subscription_traits { [] }
     }
-    subscription { build :subscription, :with_line_item, *subscription_traits }
+    subscription { association(:subscription, :with_line_item, *subscription_traits) }
 
     trait :failed do
       actionable_date { Time.zone.yesterday }
-      details { build_list(:installment_detail, 1, installment: @instance) }
+      details { [association(:installment_detail, installment: @instance)] }
     end
 
     trait :success do
@@ -16,7 +16,7 @@ FactoryBot.define do
       end
 
       details do
-        build_list(:installment_detail, 1, :success, installment: @instance, order: order)
+        [association(:installment_detail, :success, installment: @instance, order: order)]
       end
     end
   end
