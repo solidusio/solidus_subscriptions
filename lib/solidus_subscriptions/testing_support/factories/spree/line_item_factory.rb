@@ -6,11 +6,9 @@ FactoryBot.modify do
       end
 
       subscription_line_items do
-        build_list(
-          :subscription_line_item,
-          n_subscription_line_items,
-          spree_line_item: @instance
-        )
+        Array.new(n_subscription_line_items) do
+          association :subscription_line_item, spree_line_item: @instance
+        end
       end
     end
   end

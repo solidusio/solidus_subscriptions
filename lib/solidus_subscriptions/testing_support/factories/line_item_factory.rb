@@ -12,7 +12,7 @@ FactoryBot.define do
         subscription_traits { [] }
       end
 
-      subscription { build :subscription, *subscription_traits }
+      subscription { association :subscription, *subscription_traits }
     end
   end
 end
