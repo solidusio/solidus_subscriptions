@@ -56,27 +56,25 @@ module SolidusSubscriptions
     # This is useful in the case where certain fields should not be allowed to
     # be modified by the user. This locks these attributes from being passed
     # in to the orders controller (or the api controller).
-
     # Ie. if a store does not want to allow users to configure the end date of
     # a subscription. Add this to an initializer:
-
     # ```
     # SolidusSubscriptions::Config.subscription_line_item_attributes = [
     #   :quantity,
+    #   :subscribable_id,
     #   :interval_length,
     #   :interval_units,
-    #   :subscribable_id
     # ]
     # ```
     # This configuration also easily allows the gem to be customized to track
-    # more information on the subcriptions line items.
+    # more information on the subscriptions line items.
     mattr_accessor(:subscription_line_item_attributes) do
       [
         :quantity,
         :subscribable_id,
         :interval_length,
         :interval_units,
-        :end_date
+        :end_date,
       ]
     end
 
@@ -84,8 +82,12 @@ module SolidusSubscriptions
     # be updated from user data
     mattr_accessor(:subscription_attributes) do
       [
+        :interval_length,
+        :interval_units,
+        :end_date,
         :actionable_date,
-        shipping_address_attributes: Spree::PermittedAttributes.address_attributes
+        shipping_address_attributes: Spree::PermittedAttributes.address_attributes,
+        billing_address_attributes: Spree::PermittedAttributes.address_attributes,
       ]
     end
   end

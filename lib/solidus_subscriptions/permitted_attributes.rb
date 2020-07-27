@@ -4,32 +4,14 @@
 module SolidusSubscriptions
   module PermittedAttributes
     class << self
-      def update_spree_permiteed_attributes
-        ::Spree::PermittedAttributes.line_item_attributes << {
-          subscription_line_items_attributes: nested(
-            subscription_line_item_attributes
-          )
-        }
-
-        ::Spree::PermittedAttributes.user_attributes << {
-          subscriptions_attributes: nested(subscription_attributes)
-        }
-      end
-
       def subscription_line_item_attributes
         [Config.subscription_line_item_attributes]
       end
 
       def subscription_attributes
         Config.subscription_attributes | [
-          { line_items_attributes: nested(subscription_line_item_attributes) - [:subscribable_id] }
+          line_items_attributes: (subscription_line_item_attributes | [:id] - [:subscribable_id]),
         ]
-      end
-
-      private
-
-      def nested(attributes)
-        attributes | [:id]
       end
     end
   end
