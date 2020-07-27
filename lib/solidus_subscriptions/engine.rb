@@ -20,19 +20,22 @@ module SolidusSubscriptions
       g.test_framework :rspec
     end
 
-    initializer 'configure spree subcription permitted attributes', after: 'require subscription lib helpers' do
-      PermittedAttributes.update_spree_permiteed_attributes
+    initializer 'solidus_subscriptions.update_permitted_attributes' do
+      ::Spree::PermittedAttributes.line_item_attributes << {
+        subscription_line_items_attributes: PermittedAttributes.subscription_line_item_attributes | [:id],
+      }
+
+      ::Spree::PermittedAttributes.user_attributes << {
+        subscriptions_attributes: PermittedAttributes.subscription_attributes | [:id],
+      }
     end
 
-    initializer 'solidus_subscriptions.configs', before: "require subscription lib helpers" do
-    end
-
-    initializer 'register_subscription_promotion_rule', after: 'spree.promo.register.promotion.rules' do |app|
+    initializer 'solidus_subscriptions.register_promotion_rules', after: 'spree.promo.register.promotion.rules' do |app|
       app.config.spree.promotions.rules << 'SolidusSubscriptions::SubscriptionPromotionRule'
       app.config.spree.promotions.rules << 'SolidusSubscriptions::SubscriptionOrderPromotionRule'
     end
 
-    initializer 'subscriptions_backend' do
+    initializer 'solidus_subscriptions.configure_backend' do
       next unless ::Spree::Backend::Config.respond_to?(:menu_items)
       ::Spree::Backend::Config.configure do |config|
         config.menu_items << config.class::MenuItem.new(
