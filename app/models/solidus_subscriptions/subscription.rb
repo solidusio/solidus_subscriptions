@@ -215,6 +215,23 @@ module SolidusSubscriptions
       billing_address || user.bill_address
     end
 
+    def dummy_order_without_line_items
+      order = ::Spree::Order.new(
+        ship_address: shipping_address_to_use,
+        bill_address: billing_address_to_use,
+      )
+
+      yield order if block_given?
+
+      order.freeze
+    end
+
+    def dummy_order
+      dummy_order_without_line_items do |order|
+        order.line_items = LineItemBuilder.new(line_items.to_a).spree_line_items
+      end
+    end
+
     private
 
     def check_successive_skips_exceeded

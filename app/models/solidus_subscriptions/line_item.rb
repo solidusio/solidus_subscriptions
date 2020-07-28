@@ -44,25 +44,13 @@ module SolidusSubscriptions
     # Get a placeholder line item for calculating the values of future
     # subscription orders. It is frozen and cannot be saved
     def dummy_line_item
-      li = LineItemBuilder.new([self]).spree_line_items.first
-      return unless li
+      line_item = LineItemBuilder.new([self]).spree_line_items.first
+      return unless line_item
 
-      li.order = dummy_order
-      li.validate
-      li.freeze
-    end
+      line_item.order = subscription.dummy_order_without_line_items
 
-    private
-
-    # Get a placeholder order for calculating the values of future
-    # subscription orders. It is a frozen duplicate of the current order and
-    # cannot be saved
-    def dummy_order
-      order = spree_line_item ? spree_line_item.order.dup : ::Spree::Order.create
-      order.ship_address = subscription.shipping_address || subscription.user.ship_address if subscription
-      order.bill_address = subscription.billing_address || subscription.user.bill_address if subscription
-
-      order.freeze
+      line_item.validate
+      line_item.freeze
     end
   end
 end
