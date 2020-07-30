@@ -9,7 +9,12 @@ class CreateSolidusSubscriptionsSubscriptionEvents < ActiveRecord::Migration[5.2
         type: :integer,
       )
       t.string :event_type, null: false
-      t.json :details, null: false
+
+      if t.respond_to?(:jsonb)
+        t.jsonb :details, null: false
+      else
+        t.json :details, null: false
+      end
 
       t.timestamps
     end
