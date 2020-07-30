@@ -10,6 +10,48 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
   it { is_expected.to validate_numericality_of(:quantity).is_greater_than(0) }
   it { is_expected.to validate_numericality_of(:interval_length).is_greater_than(0) }
 
+  describe '#save!' do
+    context 'when the line item is new' do
+      it 'tracks a line_item_created event' do
+        line_item = build(:subscription_line_item, :with_subscription)
+
+        line_item.save!
+
+        expect(line_item.subscription.events.last).to have_attributes(
+          event_type: 'line_item_created',
+          details: a_hash_including('id' => line_item.id),
+        )
+      end
+    end
+
+    context 'when the line item is persisted' do
+      it 'tracks a line_item_updated event' do
+        line_item = create(:subscription_line_item, :with_subscription)
+
+        line_item.quantity = 2
+        line_item.save!
+
+        expect(line_item.subscription.events.last).to have_attributes(
+          event_type: 'line_item_updated',
+          details: a_hash_including('id' => line_item.id),
+        )
+      end
+    end
+  end
+
+  describe '#destroy!' do
+    it 'tracks a line_item_destroyed event' do
+      line_item = create(:subscription_line_item, :with_subscription)
+
+      line_item.destroy!
+
+      expect(line_item.subscription.events.last).to have_attributes(
+        event_type: 'line_item_destroyed',
+        details: a_hash_including('id' => line_item.id),
+      )
+    end
+  end
+
   describe "#interval" do
     let(:line_item) { create :subscription_line_item, :with_subscription }
     before do

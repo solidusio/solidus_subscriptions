@@ -40,6 +40,7 @@ en:
           sidebar: Status
           details: Details
           installments: Installments
+          events: Events
           payment: Payment
         new:
           back: Back to Subscriptions List
@@ -52,6 +53,9 @@ en:
       installments:
         index:
           title: Installments
+      subscription_events:
+        index:
+          title: Events
     promotion_rule_types:
       subscription_promotion_rule:
         name: Subscription

@@ -36,6 +36,10 @@ module SolidusSubscriptions
     validates :quantity, numericality: { greater_than: 0 }
     validates :interval_length, numericality: { greater_than: 0 }, unless: -> { subscription }
 
+    after_create :track_creation_event
+    after_update :track_update_event
+    after_destroy :track_destroy_event
+
     def as_json(**options)
       options[:methods] ||= [:dummy_line_item]
       super(options)
@@ -63,6 +67,37 @@ module SolidusSubscriptions
       order.bill_address = subscription.billing_address || subscription.user.bill_address if subscription
 
       order.freeze
+    end
+
+    def as_json_for_event
+      as_json.with_indifferent_access.except(
+        :dummy_line_item,
+        :interval_units,
+        :interval_length,
+        :end_date,
+        :spree_line_item_id,
+        :subscription_id,
+        :created_at,
+        :updated_at,
+      )
+    end
+
+    def track_creation_event
+      return unless subscription
+
+      subscription.events.create!(event_type: 'line_item_created', details: as_json_for_event)
+    end
+
+    def track_update_event
+      return unless subscription
+
+      subscription.events.create!(event_type: 'line_item_updated', details: as_json_for_event)
+    end
+
+    def track_destroy_event
+      return unless subscription
+
+      subscription.events.create!(event_type: 'line_item_destroyed', details: as_json_for_event)
     end
   end
 end

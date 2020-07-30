@@ -1,0 +1,8 @@
+<% state_class = {
+    fulfilled: 'active',
+    unfulfilled: 'error',
+}[installment.state.to_sym] %>
+
+<span class="pill pill-<%= state_class %>">
+  <%= SolidusSubscriptions::Installment.human_attribute_name("state.#{installment.state}") %>
+</span>
