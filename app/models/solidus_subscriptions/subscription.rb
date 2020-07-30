@@ -30,7 +30,6 @@ module SolidusSubscriptions
     before_validation :set_payment_method
     before_update :update_actionable_date_if_interval_changed
     after_create :track_creation_event
-    after_update :track_update_event
 
     # Find all subscriptions that are "actionable"; that is, ones that have an
     # actionable_date in the past and are not invalid or canceled.
@@ -137,13 +136,17 @@ module SolidusSubscriptions
       (actionable_date - Config.minimum_cancellation_notice).future?
     end
 
-    def skip
-      check_successive_skips_exceeded
-      check_total_skips_exceeded
+    def skip(check_skip_limits: true)
+      if check_skip_limits
+        check_successive_skips_exceeded
+        check_total_skips_exceeded
 
-      return if errors.any?
+        return if errors.any?
+      end
 
-      advance_actionable_date
+      advance_actionable_date.tap do
+        events.create!(event_type: 'subscription_skipped')
+      end
     end
 
     # This method determines if a subscription can be deactivated. A deactivated
@@ -176,8 +179,6 @@ module SolidusSubscriptions
     # subscription will be eligible to be processed.
     def advance_actionable_date
       update! actionable_date: next_actionable_date
-
-      events.create!(event_type: 'subscription_skipped')
 
       actionable_date
     end
@@ -273,10 +274,6 @@ module SolidusSubscriptions
 
     def track_creation_event
       events.create!(event_type: 'subscription_created', details: as_json_for_event)
-    end
-
-    def track_update_event
-      events.create!(event_type: 'subscription_updated', details: as_json_for_event)
     end
 
     def track_transition_event
