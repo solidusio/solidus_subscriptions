@@ -50,7 +50,7 @@
       <div class="row">
         <div class="field-block col-4">
           <div class="field">
-            <%= label_tag :q_user_email_cont, Spree::User.human_attribute_name(:email) %>
+            <%= label_tag :q_user_email_cont, Spree.user_class.human_attribute_name(:email) %>
             <%= f.text_field :user_email_cont, size: 25 %>
           </div>
         </div>

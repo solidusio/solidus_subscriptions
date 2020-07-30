@@ -22,7 +22,7 @@ module SolidusSubscriptions
         subscriptions = SolidusSubscriptions::Subscription.arel_table
         installments = SolidusSubscriptions::Installment.arel_table
 
-        ::Spree::User.
+        ::Spree.user_class.
           joins(:subscriptions).
           joins(
             subscriptions.

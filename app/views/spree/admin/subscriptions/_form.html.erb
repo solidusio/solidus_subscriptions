@@ -6,7 +6,7 @@
       <% if f.object.new_record? %>
         <div class="field">
           <%= f.label :user_id, I18n.t('spree.user'), class: "required" %>
-          <%= f.collection_select :user_id,  Spree::User.all, :id, :email, {}, class: "select2 fullwidth" %>
+          <%= f.collection_select :user_id,  Spree.user_class.all, :id, :email, {}, class: "select2 fullwidth" %>
         </div>
       <% end %>
 
