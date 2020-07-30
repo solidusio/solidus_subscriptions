@@ -15,6 +15,35 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
   it { is_expected.to accept_nested_attributes_for :line_items }
 
+  describe '#save' do
+    context 'when the subscription is new' do
+      it 'tracks a subscription_created event' do
+        subscription = build(:subscription)
+
+        subscription.save!
+
+        expect(subscription.events.last).to have_attributes(
+          event_type: 'subscription_created',
+          details: a_hash_including('id' => subscription.id),
+        )
+      end
+    end
+
+    context 'when the line item is persisted' do
+      it 'tracks a subscription_updated event' do
+        subscription = create(:subscription)
+
+        subscription.end_date = Time.zone.tomorrow
+        subscription.save!
+
+        expect(subscription.events.last).to have_attributes(
+          event_type: 'subscription_updated',
+          details: a_hash_including('id' => subscription.id),
+        )
+      end
+    end
+  end
+
   describe '#cancel' do
     subject { subscription.cancel }
 
@@ -31,6 +60,11 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
         subject
         expect(subscription.canceled?).to be_truthy
       end
+
+      it 'creates a subscription_canceled event' do
+        subject
+        expect(subscription.events.last).to have_attributes(event_type: 'subscription_canceled')
+      end
     end
 
     context 'the subscription cannot be canceled' do
@@ -39,6 +73,11 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       it 'is pending cancelation' do
         subject
         expect(subscription.pending_cancellation?).to be_truthy
+      end
+
+      it 'creates a subscription_cancellation_requested event' do
+        subject
+        expect(subscription.events.last).to have_attributes(event_type: 'subscription_cancellation_requested')
       end
     end
   end
@@ -116,10 +155,61 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
         subject
         expect(subscription.inactive?).to be_truthy
       end
+
+      it 'creates a subscription_deactivated event' do
+        subject
+        expect(subscription.events.last).to have_attributes(event_type: 'subscription_deactivated')
+      end
     end
 
     context 'the subscription cannot be deactivated' do
       it { is_expected.to be_falsy }
+
+      it 'does not create an event' do
+        expect { subject }.not_to change(subscription.events, :count)
+      end
+    end
+  end
+
+  describe '#activate' do
+    context 'when the subscription can be activated' do
+      it 'activates the subscription' do
+        subscription = create(:subscription,
+          actionable_date: Time.zone.today,
+          end_date: Time.zone.yesterday,)
+        subscription.deactivate!
+
+        subscription.activate
+
+        expect(subscription.state).to eq('active')
+      end
+
+      it 'creates a subscription_activated event' do
+        subscription = create(:subscription,
+          actionable_date: Time.zone.today,
+          end_date: Time.zone.yesterday,)
+        subscription.deactivate!
+
+        subscription.activate
+
+        expect(subscription.events.last).to have_attributes(event_type: 'subscription_activated')
+      end
+    end
+
+    context 'the subscription cannot be activated' do
+      it 'returns false' do
+        subscription = create(:subscription, actionable_date: Time.zone.today)
+
+        expect(subscription.activate).to eq(false)
+      end
+
+      it 'does not create an event' do
+        subscription = create(:subscription, actionable_date: Time.zone.today)
+
+        expect {
+          subscription.activate
+        }.not_to change(subscription.events, :count)
+      end
     end
   end
 
@@ -164,6 +254,11 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       expect(subscription.reload).to have_attributes(
         actionable_date: expected_date
       )
+    end
+
+    it 'creates a subscription_skipped event' do
+      subject
+      expect(subscription.events.last).to have_attributes(event_type: 'subscription_skipped')
     end
   end
 

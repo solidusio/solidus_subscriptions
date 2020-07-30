@@ -10,6 +10,7 @@ module SolidusSubscriptions
     belongs_to :user, class_name: "::#{::Spree.user_class}"
     has_many :line_items, class_name: 'SolidusSubscriptions::LineItem', inverse_of: :subscription
     has_many :installments, class_name: 'SolidusSubscriptions::Installment'
+    has_many :events, class_name: 'SolidusSubscriptions::SubscriptionEvent'
     belongs_to :store, class_name: '::Spree::Store'
     belongs_to :shipping_address, class_name: '::Spree::Address', optional: true
     belongs_to :billing_address, class_name: '::Spree::Address', optional: true
@@ -28,6 +29,8 @@ module SolidusSubscriptions
 
     before_validation :set_payment_method
     before_update :update_actionable_date_if_interval_changed
+    after_create :track_creation_event
+    after_update :track_update_event
 
     # Find all subscriptions that are "actionable"; that is, ones that have an
     # actionable_date in the past and are not invalid or canceled.
@@ -108,6 +111,7 @@ module SolidusSubscriptions
       end
 
       after_transition to: :active, do: :advance_actionable_date
+      after_transition do: :track_transition_event
     end
 
     # This method determines if a subscription may be canceled. Canceled
@@ -172,6 +176,9 @@ module SolidusSubscriptions
     # subscription will be eligible to be processed.
     def advance_actionable_date
       update! actionable_date: next_actionable_date
+
+      events.create!(event_type: 'subscription_skipped')
+
       actionable_date
     end
 
@@ -258,6 +265,29 @@ module SolidusSubscriptions
       if payment_source
         self.payment_method = payment_source.payment_method
       end
+    end
+
+    def as_json_for_event
+      as_json
+    end
+
+    def track_creation_event
+      events.create!(event_type: 'subscription_created', details: as_json_for_event)
+    end
+
+    def track_update_event
+      events.create!(event_type: 'subscription_updated', details: as_json_for_event)
+    end
+
+    def track_transition_event
+      event_type = {
+        active: 'subscription_activated',
+        canceled: 'subscription_canceled',
+        pending_cancellation: 'subscription_cancellation_requested',
+        inactive: 'subscription_deactivated',
+      }[state.to_sym]
+
+      events.create!(event_type: event_type, details: as_json_for_event)
     end
   end
 end
