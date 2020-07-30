@@ -67,7 +67,7 @@ module Spree
       end
 
       def skip
-        @subscription.advance_actionable_date
+        @subscription.skip(check_skip_limits: false)
 
         notice = I18n.t(
           'spree.admin.subscriptions.successfully_skipped',

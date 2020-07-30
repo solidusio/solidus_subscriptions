@@ -136,11 +136,13 @@ module SolidusSubscriptions
       (actionable_date - Config.minimum_cancellation_notice).future?
     end
 
-    def skip
-      check_successive_skips_exceeded
-      check_total_skips_exceeded
+    def skip(check_skip_limits: true)
+      if check_skip_limits
+        check_successive_skips_exceeded
+        check_total_skips_exceeded
 
-      return if errors.any?
+        return if errors.any?
+      end
 
       advance_actionable_date.tap do
         events.create!(event_type: 'subscription_skipped')
