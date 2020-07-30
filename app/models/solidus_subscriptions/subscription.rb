@@ -280,8 +280,8 @@ module SolidusSubscriptions
       event_type = {
         active: 'subscription_activated',
         canceled: 'subscription_canceled',
-        pending_cancellation: 'subscription_cancellation_requested',
-        inactive: 'subscription_deactivated',
+        pending_cancellation: 'subscription_canceled',
+        inactive: 'subscription_ended',
       }[state.to_sym]
 
       events.create!(event_type: event_type, details: as_json_for_event)

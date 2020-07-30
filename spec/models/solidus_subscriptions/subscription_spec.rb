@@ -73,9 +73,9 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
         expect(subscription.pending_cancellation?).to be_truthy
       end
 
-      it 'creates a subscription_cancellation_requested event' do
+      it 'creates a subscription_canceled event' do
         subject
-        expect(subscription.events.last).to have_attributes(event_type: 'subscription_cancellation_requested')
+        expect(subscription.events.last).to have_attributes(event_type: 'subscription_canceled')
       end
     end
   end
@@ -169,7 +169,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
       it 'creates a subscription_deactivated event' do
         subject
-        expect(subscription.events.last).to have_attributes(event_type: 'subscription_deactivated')
+        expect(subscription.events.last).to have_attributes(event_type: 'subscription_ended')
       end
     end
 
