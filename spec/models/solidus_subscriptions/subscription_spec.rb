@@ -29,17 +29,15 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       end
     end
 
-    context 'when the line item is persisted' do
-      it 'tracks a subscription_updated event' do
+    context 'when the subscription is persisted' do
+      it 'does not track an event' do
         subscription = create(:subscription)
 
         subscription.end_date = Time.zone.tomorrow
-        subscription.save!
 
-        expect(subscription.events.last).to have_attributes(
-          event_type: 'subscription_updated',
-          details: a_hash_including('id' => subscription.id),
-        )
+        expect {
+          subscription.save!
+        }.not_to change(subscription.events, :count)
       end
     end
   end

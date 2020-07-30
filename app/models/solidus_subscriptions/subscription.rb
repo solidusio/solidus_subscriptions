@@ -30,7 +30,6 @@ module SolidusSubscriptions
     before_validation :set_payment_method
     before_update :update_actionable_date_if_interval_changed
     after_create :track_creation_event
-    after_update :track_update_event
 
     # Find all subscriptions that are "actionable"; that is, ones that have an
     # actionable_date in the past and are not invalid or canceled.
@@ -273,10 +272,6 @@ module SolidusSubscriptions
 
     def track_creation_event
       events.create!(event_type: 'subscription_created', details: as_json_for_event)
-    end
-
-    def track_update_event
-      events.create!(event_type: 'subscription_updated', details: as_json_for_event)
     end
 
     def track_transition_event
