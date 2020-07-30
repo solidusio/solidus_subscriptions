@@ -1,0 +1,42 @@
+<% content_for(:page_title, t('.title')) %>
+
+<%= render 'spree/admin/shared/subscription_breadcrumbs', subscription: @subscription %>
+<%= render 'spree/admin/shared/subscription_sidebar', subscription: @subscription %>
+<%= render 'spree/admin/shared/subscription_tabs', current: :events, subscription: @subscription %>
+<%= render 'spree/admin/shared/subscription_actions', subscription: @subscription %>
+
+<fieldset class="no-border-bottom">
+  <legend><%= t('spree.admin.subscription_events.index.title') %></legend>
+
+  <%= paginate @subscription_events, theme: 'solidus_admin' %>
+
+  <table id="listing_subscription_events" class="index">
+    <thead>
+      <tr data-hook="admin_subscription_events_index_headers">
+        <th><%= SolidusSubscriptions::SubscriptionEvent.human_attribute_name(:event_type) %></th>
+        <th><%= SolidusSubscriptions::SubscriptionEvent.human_attribute_name(:details) %></th>
+        <th><%= sort_link(@search, :created_at, SolidusSubscriptions::SubscriptionEvent.human_attribute_name(:created_at)) %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @subscription_events.each do |event| %>
+        <tr>
+          <td><%= event.event_type %></td>
+          <td>
+            <% if event.details.is_a?(Hash) %>
+              <% event.details.each_pair do |key, value| %>
+                <strong><%= key %></strong>: <%= value %><br>
+              <% end %>
+            <% else %>
+              <%= event.details %>
+            <% end %>
+          </td>
+          <td><%= l event.created_at %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= paginate @subscription_events, theme: 'solidus_admin' %>
+</fieldset>

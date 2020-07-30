@@ -23,6 +23,7 @@ Spree::Core::Engine.routes.draw do
       post :activate, on: :member
       post :skip, on: :member
       resources :installments, only: [:index, :show]
+      resources :subscription_events, only: :index
     end
   end
 end
