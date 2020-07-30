@@ -76,9 +76,6 @@ module SolidusSubscriptions
         :interval_length,
         :end_date,
         :spree_line_item_id,
-        :subscription_id,
-        :created_at,
-        :updated_at,
       )
     end
 
