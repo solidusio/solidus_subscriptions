@@ -142,7 +142,9 @@ module SolidusSubscriptions
 
       return if errors.any?
 
-      advance_actionable_date
+      advance_actionable_date.tap do
+        events.create!(event_type: 'subscription_skipped')
+      end
     end
 
     # This method determines if a subscription can be deactivated. A deactivated
@@ -175,8 +177,6 @@ module SolidusSubscriptions
     # subscription will be eligible to be processed.
     def advance_actionable_date
       update! actionable_date: next_actionable_date
-
-      events.create!(event_type: 'subscription_skipped')
 
       actionable_date
     end

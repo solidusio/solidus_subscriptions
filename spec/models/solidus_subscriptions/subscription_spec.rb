@@ -117,6 +117,10 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
         subject
         expect(subscription.errors[:successive_skip_count]).to_not be_empty
       end
+
+      it 'does not create an event' do
+        expect { subject }.not_to change(subscription.events, :count)
+      end
     end
 
     context 'when the total skips have been exceeded' do
@@ -127,10 +131,19 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
         subject
         expect(subscription.errors[:skip_count]).to_not be_empty
       end
+
+      it 'does not create an event' do
+        expect { subject }.not_to change(subscription.events, :count)
+      end
     end
 
     context 'when the subscription can be skipped' do
       it { is_expected.to eq expected_date }
+
+      it 'creates a subscription_skipped event' do
+        subject
+        expect(subscription.events.last).to have_attributes(event_type: 'subscription_skipped')
+      end
     end
   end
 
@@ -252,11 +265,6 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       expect(subscription.reload).to have_attributes(
         actionable_date: expected_date
       )
-    end
-
-    it 'creates a subscription_skipped event' do
-      subject
-      expect(subscription.events.last).to have_attributes(event_type: 'subscription_skipped')
     end
   end
 
