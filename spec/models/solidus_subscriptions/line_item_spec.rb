@@ -1,10 +1,6 @@
 require 'spec_helper'
 
 RSpec.describe SolidusSubscriptions::LineItem, type: :model do
-  it { is_expected.to belong_to :spree_line_item }
-  it { is_expected.to belong_to :subscription }
-  it { is_expected.to have_one :order }
-
   it { is_expected.to validate_presence_of :subscribable_id }
 
   it { is_expected.to validate_numericality_of(:quantity).is_greater_than(0) }
