@@ -11,6 +11,7 @@ module SolidusSubscriptions
     has_many :line_items, class_name: 'SolidusSubscriptions::LineItem', inverse_of: :subscription
     has_many :installments, class_name: 'SolidusSubscriptions::Installment'
     has_many :events, class_name: 'SolidusSubscriptions::SubscriptionEvent'
+    has_many :orders, class_name: '::Spree::Order', inverse_of: :subscription
     belongs_to :store, class_name: '::Spree::Store'
     belongs_to :shipping_address, class_name: '::Spree::Address', optional: true
     belongs_to :billing_address, class_name: '::Spree::Address', optional: true

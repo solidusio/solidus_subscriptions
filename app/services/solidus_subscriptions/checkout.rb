@@ -58,7 +58,8 @@ module SolidusSubscriptions
         user: user,
         email: user.email,
         store: subscription.store || ::Spree::Store.default,
-        subscription_order: true
+        subscription_order: true,
+        subscription: subscription
       )
     end
 
