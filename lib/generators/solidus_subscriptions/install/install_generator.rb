@@ -3,7 +3,13 @@
 module SolidusSubscriptions
   module Generators
     class InstallGenerator < Rails::Generators::Base
+      source_root File.expand_path('templates', __dir__)
+
       class_option :auto_run_migrations, type: :boolean, default: false
+
+      def copy_initializer
+        template 'initializer.rb', 'config/initializers/solidus_subscriptions.rb'
+      end
 
       def add_javascripts
         append_file 'vendor/assets/javascripts/spree/backend/all.js', "//= require spree/backend/solidus_subscriptions\n"
