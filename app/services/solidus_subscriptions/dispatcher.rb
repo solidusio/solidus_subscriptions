@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SolidusSubscriptions
   class Dispatcher
     attr_reader :installments, :order

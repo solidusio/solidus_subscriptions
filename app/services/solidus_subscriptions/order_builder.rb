@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This class is responsible for adding line items to order without going
 # through order contents.
 module SolidusSubscriptions

@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 RSpec.describe SolidusSubscriptions::Installment, type: :model do
-  it { is_expected.to validate_presence_of :subscription }
-
   let(:installment) { create :installment }
+
+  it { is_expected.to validate_presence_of :subscription }
 
   describe '#line_item_builder' do
     subject { installment.line_item_builder }
@@ -22,7 +22,8 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     end
 
     it { is_expected.to be_a SolidusSubscriptions::InstallmentDetail }
-    it { is_expected.to_not be_successful }
+    it { is_expected.not_to be_successful }
+
     it 'has the correct message' do
       expect(subject).to have_attributes(
         message: I18n.t('solidus_subscriptions.installment_details.out_of_stock')
@@ -46,7 +47,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
 
     it 'removes any actionable date if any' do
       expect { subject }.
-        to change { installment.actionable_date }.
+        to change(installment, :actionable_date).
         from(actionable_date).to(nil)
     end
 
@@ -67,6 +68,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
 
   describe '#failed!' do
     subject { installment.failed!(order) }
+
     let(:order) { create :order }
 
     let(:expected_date) do
@@ -74,7 +76,8 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     end
 
     it { is_expected.to be_a SolidusSubscriptions::InstallmentDetail }
-    it { is_expected.to_not be_successful }
+    it { is_expected.not_to be_successful }
+
     it 'has the correct message' do
       expect(subject).to have_attributes(
         message: I18n.t('solidus_subscriptions.installment_details.failed'),
@@ -103,30 +106,36 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
 
   describe '#unfulfilled?' do
     subject { installment.unfulfilled? }
+
     let(:installment) { create(:installment, details: details) }
 
     context 'the installment has an associated successful detail' do
       let(:details) { create_list :installment_detail, 1, success: true }
+
       it { is_expected.to be_falsy }
     end
 
     context 'the installment has no associated successful detail' do
       let(:details) { create_list :installment_detail, 1 }
+
       it { is_expected.to be_truthy }
     end
   end
 
   describe '#fulfilled' do
     subject { installment.fulfilled? }
+
     let(:installment) { create(:installment, details: details) }
 
     context 'the installment has an associated completed order' do
       let(:details) { create_list :installment_detail, 1, success: true }
+
       it { is_expected.to be_truthy }
     end
 
     context 'the installment has no associated completed order' do
       let(:details) { create_list :installment_detail, 1 }
+
       it { is_expected.to be_falsy }
     end
   end
@@ -141,7 +150,8 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     end
 
     it { is_expected.to be_a SolidusSubscriptions::InstallmentDetail }
-    it { is_expected.to_not be_successful }
+    it { is_expected.not_to be_successful }
+
     it 'has the correct message' do
       expect(subject).to have_attributes(
         order: order,

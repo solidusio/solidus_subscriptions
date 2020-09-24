@@ -49,16 +49,19 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
   end
 
   describe "#interval" do
+    subject { line_item.interval }
+
     let(:line_item) { create :subscription_line_item, :with_subscription }
+
     before do
       Timecop.freeze(Date.parse("2016-09-22"))
       line_item.subscription.update!(actionable_date: Date.current)
     end
+
     after { Timecop.return }
 
-    subject { line_item.interval }
-
     it { is_expected.to be_a ActiveSupport::Duration }
+
     it "calculates the duration correctly" do
       expect(subject.from_now).to eq Date.parse("2016-10-22")
     end
@@ -68,6 +71,7 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
     subject { line_item.as_json }
 
     around { |e| Timecop.freeze { e.run } }
+
     let(:line_item) { create(:subscription_line_item, :with_subscription) }
 
     let(:expected_hash) do

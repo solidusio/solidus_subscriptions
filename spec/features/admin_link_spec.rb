@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-RSpec.feature 'Subscriptions admin link', type: :feature do
+RSpec.describe 'Subscriptions admin link', type: :feature do
   stub_authorization!
 
-  scenario 'Navigating to the subscriptions backend' do
+  it 'Navigating to the subscriptions backend' do
     visit '/admin'
     click_on "Subscriptions"
-    expect(page.current_path).to match /admin\/subscriptions/
+    expect(page).to have_current_path %r{admin/subscriptions}
   end
 end

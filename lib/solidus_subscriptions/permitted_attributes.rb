@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This module is responsible for managing what attributes can be updated
 # through the api. It also overrides Spree::Permitted attributes to allow the
 # solidus api to accept nested params for subscription models as well

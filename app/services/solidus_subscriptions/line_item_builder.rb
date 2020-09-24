@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This class is responsible for taking SubscriptionLineItems and building
 # them into Spree::LineItems which can be added to an order
 module SolidusSubscriptions
@@ -22,7 +24,7 @@ module SolidusSubscriptions
       line_items = subscription_line_items.map do |subscription_line_item|
         variant = subscribables.fetch(subscription_line_item.subscribable_id)
 
-        raise UnsubscribableError.new(variant) unless variant.subscribable?
+        raise UnsubscribableError, variant unless variant.subscribable?
         next unless variant.can_supply?(subscription_line_item.quantity)
 
         ::Spree::LineItem.new(variant: variant, quantity: subscription_line_item.quantity)

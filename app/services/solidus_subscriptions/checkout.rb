@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This class takes a collection of installments and populates a new spree
 # order with the correct contents based on the subscriptions associated to the
 # intallments. This is to group together subscriptions being
@@ -104,6 +106,7 @@ module SolidusSubscriptions
       end
 
       return if installments.empty?
+
       order_builder.add_line_items(order_line_items)
     end
 

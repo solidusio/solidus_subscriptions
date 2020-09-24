@@ -61,6 +61,7 @@ RSpec.describe Spree::Admin::SubscriptionsController, type: :request do
 
   describe 'POST cancel' do
     subject { delete spree.cancel_admin_subscription_path(subscription) }
+
     context 'the subscription can be canceled' do
       let(:subscription) { create :subscription, :actionable }
 
@@ -87,7 +88,7 @@ RSpec.describe Spree::Admin::SubscriptionsController, type: :request do
       end
 
       it 'cancels the subscription' do
-        expect { subject }.to_not change { subscription.reload.state }
+        expect { subject }.not_to change { subscription.reload.state }
       end
     end
   end
@@ -121,7 +122,7 @@ RSpec.describe Spree::Admin::SubscriptionsController, type: :request do
       end
 
       it 'cancels the subscription' do
-        expect { subject }.to_not change { subscription.reload.state }
+        expect { subject }.not_to change { subscription.reload.state }
       end
     end
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This module is responsible for taking SolidusSubscriptions::LineItem
 # objects and creating SolidusSubscriptions::Subscription Objects
 module SolidusSubscriptions
@@ -47,7 +49,7 @@ module SolidusSubscriptions
       subscription_line_items.group_by do |li|
         subscription_configuration(li)
       end.
-      values
+        values
     end
 
     private

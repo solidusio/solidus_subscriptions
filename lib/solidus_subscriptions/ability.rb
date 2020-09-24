@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SolidusSubscriptions
   class Ability
     include CanCan::Ability

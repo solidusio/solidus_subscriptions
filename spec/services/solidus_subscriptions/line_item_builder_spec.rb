@@ -10,6 +10,7 @@ RSpec.describe SolidusSubscriptions::LineItemBuilder do
 
   describe '#spree_line_items' do
     subject { builder.spree_line_items }
+
     let(:expected_attributes) do
       {
         variant_id: subscription_line_item.subscribable_id,
@@ -36,6 +37,7 @@ RSpec.describe SolidusSubscriptions::LineItemBuilder do
 
     context 'the variant is out of stock' do
       before { create :stock_location, backorderable_default: false }
+
       it { is_expected.to be_empty }
     end
   end

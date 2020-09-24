@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # A handler for behaviour that should happen after installments are marked as
 # failures
 module SolidusSubscriptions

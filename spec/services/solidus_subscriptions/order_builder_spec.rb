@@ -36,8 +36,8 @@ RSpec.describe SolidusSubscriptions::OrderBuilder do
     context 'the line item already exists on the order' do
       let(:line_items_attributes) do
         [{
-            variant: variant,
-            quantity: 3
+          variant: variant,
+          quantity: 3
         }]
       end
 

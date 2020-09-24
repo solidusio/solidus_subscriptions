@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Spree
   module Admin
     class InstallmentsController < ResourceController
@@ -9,8 +11,8 @@ module Spree
         @search = collection.ransack((params[:q] || {}).reverse_merge(s: 'created_at desc'))
 
         @installments = @search.result(distinct: true).
-          page(params[:page]).
-          per(params[:per_page] || Spree::Config[:orders_per_page])
+                        page(params[:page]).
+                        per(params[:per_page] || Spree::Config[:orders_per_page])
       end
 
       private

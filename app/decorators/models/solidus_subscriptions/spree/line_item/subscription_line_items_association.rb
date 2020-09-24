@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Each Spree::LineItem can have multiple subscription_line_items. This
 # allows a cart to represent multiple subscriptions to the same item in
 # the same order.

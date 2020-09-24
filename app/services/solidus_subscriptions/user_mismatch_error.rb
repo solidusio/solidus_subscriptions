@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SolidusSubscriptions
   class UserMismatchError < StandardError
     def initialize(installments)

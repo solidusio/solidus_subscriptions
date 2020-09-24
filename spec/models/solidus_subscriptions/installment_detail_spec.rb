@@ -8,11 +8,13 @@ RSpec.describe SolidusSubscriptions::InstallmentDetail, type: :model do
 
     context 'the detail was successful' do
       let(:success) { true }
+
       it { is_expected.to be_falsy }
     end
 
     context 'the detail was not successfuly' do
       let(:success) { false }
+
       it { is_expected.to be_truthy }
     end
   end

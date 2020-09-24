@@ -23,7 +23,7 @@ RSpec.describe SolidusSubscriptions::FailureDispatcher do
       if Spree.solidus_gem_version > Gem::Version.new('2.10')
         skip 'Orders in cart state cannot be canceled starting from Solidus 2.11'
       end
-      expect { subject }.to change { order.state }.to 'canceled'
+      expect { subject }.to change(order, :state).to 'canceled'
     end
   end
 end

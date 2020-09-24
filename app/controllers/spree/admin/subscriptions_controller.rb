@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Spree
   module Admin
     class SubscriptionsController < ResourceController
@@ -5,12 +7,12 @@ module Spree
 
       def index
         @search = SolidusSubscriptions::Subscription.
-          accessible_by(current_ability, :index).ransack(params[:q])
+                  accessible_by(current_ability, :index).ransack(params[:q])
 
         @subscriptions = @search.result(distinct: true).
-          includes(:line_items, :user).
-          page(params[:page]).
-          per(params[:per_page] || Spree::Config[:orders_per_page])
+                         includes(:line_items, :user).
+                         page(params[:page]).
+                         per(params[:per_page] || Spree::Config[:orders_per_page])
       end
 
       def new
@@ -29,9 +31,9 @@ module Spree
 
         if @subscription.payment_method&.source_required?
           @subscription.payment_source = @subscription
-            .payment_method
-            .payment_source_class
-            .find_by(id: params[:subscription][:payment_source_id])
+                                         .payment_method
+                                         .payment_source_class
+                                         .find_by(id: params[:subscription][:payment_source_id])
         else
           @subscription.payment_source = nil
         end
@@ -45,11 +47,11 @@ module Spree
           @subscription.cancel
         end
 
-        if @subscription.errors.none?
-          notice = I18n.t('spree.admin.subscriptions.successfully_canceled')
-        else
-          notice = @subscription.errors.full_messages.to_sentence
-        end
+        notice = if @subscription.errors.none?
+                   I18n.t('spree.admin.subscriptions.successfully_canceled')
+                 else
+                   @subscription.errors.full_messages.to_sentence
+                 end
 
         redirect_back(fallback_location: spree.admin_subscriptions_path, notice: notice)
       end
@@ -57,11 +59,11 @@ module Spree
       def activate
         @subscription.activate
 
-        if @subscription.errors.none?
-          notice = I18n.t('spree.admin.subscriptions.successfully_activated')
-        else
-          notice = @subscription.errors.full_messages.to_sentence
-        end
+        notice = if @subscription.errors.none?
+                   I18n.t('spree.admin.subscriptions.successfully_activated')
+                 else
+                   @subscription.errors.full_messages.to_sentence
+                 end
 
         redirect_back(fallback_location: spree.admin_subscriptions_path, notice: notice)
       end

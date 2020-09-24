@@ -30,6 +30,7 @@ RSpec.describe SolidusSubscriptions::Checkout do
 
   context 'initialized with installments belonging to multiple users' do
     subject { checkout }
+
     let(:installments) { build_stubbed_list :installment, 2 }
 
     it 'raises an error' do
@@ -40,10 +41,12 @@ RSpec.describe SolidusSubscriptions::Checkout do
 
   describe '#process', :checkout do
     subject(:order) { checkout.process }
+
     let(:subscription_line_item) { installments.first.subscription.line_items.first }
 
     shared_examples 'a completed checkout' do
       it { is_expected.to be_a Spree::Order }
+
       let(:total) { 49.98 }
       let(:quantity) { installments.length }
 
@@ -108,7 +111,7 @@ RSpec.describe SolidusSubscriptions::Checkout do
       it { is_expected.to be_nil }
 
       it 'creates no order' do
-        expect { subject }.to_not change { Spree::Order.count }
+        expect { subject }.not_to change { Spree::Order.count }
       end
     end
 
@@ -140,6 +143,7 @@ RSpec.describe SolidusSubscriptions::Checkout do
 
     context 'the variant is out of stock' do
       let(:subscription_line_item) { installments.last.subscription.line_items.first }
+      let(:expected_date) { (DateTime.current + SolidusSubscriptions.configuration.reprocessing_interval).beginning_of_minute }
 
       # Remove stock for 1 variant in the consolidated installment
       before do
@@ -148,13 +152,11 @@ RSpec.describe SolidusSubscriptions::Checkout do
         variant.stock_items.update_all(count_on_hand: 0, backorderable: false)
       end
 
-      let(:expected_date) { (DateTime.current + SolidusSubscriptions.configuration.reprocessing_interval).beginning_of_minute }
-
       it 'creates a failed installment detail' do
         subject
         detail = installments.first.details.last
 
-        expect(detail).to_not be_successful
+        expect(detail).not_to be_successful
         expect(detail.message).
           to eq I18n.t('solidus_subscriptions.installment_details.out_of_stock')
       end
@@ -253,9 +255,10 @@ RSpec.describe SolidusSubscriptions::Checkout do
     end
 
     context 'the user has store credit' do
-      it_behaves_like 'a completed checkout'
-      let!(:store_credit_payment_method) { create :store_credit_payment_method }
       let!(:store_credit) { create :store_credit, user: subscription_user }
+      let!(:store_credit_payment_method) { create :store_credit_payment_method }
+
+      it_behaves_like 'a completed checkout'
 
       it 'has a valid store credit payment' do
         expect(order.payments.valid.store_credits).to be_present
@@ -263,8 +266,6 @@ RSpec.describe SolidusSubscriptions::Checkout do
     end
 
     context 'the subscription has a shipping address' do
-      it_behaves_like 'a completed checkout'
-      let(:shipping_address) { create :address }
       let(:installment_traits) do
         {
           subscription_traits: [{
@@ -274,6 +275,9 @@ RSpec.describe SolidusSubscriptions::Checkout do
           }]
         }
       end
+      let(:shipping_address) { create :address }
+
+      it_behaves_like 'a completed checkout'
 
       it 'ships to the subscription address' do
         expect(subject.ship_address).to eq shipping_address
@@ -281,8 +285,6 @@ RSpec.describe SolidusSubscriptions::Checkout do
     end
 
     context 'the subscription has a billing address' do
-      it_behaves_like 'a completed checkout'
-      let(:billing_address) { create :address }
       let(:installment_traits) do
         {
           subscription_traits: [{
@@ -292,6 +294,9 @@ RSpec.describe SolidusSubscriptions::Checkout do
           }]
         }
       end
+      let(:billing_address) { create :address }
+
+      it_behaves_like 'a completed checkout'
 
       it 'bills to the subscription address' do
         expect(subject.bill_address).to eq billing_address
@@ -299,8 +304,6 @@ RSpec.describe SolidusSubscriptions::Checkout do
     end
 
     context 'the subscription has a payment method' do
-      it_behaves_like 'a completed checkout'
-      let(:payment_method) { create :check_payment_method }
       let(:installment_traits) do
         {
           subscription_traits: [{
@@ -310,6 +313,9 @@ RSpec.describe SolidusSubscriptions::Checkout do
           }]
         }
       end
+      let(:payment_method) { create :check_payment_method }
+
+      it_behaves_like 'a completed checkout'
 
       it 'pays with the payment method' do
         expect(subject.payments.valid.first.payment_method).to eq payment_method
@@ -317,9 +323,6 @@ RSpec.describe SolidusSubscriptions::Checkout do
     end
 
     context 'the subscription has a payment method and a source' do
-      it_behaves_like 'a completed checkout'
-      let(:payment_method) { create :credit_card_payment_method }
-      let(:payment_source) { create :credit_card, payment_method: payment_method, user: subscription_user }
       let(:installment_traits) do
         {
           subscription_traits: [{
@@ -330,6 +333,10 @@ RSpec.describe SolidusSubscriptions::Checkout do
           }]
         }
       end
+      let(:payment_source) { create :credit_card, payment_method: payment_method, user: subscription_user }
+      let(:payment_method) { create :credit_card_payment_method }
+
+      it_behaves_like 'a completed checkout'
 
       it 'pays with the payment method' do
         expect(subject.payments.valid.first.payment_method).to eq payment_method
@@ -361,6 +368,7 @@ RSpec.describe SolidusSubscriptions::Checkout do
 
   describe '#order' do
     subject { checkout.order }
+
     let(:user) { installments.first.subscription.user }
 
     it { is_expected.to be_a Spree::Order }
