@@ -71,7 +71,6 @@ SolidusSubscriptions.configure do |config|
   #   :interval_length,
   #   :interval_units,
   #   :end_date,
-  #   :actionable_date,
   #   shipping_address_attributes: Spree::PermittedAttributes.address_attributes,
   #   billing_address_attributes: Spree::PermittedAttributes.address_attributes,
   # ]
