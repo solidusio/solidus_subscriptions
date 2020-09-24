@@ -8,7 +8,7 @@ module SolidusSubscriptions
         wrap_parameters :subscription_line_item
 
         def update
-          authorize! :crud, @line_item, @order
+          authorize! :update, @line_item, @order
           if @line_item.update(line_item_params)
             render json: @line_item.to_json
           else
@@ -17,7 +17,7 @@ module SolidusSubscriptions
         end
 
         def destroy
-          authorize! :crud, @line_item, @order
+          authorize! :destroy, @line_item, @order
           return render json: {}, status: :bad_request if @line_item.order.complete?
 
           @line_item.destroy!
