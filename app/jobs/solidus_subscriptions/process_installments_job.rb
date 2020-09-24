@@ -3,7 +3,7 @@
 
 module SolidusSubscriptions
   class ProcessInstallmentsJob < ActiveJob::Base
-     queue_as Config.processing_queue
+     queue_as SolidusSubscriptions.configuration.processing_queue
 
      # Process a collection of installments
      #

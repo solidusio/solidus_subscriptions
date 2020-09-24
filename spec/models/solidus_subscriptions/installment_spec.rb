@@ -18,7 +18,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     subject { installment.out_of_stock }
 
     let(:expected_date) do
-      (DateTime.current + SolidusSubscriptions::Config.reprocessing_interval).beginning_of_minute
+      (DateTime.current + SolidusSubscriptions.configuration.reprocessing_interval).beginning_of_minute
     end
 
     it { is_expected.to be_a SolidusSubscriptions::InstallmentDetail }
@@ -70,7 +70,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     let(:order) { create :order }
 
     let(:expected_date) do
-      (DateTime.current + SolidusSubscriptions::Config.reprocessing_interval).beginning_of_minute
+      (DateTime.current + SolidusSubscriptions.configuration.reprocessing_interval).beginning_of_minute
     end
 
     it { is_expected.to be_a SolidusSubscriptions::InstallmentDetail }
@@ -89,12 +89,8 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     end
 
     context 'the reprocessing interval is set to nil' do
-      around do |e|
-        interval, SolidusSubscriptions::Config.reprocessing_interval = [SolidusSubscriptions::Config.reprocessing_interval, nil]
-
-        e.run
-
-        SolidusSubscriptions::Config.reprocessing_interval = interval
+      before do
+        allow(SolidusSubscriptions.configuration).to receive_messages(reprocessing_interval: nil)
       end
 
       it 'does not advance the installment actionable_date' do
@@ -141,7 +137,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     let(:order) { create :order }
 
     let(:expected_date) do
-      (DateTime.current + SolidusSubscriptions::Config.reprocessing_interval).beginning_of_minute
+      (DateTime.current + SolidusSubscriptions.configuration.reprocessing_interval).beginning_of_minute
     end
 
     it { is_expected.to be_a SolidusSubscriptions::InstallmentDetail }

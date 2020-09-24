@@ -45,6 +45,6 @@ class SolidusSubscriptions::Api::V1::SubscriptionsController < Spree::Api::BaseC
   end
 
   def line_item_attributes
-    SolidusSubscriptions::Config.subscription_line_item_attributes - [:subscribable_id] + [:id]
+    SolidusSubscriptions.configuration.subscription_line_item_attributes - [:subscribable_id] + [:id]
   end
 end

@@ -5,11 +5,11 @@ module SolidusSubscriptions
   module PermittedAttributes
     class << self
       def subscription_line_item_attributes
-        [Config.subscription_line_item_attributes]
+        [SolidusSubscriptions.configuration.subscription_line_item_attributes]
       end
 
       def subscription_attributes
-        Config.subscription_attributes | [
+        SolidusSubscriptions.configuration.subscription_attributes | [
           line_items_attributes: (subscription_line_item_attributes | [:id] - [:subscribable_id]),
         ]
       end

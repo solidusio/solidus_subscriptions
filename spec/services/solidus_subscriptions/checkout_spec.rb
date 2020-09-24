@@ -148,7 +148,7 @@ RSpec.describe SolidusSubscriptions::Checkout do
         variant.stock_items.update_all(count_on_hand: 0, backorderable: false)
       end
 
-      let(:expected_date) { (DateTime.current + SolidusSubscriptions::Config.reprocessing_interval).beginning_of_minute }
+      let(:expected_date) { (DateTime.current + SolidusSubscriptions.configuration.reprocessing_interval).beginning_of_minute }
 
       it 'creates a failed installment detail' do
         subject
@@ -179,7 +179,7 @@ RSpec.describe SolidusSubscriptions::Checkout do
         checkout.user.wallet.default_wallet_payment_source = wallet_payment_source
         card
       }
-      let(:expected_date) { (DateTime.current + SolidusSubscriptions::Config.reprocessing_interval).beginning_of_minute }
+      let(:expected_date) { (DateTime.current + SolidusSubscriptions.configuration.reprocessing_interval).beginning_of_minute }
 
       it { is_expected.to be_nil }
 
@@ -235,7 +235,7 @@ RSpec.describe SolidusSubscriptions::Checkout do
     end
 
     context 'there is an aribitrary failure' do
-      let(:expected_date) { (DateTime.current + SolidusSubscriptions::Config.reprocessing_interval).beginning_of_minute }
+      let(:expected_date) { (DateTime.current + SolidusSubscriptions.configuration.reprocessing_interval).beginning_of_minute }
 
       before do
         allow(checkout).to receive(:populate).and_raise('arbitrary runtime error')

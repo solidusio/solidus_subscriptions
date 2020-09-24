@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-SolidusSubscriptions::Config.tap do |config|
+SolidusSubscriptions.configure do |config|
   # These handlers are pluggable, however it is highly encouraged that
   # you subclass from the the dispatcher you are replacing, and call
   # `super` from within the #dispatch method (if you override it).
@@ -47,7 +47,7 @@ SolidusSubscriptions::Config.tap do |config|
   # date of a subscription, set this:
   #
   # ```
-  # SolidusSubscriptions::Config.subscription_line_item_attributes = [
+  # SolidusSubscriptions.configuration.subscription_line_item_attributes = [
   #   :quantity,
   #   :subscribable_id,
   #   :interval_length,

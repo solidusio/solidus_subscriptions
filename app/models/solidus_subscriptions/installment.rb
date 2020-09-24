@@ -126,8 +126,8 @@ module SolidusSubscriptions
     end
 
     def next_actionable_date
-      return if Config.reprocessing_interval.nil?
-      (DateTime.current + Config.reprocessing_interval).beginning_of_minute
+      return if SolidusSubscriptions.configuration.reprocessing_interval.nil?
+      (DateTime.current + SolidusSubscriptions.configuration.reprocessing_interval).beginning_of_minute
     end
   end
 end

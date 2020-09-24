@@ -91,16 +91,16 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
     end
 
     around do |e|
-      successive_skip_limit = SolidusSubscriptions::Config.maximum_successive_skips
-      total_skip_limit = SolidusSubscriptions::Config.maximum_total_skips
+      successive_skip_limit = SolidusSubscriptions.configuration.maximum_successive_skips
+      total_skip_limit = SolidusSubscriptions.configuration.maximum_total_skips
 
-      SolidusSubscriptions::Config.maximum_successive_skips = 1
-      SolidusSubscriptions::Config.maximum_total_skips = 1
+      SolidusSubscriptions.configuration.maximum_successive_skips = 1
+      SolidusSubscriptions.configuration.maximum_total_skips = 1
 
       Timecop.freeze { e.run }
 
-      SolidusSubscriptions::Config.maximum_successive_skips = successive_skip_limit
-      SolidusSubscriptions::Config.maximum_total_skips = total_skip_limit
+      SolidusSubscriptions.configuration.maximum_successive_skips = successive_skip_limit
+      SolidusSubscriptions.configuration.maximum_total_skips = total_skip_limit
     end
 
     context 'when the successive skips have been exceeded' do

@@ -14,7 +14,7 @@ module SolidusSubscriptions
 
     def subscription_params
       params.require(:subscription_line_item).permit(
-        SolidusSubscriptions::Config.subscription_line_item_attributes
+        SolidusSubscriptions.configuration.subscription_line_item_attributes
       )
     end
   end

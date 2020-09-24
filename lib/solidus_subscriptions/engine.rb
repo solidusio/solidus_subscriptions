@@ -4,7 +4,7 @@ require 'spree/core'
 
 require 'solidus_subscriptions'
 require 'solidus_subscriptions/permitted_attributes'
-require 'solidus_subscriptions/config'
+require 'solidus_subscriptions/configuration'
 require 'solidus_subscriptions/processor'
 
 module SolidusSubscriptions
