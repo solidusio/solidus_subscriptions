@@ -39,14 +39,9 @@ module SolidusSubscriptions
         end
 
         def subscription_params
-          params.require(:subscription).permit(
-            :interval_units,
-            :interval_length,
-            :end_date,
+          params.require(:subscription).permit(SolidusSubscriptions.configuration.subscription_attributes | [
             line_items_attributes: line_item_attributes,
-            shipping_address_attributes: Spree::PermittedAttributes.address_attributes,
-            billing_address_attributes: Spree::PermittedAttributes.address_attributes,
-          )
+          ])
         end
 
         def line_item_attributes
