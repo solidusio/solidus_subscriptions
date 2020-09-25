@@ -6,6 +6,7 @@ RSpec.describe SolidusSubscriptions::SuccessDispatcher do
 
   describe 'initialization' do
     subject { dispatcher }
+
     it { is_expected.to be_a described_class }
   end
 

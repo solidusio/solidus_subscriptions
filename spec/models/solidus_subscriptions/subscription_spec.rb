@@ -50,7 +50,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
       it 'is canceled' do
         subject
-        expect(subscription.canceled?).to be_truthy
+        expect(subscription).to be_canceled
       end
 
       it 'creates a subscription_canceled event' do
@@ -64,7 +64,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
       it 'is pending cancelation' do
         subject
-        expect(subscription.pending_cancellation?).to be_truthy
+        expect(subscription).to be_pending_cancellation
       end
 
       it 'creates a subscription_canceled event' do
@@ -91,25 +91,26 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
     end
 
     around do |e|
-      successive_skip_limit = SolidusSubscriptions::Config.maximum_successive_skips
-      total_skip_limit = SolidusSubscriptions::Config.maximum_total_skips
+      successive_skip_limit = SolidusSubscriptions.configuration.maximum_successive_skips
+      total_skip_limit = SolidusSubscriptions.configuration.maximum_total_skips
 
-      SolidusSubscriptions::Config.maximum_successive_skips = 1
-      SolidusSubscriptions::Config.maximum_total_skips = 1
+      SolidusSubscriptions.configuration.maximum_successive_skips = 1
+      SolidusSubscriptions.configuration.maximum_total_skips = 1
 
       Timecop.freeze { e.run }
 
-      SolidusSubscriptions::Config.maximum_successive_skips = successive_skip_limit
-      SolidusSubscriptions::Config.maximum_total_skips = total_skip_limit
+      SolidusSubscriptions.configuration.maximum_successive_skips = successive_skip_limit
+      SolidusSubscriptions.configuration.maximum_total_skips = total_skip_limit
     end
 
     context 'when the successive skips have been exceeded' do
       let(:successive_skips) { 1 }
+
       it { is_expected.to be_falsy }
 
       it 'adds errors to the subscription' do
         subject
-        expect(subscription.errors[:successive_skip_count]).to_not be_empty
+        expect(subscription.errors[:successive_skip_count]).not_to be_empty
       end
 
       it 'does not create an event' do
@@ -119,11 +120,12 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
     context 'when the total skips have been exceeded' do
       let(:total_skips) { 1 }
+
       it { is_expected.to be_falsy }
 
       it 'adds errors to the subscription' do
         subject
-        expect(subscription.errors[:skip_count]).to_not be_empty
+        expect(subscription.errors[:skip_count]).not_to be_empty
       end
 
       it 'does not create an event' do
@@ -158,7 +160,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
       it 'is inactive' do
         subject
-        expect(subscription.inactive?).to be_truthy
+        expect(subscription).to be_inactive
       end
 
       it 'creates a subscription_deactivated event' do
@@ -236,6 +238,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
     context "when the subscription is not active" do
       let(:subscription) { build_stubbed :subscription, :with_line_item, state: :canceled }
+
       it { is_expected.to be_nil }
     end
   end
@@ -263,27 +266,27 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
   end
 
   describe ".actionable" do
+    subject { described_class.actionable }
+
     let!(:past_subscription) { create :subscription, actionable_date: 2.days.ago }
     let!(:future_subscription) { create :subscription, actionable_date: 1.month.from_now }
     let!(:inactive_subscription) { create :subscription, state: "inactive", actionable_date: 7.days.ago }
     let!(:canceled_subscription) { create :subscription, state: "canceled", actionable_date: 4.days.ago }
-
-    subject { described_class.actionable }
 
     it "returns subscriptions that have an actionable date in the past" do
       expect(subject).to include past_subscription
     end
 
     it "does not include future subscriptions" do
-      expect(subject).to_not include future_subscription
+      expect(subject).not_to include future_subscription
     end
 
     it "does not include inactive subscriptions" do
-      expect(subject).to_not include inactive_subscription
+      expect(subject).not_to include inactive_subscription
     end
 
     it "does not include canceled subscriptions" do
-      expect(subject).to_not include canceled_subscription
+      expect(subject).not_to include canceled_subscription
     end
   end
 
@@ -302,6 +305,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
     context 'when the subscription has never been processed' do
       let(:subscription) { build_stubbed :subscription }
+
       it { is_expected.to eq 'pending' }
     end
 
@@ -337,6 +341,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
   describe '.ransackable_scopes' do
     subject { described_class.ransackable_scopes }
+
     it { is_expected.to match_array [:in_processing_state] }
   end
 
@@ -349,16 +354,19 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
     context 'successfull subscriptions' do
       let(:state) { :success }
+
       it { is_expected.to match_array success_subs }
     end
 
     context 'failed subscriptions' do
       let(:state) { :failed }
+
       it { is_expected.to match_array failed_subs }
     end
 
     context 'new subscriptions' do
       let(:state) { :pending }
+
       it { is_expected.to match_array new_subs }
     end
 
@@ -373,6 +381,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
   describe '.processing_states' do
     subject { described_class.processing_states }
+
     it { is_expected.to match_array [:pending, :success, :failed] }
   end
 

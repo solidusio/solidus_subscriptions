@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This class is responsible for finding subscriptions and installments
 # which need to be processed. It will group them together by user and attempts
 # to process them together. Subscriptions will also be grouped by their
@@ -61,7 +63,7 @@ module SolidusSubscriptions
           [i.subscription.shipping_address_id, i.subscription.billing_address_id]
         end
 
-        installemts_by_address_and_user.values.each do |grouped_installments|
+        installemts_by_address_and_user.each_value do |grouped_installments|
           ProcessInstallmentsJob.perform_later grouped_installments.map(&:id)
         end
       end
@@ -71,18 +73,18 @@ module SolidusSubscriptions
 
     def subscriptions_by_id
       @subscriptions_by_id ||= Subscription.
-        actionable.
-        includes(:line_items, :user).
-        where(user_id: user_ids).
-        group_by(&:user_id)
+                               actionable.
+                               includes(:line_items, :user).
+                               where(user_id: user_ids).
+                               group_by(&:user_id)
     end
 
     def retry_installments
       @failed_installments ||= Installment.
-        actionable.
-        includes(:subscription).
-        where(solidus_subscriptions_subscriptions: { user_id: user_ids }).
-        group_by { |i| i.subscription.user_id }
+                               actionable.
+                               includes(:subscription).
+                               where(solidus_subscriptions_subscriptions: { user_id: user_ids }).
+                               group_by { |i| i.subscription.user_id }
     end
 
     def installments(user)

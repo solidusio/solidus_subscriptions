@@ -4,7 +4,7 @@ require 'spree/core'
 
 require 'solidus_subscriptions'
 require 'solidus_subscriptions/permitted_attributes'
-require 'solidus_subscriptions/config'
+require 'solidus_subscriptions/configuration'
 require 'solidus_subscriptions/processor'
 
 module SolidusSubscriptions
@@ -37,6 +37,7 @@ module SolidusSubscriptions
 
     initializer 'solidus_subscriptions.configure_backend' do
       next unless ::Spree::Backend::Config.respond_to?(:menu_items)
+
       ::Spree::Backend::Config.configure do |config|
         config.menu_items << config.class::MenuItem.new(
           [:subscriptions],

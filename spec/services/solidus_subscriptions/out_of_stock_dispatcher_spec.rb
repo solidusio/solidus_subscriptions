@@ -6,6 +6,7 @@ RSpec.describe SolidusSubscriptions::OutOfStockDispatcher do
 
   describe 'initialization' do
     subject { dispatcher }
+
     it { is_expected.to be_a described_class }
   end
 

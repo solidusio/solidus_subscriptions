@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This module is intended to be included into any active record
 # model which needs to be aware of how intervals are stored and
 # calculated in the db.

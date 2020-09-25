@@ -7,6 +7,7 @@ RSpec.describe SolidusSubscriptions::PaymentFailedDispatcher do
 
   describe 'initialization' do
     subject { dispatcher }
+
     it { is_expected.to be_a described_class }
   end
 
@@ -24,7 +25,10 @@ RSpec.describe SolidusSubscriptions::PaymentFailedDispatcher do
     end
 
     it 'cancels the order' do
-      expect { subject }.to change { order.state }.to 'canceled'
+      if Spree.solidus_gem_version > Gem::Version.new('2.10')
+        skip 'Orders in cart state cannot be canceled starting from Solidus 2.11'
+      end
+      expect { subject }.to change(order, :state).to 'canceled'
     end
   end
 end

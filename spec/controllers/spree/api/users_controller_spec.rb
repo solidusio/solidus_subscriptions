@@ -6,7 +6,7 @@ RSpec.describe Spree::Api::UsersController, type: :controller do
   routes { Spree::Core::Engine.routes }
 
   let!(:user) do
-    create(:user) { |user| user.generate_spree_api_key }.tap(&:save)
+    create(:user, &:generate_spree_api_key).tap(&:save)
   end
   let!(:subscription) { create :subscription, :with_line_item, user: user }
 

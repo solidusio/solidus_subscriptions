@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This class takes a collection of installments and populates a new spree
 # order with the correct contents based on the subscriptions associated to the
 # intallments. This is to group together subscriptions being
@@ -31,13 +33,13 @@ module SolidusSubscriptions
       return if installments.empty?
 
       if checkout
-        Config.success_dispatcher_class.new(installments, order).dispatch
+        SolidusSubscriptions.configuration.success_dispatcher_class.new(installments, order).dispatch
         return order
       end
 
       # A new order will only have 1 payment that we created
       if order.payments.any?(&:failed?)
-        Config.payment_failed_dispatcher_class.new(installments, order).dispatch
+        SolidusSubscriptions.configuration.payment_failed_dispatcher_class.new(installments, order).dispatch
         installments.clear
         nil
       end
@@ -45,7 +47,7 @@ module SolidusSubscriptions
       # Any installments that failed to be processed will be reprocessed
       unfulfilled_installments = installments.select(&:unfulfilled?)
       if unfulfilled_installments.any?
-        Config.failure_dispatcher_class.
+        SolidusSubscriptions.configuration.failure_dispatcher_class.
           new(unfulfilled_installments, order).dispatch
       end
     end
@@ -101,10 +103,11 @@ module SolidusSubscriptions
       # They will be reprocessed later
       @installments -= unfulfilled_installments
       if unfulfilled_installments.any?
-        Config.out_of_stock_dispatcher_class.new(unfulfilled_installments).dispatch
+        SolidusSubscriptions.configuration.out_of_stock_dispatcher_class.new(unfulfilled_installments).dispatch
       end
 
       return if installments.empty?
+
       order_builder.add_line_items(order_line_items)
     end
 

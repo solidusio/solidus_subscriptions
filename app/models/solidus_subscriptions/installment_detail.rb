@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 # This class represents a single attempt to fulfill an installment. It will
 # indicate the result of that attempt.
 module SolidusSubscriptions
-  class InstallmentDetail < ActiveRecord::Base
+  class InstallmentDetail < ApplicationRecord
     belongs_to(
       :installment,
       class_name: 'SolidusSubscriptions::Installment',

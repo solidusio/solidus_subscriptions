@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 # The subscription class is responsible for grouping together the
 # information required for the system to place a subscriptions order on
 # behalf of a specific user.
 module SolidusSubscriptions
-  class Subscription < ActiveRecord::Base
+  class Subscription < ApplicationRecord
     include Interval
 
-    PROCESSING_STATES = [:pending, :failed, :success]
+    PROCESSING_STATES = [:pending, :failed, :success].freeze
 
     belongs_to :user, class_name: "::#{::Spree.user_class}"
     has_many :line_items, class_name: 'SolidusSubscriptions::LineItem', inverse_of: :subscription
@@ -18,7 +20,7 @@ module SolidusSubscriptions
     belongs_to :payment_method, class_name: '::Spree::PaymentMethod', optional: true
     belongs_to :payment_source, polymorphic: true, optional: true
 
-    validates :user, presence: :true
+    validates :user, presence: true
     validates :skip_count, :successive_skip_count, presence: true, numericality: { greater_than_or_equal_to: 0 }
     validates :interval_length, numericality: { greater_than: 0 }
     validates :payment_method, presence: true, if: -> { payment_source }
@@ -29,8 +31,8 @@ module SolidusSubscriptions
     accepts_nested_attributes_for :line_items, allow_destroy: true, reject_if: ->(p) { p[:quantity].blank? }
 
     before_validation :set_payment_method
-    before_update :update_actionable_date_if_interval_changed
     after_create :track_creation_event
+    before_update :update_actionable_date_if_interval_changed
 
     # Find all subscriptions that are "actionable"; that is, ones that have an
     # actionable_date in the past and are not invalid or canceled.
@@ -57,7 +59,7 @@ module SolidusSubscriptions
       when :pending
         includes(:installments).where(solidus_subscriptions_installments: { id: nil })
       else
-        raise ArgumentError.new("state must be one of: :success, :failed, :pending")
+        raise ArgumentError, "state must be one of: :success, :failed, :pending"
       end
     end)
 
@@ -94,7 +96,7 @@ module SolidusSubscriptions
     state_machine :state, initial: :active do
       event :cancel do
         transition [:active, :pending_cancellation] => :canceled,
-          if: ->(subscription) { subscription.can_be_canceled? }
+                   if: ->(subscription) { subscription.can_be_canceled? }
 
         transition active: :pending_cancellation
       end
@@ -103,7 +105,7 @@ module SolidusSubscriptions
 
       event :deactivate do
         transition active: :inactive,
-          if: ->(subscription) { subscription.can_be_deactivated? }
+                   if: ->(subscription) { subscription.can_be_deactivated? }
       end
 
       event :activate do
@@ -134,7 +136,8 @@ module SolidusSubscriptions
     # pending cancellation will still be processed.
     def can_be_canceled?
       return true if actionable_date.nil?
-      (actionable_date - Config.minimum_cancellation_notice).future?
+
+      (actionable_date - SolidusSubscriptions.configuration.minimum_cancellation_notice).future?
     end
 
     def skip(check_skip_limits: true)
@@ -169,6 +172,7 @@ module SolidusSubscriptions
     #   eligible to be processed.
     def next_actionable_date
       return nil unless active?
+
       new_date = (actionable_date || Time.zone.now)
       (new_date + interval).beginning_of_minute
     end
@@ -201,6 +205,7 @@ module SolidusSubscriptions
     #   if the last installment was fulfilled.
     def processing_state
       return 'pending' if installments.empty?
+
       installments.last.fulfilled? ? 'success' : 'failed'
     end
 
@@ -227,17 +232,17 @@ module SolidusSubscriptions
     private
 
     def check_successive_skips_exceeded
-      return unless Config.maximum_successive_skips
+      return unless SolidusSubscriptions.configuration.maximum_successive_skips
 
-      if successive_skip_count >= Config.maximum_successive_skips
+      if successive_skip_count >= SolidusSubscriptions.configuration.maximum_successive_skips
         errors.add(:successive_skip_count, :exceeded)
       end
     end
 
     def check_total_skips_exceeded
-      return unless Config.maximum_total_skips
+      return unless SolidusSubscriptions.configuration.maximum_total_skips
 
-      if skip_count >= Config.maximum_total_skips
+      if skip_count >= SolidusSubscriptions.configuration.maximum_total_skips
         errors.add(:skip_count, :exceeded)
       end
     end
@@ -245,10 +250,10 @@ module SolidusSubscriptions
     def update_actionable_date_if_interval_changed
       if persisted? && (interval_length_previously_changed? || interval_units_previously_changed?)
         base_date = if installments.any?
-          installments.last.created_at
-        else
-          created_at
-        end
+                      installments.last.created_at
+                    else
+                      created_at
+                    end
 
         new_date = interval.since(base_date)
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Spree::Orders may contain many subscription_line_items. When the order is
 # finalized these subscription_line_items are converted into subscritpions.
 # The order needs to be able to get a list of associated subscription_line_items

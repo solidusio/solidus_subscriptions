@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.modify do
   factory :line_item do
     trait :with_subscription_line_items do

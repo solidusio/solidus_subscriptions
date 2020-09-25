@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 # This class represents a single iteration of a subscription. It is fulfilled
 # by a completed order and maintains an association which tracks all attempts
 # successful or otherwise at fulfilling this installment
 module SolidusSubscriptions
-  class Installment < ActiveRecord::Base
+  class Installment < ApplicationRecord
     has_many :details, class_name: 'SolidusSubscriptions::InstallmentDetail'
     belongs_to(
       :subscription,
@@ -30,9 +32,7 @@ module SolidusSubscriptions
     # object
     #
     # @return [SolidusSubscriptions::LineItemBuilder]
-    def line_item_builder
-      subscription.line_item_builder
-    end
+    delegate :line_item_builder, to: :subscription
 
     # Mark this installment as out of stock.
     #
@@ -92,7 +92,7 @@ module SolidusSubscriptions
     #
     # @return [Boolean]
     def fulfilled?
-      details.where(success: true).exists?
+      details.exists?(success: true)
     end
 
     # Returns the state of this fulfillment
@@ -126,8 +126,9 @@ module SolidusSubscriptions
     end
 
     def next_actionable_date
-      return if Config.reprocessing_interval.nil?
-      (DateTime.current + Config.reprocessing_interval).beginning_of_minute
+      return if SolidusSubscriptions.configuration.reprocessing_interval.nil?
+
+      (DateTime.current + SolidusSubscriptions.configuration.reprocessing_interval).beginning_of_minute
     end
   end
 end

@@ -1,4 +1,4 @@
+inherit_from: .rubocop_todo.yml
+
 require:
   - solidus_dev_support/rubocop
-
-inherit_from: .rubocop_todo.yml

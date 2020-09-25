@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This error should be raised if a user attempts to subscribe to a item which
 # is not subscribable
 module SolidusSubscriptions

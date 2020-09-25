@@ -121,11 +121,13 @@ RSpec.describe SolidusSubscriptions::Processor, :checkout do
 
   describe '.run' do
     subject { described_class.run }
+
     it_behaves_like 'a subscription order'
   end
 
   describe '#build_jobs' do
     subject { described_class.new([user]).build_jobs }
+
     it_behaves_like 'a subscription order'
   end
 end

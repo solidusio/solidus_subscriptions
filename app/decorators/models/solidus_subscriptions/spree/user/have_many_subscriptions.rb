@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Spree::Users maintain a list of the subscriptions associated with them
 module SolidusSubscriptions
   module Spree

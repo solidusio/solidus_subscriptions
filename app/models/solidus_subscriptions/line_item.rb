@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # The LineItem class is responsible for associating Line items to subscriptions.  # It tracks the following values:
 #
 # [Spree::LineItem] :spree_line_item The spree object which created this instance
@@ -15,7 +17,7 @@
 #
 # [Integer] :installments How many subscription orders should be placed
 module SolidusSubscriptions
-  class LineItem < ActiveRecord::Base
+  class LineItem < ApplicationRecord
     include Interval
 
     belongs_to(
@@ -32,7 +34,7 @@ module SolidusSubscriptions
       optional: true
     )
 
-    validates :subscribable_id, presence: :true
+    validates :subscribable_id, presence: true
     validates :quantity, numericality: { greater_than: 0 }
     validates :interval_length, numericality: { greater_than: 0 }, unless: -> { subscription }
 

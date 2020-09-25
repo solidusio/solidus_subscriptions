@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This service class is intended to provide callback behaviour to handle
 # the case where an installment cannot be processed due to lack of stock.
 module SolidusSubscriptions

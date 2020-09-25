@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Create new subscription line items associated to the current order, when
 # a line item is added to the cart which includes subscription_line_item
 # params.
