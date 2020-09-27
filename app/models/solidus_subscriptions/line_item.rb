@@ -33,6 +33,7 @@ module SolidusSubscriptions
       inverse_of: :line_items,
       optional: true
     )
+    belongs_to :subscribable, class_name: "::#{SolidusSubscriptions.configuration.subscribable_class}"
 
     validates :subscribable_id, presence: true
     validates :quantity, numericality: { greater_than: 0 }
