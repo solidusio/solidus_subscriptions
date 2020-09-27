@@ -25,6 +25,8 @@ end
 
 gemspec
 
+gem 'solidus_tracking', github: 'solidusio-contrib/solidus_tracking'
+
 # Use a local Gemfile to include development dependencies that might not be
 # relevant for the project or for other contributors, e.g. pry-byebug.
 #
