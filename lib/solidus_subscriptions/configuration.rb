@@ -8,7 +8,7 @@ module SolidusSubscriptions
       :success_dispatcher_class, :failure_dispatcher_class, :payment_failed_dispatcher_class,
       :out_of_stock_dispatcher, :maximum_successive_skips, :reprocessing_interval,
       :minimum_cancellation_notice, :processing_queue, :subscription_line_item_attributes,
-      :subscription_attributes,
+      :subscription_attributes, :subscribable_class,
     )
 
     def success_dispatcher_class
@@ -67,6 +67,11 @@ module SolidusSubscriptions
           billing_address_attributes: Spree::PermittedAttributes.address_attributes
         },
       ]
+    end
+
+    def subscribable_class
+      @subscribable_class ||= 'Spree::Variant'
+      @subscribable_class.constantize
     end
   end
 end

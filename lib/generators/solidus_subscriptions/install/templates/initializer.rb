@@ -5,6 +5,9 @@ SolidusSubscriptions.configure do |config|
   # you subclass from the the dispatcher you are replacing, and call
   # `super` from within the #dispatch method (if you override it).
 
+  # The ActiveRecord model users can subscribe to.
+  # config.subscribable_class = 'Spree::Variant'
+
   # This handler is called when a subscription order is successfully placed.
   # config.success_dispatcher_class = 'SolidusSubscriptions::SuccessDispatcher'
 
