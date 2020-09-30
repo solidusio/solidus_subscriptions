@@ -4,31 +4,20 @@ module SolidusSubscriptions
   class Dispatcher
     attr_reader :installments, :order
 
-    # Get a new instance of the FailureDispatcher
+    # Returns a new instance of this dispatcher.
     #
-    # @param installments [Array<SolidusSubscriptions::Installment>] The
-    #   installments which have failed to be fulfilled
+    # @param installments [Array<SolidusSubscriptions::Installment>] The installments to process
+    #   with this dispatcher
+    # @param order [Spree::Order] The order that was generated as a result of these installments
     #
-    # @return [SolidusSubscriptions::FailureDispatcher]
+    # @return [SolidusSubscriptions::Dispatcher]
     def initialize(installments, order = nil)
       @installments = installments
       @order = order
     end
 
     def dispatch
-      notify
-    end
-
-    private
-
-    def notify
-      Rails.logger.tagged('Event') do
-        Rails.logger.info message.squish.tr("\n", ' ')
-      end
-    end
-
-    def message
-      raise 'A message should be set in subclasses of Dispatcher'
+      raise NotImplementedError
     end
   end
 end

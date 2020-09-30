@@ -1,24 +1,14 @@
 # frozen_string_literal: true
 
-# This service class is intended to provide callback behaviour to handle
-# the case where a subscription order cannot be processed because a payment
-# failed
+# Handles payment failures for subscription installments.
 module SolidusSubscriptions
   class PaymentFailedDispatcher < Dispatcher
     def dispatch
-      order.touch :completed_at
+      order.touch(:completed_at)
       order.cancel
-      installments.each { |i| i.payment_failed!(order) }
-      super
-    end
-
-    private
-
-    def message
-      "
-      The following installments could not be processed due to payment
-      authorization failure: #{installments.map(&:id).join(', ')}
-      "
+      installments.each do |installment|
+        installment.payment_failed!(order)
+      end
     end
   end
 end

@@ -1,14 +1,11 @@
-require 'spec_helper'
-
 RSpec.describe SolidusSubscriptions::Dispatcher do
   describe '#dispatch' do
-    subject { described_class.new([]).dispatch }
+    it 'raises a NotImplementedError' do
+      dispatcher = described_class.new([])
 
-    it 'must be subclassed' do
-      expect { subject }.to raise_error(
-        RuntimeError,
-        'A message should be set in subclasses of Dispatcher'
-      )
+      expect {
+        dispatcher.dispatch
+      }.to raise_error(NotImplementedError)
     end
   end
 end

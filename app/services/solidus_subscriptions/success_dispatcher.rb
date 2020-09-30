@@ -1,18 +1,12 @@
 # frozen_string_literal: true
 
-# This service class is intended to provide callback behaviour to handle
-# an installment successfully being processed
+# Handles installments that are processed successfully.
 module SolidusSubscriptions
   class SuccessDispatcher < Dispatcher
     def dispatch
-      installments.each { |i| i.success!(order) }
-      super
-    end
-
-    private
-
-    def message
-      "Successfully processed installments: #{installments.map(&:id).join(', ')}"
+      installments.each do |installment|
+        installment.success!(order)
+      end
     end
   end
 end
