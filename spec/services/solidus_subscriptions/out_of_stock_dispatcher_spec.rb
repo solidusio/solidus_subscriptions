@@ -1,26 +1,12 @@
-require 'spec_helper'
-
 RSpec.describe SolidusSubscriptions::OutOfStockDispatcher do
-  let(:dispatcher) { described_class.new(installments) }
-  let(:installments) { build_list(:installment, 2) }
-
-  describe 'initialization' do
-    subject { dispatcher }
-
-    it { is_expected.to be_a described_class }
-  end
-
   describe '#dispatch' do
-    subject { dispatcher.dispatch }
+    it 'marks all the installments as out of stock' do
+      installments = Array.new(2) { instance_spy(SolidusSubscriptions::Installment) }
 
-    it 'marks all the installments out of stock' do
-      expect(installments).to all receive(:out_of_stock).once
-      subject
-    end
+      dispatcher = described_class.new(installments)
+      dispatcher.dispatch
 
-    it 'logs the failure' do
-      expect(dispatcher).to receive(:notify).once
-      subject
+      expect(installments).to all(have_received(:out_of_stock).once)
     end
   end
 end

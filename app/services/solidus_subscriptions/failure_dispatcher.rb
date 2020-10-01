@@ -1,21 +1,14 @@
 # frozen_string_literal: true
 
-# A handler for behaviour that should happen after installments are marked as
-# failures
+# Handles failed installments.
 module SolidusSubscriptions
   class FailureDispatcher < Dispatcher
     def dispatch
-      order.touch :completed_at
+      order.touch(:completed_at)
       order.cancel
-      installments.each { |i| i.failed!(order) }
-      super
-    end
-
-    def message
-      "
-      Something went wrong processing installments: #{installments.map(&:id).join(', ')}.
-      They have been marked for reprocessing.
-      "
+      installments.each do |installment|
+        installment.failed!(order)
+      end
     end
   end
 end
