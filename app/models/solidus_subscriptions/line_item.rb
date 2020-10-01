@@ -39,9 +39,9 @@ module SolidusSubscriptions
     validates :quantity, numericality: { greater_than: 0 }
     validates :interval_length, numericality: { greater_than: 0 }, unless: -> { subscription }
 
-    after_create :track_creation_event
-    after_update :track_update_event
-    after_destroy :track_destroy_event
+    after_create :emit_event_for_repopulation
+    after_update :emit_event_for_repopulation
+    after_destroy :emit_event_for_repopulation
 
     def as_json(**options)
       options[:methods] ||= [:dummy_line_item]
@@ -72,32 +72,10 @@ module SolidusSubscriptions
       order.freeze
     end
 
-    def as_json_for_event
-      as_json.with_indifferent_access.except(
-        :dummy_line_item,
-        :interval_units,
-        :interval_length,
-        :end_date,
-        :spree_line_item_id,
-      )
-    end
-
-    def track_creation_event
+    def emit_event_for_repopulation
       return unless subscription
 
-      subscription.events.create!(event_type: 'line_item_created', details: as_json_for_event)
-    end
-
-    def track_update_event
-      return unless subscription
-
-      subscription.events.create!(event_type: 'line_item_updated', details: as_json_for_event)
-    end
-
-    def track_destroy_event
-      return unless subscription
-
-      subscription.events.create!(event_type: 'line_item_destroyed', details: as_json_for_event)
+      ::Spree::Event.fire('solidus_subscriptions.subscription_repopulated', subscription: subscription)
     end
   end
 end

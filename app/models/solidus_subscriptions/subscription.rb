@@ -31,7 +31,7 @@ module SolidusSubscriptions
     accepts_nested_attributes_for :line_items, allow_destroy: true, reject_if: ->(p) { p[:quantity].blank? }
 
     before_validation :set_payment_method
-    after_create :track_creation_event
+    after_create :emit_event_for_creation
     before_update :update_actionable_date_if_interval_changed
 
     # Find all subscriptions that are "actionable"; that is, ones that have an
@@ -113,7 +113,7 @@ module SolidusSubscriptions
       end
 
       after_transition to: :active, do: :advance_actionable_date
-      after_transition do: :track_transition_event
+      after_transition do: :emit_event_for_transition
     end
 
     # This method determines if a subscription may be canceled. Canceled
@@ -274,15 +274,14 @@ module SolidusSubscriptions
       end
     end
 
-    def as_json_for_event
-      as_json
+    def emit_event_for_creation
+      ::Spree::Event.fire(
+        'solidus_subscriptions.subscription_created',
+        subscription: self,
+      )
     end
 
-    def track_creation_event
-      events.create!(event_type: 'subscription_created', details: as_json_for_event)
-    end
-
-    def track_transition_event
+    def emit_event_for_transition
       event_type = {
         active: 'subscription_activated',
         canceled: 'subscription_canceled',
@@ -290,7 +289,10 @@ module SolidusSubscriptions
         inactive: 'subscription_ended',
       }[state.to_sym]
 
-      events.create!(event_type: event_type, details: as_json_for_event)
+      ::Spree::Event.fire(
+        "solidus_subscriptions.#{event_type}",
+        subscription: self,
+      )
     end
   end
 end

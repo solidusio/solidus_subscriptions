@@ -8,27 +8,27 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
 
   describe '#save!' do
     context 'when the line item is new' do
-      it 'tracks a line_item_created event' do
+      it 'tracks a subscription_repopulated event' do
         line_item = build(:subscription_line_item, :with_subscription)
 
         line_item.save!
 
         expect(line_item.subscription.events.last).to have_attributes(
-          event_type: 'line_item_created',
+          event_type: 'subscription_repopulated',
           details: a_hash_including('id' => line_item.id),
         )
       end
     end
 
     context 'when the line item is persisted' do
-      it 'tracks a line_item_updated event' do
+      it 'tracks a subscription_repopulated event' do
         line_item = create(:subscription_line_item, :with_subscription)
 
         line_item.quantity = 2
         line_item.save!
 
         expect(line_item.subscription.events.last).to have_attributes(
-          event_type: 'line_item_updated',
+          event_type: 'subscription_repopulated',
           details: a_hash_including('id' => line_item.id),
         )
       end
@@ -36,13 +36,13 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
   end
 
   describe '#destroy!' do
-    it 'tracks a line_item_destroyed event' do
+    it 'tracks a subscription_repopulated event' do
       line_item = create(:subscription_line_item, :with_subscription)
 
       line_item.destroy!
 
       expect(line_item.subscription.events.last).to have_attributes(
-        event_type: 'line_item_destroyed',
+        event_type: 'subscription_repopulated',
         details: a_hash_including('id' => line_item.id),
       )
     end
