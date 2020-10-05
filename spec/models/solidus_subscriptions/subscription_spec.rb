@@ -7,32 +7,56 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
   it { is_expected.to validate_numericality_of(:skip_count).is_greater_than_or_equal_to(0) }
   it { is_expected.to validate_numericality_of(:successive_skip_count).is_greater_than_or_equal_to(0) }
 
-  it { is_expected.to accept_nested_attributes_for :line_items }
+  it { is_expected.to accept_nested_attributes_for(:line_items) }
 
-  describe '#save' do
-    context 'when the subscription is new' do
-      it 'tracks a subscription_created event' do
-        subscription = build(:subscription)
+  describe 'creating a subscription' do
+    it 'tracks the creation' do
+      stub_const('Spree::Event', class_spy(Spree::Event))
 
-        subscription.save!
+      subscription = create(:subscription)
 
-        expect(subscription.events.last).to have_attributes(
-          event_type: 'subscription_created',
-          details: a_hash_including('id' => subscription.id),
-        )
-      end
+      expect(Spree::Event).to have_received(:fire).with(
+        'solidus_subscriptions.subscription_created',
+        subscription: subscription,
+      )
+    end
+  end
+
+  describe 'updating a subscription' do
+    it 'tracks interval changes' do
+      stub_const('Spree::Event', class_spy(Spree::Event))
+      subscription = create(:subscription)
+
+      subscription.update!(interval_length: subscription.interval_length + 1)
+
+      expect(Spree::Event).to have_received(:fire).with(
+        'solidus_subscriptions.subscription_frequency_changed',
+        subscription: subscription,
+      )
     end
 
-    context 'when the subscription is persisted' do
-      it 'does not track an event' do
-        subscription = create(:subscription)
+    it 'tracks shipping address changes' do
+      stub_const('Spree::Event', class_spy(Spree::Event))
+      subscription = create(:subscription)
 
-        subscription.end_date = Time.zone.tomorrow
+      subscription.update!(shipping_address: create(:address))
 
-        expect {
-          subscription.save!
-        }.not_to change(subscription.events, :count)
-      end
+      expect(Spree::Event).to have_received(:fire).with(
+        'solidus_subscriptions.subscription_shipping_address_changed',
+        subscription: subscription,
+      )
+    end
+
+    it 'tracks billing address changes' do
+      stub_const('Spree::Event', class_spy(Spree::Event))
+      subscription = create(:subscription)
+
+      subscription.update!(billing_address: create(:address))
+
+      expect(Spree::Event).to have_received(:fire).with(
+        'solidus_subscriptions.subscription_billing_address_changed',
+        subscription: subscription,
+      )
     end
   end
 

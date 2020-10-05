@@ -33,6 +33,7 @@ module SolidusSubscriptions
     before_validation :set_payment_method
     after_create :emit_event_for_creation
     before_update :update_actionable_date_if_interval_changed
+    after_update :emit_events_for_update
 
     # Find all subscriptions that are "actionable"; that is, ones that have an
     # actionable_date in the past and are not invalid or canceled.
@@ -293,6 +294,29 @@ module SolidusSubscriptions
         "solidus_subscriptions.#{event_type}",
         subscription: self,
       )
+    end
+
+    def emit_events_for_update
+      if previous_changes.key?('interval_length') || previous_changes.key?('interval_units')
+        ::Spree::Event.fire(
+          'solidus_subscriptions.subscription_frequency_changed',
+          subscription: self,
+        )
+      end
+
+      if previous_changes.key?('shipping_address_id')
+        ::Spree::Event.fire(
+          'solidus_subscriptions.subscription_shipping_address_changed',
+          subscription: self,
+        )
+      end
+
+      if previous_changes.key?('billing_address_id')
+        ::Spree::Event.fire(
+          'solidus_subscriptions.subscription_billing_address_changed',
+          subscription: self,
+        )
+      end
     end
   end
 end
