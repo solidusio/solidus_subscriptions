@@ -9,6 +9,9 @@ module SolidusSubscriptions
     event_action :track_subscription_canceled, event_name: 'solidus_subscriptions.subscription_canceled'
     event_action :track_subscription_ended, event_name: 'solidus_subscriptions.subscription_ended'
     event_action :track_subscription_repopulated, event_name: 'solidus_subscriptions.subscription_repopulated'
+    event_action :track_subscription_shipping_address_changed, event_name: 'solidus_subscriptions.subscription_shipping_address_changed'
+    event_action :track_subscription_billing_address_changed, event_name: 'solidus_subscriptions.subscription_billing_address_changed'
+    event_action :track_subscription_frequency_changed, event_name: 'solidus_subscriptions.subscription_frequency_changed'
 
     def track_subscription_created(event)
       event.payload.fetch(:subscription).events.create!(
@@ -41,6 +44,27 @@ module SolidusSubscriptions
     def track_subscription_repopulated(event)
       event.payload.fetch(:subscription).events.create!(
         event_type: 'subscription_repopulated',
+        details: event.payload.fetch(:subscription).as_json,
+      )
+    end
+
+    def track_subscription_shipping_address_changed(event)
+      event.payload.fetch(:subscription).events.create!(
+        event_type: 'subscription_shipping_address_changed',
+        details: event.payload.fetch(:subscription).as_json,
+      )
+    end
+
+    def track_subscription_billing_address_changed(event)
+      event.payload.fetch(:subscription).events.create!(
+        event_type: 'subscription_billing_address_changed',
+        details: event.payload.fetch(:subscription).as_json,
+      )
+    end
+
+    def track_subscription_frequency_changed(event)
+      event.payload.fetch(:subscription).events.create!(
+        event_type: 'subscription_frequency_changed',
         details: event.payload.fetch(:subscription).as_json,
       )
     end
