@@ -15,7 +15,7 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
 
         expect(line_item.subscription.events.last).to have_attributes(
           event_type: 'subscription_repopulated',
-          details: a_hash_including('id' => line_item.id),
+          details: a_hash_including('id' => line_item.subscription.id),
         )
       end
     end
@@ -29,7 +29,7 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
 
         expect(line_item.subscription.events.last).to have_attributes(
           event_type: 'subscription_repopulated',
-          details: a_hash_including('id' => line_item.id),
+          details: a_hash_including('id' => line_item.subscription.id),
         )
       end
     end
@@ -43,7 +43,7 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
 
       expect(line_item.subscription.events.last).to have_attributes(
         event_type: 'subscription_repopulated',
-        details: a_hash_including('id' => line_item.id),
+        details: a_hash_including('id' => line_item.subscription.id),
       )
     end
   end
