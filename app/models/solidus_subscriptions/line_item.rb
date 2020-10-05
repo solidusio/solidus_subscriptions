@@ -39,10 +39,6 @@ module SolidusSubscriptions
     validates :quantity, numericality: { greater_than: 0 }
     validates :interval_length, numericality: { greater_than: 0 }, unless: -> { subscription }
 
-    after_create :emit_event_for_repopulation
-    after_update :emit_event_for_repopulation
-    after_destroy :emit_event_for_repopulation
-
     def as_json(**options)
       options[:methods] ||= [:dummy_line_item]
       super(options)
@@ -70,12 +66,6 @@ module SolidusSubscriptions
       order.bill_address = subscription.billing_address || subscription.user.bill_address if subscription
 
       order.freeze
-    end
-
-    def emit_event_for_repopulation
-      return unless subscription
-
-      ::Spree::Event.fire('solidus_subscriptions.subscription_repopulated', subscription: subscription)
     end
   end
 end
