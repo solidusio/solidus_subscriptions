@@ -35,7 +35,8 @@ module SolidusSubscriptions
         private
 
         def load_subscription
-          @subscription = current_api_user.subscriptions.find(params[:id])
+          @subscription = SolidusSubscriptions::Subscription.find(params[:id])
+          authorize! action_name, @subscription, subscription_guest_token
         end
 
         def subscription_params

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :controller do
+RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController do
   routes { SolidusSubscriptions::Engine.routes }
 
   let!(:user) { create :user }
@@ -24,7 +24,7 @@ RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :co
     context "when the subscription belongs to someone else" do
       let!(:subscription) { create :subscription, user: create(:user) }
 
-      it { is_expected.to be_not_found }
+      it { is_expected.to be_unauthorized }
     end
 
     context 'when the subscription is canceled' do
@@ -99,7 +99,7 @@ RSpec.describe SolidusSubscriptions::Api::V1::SubscriptionsController, type: :co
     context 'when the subscription belongs to someone else' do
       let!(:subscription) { create :subscription, :with_line_item, user: create(:user) }
 
-      it { is_expected.to be_not_found }
+      it { is_expected.to be_unauthorized }
     end
   end
 
