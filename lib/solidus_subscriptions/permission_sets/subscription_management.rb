@@ -5,12 +5,11 @@ module SolidusSubscriptions
     class SubscriptionManagement < ::Spree::PermissionSets::Base
       def activate!
         can :manage, Subscription do |subscription|
-          subscription.user == user
+          subscription.user && subscription.user == user
         end
 
-        can :manage, LineItem do |line_item, order|
-          (line_item.order && line_item.order == order) ||
-            (line_item.order&.user && line_item.order.user == user)
+        can :manage, LineItem do |line_item|
+          line_item.subscription&.user && line_item.subscription.user == user
         end
       end
     end
