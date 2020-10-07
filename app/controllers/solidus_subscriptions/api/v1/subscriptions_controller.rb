@@ -3,7 +3,7 @@
 module SolidusSubscriptions
   module Api
     module V1
-      class SubscriptionsController < ::Spree::Api::BaseController
+      class SubscriptionsController < BaseController
         before_action :load_subscription, only: [:cancel, :update, :skip]
 
         protect_from_forgery unless: -> { request.format.json? }

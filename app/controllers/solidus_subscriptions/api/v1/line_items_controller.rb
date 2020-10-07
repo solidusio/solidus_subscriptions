@@ -3,7 +3,7 @@
 module SolidusSubscriptions
   module Api
     module V1
-      class LineItemsController < ::Spree::Api::BaseController
+      class LineItemsController < BaseController
         before_action :load_line_item, only: [:update, :destroy]
         wrap_parameters :subscription_line_item
 
