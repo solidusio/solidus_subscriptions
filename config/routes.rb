@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 SolidusSubscriptions::Engine.routes.draw do
-  namespace :api do
+  namespace :api, defaults: { format: :json } do
     namespace :v1 do
       resources :line_items, only: [:update, :destroy]
       resources :subscriptions, only: [:update] do

@@ -47,12 +47,6 @@ module SolidusSubscriptions
         )
       end
     end
-
-    def self.activate
-      ::Spree::Ability.register_ability(SolidusSubscriptions::Ability)
-    end
-
-    config.to_prepare(&method(:activate).to_proc)
   end
 
   def self.table_name_prefix

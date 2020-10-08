@@ -6,9 +6,7 @@ module Spree
       skip_before_action :load_resource, only: :index
 
       def index
-        @search = SolidusSubscriptions::Subscription.
-                  accessible_by(current_ability, :index).ransack(params[:q])
-
+        @search = SolidusSubscriptions::Subscription.ransack(params[:q])
         @subscriptions = @search.result(distinct: true).
                          includes(:line_items, :user).
                          page(params[:page]).

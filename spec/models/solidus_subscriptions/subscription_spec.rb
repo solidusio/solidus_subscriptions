@@ -20,6 +20,12 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
         subscription: subscription,
       )
     end
+
+    it 'generates a guest token' do
+      subscription = create(:subscription)
+
+      expect(subscription.guest_token).to be_present
+    end
   end
 
   describe 'updating a subscription' do

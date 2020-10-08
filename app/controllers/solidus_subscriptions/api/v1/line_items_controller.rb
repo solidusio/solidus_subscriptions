@@ -3,12 +3,14 @@
 module SolidusSubscriptions
   module Api
     module V1
-      class LineItemsController < ::Spree::Api::BaseController
-        before_action :load_line_item, only: [:update, :destroy]
+      class LineItemsController < BaseController
+        protect_from_forgery unless: -> { request.format.json? }
+
         wrap_parameters :subscription_line_item
 
         def update
-          authorize! :update, @line_item, @order
+          load_line_item
+
           if @line_item.update(line_item_params)
             render json: @line_item.to_json
           else
@@ -17,25 +19,28 @@ module SolidusSubscriptions
         end
 
         def destroy
-          authorize! :destroy, @line_item, @order
-          return render json: {}, status: :bad_request if @line_item.order.complete?
+          load_line_item
 
           @line_item.destroy!
-          @line_item.order.recalculate
+
+          if @line_item.order && !@line_item.order.complete?
+            @line_item.order.recalculate
+          end
 
           render json: @line_item.to_json
         end
 
         private
 
+        def load_line_item
+          @line_item = SolidusSubscriptions::LineItem.find(params[:id])
+          authorize! action_name, @line_item, subscription_guest_token
+        end
+
         def line_item_params
           params.require(:subscription_line_item).permit(
             SolidusSubscriptions::PermittedAttributes.subscription_line_item_attributes - [:subscribable_id]
           )
-        end
-
-        def load_line_item
-          @line_item = SolidusSubscriptions::LineItem.find(params[:id])
         end
       end
     end

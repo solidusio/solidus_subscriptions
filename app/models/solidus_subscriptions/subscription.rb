@@ -31,6 +31,7 @@ module SolidusSubscriptions
     accepts_nested_attributes_for :line_items, allow_destroy: true, reject_if: ->(p) { p[:quantity].blank? }
 
     before_validation :set_payment_method
+    before_create :generate_guest_token
     after_create :emit_event_for_creation
     before_update :update_actionable_date_if_interval_changed
     after_update :emit_events_for_update
@@ -272,6 +273,13 @@ module SolidusSubscriptions
     def set_payment_method
       if payment_source
         self.payment_method = payment_source.payment_method
+      end
+    end
+
+    def generate_guest_token
+      self.guest_token ||= loop do
+        random_token = SecureRandom.urlsafe_base64(nil, false)
+        break random_token unless self.class.exists?(guest_token: random_token)
       end
     end
 
