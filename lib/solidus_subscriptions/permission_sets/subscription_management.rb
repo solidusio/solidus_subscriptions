@@ -4,7 +4,7 @@ module SolidusSubscriptions
   module PermissionSets
     class SubscriptionManagement < ::Spree::PermissionSets::Base
       def activate!
-        can :manage, Subscription do |subscription, guest_token|
+        can :manage, Subscription, Subscription.where(user: user) do |subscription, guest_token|
           (subscription.guest_token.present? && subscription.guest_token == guest_token) ||
             (subscription.user && subscription.user == user)
         end
