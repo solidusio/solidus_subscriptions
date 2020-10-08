@@ -4,11 +4,11 @@ module SolidusSubscriptions
   module Api
     module V1
       class SubscriptionsController < BaseController
-        before_action :load_subscription, only: [:cancel, :update, :skip]
-
         protect_from_forgery unless: -> { request.format.json? }
 
         def update
+          load_subscription
+
           if @subscription.update(subscription_params)
             render json: @subscription.to_json(include: [:line_items, :shipping_address, :billing_address])
           else
@@ -17,6 +17,8 @@ module SolidusSubscriptions
         end
 
         def skip
+          load_subscription
+
           if @subscription.skip
             render json: @subscription.to_json
           else
@@ -25,6 +27,8 @@ module SolidusSubscriptions
         end
 
         def cancel
+          load_subscription
+
           if @subscription.cancel
             render json: @subscription.to_json
           else

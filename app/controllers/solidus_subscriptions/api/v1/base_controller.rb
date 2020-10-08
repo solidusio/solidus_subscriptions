@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SolidusSubscriptions
   module Api
     module V1
