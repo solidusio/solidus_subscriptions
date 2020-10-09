@@ -1,0 +1,229 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.churnbuster.io/v1/successful_payments
+    body:
+      encoding: UTF-8
+      string: '{"payment":{"source":"in_house","source_id":"R863897282","amount_in_cents":0,"currency":"USD"},"customer":{"source":"in_house","source_id":1,"email":"email2@example.com","properties":{"first_name":"John","last_name":"John"}}}'
+    headers:
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Cowboy
+      Date:
+      - Thu, 01 Oct 2020 13:46:09 GMT
+      Connection:
+      - keep-alive
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Download-Options:
+      - noopen
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      Content-Type:
+      - application/json
+      Cache-Control:
+      - no-cache
+      X-Request-Id:
+      - a664eaa0-2735-4a88-990d-fb9c29766e00
+      X-Runtime:
+      - '0.070480'
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Via:
+      - 1.1 vegur
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Thu, 01 Oct 2020 13:46:09 GMT
+- request:
+    method: post
+    uri: https://api.churnbuster.io/v1/failed_payments
+    body:
+      encoding: UTF-8
+      string: '{"payment":{"source":"in_house","source_id":"R276044153","amount_in_cents":0,"currency":"USD"},"customer":{"source":"in_house","source_id":1,"email":"email2@example.com","properties":{"first_name":"John","last_name":"John"}}}'
+    headers:
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Cowboy
+      Date:
+      - Thu, 01 Oct 2020 14:24:32 GMT
+      Connection:
+      - keep-alive
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Download-Options:
+      - noopen
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      Content-Type:
+      - application/json
+      Cache-Control:
+      - no-cache
+      X-Request-Id:
+      - bfd0c00b-dafa-4122-95e3-6fae6676bf05
+      X-Runtime:
+      - '0.052157'
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Via:
+      - 1.1 vegur
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Thu, 01 Oct 2020 14:24:32 GMT
+- request:
+    method: post
+    uri: https://api.churnbuster.io/v1/cancellations
+    body:
+      encoding: UTF-8
+      string: '{"subscription":{"source":"in_house","source_id":1},"customer":{"source":"in_house","source_id":1,"email":"email5@example.com","properties":{"first_name":"John","last_name":"Von
+        Doe"}}}'
+    headers:
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Cowboy
+      Date:
+      - Thu, 01 Oct 2020 14:24:33 GMT
+      Connection:
+      - keep-alive
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Download-Options:
+      - noopen
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      Content-Type:
+      - application/json
+      Cache-Control:
+      - no-cache
+      X-Request-Id:
+      - aa57bbfb-aa49-4f4c-bad9-a3e9a87335bd
+      X-Runtime:
+      - '0.070606'
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Via:
+      - 1.1 vegur
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Thu, 01 Oct 2020 14:24:33 GMT
+- request:
+    method: post
+    uri: https://api.churnbuster.io/v1/payment_methods
+    body:
+      encoding: UTF-8
+      string: '{"payment_method":{"source":"in_house","source_id":"1-1","type":"card","properties":{}},"customer":{"source":"in_house","source_id":1,"email":"email6@example.com","properties":{"first_name":"John","last_name":"Von
+        Doe"}}}'
+    headers:
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Cowboy
+      Date:
+      - Mon, 05 Oct 2020 10:55:30 GMT
+      Connection:
+      - keep-alive
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Download-Options:
+      - noopen
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      Content-Type:
+      - application/json
+      Cache-Control:
+      - no-cache
+      X-Request-Id:
+      - 585f1c6a-fb36-4cb4-9127-2f80636d33d9
+      X-Runtime:
+      - '1.184629'
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Via:
+      - 1.1 vegur
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Mon, 05 Oct 2020 10:55:31 GMT
+recorded_with: VCR 6.0.0

@@ -64,4 +64,18 @@ SolidusSubscriptions.configure do |config|
   #   :interval_units,
   #   :end_date,
   # ]
+
+  # ========================================= Churn Buster =========================================
+  #
+  # This extension can integrate with Churn Buster for churn mitigation and failed payment recovery.
+  # If you want to integrate with Churn Buster, simply configure your credentials below.
+  #
+  # NOTE: If you integrate with Churn Buster and override any of the handlers, make sure to call
+  # `super` or copy-paste the original integration code or things won't work!
+
+  # Your Churn Buster account ID.
+  # config.churn_buster_account_id = 'YOUR_CHURN_BUSTER_ACCOUNT_ID'
+
+  # Your Churn Buster API key.
+  # config.churn_buster_api_key = 'YOUR_CHURN_BUSTER_API_KEY'
 end

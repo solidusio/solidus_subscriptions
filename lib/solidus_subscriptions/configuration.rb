@@ -2,7 +2,9 @@
 
 module SolidusSubscriptions
   class Configuration
-    attr_accessor :maximum_total_skips
+    attr_accessor(
+      :maximum_total_skips, :churn_buster_account_id, :churn_buster_api_key,
+    )
 
     attr_writer(
       :success_dispatcher_class, :failure_dispatcher_class, :payment_failed_dispatcher_class,
@@ -72,6 +74,10 @@ module SolidusSubscriptions
     def subscribable_class
       @subscribable_class ||= 'Spree::Variant'
       @subscribable_class.constantize
+    end
+
+    def churn_buster?
+      churn_buster_account_id.present? && churn_buster_api_key.present?
     end
   end
 end
