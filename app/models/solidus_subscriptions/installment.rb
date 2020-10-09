@@ -110,13 +110,25 @@ module SolidusSubscriptions
     # @return [SolidusSubscriptions::InstallmentDetail] The record of the
     #   failed processing attempt
     def payment_failed!(order)
-      advance_actionable_date!
-
       details.create!(
         success: false,
         order: order,
         message: I18n.t('solidus_subscriptions.installment_details.payment_failed')
       )
+
+      if maximum_attempts_reached? && !subscription.canceled?
+        subscription.force_cancel!
+        update!(actionable_date: nil)
+      else
+        advance_actionable_date!
+      end
+    end
+
+    # Returns whether this installment has reached the maximum number of reprocessing attempts.
+    def maximum_attempts_reached?
+      return false unless SolidusSubscriptions.configuration.maximum_reprocessing_attempts
+
+      details.where(success: false).count >= SolidusSubscriptions.configuration.maximum_reprocessing_attempts
     end
 
     private

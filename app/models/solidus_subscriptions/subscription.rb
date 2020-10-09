@@ -107,6 +107,12 @@ module SolidusSubscriptions
         transition active: :pending_cancellation
       end
 
+      event :force_cancel do
+        transition [:active, :pending_cancellation] => :canceled
+        transition inactive: :inactive
+        transition canceled: :canceled
+      end
+
       after_transition to: :canceled, do: :advance_actionable_date
 
       event :deactivate do
