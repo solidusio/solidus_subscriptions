@@ -30,6 +30,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency 'deface'
+  spec.add_dependency 'httparty', '~> 0.18'
   spec.add_dependency 'i18n'
   spec.add_dependency 'solidus_core', ['>= 2.0.0', '< 3']
   spec.add_dependency 'solidus_support', '~> 0.5'
@@ -39,6 +40,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'shoulda-matchers', '~> 4.4'
   spec.add_development_dependency 'solidus_dev_support', '~> 2.0'
   spec.add_development_dependency 'timecop'
+  spec.add_development_dependency 'vcr'
   spec.add_development_dependency 'versioncake'
+  spec.add_development_dependency 'webmock'
   spec.add_development_dependency 'yard'
 end

@@ -74,6 +74,10 @@ module SolidusSubscriptions
       joins(:installments).merge(Installment.unfulfilled)
     end)
 
+    scope :with_default_payment_source, (lambda do
+      where(payment_method: nil, payment_source: nil)
+    end)
+
     def self.ransackable_scopes(_auth_object = nil)
       [:in_processing_state]
     end
@@ -322,6 +326,13 @@ module SolidusSubscriptions
       if previous_changes.key?('billing_address_id')
         ::Spree::Event.fire(
           'solidus_subscriptions.subscription_billing_address_changed',
+          subscription: self,
+        )
+      end
+
+      if previous_changes.key?('payment_source_id') || previous_changes.key?('payment_source_type') || previous_changes.key?('payment_method_id')
+        ::Spree::Event.fire(
+          'solidus_subscriptions.subscription_payment_method_changed',
           subscription: self,
         )
       end

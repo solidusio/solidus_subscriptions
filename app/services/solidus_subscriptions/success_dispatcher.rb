@@ -7,6 +7,12 @@ module SolidusSubscriptions
       installments.each do |installment|
         installment.success!(order)
       end
+
+      ::Spree::Event.fire(
+        'solidus_subscriptions.installments_succeeded',
+        installments: installments,
+        order: order,
+      )
     end
   end
 end

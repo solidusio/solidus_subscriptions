@@ -64,6 +64,18 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
         subscription: subscription,
       )
     end
+
+    it 'tracks payment method changes' do
+      stub_const('Spree::Event', class_spy(Spree::Event))
+
+      subscription = create(:subscription)
+      subscription.update!(payment_source: create(:credit_card))
+
+      expect(Spree::Event).to have_received(:fire).with(
+        'solidus_subscriptions.subscription_payment_method_changed',
+        subscription: subscription,
+      )
+    end
   end
 
   describe '#cancel' do
@@ -445,7 +457,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
     end
 
     context 'when the subscription has no payment method' do
-      it "returns the default source from the user's wallet" do
+      it "returns the default source from the user's wallet_payment_source" do
         user = create(:user)
         payment_source = create(:credit_card, gateway_customer_profile_id: 'BGS-123', user: user)
         wallet_payment_source = user.wallet.add(payment_source)
@@ -487,7 +499,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
     end
 
     context 'when the subscription has no payment method' do
-      it "returns the method from the default source in the user's wallet" do
+      it "returns the method from the default source in the user's wallet_payment_source" do
         user = create(:user)
         payment_source = create(:credit_card, gateway_customer_profile_id: 'BGS-123', user: user)
         wallet_payment_source = user.wallet.add(payment_source)
