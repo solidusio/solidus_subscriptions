@@ -3,7 +3,8 @@
 module SolidusSubscriptions
   class Configuration
     attr_accessor(
-      :maximum_total_skips, :churn_buster_account_id, :churn_buster_api_key,
+      :maximum_total_skips, :maximum_reprocessing_attempts, :churn_buster_account_id,
+      :churn_buster_api_key,
     )
 
     attr_writer(

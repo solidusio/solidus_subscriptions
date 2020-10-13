@@ -22,6 +22,10 @@ SolidusSubscriptions.configure do |config|
   # Time between an installment failing to be processed and the system retrying to fulfill it.
   # config.reprocessing_interval = 1.day
 
+  # Maximum number of times the system attempts to reprocess a failed payment before cancelling
+  # the subscription (`nil` is the default and will make the system reprocess indefinitely).
+  # config.maximum_reprocessing_attempts = nil
+
   # ========================================= Dispatchers ==========================================
   #
   # These dispatchers are pluggable. If you override any handlers, it is highly encouraged that you

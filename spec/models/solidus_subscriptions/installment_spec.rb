@@ -141,28 +141,100 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
   end
 
   describe '#payment_failed!' do
-    subject { installment.payment_failed!(order) }
+    context 'when maximum_reprocessing_attempts is nil' do
+      it 'creates a new installment detail' do
+        allow(SolidusSubscriptions.configuration).to receive_messages(
+          maximum_reprocessing_attempts: nil,
+          reprocessing_interval: 2.days,
+        )
+        installment = create(:installment)
 
-    let(:order) { create :order }
+        installment.payment_failed!(create(:order))
 
-    let(:expected_date) do
-      (DateTime.current + SolidusSubscriptions.configuration.reprocessing_interval).beginning_of_minute
+        expect(installment.details.count).to eq(1)
+      end
+
+      it "advances the installment's actionable_date" do
+        allow(SolidusSubscriptions.configuration).to receive_messages(
+          maximum_reprocessing_attempts: nil,
+          reprocessing_interval: 2.days,
+        )
+        installment = create(:installment)
+
+        installment.payment_failed!(create(:order))
+
+        expect(installment.actionable_date).to eq((Time.zone.now + 2.days).beginning_of_minute)
+      end
     end
 
-    it { is_expected.to be_a SolidusSubscriptions::InstallmentDetail }
-    it { is_expected.not_to be_successful }
+    context 'when maximum_reprocessing_attempts is configured' do
+      context 'when the installment has reached the maximum number of attempts' do
+        it 'creates a new installment detail' do
+          allow(SolidusSubscriptions.configuration).to receive_messages(
+            maximum_reprocessing_attempts: 3,
+            reprocessing_interval: 2.days,
+          )
+          installment = create(:installment)
+          create_list(:installment_detail, 2, installment: installment, success: false)
 
-    it 'has the correct message' do
-      expect(subject).to have_attributes(
-        order: order,
-        message: I18n.t('solidus_subscriptions.installment_details.payment_failed')
-      )
-    end
+          installment.payment_failed!(create(:order))
 
-    it 'advances the installment actionable_date' do
-      subject
-      actionable_date = installment.reload.actionable_date
-      expect(actionable_date).to eq expected_date
+          expect(installment.details.count).to eq(3)
+        end
+
+        it 'sets the actionable_date to nil' do
+          allow(SolidusSubscriptions.configuration).to receive_messages(
+            maximum_reprocessing_attempts: 3,
+          )
+          installment = create(:installment)
+          create_list(:installment_detail, 2, installment: installment, success: false)
+
+          installment.payment_failed!(create(:order))
+
+          expect(installment.actionable_date).to eq(nil)
+        end
+
+        it 'cancels the subscription' do
+          allow(SolidusSubscriptions.configuration).to receive_messages(
+            maximum_reprocessing_attempts: 3,
+            reprocessing_interval: 2.days,
+          )
+          installment = create(:installment)
+          create_list(:installment_detail, 2, installment: installment, success: false)
+
+          installment.payment_failed!(create(:order))
+
+          expect(installment.subscription.state).to eq('canceled')
+        end
+      end
+
+      context 'when the installment has not reached the maximum number of attempts' do
+        it 'creates a new installment detail' do
+          allow(SolidusSubscriptions.configuration).to receive_messages(
+            maximum_reprocessing_attempts: 3,
+            reprocessing_interval: 2.days,
+          )
+          installment = create(:installment)
+          create_list(:installment_detail, 1, installment: installment, success: false)
+
+          installment.payment_failed!(create(:order))
+
+          expect(installment.details.count).to eq(2)
+        end
+
+        it "advances the installment's actionable_date" do
+          allow(SolidusSubscriptions.configuration).to receive_messages(
+            maximum_reprocessing_attempts: 3,
+            reprocessing_interval: 2.days,
+          )
+          installment = create(:installment)
+          create_list(:installment_detail, 1, installment: installment, success: false)
+
+          installment.payment_failed!(create(:order))
+
+          expect(installment.actionable_date).to eq((Time.zone.now + 2.days).beginning_of_minute)
+        end
+      end
     end
   end
 end
