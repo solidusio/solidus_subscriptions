@@ -34,7 +34,7 @@ module SolidusSubscriptions
 
         def load_line_item
           @line_item = SolidusSubscriptions::LineItem.find(params[:id])
-          authorize! action_name, @line_item, subscription_guest_token
+          authorize! action_name.to_sym, @line_item, subscription_guest_token
         end
 
         def line_item_params

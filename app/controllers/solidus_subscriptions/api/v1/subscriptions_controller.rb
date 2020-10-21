@@ -40,7 +40,7 @@ module SolidusSubscriptions
 
         def load_subscription
           @subscription = SolidusSubscriptions::Subscription.find(params[:id])
-          authorize! action_name, @subscription, subscription_guest_token
+          authorize! action_name.to_sym, @subscription, subscription_guest_token
         end
 
         def subscription_params
