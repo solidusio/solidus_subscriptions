@@ -49,13 +49,6 @@ en:
           subscription_line_item: Subscription Line Item
       tab:
         subscriptions: Subscriptions
-    promotion_rule_types:
-      subscription_promotion_rule:
-        name: Subscription
-        description: Order contains a subscription
-      subscription_order_promotion_rule:
-        name: Subscription Order
-        description: Order fulfills a subscription
 
     products:
       cart_form:
@@ -75,6 +68,13 @@ en:
         pending: new
         success: success
         failed: failure
+      solidus_subscriptions/subscription_promotion_rule:
+        description: Order contains a subscription
+      solidus_subscriptions/subscription_order_promotion_rule:
+        description: Order fulfills a subscription
+    models:
+      solidus_subscriptions/subscription_promotion_rule: Subscription
+      solidus_subscriptions/subscription_order_promotion_rule: Subscription Order
 
     errors:
       models:
