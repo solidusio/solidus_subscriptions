@@ -56,6 +56,8 @@ en:
       subscription_events:
         index:
           title: Events
+      user:
+        subscriptions: Subscriptions
     promotion_rule_types:
       subscription_promotion_rule:
         name: Subscription

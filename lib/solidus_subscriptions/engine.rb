@@ -43,7 +43,8 @@ module SolidusSubscriptions
           [:subscriptions],
           'repeat',
           url: :admin_subscriptions_path,
-          condition: ->{ can?(:admin, SolidusSubscriptions::Subscription) }
+          condition: ->{ can?(:admin, SolidusSubscriptions::Subscription) },
+          match_path: '/subscriptions'
         )
       end
     end

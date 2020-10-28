@@ -1,0 +1,5 @@
+<% if can? :admin, @user.subscriptions %>
+  <li<%== ' class="active"' if current == :subscriptions %>>
+    <%= link_to t("spree.admin.user.subscriptions"), spree.admin_user_subscriptions_path(@user) %>
+  </li>
+<% end %>
