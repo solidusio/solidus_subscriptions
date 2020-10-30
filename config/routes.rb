@@ -25,5 +25,9 @@ Spree::Core::Engine.routes.draw do
       resources :installments, only: [:index, :show]
       resources :subscription_events, only: :index
     end
+
+    resources :users do
+      resources :subscriptions, only: [:index], controller: 'users/subscriptions'
+    end
   end
 end

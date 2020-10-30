@@ -1,0 +1,44 @@
+<% admin_breadcrumb(link_to plural_resource_name(Spree::LegacyUser), spree.admin_users_path) %>
+<% admin_breadcrumb(link_to @user.email, edit_admin_user_url(@user)) %>
+<% admin_breadcrumb(plural_resource_name(SolidusSubscriptions::Subscription)) %>
+
+<%= render 'spree/admin/users/sidebar' %>
+<%= render 'spree/admin/users/tabs', current: :subscriptions %>
+
+<fieldset>
+  <legend><%= plural_resource_name(SolidusSubscriptions::Subscription) %></legend>
+
+  <% if @subscriptions.any? %>
+    <table id="subscriptions-table" class="index">
+      <thead>
+        <tr>
+          <th><%= SolidusSubscriptions::Subscription.human_attribute_name(:created_at) %></th>
+          <th><%= SolidusSubscriptions::Subscription.human_attribute_name(:actionable_date) %></th>
+          <th><%= SolidusSubscriptions::Subscription.human_attribute_name(:interval) %></th>
+          <th><%= SolidusSubscriptions::Subscription.human_attribute_name(:state) %></th>
+          <th><%= SolidusSubscriptions::Subscription.human_attribute_name(:processing_state) %></th>
+          <th class="actions"></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @subscriptions.each do |subscription| %>
+          <tr>
+            <td><%= l(subscription.created_at.to_date) %></td>
+            <td><%= subscription.actionable_date ? l(subscription.actionable_date.to_date) : '-' %></td>
+            <td><%= subscription.interval.inspect %></td>
+            <td><%= render 'spree/admin/subscriptions/state_pill', subscription: subscription %></td>
+            <td><%= render 'spree/admin/subscriptions/processing_state_pill', subscription: subscription %></td>
+            <td class="actions">
+              <%= link_to_edit(subscription, no_text: true, url: edit_admin_subscription_path(subscription)) %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <div class="no-objects-found">
+      <%= render 'spree/admin/shared/no_objects_found', resource: SolidusSubscriptions::Subscription %>
+    </div>
+  <% end %>
+</fieldset>
