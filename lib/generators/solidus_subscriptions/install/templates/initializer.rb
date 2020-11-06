@@ -26,6 +26,9 @@ SolidusSubscriptions.configure do |config|
   # the subscription (`nil` is the default and will make the system reprocess indefinitely).
   # config.maximum_reprocessing_attempts = nil
 
+  # Disables the Subscriptions link on the admin menu (it is enabled by default)
+  # config.disable_admin_menu_link = true
+
   # ========================================= Dispatchers ==========================================
   #
   # These dispatchers are pluggable. If you override any handlers, it is highly encouraged that you

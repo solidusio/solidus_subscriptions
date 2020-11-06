@@ -36,7 +36,7 @@ module SolidusSubscriptions
     end
 
     initializer 'solidus_subscriptions.configure_backend' do
-      next unless ::Spree::Backend::Config.respond_to?(:menu_items)
+      next if SolidusSubscriptions.configuration.disable_admin_menu_link || !::Spree::Backend::Config.respond_to?(:menu_items)
 
       ::Spree::Backend::Config.configure do |config|
         config.menu_items << config.class::MenuItem.new(

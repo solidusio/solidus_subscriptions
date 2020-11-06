@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-if !Spree::Backend::Config.respond_to?(:menu_items)
+if !SolidusSubscriptions.configuration.disable_admin_menu_link && !Spree::Backend::Config.respond_to?(:menu_items)
   Deface::Override.new(
     virtual_path: 'spree/admin/shared/_menu',
     name: :add_subcriptions_admin_link,
