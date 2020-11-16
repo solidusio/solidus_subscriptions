@@ -104,7 +104,7 @@ configuration:
 ```ruby
 SolidusSubscriptions.configure do |config|
   # ...
-  
+
   config.churn_buster_account_id = 'YOUR_CHURN_BUSTER_ACCOUNT_ID'
   config.churn_buster_api_key = 'YOUR_CHURN_BUSTER_API_KEY'
 end
@@ -112,6 +112,23 @@ end
 
 The extension will take care of reporting successful/failed payments and payment method changes
 to Churn Buster.
+
+### Failed installments retries
+
+The extension generates an installment for each subscription cycle, however some of them can fail
+(e.g. for an expired credit card). On each processor run the extension will try to complete all past
+failed installments, however this is not always the desired behaviour.
+
+If you want to process only the latest installment in each subscription, regardless of any number of
+failed installments prior to that, you can configure the extension like so:
+
+```ruby
+SolidusSubscriptions.configure do |config|
+  # ...
+
+  config.clear_past_installments = true
+end
+```
 
 ## Development
 

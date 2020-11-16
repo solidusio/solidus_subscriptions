@@ -82,4 +82,11 @@ SolidusSubscriptions.configure do |config|
 
   # Your Churn Buster API key.
   # config.churn_buster_api_key = 'YOUR_CHURN_BUSTER_API_KEY'
+
+  # =================================== Clear past installments ====================================
+  #
+  # This setting prevents the overlap of old failed installments (e.g. for an expired credit card)
+  # with new subscription cycles by clearing any past failed installment when a new one is created
+
+  # config.clear_past_installments = true
 end

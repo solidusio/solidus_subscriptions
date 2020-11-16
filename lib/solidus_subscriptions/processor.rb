@@ -98,6 +98,12 @@ module SolidusSubscriptions
           sub.advance_actionable_date
           sub.cancel! if sub.pending_cancellation?
           sub.deactivate! if sub.can_be_deactivated?
+          if SolidusSubscriptions.configuration.clear_past_installments
+            sub.installments.unfulfilled.each do |installment|
+              installment.actionable_date = nil
+              installment.save!
+            end
+          end
           sub.installments.create!
         end
       end

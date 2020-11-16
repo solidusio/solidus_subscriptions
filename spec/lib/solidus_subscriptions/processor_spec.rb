@@ -65,7 +65,7 @@ RSpec.describe SolidusSubscriptions::Processor, :checkout do
       expect(order_variant_ids).to match_array expected_ids
     end
 
-    it 'advances the subsription actionable dates' do
+    it 'advances the subscription actionable dates' do
       subscription = actionable_subscriptions.first
 
       current_date = subscription.actionable_date
@@ -105,6 +105,19 @@ RSpec.describe SolidusSubscriptions::Processor, :checkout do
 
       it 'creates an order for each shipping address' do
         expect { subject }.to change { Spree::Order.complete.count }.by 2
+      end
+    end
+
+    context "when the config 'clear_past_installments' is enabled" do
+      it 'clears the past failed installments' do
+        allow(SolidusSubscriptions.configuration).to receive(:clear_past_installments).
+          and_return(true)
+
+        subject
+
+        failed_installments.each do |fi|
+          expect(fi.reload.actionable_date).to eq(nil)
+        end
       end
     end
 
