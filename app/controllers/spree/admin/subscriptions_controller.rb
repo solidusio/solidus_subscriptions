@@ -88,8 +88,8 @@ module Spree
       end
 
       def prepare_form
-        @subscription.build_shipping_address unless @subscription.shipping_address
-        @subscription.build_billing_address unless @subscription.billing_address
+        @subscription.build_shipping_address(@subscription.shipping_address&.value_attributes)
+        @subscription.build_billing_address(@subscription.billing_address&.value_attributes)
         @subscription.line_items.build
       end
 

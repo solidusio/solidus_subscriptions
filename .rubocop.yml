@@ -6,3 +6,4 @@ require:
 RSpec/DescribeClass:
   Exclude:
     - spec/requests/**/*
+    - spec/features/**/*
