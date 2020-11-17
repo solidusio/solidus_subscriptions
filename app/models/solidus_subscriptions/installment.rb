@@ -116,7 +116,7 @@ module SolidusSubscriptions
         message: I18n.t('solidus_subscriptions.installment_details.payment_failed')
       )
 
-      if maximum_attempts_reached? && !subscription.canceled?
+      if maximum_reprocessing_time_reached? && !subscription.canceled?
         subscription.force_cancel!
         update!(actionable_date: nil)
       else
@@ -124,14 +124,15 @@ module SolidusSubscriptions
       end
     end
 
-    # Returns whether this installment has reached the maximum number of reprocessing attempts.
-    def maximum_attempts_reached?
-      return false unless SolidusSubscriptions.configuration.maximum_reprocessing_attempts
-
-      details.where(success: false).count >= SolidusSubscriptions.configuration.maximum_reprocessing_attempts
-    end
-
     private
+
+    # Returns whether this installment has failed after the maximum reprocessing time.
+    def maximum_reprocessing_time_reached?
+      return false unless SolidusSubscriptions.configuration.maximum_reprocessing_time
+      return false unless subscription.last_fulfilled_at
+
+      subscription.last_fulfilled_at + SolidusSubscriptions.configuration.maximum_reprocessing_time < Time.zone.now
+    end
 
     def advance_actionable_date!
       update!(actionable_date: next_actionable_date)

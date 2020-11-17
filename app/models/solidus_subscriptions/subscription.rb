@@ -241,6 +241,14 @@ module SolidusSubscriptions
       billing_address || user.bill_address
     end
 
+    def last_fulfilled_at
+      SolidusSubscriptions::InstallmentDetail.joins(installment: :subscription)
+                                             .where('subscription_id = ?', id)
+                                             .where(success: true)
+                                             .order('created_at DESC')
+                                             .first&.created_at
+    end
+
     private
 
     def check_successive_skips_exceeded
