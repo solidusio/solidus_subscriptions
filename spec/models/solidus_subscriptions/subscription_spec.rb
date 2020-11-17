@@ -607,4 +607,30 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       end
     end
   end
+
+  describe '#last_fulfilled_at' do
+    context 'when the subscription has never been fulfilled' do
+      it 'returns nil' do
+        subscription = create(:subscription, installments: [
+          create(:installment, details: [create(:installment_detail, success: false, created_at: '2020-11-11')]),
+          create(:installment, details: [create(:installment_detail, success: false, created_at: '2020-11-24')]),
+        ])
+
+        expect(subscription.last_fulfilled_at).to eq(nil)
+      end
+    end
+
+    context 'when the subscription has been fulfilled at least one time' do
+      it 'returns the last successful fulfillment date' do
+        subscription = create(:subscription, installments: [
+          create(:installment, details: [create(:installment_detail, :success, created_at: '2020-11-11')]),
+          create(:installment, details: [create(:installment_detail, :success, created_at: '2020-11-15')]),
+          create(:installment, details: [create(:installment_detail, :success, created_at: '2020-11-20')]),
+          create(:installment, details: [create(:installment_detail, success: false, created_at: '2020-11-24')]),
+        ])
+
+        expect(subscription.last_fulfilled_at).to eq(Time.zone.parse('2020-11-20'))
+      end
+    end
+  end
 end
