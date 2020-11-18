@@ -12,6 +12,7 @@ module SolidusSubscriptions
     belongs_to :user, class_name: "::#{::Spree.user_class}"
     has_many :line_items, class_name: 'SolidusSubscriptions::LineItem', inverse_of: :subscription
     has_many :installments, class_name: 'SolidusSubscriptions::Installment'
+    has_many :installment_details, class_name: 'SolidusSubscriptions::InstallmentDetail', through: :installments, source: :details
     has_many :events, class_name: 'SolidusSubscriptions::SubscriptionEvent'
     has_many :orders, class_name: '::Spree::Order', inverse_of: :subscription
     belongs_to :store, class_name: '::Spree::Store'
@@ -241,12 +242,30 @@ module SolidusSubscriptions
       billing_address || user.bill_address
     end
 
-    def last_fulfilled_at
-      SolidusSubscriptions::InstallmentDetail.joins(installment: :subscription)
-                                             .where('subscription_id = ?', id)
-                                             .where(success: true)
-                                             .order('created_at DESC')
-                                             .first&.created_at
+    def failing_since
+      failing_details = installment_details.failed.order('solidus_subscriptions_installment_details.created_at ASC')
+
+      last_successful_detail = installment_details
+                               .succeeded
+                               .order('solidus_subscriptions_installment_details.created_at DESC')
+                               .first
+      if last_successful_detail
+        failing_details = failing_details.where(
+          'solidus_subscriptions_installment_details.created_at > ?',
+          last_successful_detail.created_at,
+        )
+      end
+
+      first_failing_detail = failing_details.first
+
+      first_failing_detail&.created_at
+    end
+
+    def maximum_reprocessing_time_reached?
+      return false unless SolidusSubscriptions.configuration.maximum_reprocessing_time
+      return false unless failing_since
+
+      Time.zone.now > (failing_since + SolidusSubscriptions.configuration.maximum_reprocessing_time)
     end
 
     private

@@ -15,6 +15,9 @@ module SolidusSubscriptions
     validates :installment, presence: true
     alias_attribute :successful, :success
 
+    scope :succeeded, -> { where success: true }
+    scope :failed, -> { where success: false }
+
     # Was the attempt at fulfilling this installment a failure?
     #
     # @return [Boolean]

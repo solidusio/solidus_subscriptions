@@ -608,28 +608,159 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
     end
   end
 
-  describe '#last_fulfilled_at' do
-    context 'when the subscription has never been fulfilled' do
+  describe '#failing_since' do
+    context 'when the subscription is not failing' do
       it 'returns nil' do
         subscription = create(:subscription, installments: [
-          create(:installment, details: [create(:installment_detail, success: false, created_at: '2020-11-11')]),
-          create(:installment, details: [create(:installment_detail, success: false, created_at: '2020-11-24')]),
+          create(:installment, details: [
+            create(:installment_detail, success: false, created_at: '2020-11-11'),
+            create(:installment_detail, success: false, created_at: '2020-11-12'),
+            create(:installment_detail, success: true, created_at: '2020-11-13'),
+          ]),
+          create(:installment, details: [
+            create(:installment_detail, success: false, created_at: '2020-11-24'),
+            create(:installment_detail, success: true, created_at: '2020-11-25'),
+          ]),
         ])
 
-        expect(subscription.last_fulfilled_at).to eq(nil)
+        expect(subscription.failing_since).to eq(nil)
       end
     end
 
-    context 'when the subscription has been fulfilled at least one time' do
-      it 'returns the last successful fulfillment date' do
+    context 'when the subscription is failing with a previous success' do
+      it 'returns the date of the first failure' do
         subscription = create(:subscription, installments: [
-          create(:installment, details: [create(:installment_detail, :success, created_at: '2020-11-11')]),
-          create(:installment, details: [create(:installment_detail, :success, created_at: '2020-11-15')]),
-          create(:installment, details: [create(:installment_detail, :success, created_at: '2020-11-20')]),
-          create(:installment, details: [create(:installment_detail, success: false, created_at: '2020-11-24')]),
+          create(:installment, details: [
+            create(:installment_detail, success: false, created_at: '2020-11-11'),
+            create(:installment_detail, success: false, created_at: '2020-11-12'),
+            create(:installment_detail, success: true, created_at: '2020-11-13'),
+          ]),
+          create(:installment, details: [
+            create(:installment_detail, success: false, created_at: '2020-11-24'),
+            create(:installment_detail, success: false, created_at: '2020-11-25'),
+          ]),
+          create(:installment, details: [
+            create(:installment_detail, success: false, created_at: '2020-11-26'),
+            create(:installment_detail, success: false, created_at: '2020-11-27'),
+          ]),
         ])
 
-        expect(subscription.last_fulfilled_at).to eq(Time.zone.parse('2020-11-20'))
+        expect(subscription.failing_since).to eq(Time.zone.parse('2020-11-24'))
+      end
+    end
+
+    context 'when the subscription is failing with no previous success' do
+      it 'returns the date of the first failure' do
+        subscription = create(:subscription, installments: [
+          create(:installment, details: [
+            create(:installment_detail, success: false, created_at: '2020-11-11'),
+            create(:installment_detail, success: false, created_at: '2020-11-12'),
+            create(:installment_detail, success: false, created_at: '2020-11-13'),
+          ]),
+          create(:installment, details: [
+            create(:installment_detail, success: false, created_at: '2020-11-24'),
+            create(:installment_detail, success: false, created_at: '2020-11-25'),
+          ]),
+          create(:installment, details: [
+            create(:installment_detail, success: false, created_at: '2020-11-26'),
+            create(:installment_detail, success: false, created_at: '2020-11-27'),
+          ]),
+        ])
+
+        expect(subscription.failing_since).to eq(Time.zone.parse('2020-11-11'))
+      end
+    end
+  end
+
+  describe '#maximum_reprocessing_time_reached?' do
+    context 'when maximum_reprocessing_time is not configured' do
+      it 'returns false' do
+        allow(SolidusSubscriptions.configuration).to receive_messages(
+          maximum_reprocessing_time: 5.days,
+        )
+        subscription = create(:subscription)
+
+        expect(subscription.maximum_reprocessing_time_reached?).to eq(false)
+      end
+    end
+
+    context 'when maximum_reprocessing_time is configured' do
+      context 'when the subscription has been failing for too long' do
+        it 'returns true' do
+          allow(SolidusSubscriptions.configuration).to receive_messages(
+            maximum_reprocessing_time: 15.days,
+          )
+
+          subscription = create(:subscription, installments: [
+            create(:installment, details: [
+              create(:installment_detail, success: false, created_at: 20.days.ago),
+              create(:installment_detail, success: false, created_at: 19.days.ago),
+              create(:installment_detail, success: true, created_at: 18.days.ago),
+            ]),
+            create(:installment, details: [
+              create(:installment_detail, success: false, created_at: 17.days.ago),
+              create(:installment_detail, success: false, created_at: 16.days.ago),
+            ]),
+            create(:installment, details: [
+              create(:installment_detail, success: false, created_at: 15.days.ago),
+              create(:installment_detail, success: false, created_at: 14.days.ago),
+            ]),
+          ])
+
+          expect(subscription.maximum_reprocessing_time_reached?).to eq(true)
+        end
+      end
+
+      context 'when the subscription has not been failing for too long' do
+        it 'returns false' do
+          allow(SolidusSubscriptions.configuration).to receive_messages(
+            maximum_reprocessing_time: 15.days,
+          )
+
+          subscription = create(:subscription, installments: [
+            create(:installment, details: [
+              create(:installment_detail, success: false, created_at: 15.days.ago),
+              create(:installment_detail, success: false, created_at: 14.days.ago),
+              create(:installment_detail, success: true, created_at: 13.days.ago),
+            ]),
+            create(:installment, details: [
+              create(:installment_detail, success: false, created_at: 12.days.ago),
+              create(:installment_detail, success: false, created_at: 11.days.ago),
+            ]),
+            create(:installment, details: [
+              create(:installment_detail, success: false, created_at: 10.days.ago),
+              create(:installment_detail, success: false, created_at: 9.days.ago),
+            ]),
+          ])
+
+          expect(subscription.maximum_reprocessing_time_reached?).to eq(false)
+        end
+      end
+
+      context 'when the subscription is not failing' do
+        it 'returns false' do
+          allow(SolidusSubscriptions.configuration).to receive_messages(
+            maximum_reprocessing_time: 2.days,
+          )
+
+          subscription = create(:subscription, installments: [
+            create(:installment, details: [
+              create(:installment_detail, success: false, created_at: 15.days.ago),
+              create(:installment_detail, success: false, created_at: 14.days.ago),
+              create(:installment_detail, success: true, created_at: 13.days.ago),
+            ]),
+            create(:installment, details: [
+              create(:installment_detail, success: false, created_at: 12.days.ago),
+              create(:installment_detail, success: false, created_at: 11.days.ago),
+            ]),
+            create(:installment, details: [
+              create(:installment_detail, success: false, created_at: 10.days.ago),
+              create(:installment_detail, success: true, created_at: 9.days.ago),
+            ]),
+          ])
+
+          expect(subscription.maximum_reprocessing_time_reached?).to eq(false)
+        end
       end
     end
   end
