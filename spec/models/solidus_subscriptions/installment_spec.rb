@@ -92,9 +92,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     end
 
     context 'the reprocessing interval is set to nil' do
-      before do
-        allow(SolidusSubscriptions.configuration).to receive_messages(reprocessing_interval: nil)
-      end
+      before { stub_config(reprocessing_interval: nil) }
 
       it 'does not advance the installment actionable_date' do
         subject
@@ -188,7 +186,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
       it "advances the installment's actionable_date" do
         subscription = create(:subscription)
         allow(subscription).to receive(:maximum_reprocessing_time_reached?).and_return(false)
-        allow(SolidusSubscriptions.configuration).to receive(:reprocessing_interval).and_return(2.days)
+        stub_config(reprocessing_interval: 2.days)
 
         current_installment = create(:installment, subscription: subscription)
         current_installment.payment_failed!(create(:order))

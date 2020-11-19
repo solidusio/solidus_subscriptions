@@ -675,9 +675,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
   describe '#maximum_reprocessing_time_reached?' do
     context 'when maximum_reprocessing_time is not configured' do
       it 'returns false' do
-        allow(SolidusSubscriptions.configuration).to receive_messages(
-          maximum_reprocessing_time: 5.days,
-        )
+        stub_config(maximum_reprocessing_time: 5.days)
         subscription = create(:subscription)
 
         expect(subscription.maximum_reprocessing_time_reached?).to eq(false)
@@ -687,9 +685,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
     context 'when maximum_reprocessing_time is configured' do
       context 'when the subscription has been failing for too long' do
         it 'returns true' do
-          allow(SolidusSubscriptions.configuration).to receive_messages(
-            maximum_reprocessing_time: 15.days,
-          )
+          stub_config(maximum_reprocessing_time: 15.days)
 
           subscription = create(:subscription, installments: [
             create(:installment, details: [
@@ -713,9 +709,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
       context 'when the subscription has not been failing for too long' do
         it 'returns false' do
-          allow(SolidusSubscriptions.configuration).to receive_messages(
-            maximum_reprocessing_time: 15.days,
-          )
+          stub_config(maximum_reprocessing_time: 15.days)
 
           subscription = create(:subscription, installments: [
             create(:installment, details: [
@@ -739,9 +733,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
       context 'when the subscription is not failing' do
         it 'returns false' do
-          allow(SolidusSubscriptions.configuration).to receive_messages(
-            maximum_reprocessing_time: 2.days,
-          )
+          stub_config(maximum_reprocessing_time: 2.days)
 
           subscription = create(:subscription, installments: [
             create(:installment, details: [
