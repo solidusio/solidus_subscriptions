@@ -1,389 +1,122 @@
-require 'spec_helper'
+RSpec.describe SolidusSubscriptions::Checkout, :checkout do
+  context 'when the order can be created and paid' do
+    it 'creates and finalizes a new order for the installment' do
+      stub_spree_preferences(auto_capture: true)
+      installment = create(:installment, :actionable)
 
-RSpec.describe SolidusSubscriptions::Checkout do
-  let(:checkout) { described_class.new(installments) }
-  let(:root_order) { create :completed_order_with_pending_payment, user: subscription_user }
-  let(:subscription_user) { create(:user, :subscription_user) }
-  let!(:credit_card) {
-    card = create(:credit_card, user: subscription_user, gateway_customer_profile_id: 'BGS-123', payment_method: payment_method)
-    wallet_payment_source = subscription_user.wallet.add(card)
-    subscription_user.wallet.default_wallet_payment_source = wallet_payment_source
-    card
-  }
-  let(:payment_method) { create(:payment_method) }
-  let(:installments) { create_list(:installment, 2, installment_traits) }
+      order = described_class.new(installment).process
 
-  let(:installment_traits) do
-    {
-      subscription_traits: [{
-        user: subscription_user,
-        line_item_traits: [{
-          spree_line_item: root_order.line_items.first
-        }]
-      }]
-    }
-  end
+      expect(order).to be_complete
+      expect(order).to be_paid
+    end
 
-  before do
-    Spree::Variant.all.each { |v| v.update(subscribable: true) }
-  end
+    # rubocop:disable RSpec/MultipleExpectations
+    it 'copies basic information from the subscription' do
+      stub_spree_preferences(auto_capture: true)
+      installment = create(:installment, :actionable)
+      subscription = installment.subscription
 
-  context 'initialized with installments belonging to multiple users' do
-    subject { checkout }
+      order = described_class.new(installment).process
 
-    let(:installments) { build_stubbed_list :installment, 2 }
+      expect(order.ship_address.value_attributes).to eq(subscription.shipping_address_to_use.value_attributes)
+      expect(order.bill_address.value_attributes).to eq(subscription.billing_address_to_use.value_attributes)
+      expect(order.payments.first.payment_method).to eq(subscription.payment_method_to_use)
+      expect(order.payments.first.source).to eq(subscription.payment_source_to_use)
+      expect(order.user).to eq(subscription.user)
+      expect(order.email).to eq(subscription.user.email)
+    end
+    # rubocop:enable RSpec/MultipleExpectations
 
-    it 'raises an error' do
-      expect { subject }.
-        to raise_error SolidusSubscriptions::UserMismatchError, /must have the same user/
+    it 'marks the order as a subscription order' do
+      stub_spree_preferences(auto_capture: true)
+      installment = create(:installment, :actionable)
+      subscription = installment.subscription
+
+      order = described_class.new(installment).process
+
+      expect(order.subscription).to eq(subscription)
+      expect(order.subscription_order).to eq(true)
+    end
+
+    it 'matches the total on the subscription' do
+      stub_spree_preferences(auto_capture: true)
+      installment = create(:installment, :actionable)
+      subscription = installment.subscription
+
+      order = described_class.new(installment).process
+
+      expect(order.item_total).to eq(subscription.line_items.first.subscribable.price)
+    end
+
+    it 'calls the success dispatcher' do
+      stub_spree_preferences(auto_capture: true)
+      installment = create(:installment, :actionable)
+      success_dispatcher = stub_dispatcher(SolidusSubscriptions::Dispatcher::SuccessDispatcher, installment)
+
+      described_class.new(installment).process
+
+      expect(success_dispatcher).to have_received(:dispatch)
     end
   end
 
-  describe '#process', :checkout do
-    subject(:order) { checkout.process }
-
-    let(:subscription_line_item) { installments.first.subscription.line_items.first }
-
-    shared_examples 'a completed checkout' do
-      it { is_expected.to be_a Spree::Order }
-
-      let(:total) { 49.98 }
-      let(:quantity) { installments.length }
-
-      it 'has the correct number of line items' do
-        count = order.line_items.length
-        expect(count).to eq quantity
+  context 'when payment of the order fails' do
+    it 'calls the payment failed dispatcher' do
+      stub_spree_preferences(auto_capture: true)
+      installment = create(:installment, :actionable).tap do |i|
+        i.subscription.update!(payment_source: create(:credit_card, number: '4111123412341234'))
       end
+      payment_failed_dispatcher = stub_dispatcher(SolidusSubscriptions::Dispatcher::PaymentFailedDispatcher, installment)
 
-      it 'the line items have the correct values' do
-        line_item = order.line_items.first
-        expect(line_item).to have_attributes(
-          quantity: subscription_line_item.quantity,
-          variant_id: subscription_line_item.subscribable_id
-        )
-      end
+      described_class.new(installment).process
 
-      it 'has a shipment' do
-        expect(order.shipments).to be_present
-      end
-
-      it 'has a payment' do
-        expect(order.payments.valid).to be_present
-      end
-
-      it 'has the correct totals' do
-        expect(order).to have_attributes(
-          total: total,
-          shipment_total: 10
-        )
-      end
-
-      it { is_expected.to be_complete }
-
-      it 'associates the order to the installment detail' do
-        order
-        installment_orders = installments.flat_map { |i| i.details.map(&:order) }.compact
-        expect(installment_orders).to all eq order
-      end
-
-      it 'creates an installment detail for each installment' do
-        expect { subject }.
-          to change { SolidusSubscriptions::InstallmentDetail.count }.
-          by(installments.count)
-      end
-    end
-
-    context 'no line items get added to the cart' do
-      before do
-        installments
-        Spree::StockItem.update_all(count_on_hand: 0, backorderable: false)
-      end
-
-      it 'creates two failed installment details' do
-        expect { order }.
-          to change { SolidusSubscriptions::InstallmentDetail.count }.
-          by(installments.length)
-
-        details = SolidusSubscriptions::InstallmentDetail.last(installments.length)
-        expect(details).to all be_failed
-      end
-
-      it { is_expected.to be_nil }
-
-      it 'creates no order' do
-        expect { subject }.not_to change { Spree::Order.count }
-      end
-    end
-
-    if Gem::Specification.find_by_name('solidus').version >= Gem::Version.new('1.4.0')
-      context 'Altered checkout flow' do
-        before do
-          @old_checkout_flow = Spree::Order.checkout_flow
-          Spree::Order.remove_checkout_step(:delivery)
-        end
-
-        after do
-          Spree::Order.checkout_flow(&@old_checkout_flow)
-        end
-
-        it 'has a payment' do
-          expect(order.payments.valid).to be_present
-        end
-
-        it 'has the correct totals' do
-          expect(order).to have_attributes(
-            total: 39.98,
-            shipment_total: 0
-          )
-        end
-
-        it { is_expected.to be_complete }
-      end
-    end
-
-    context 'the variant is out of stock' do
-      let(:subscription_line_item) { installments.last.subscription.line_items.first }
-      let(:expected_date) { Time.zone.today + SolidusSubscriptions.configuration.reprocessing_interval }
-
-      # Remove stock for 1 variant in the consolidated installment
-      before do
-        subscribable_id = installments.first.subscription.line_items.first.subscribable_id
-        variant = Spree::Variant.find(subscribable_id)
-        variant.stock_items.update_all(count_on_hand: 0, backorderable: false)
-      end
-
-      it 'creates a failed installment detail' do
-        subject
-        detail = installments.first.details.last
-
-        expect(detail).not_to be_successful
-        expect(detail.message).
-          to eq I18n.t('solidus_subscriptions.installment_details.out_of_stock')
-      end
-
-      it 'removes the installment from the list of installments' do
-        expect { subject }.
-          to change { checkout.installments.length }.
-          by(-1)
-      end
-
-      it_behaves_like 'a completed checkout' do
-        let(:total) { 29.99 }
-        let(:quantity) { installments.length - 1 }
-      end
-    end
-
-    context 'the payment fails' do
-      let(:payment_method) { create(:payment_method) }
-      let!(:credit_card) {
-        card = create(:credit_card, user: checkout.user, payment_method: payment_method)
-        wallet_payment_source = checkout.user.wallet.add(card)
-        checkout.user.wallet.default_wallet_payment_source = wallet_payment_source
-        card
-      }
-      let(:expected_date) { Time.zone.today + SolidusSubscriptions.configuration.reprocessing_interval }
-
-      it { is_expected.to be_nil }
-
-      it 'marks all of the installments as failed' do
-        subject
-
-        details = installments.map do |installments|
-          installments.details.reload.last
-        end
-
-        expect(details).to all be_failed && have_attributes(
-          message: I18n.t('solidus_subscriptions.installment_details.payment_failed')
-        )
-      end
-
-      it 'marks the installment to be reprocessed' do
-        subject
-        actionable_dates = installments.map do |installment|
-          installment.reload.actionable_date
-        end
-
-        expect(actionable_dates).to all eq expected_date
-      end
-    end
-
-    context 'when there are cart promotions' do
-      let!(:promo) do
-        create(
-          :promotion,
-          :with_item_total_rule,
-          :with_order_adjustment,
-          promo_params
-        )
-      end
-
-      # Promotions require the :apply_automatically flag to be auto applied in
-      # solidus versions greater than 1.0
-      let(:promo_params) do
-        {}.tap do |params|
-          if Spree::Promotion.new.respond_to?(:apply_automatically)
-            params[:apply_automatically] = true
-          end
-        end
-      end
-
-      it_behaves_like 'a completed checkout' do
-        let(:total) { 39.98 }
-      end
-
-      it 'applies the correct adjustments' do
-        expect(subject.adjustments).to be_present
-      end
-    end
-
-    context 'there is an aribitrary failure' do
-      let(:expected_date) { Time.zone.today + SolidusSubscriptions.configuration.reprocessing_interval }
-
-      before do
-        allow(checkout).to receive(:populate).and_raise('arbitrary runtime error')
-      end
-
-      it 'advances the installment actionable dates', :aggregate_failures do
-        expect { subject }.to raise_error('arbitrary runtime error')
-
-        actionable_dates = installments.map do |installment|
-          installment.reload.actionable_date
-        end
-
-        expect(actionable_dates).to all eq expected_date
-      end
-    end
-
-    context 'the user has store credit' do
-      let!(:store_credit) { create :store_credit, user: subscription_user }
-      let!(:store_credit_payment_method) { create :store_credit_payment_method }
-
-      it_behaves_like 'a completed checkout'
-
-      it 'has a valid store credit payment' do
-        expect(order.payments.valid.store_credits).to be_present
-      end
-    end
-
-    context 'the subscription has a shipping address' do
-      let(:installment_traits) do
-        {
-          subscription_traits: [{
-            shipping_address: shipping_address,
-            user: subscription_user,
-            line_item_traits: [{ spree_line_item: root_order.line_items.first }]
-          }]
-        }
-      end
-      let(:shipping_address) { create :address }
-
-      it_behaves_like 'a completed checkout'
-
-      it 'ships to the subscription address' do
-        expect(subject.ship_address).to eq shipping_address
-      end
-    end
-
-    context 'the subscription has a billing address' do
-      let(:installment_traits) do
-        {
-          subscription_traits: [{
-            billing_address: billing_address,
-            user: subscription_user,
-            line_item_traits: [{ spree_line_item: root_order.line_items.first }]
-          }]
-        }
-      end
-      let(:billing_address) { create :address }
-
-      it_behaves_like 'a completed checkout'
-
-      it 'bills to the subscription address' do
-        expect(subject.bill_address).to eq billing_address
-      end
-    end
-
-    context 'the subscription has a payment method' do
-      let(:installment_traits) do
-        {
-          subscription_traits: [{
-            payment_method: payment_method,
-            user: subscription_user,
-            line_item_traits: [{ spree_line_item: root_order.line_items.first }]
-          }]
-        }
-      end
-      let(:payment_method) { create :check_payment_method }
-
-      it_behaves_like 'a completed checkout'
-
-      it 'pays with the payment method' do
-        expect(subject.payments.valid.first.payment_method).to eq payment_method
-      end
-    end
-
-    context 'the subscription has a payment method and a source' do
-      let(:installment_traits) do
-        {
-          subscription_traits: [{
-            payment_method: payment_method,
-            payment_source: payment_source,
-            user: subscription_user,
-            line_item_traits: [{ spree_line_item: root_order.line_items.first }]
-          }]
-        }
-      end
-      let(:payment_source) { create :credit_card, payment_method: payment_method, user: subscription_user }
-      let(:payment_method) { create :credit_card_payment_method }
-
-      it_behaves_like 'a completed checkout'
-
-      it 'pays with the payment method' do
-        expect(subject.payments.valid.first.payment_method).to eq payment_method
-      end
-
-      it 'pays with the payment source' do
-        expect(subject.payments.valid.first.source).to eq payment_source
-      end
-    end
-
-    context 'there are multiple associated subscritpion line items' do
-      it_behaves_like 'a completed checkout' do
-        let(:quantity) { subscription_line_items.length }
-      end
-
-      let(:installments) { create_list(:installment, 1, installment_traits) }
-      let(:subscription_line_items) { create_list(:subscription_line_item, 2, quantity: 1) }
-
-      let(:installment_traits) do
-        {
-          subscription_traits: [{
-            user: subscription_user,
-            line_items: subscription_line_items
-          }]
-        }
-      end
+      expect(payment_failed_dispatcher).to have_received(:dispatch)
     end
   end
 
-  describe '#order' do
-    subject { checkout.order }
+  context 'when an item is out of stock' do
+    it 'calls the out of stock dispatcher' do
+      stub_spree_preferences(auto_capture: true)
+      installment = create(:installment, :actionable).tap do |i|
+        i.subscription.line_items.first.subscribable.stock_items.each do |stock_item|
+          stock_item.update!(backorderable: false)
+        end
+      end
+      out_of_stock_dispatcher = stub_dispatcher(SolidusSubscriptions::Dispatcher::OutOfStockDispatcher, installment)
 
-    let(:user) { installments.first.subscription.user }
+      described_class.new(installment).process
 
-    it { is_expected.to be_a Spree::Order }
-
-    it 'has the correct attributes' do
-      expect(subject).to have_attributes(
-        user: user,
-        email: user.email,
-        store: installments.first.subscription.store
-      )
+      expect(out_of_stock_dispatcher).to have_received(:dispatch)
     end
+  end
 
-    it 'is the same instance any time its called' do
-      order = checkout.order
-      expect(subject).to equal order
+  context 'when a generic transition error happens during checkout' do
+    it 'calls the failure dispatcher' do
+      stub_spree_preferences(auto_capture: true)
+      installment = create(:installment, :actionable)
+      failure_dispatcher = stub_dispatcher(SolidusSubscriptions::Dispatcher::FailureDispatcher, installment)
+      # rubocop:disable RSpec/AnyInstance
+      allow_any_instance_of(Spree::Order).to receive(:next!)
+        .and_raise(StateMachines::InvalidTransition.new(
+          Spree::Order.new,
+          Spree::Order.state_machines[:state],
+          :next,
+        ))
+      # rubocop:enable RSpec/AnyInstance
+
+      described_class.new(installment).process
+
+      expect(failure_dispatcher).to have_received(:dispatch)
+    end
+  end
+
+  private
+
+  def stub_dispatcher(klass, installment)
+    instance_spy(klass).tap do |dispatcher|
+      allow(klass).to receive(:new).with(
+        [installment],
+        an_instance_of(Spree::Order)
+      ).and_return(dispatcher)
     end
   end
 end

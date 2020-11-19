@@ -1,155 +1,73 @@
 # frozen_string_literal: true
 
-# This class takes a collection of installments and populates a new spree
-# order with the correct contents based on the subscriptions associated to the
-# intallments. This is to group together subscriptions being
-# processed on the same day for a specific user
 module SolidusSubscriptions
   class Checkout
-    # @return [Array<Installment>] The collection of installments to be used
-    #   when generating a new order
-    attr_reader :installments
+    attr_reader :installment
 
-    delegate :user, to: :subscription
-
-    # Get a new instance of a Checkout
-    #
-    # @param installments [Array<Installment>] The collection of installments
-    # to be used when generating a new order
-    def initialize(installments)
-      @installments = installments
-      raise UserMismatchError.new(installments) if different_owners?
+    def initialize(installment)
+      @installment = installment
     end
 
-    # Generate a new Spree::Order based on the information associated to the
-    # installments
-    #
-    # @return [Spree::Order]
     def process
-      populate
+      order = create_order
 
-      # Installments are removed and set for future processing if they are
-      # out of stock. If there are no line items left there is nothing to do
-      return if installments.empty?
+      begin
+        populate_order(order)
+        finalize_order(order)
 
-      if checkout
-        SolidusSubscriptions.configuration.success_dispatcher_class.new(installments, order).dispatch
-        return order
+        SolidusSubscriptions.configuration.success_dispatcher_class.new([installment], order).dispatch
+      rescue StateMachines::InvalidTransition
+        if order.payments.any?(&:failed?)
+          SolidusSubscriptions.configuration.payment_failed_dispatcher_class.new([installment], order).dispatch
+        else
+          SolidusSubscriptions.configuration.failure_dispatcher_class.new([installment], order).dispatch
+        end
+      rescue ::Spree::Order::InsufficientStock
+        SolidusSubscriptions.configuration.out_of_stock_dispatcher_class.new([installment], order).dispatch
       end
 
-      # A new order will only have 1 payment that we created
-      if order.payments.any?(&:failed?)
-        SolidusSubscriptions.configuration.payment_failed_dispatcher_class.new(installments, order).dispatch
-        installments.clear
-        nil
-      end
-    ensure
-      # Any installments that failed to be processed will be reprocessed
-      unfulfilled_installments = installments.select(&:unfulfilled?)
-      if unfulfilled_installments.any?
-        SolidusSubscriptions.configuration.failure_dispatcher_class.
-          new(unfulfilled_installments, order).dispatch
-      end
-    end
-
-    # The order fulfilling the consolidated installment
-    #
-    # @return [Spree::Order]
-    def order
-      @order ||= ::Spree::Order.create(
-        user: user,
-        email: user.email,
-        store: subscription.store || ::Spree::Store.default,
-        subscription_order: true,
-        subscription: subscription
-      )
+      order
     end
 
     private
 
-    def checkout
+    def create_order
+      ::Spree::Order.create(
+        user: installment.subscription.user,
+        email: installment.subscription.user.email,
+        store: installment.subscription.store || ::Spree::Store.default,
+        subscription_order: true,
+        subscription: installment.subscription
+      )
+    end
+
+    def populate_order(order)
+      installment.subscription.line_items.each do |line_item|
+        order.contents.add(line_item.subscribable, line_item.quantity)
+      end
+    end
+
+    def finalize_order(order)
+      ::Spree::PromotionHandler::Cart.new(order).activate
       order.recalculate
-      apply_promotions
 
       order.checkout_steps[0...-1].each do
         case order.state
-        when "address"
-          order.ship_address = ship_address
-          order.bill_address = bill_address
-        when "payment"
-          create_payment
+        when 'address'
+          order.ship_address = installment.subscription.shipping_address_to_use
+          order.bill_address = installment.subscription.billing_address_to_use
+        when 'payment'
+          order.payments.create(
+            payment_method: installment.subscription.payment_method_to_use,
+            source: installment.subscription.payment_source_to_use,
+            amount: order.total,
+          )
         end
 
         order.next!
       end
 
-      # Do this as a separate "quiet" transition so that it returns true or
-      # false rather than raising a failed transition error
-      order.complete
-    end
-
-    def populate
-      unfulfilled_installments = []
-
-      order_line_items = installments.flat_map do |installment|
-        line_items = installment.line_item_builder.spree_line_items
-
-        unfulfilled_installments.push(installment) if line_items.empty?
-
-        line_items
-      end
-
-      # Remove installments which had no stock from the active list
-      # They will be reprocessed later
-      @installments -= unfulfilled_installments
-      if unfulfilled_installments.any?
-        SolidusSubscriptions.configuration.out_of_stock_dispatcher_class.new(unfulfilled_installments).dispatch
-      end
-
-      return if installments.empty?
-
-      order_builder.add_line_items(order_line_items)
-    end
-
-    def order_builder
-      @order_builder ||= OrderBuilder.new(order)
-    end
-
-    def subscription
-      installments.first.subscription
-    end
-
-    def ship_address
-      subscription.shipping_address_to_use
-    end
-
-    def bill_address
-      subscription.billing_address_to_use
-    end
-
-    def payment_source
-      subscription.payment_source_to_use
-    end
-
-    def payment_method
-      subscription.payment_method_to_use
-    end
-
-    def create_payment
-      order.payments.create(
-        source: payment_source,
-        amount: order.total,
-        payment_method: payment_method,
-      )
-    end
-
-    def apply_promotions
-      ::Spree::PromotionHandler::Cart.new(order).activate
-      order.updater.update # reload totals
-    end
-
-    def different_owners?
-      installments.map { |i| i.subscription.user }.uniq.length > 1
+      order.complete!
     end
   end
 end

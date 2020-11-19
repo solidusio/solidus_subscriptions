@@ -5,7 +5,7 @@ module SolidusSubscriptions
     queue_as SolidusSubscriptions.configuration.processing_queue
 
     def perform(installment)
-      Checkout.new([installment]).process
+      Checkout.new(installment).process
     end
   end
 end
