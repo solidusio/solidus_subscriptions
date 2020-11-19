@@ -29,7 +29,7 @@ module SolidusSubscriptions
       end
 
       def process_installment(installment)
-        ProcessInstallmentsJob.perform_later(installment)
+        ProcessInstallmentJob.perform_later(installment)
       end
     end
   end

@@ -46,8 +46,8 @@ RSpec.describe SolidusSubscriptions::Processor, :checkout do
 
       described_class.run
 
-      expect(SolidusSubscriptions::ProcessInstallmentsJob).to have_been_enqueued
-        .with([subscription.installments.last])
+      expect(SolidusSubscriptions::ProcessInstallmentJob).to have_been_enqueued
+        .with(subscription.installments.last)
     end
 
     it 'schedules other actionable installments for processing' do
@@ -55,8 +55,8 @@ RSpec.describe SolidusSubscriptions::Processor, :checkout do
 
       described_class.run
 
-      expect(SolidusSubscriptions::ProcessInstallmentsJob).to have_been_enqueued
-        .with([actionable_installment])
+      expect(SolidusSubscriptions::ProcessInstallmentJob).to have_been_enqueued
+        .with(actionable_installment)
     end
   end
 
