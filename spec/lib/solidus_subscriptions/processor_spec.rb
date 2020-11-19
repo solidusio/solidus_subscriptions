@@ -110,8 +110,7 @@ RSpec.describe SolidusSubscriptions::Processor, :checkout do
 
     context "when the config 'clear_past_installments' is enabled" do
       it 'clears the past failed installments' do
-        allow(SolidusSubscriptions.configuration).to receive(:clear_past_installments).
-          and_return(true)
+        stub_config(clear_past_installments: true)
 
         subject
 

@@ -92,9 +92,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     end
 
     context 'the reprocessing interval is set to nil' do
-      before do
-        allow(SolidusSubscriptions.configuration).to receive_messages(reprocessing_interval: nil)
-      end
+      before { stub_config(reprocessing_interval: nil) }
 
       it 'does not advance the installment actionable_date' do
         subject
@@ -141,138 +139,69 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
   end
 
   describe '#payment_failed!' do
-    context 'when maximum_reprocessing_time is nil' do
+    context 'when the maximum reprocessing time has been reached' do
       it 'creates a new installment detail' do
-        allow(SolidusSubscriptions.configuration).to receive_messages(
-          maximum_reprocessing_time: nil,
-          reprocessing_interval: 2.days,
-        )
-        installment = create(:installment)
+        subscription = create(:subscription)
+        allow(subscription).to receive(:maximum_reprocessing_time_reached?).and_return(true)
 
-        installment.payment_failed!(create(:order))
+        current_installment = create(:installment, subscription: subscription)
+        current_installment.payment_failed!(create(:order))
 
-        expect(installment.details.count).to eq(1)
+        expect(current_installment.details.count).to eq(1)
       end
 
-      it "advances the installment's actionable_date" do
-        allow(SolidusSubscriptions.configuration).to receive_messages(
-          maximum_reprocessing_time: nil,
-          reprocessing_interval: 2.days,
-        )
-        installment = create(:installment)
+      it 'sets the actionable_date to nil' do
+        subscription = create(:subscription)
+        allow(subscription).to receive(:maximum_reprocessing_time_reached?).and_return(true)
 
-        installment.payment_failed!(create(:order))
+        current_installment = create(:installment, subscription: subscription)
+        current_installment.payment_failed!(create(:order))
 
-        expect(installment.actionable_date).to eq((Time.zone.now + 2.days).beginning_of_minute)
+        expect(current_installment.actionable_date).to eq(nil)
+      end
+
+      it 'cancels the subscription' do
+        subscription = create(:subscription)
+        allow(subscription).to receive(:maximum_reprocessing_time_reached?).and_return(true)
+
+        current_installment = create(:installment, subscription: subscription)
+        current_installment.payment_failed!(create(:order))
+
+        expect(current_installment.subscription.state).to eq('canceled')
       end
     end
 
-    context 'when maximum_reprocessing_attempts is configured' do
-      context 'when the installment has surpassed the maximum reprocessing time' do
-        it 'creates a new installment detail' do
-          allow(SolidusSubscriptions.configuration).to receive_messages(
-            maximum_reprocessing_time: 3.days,
-            reprocessing_interval: 2.days,
-          )
-          subscription = create(:subscription)
-          _last_successful_installment = create(
-            :installment,
-            subscription: subscription,
-            details: [create(:installment_detail, :success, created_at: 4.days.ago)]
-          )
-          current_installment = create(:installment, subscription: subscription)
-          current_installment.payment_failed!(create(:order))
+    context 'when the maximum reprocessing time has not been reached' do
+      it 'creates a new installment detail' do
+        subscription = create(:subscription)
+        allow(subscription).to receive(:maximum_reprocessing_time_reached?).and_return(false)
 
-          expect(current_installment.details.count).to eq(1)
-        end
+        current_installment = create(:installment, subscription: subscription)
+        current_installment.payment_failed!(create(:order))
+        current_installment.payment_failed!(create(:order))
 
-        it 'sets the actionable_date to nil' do
-          allow(SolidusSubscriptions.configuration).to receive_messages(
-            maximum_reprocessing_time: 3.days,
-            reprocessing_interval: 2.days,
-          )
-          subscription = create(:subscription)
-          _last_successful_installment = create(
-            :installment,
-            subscription: subscription,
-            details: [create(:installment_detail, :success, created_at: 4.days.ago)]
-          )
-          current_installment = create(:installment, subscription: subscription)
-          current_installment.payment_failed!(create(:order))
-
-          expect(current_installment.actionable_date).to eq(nil)
-        end
-
-        it 'cancels the subscription' do
-          allow(SolidusSubscriptions.configuration).to receive_messages(
-            maximum_reprocessing_time: 3.days,
-            reprocessing_interval: 2.days,
-          )
-          subscription = create(:subscription)
-          _last_successful_installment = create(
-            :installment,
-            subscription: subscription,
-            details: [create(:installment_detail, :success, created_at: 4.days.ago)]
-          )
-          current_installment = create(:installment, subscription: subscription)
-          current_installment.payment_failed!(create(:order))
-
-          expect(current_installment.subscription.state).to eq('canceled')
-        end
+        expect(current_installment.details.count).to eq(2)
       end
 
-      context 'when the installment has not surpassed the maximum reprocessing time' do
-        it 'creates a new installment detail' do
-          allow(SolidusSubscriptions.configuration).to receive_messages(
-            maximum_reprocessing_time: 3.days,
-            reprocessing_interval: 2.days,
-          )
-          subscription = create(:subscription)
-          _last_successful_installment = create(
-            :installment,
-            subscription: subscription,
-            details: [create(:installment_detail, :success, created_at: 1.day.ago)]
-          )
-          current_installment = create(:installment, subscription: subscription)
-          current_installment.payment_failed!(create(:order))
-          current_installment.payment_failed!(create(:order))
+      it "advances the installment's actionable_date" do
+        subscription = create(:subscription)
+        allow(subscription).to receive(:maximum_reprocessing_time_reached?).and_return(false)
+        stub_config(reprocessing_interval: 2.days)
 
-          expect(current_installment.details.count).to eq(2)
-        end
+        current_installment = create(:installment, subscription: subscription)
+        current_installment.payment_failed!(create(:order))
 
-        it "advances the installment's actionable_date" do
-          allow(SolidusSubscriptions.configuration).to receive_messages(
-            maximum_reprocessing_time: 3.days,
-            reprocessing_interval: 2.days,
-          )
-          subscription = create(:subscription)
-          _last_successful_installment = create(
-            :installment,
-            subscription: subscription,
-            details: [create(:installment_detail, :success, created_at: 1.day.ago)]
-          )
-          current_installment = create(:installment, subscription: subscription)
-          current_installment.payment_failed!(create(:order))
+        expect(current_installment.actionable_date).to eq((Time.zone.now + 2.days).beginning_of_minute)
+      end
 
-          expect(current_installment.actionable_date).to eq((Time.zone.now + 2.days).beginning_of_minute)
-        end
+      it 'does not cancel the subscription' do
+        subscription = create(:subscription)
+        allow(subscription).to receive(:maximum_reprocessing_time_reached?).and_return(false)
 
-        it 'does not cancel the subscription' do
-          allow(SolidusSubscriptions.configuration).to receive_messages(
-            maximum_reprocessing_time: 3.days,
-            reprocessing_interval: 2.days,
-          )
-          subscription = create(:subscription)
-          _last_successful_installment = create(
-            :installment,
-            subscription: subscription,
-            details: [create(:installment_detail, :success, created_at: 1.day.ago)]
-          )
-          current_installment = create(:installment, subscription: subscription)
-          current_installment.payment_failed!(create(:order))
+        current_installment = create(:installment, subscription: subscription)
+        current_installment.payment_failed!(create(:order))
 
-          expect(subscription.state).to eq('active')
-        end
+        expect(subscription.state).to eq('active')
       end
     end
   end
