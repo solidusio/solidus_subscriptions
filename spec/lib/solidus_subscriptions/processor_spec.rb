@@ -1,156 +1,136 @@
-require 'spec_helper'
-
 RSpec.describe SolidusSubscriptions::Processor, :checkout do
-  include ActiveJob::TestHelper
-  around { |e| perform_enqueued_jobs { e.run } }
+  shared_examples 'processes the subscription' do
+    it 'resets the successive_skip_count' do
+      subscription
+      subscription.update_columns(successive_skip_count: 3)
 
-  let!(:user) { create(:user, :subscription_user) }
-  let!(:credit_card) {
-    card = create(:credit_card, gateway_customer_profile_id: 'BGS-123', user: user)
-    wallet_payment_source = user.wallet.add(card)
-    user.wallet.default_wallet_payment_source = wallet_payment_source
-    user.save
-    card
-  }
+      described_class.run
 
-  let!(:actionable_subscriptions) { create_list(:subscription, 2, :actionable, user: user) }
-  let!(:pending_cancellation_subscriptions) do
-    create_list(:subscription, 2, :pending_cancellation, user: user)
-  end
-
-  let!(:expiring_subscriptions) do
-    create_list(
-      :subscription,
-      2,
-      :actionable,
-      :with_line_item,
-      user: user,
-      end_date: Date.current.tomorrow,
-    )
-  end
-
-  let!(:future_subscriptions) { create_list(:subscription, 2, :not_actionable) }
-  let!(:canceled_subscriptions) { create_list(:subscription, 2, :canceled) }
-  let!(:inactive) { create_list(:subscription, 2, :inactive) }
-
-  let!(:successful_installments) { create_list :installment, 2, :success }
-  let!(:failed_installments) do
-    create_list(
-      :installment,
-      2,
-      :failed,
-      subscription_traits: [{ user: user }]
-    )
-  end
-
-  # all subscriptions and previously failed installments belong to the same user
-  let(:expected_orders) { 1 }
-
-  shared_examples 'a subscription order' do
-    let(:order_variant_ids) { Spree::Order.last.variant_ids }
-    let(:expected_ids) do
-      subs = actionable_subscriptions + pending_cancellation_subscriptions + expiring_subscriptions
-      subs_ids = subs.flat_map { |s| s.line_items.pluck(:subscribable_id) }
-      inst_ids = failed_installments.flat_map { |i| i.subscription.line_items.pluck(:subscribable_id) }
-
-      subs_ids + inst_ids
+      expect(subscription.reload.successive_skip_count).to eq(0)
     end
 
-    it 'creates the correct number of orders' do
-      expect { subject }.to change { Spree::Order.complete.count }.by expected_orders
-    end
-
-    it 'creates the correct order' do
-      subject
-      expect(order_variant_ids).to match_array expected_ids
-    end
-
-    it 'advances the subscription actionable dates' do
-      subscription = actionable_subscriptions.first
-
-      current_date = subscription.actionable_date
-      expected_date = subscription.next_actionable_date
-
-      expect { subject }.
-        to change { subscription.reload.actionable_date }.
-        from(current_date).to(expected_date)
-    end
-
-    it 'cancels subscriptions pending cancellation' do
-      subs = pending_cancellation_subscriptions.first
-      expect { subject }.
-        to change { subs.reload.state }.
-        from('pending_cancellation').to('canceled')
-    end
-
-    it 'resets the subscription successive skip count' do
-      subs = pending_cancellation_subscriptions.first
-      expect { subject }.
-        to change { subs.reload.state }.
-        from('pending_cancellation').to('canceled')
-    end
-
-    it 'deactivates expired subscriptions' do
-      sub = expiring_subscriptions.first
-
-      expect { subject }.
-        to change { sub.reload.state }.
-        from('active').to('inactive')
-    end
-
-    context 'the subscriptions have different shipping addresses' do
-      let!(:sub_to_different_address) do
-        create(:subscription, :actionable, :with_shipping_address, user: user)
-      end
-
-      it 'creates an order for each shipping address' do
-        expect { subject }.to change { Spree::Order.complete.count }.by 2
-      end
-    end
-
-    context "when the config 'clear_past_installments' is enabled" do
-      it 'clears the past failed installments' do
+    context 'with clear_past_installments set to true' do
+      it 'clears any past unfulfilled installments' do
         stub_config(clear_past_installments: true)
+        subscription
+        installment = create(:installment, :actionable, subscription: subscription)
 
-        subject
+        described_class.run
 
-        failed_installments.each do |fi|
-          expect(fi.reload.actionable_date).to eq(nil)
-        end
+        expect(installment.reload.actionable_date).to eq(nil)
       end
     end
 
-    context 'the subscriptions have different billing addresses' do
-      let!(:sub_to_different_address) do
-        create(:subscription, :actionable, :with_billing_address, user: user)
-      end
+    context 'with clear_past_installments set to false' do
+      it 'does not clear any past unfulfilled installments' do
+        stub_config(clear_past_installments: false)
+        subscription
+        installment = create(:installment, :actionable, subscription: subscription)
 
-      it 'creates an order for each billing address' do
-        expect { subject }.to change { Spree::Order.complete.count }.by 2
+        described_class.run
+
+        expect(installment.reload.actionable_date).not_to be_nil
       end
     end
 
-    context 'the subscription is cancelled with pending installments' do
-      let!(:cancelled_installment) do
-        installment = create(:installment, actionable_date: Time.zone.today)
-        installment.subscription.cancel!
-      end
+    it 'creates a new installment' do
+      subscription
 
-      it 'does not process the installment' do
-        expect { subject }.to change { Spree::Order.complete.count }.by expected_orders
-      end
+      described_class.run
+
+      expect(subscription.installments.count).to eq(1)
+    end
+
+    it 'schedules the newly created installment for processing' do
+      subscription
+
+      described_class.run
+
+      expect(SolidusSubscriptions::ProcessInstallmentsJob).to have_been_enqueued
+        .with([subscription.installments.last])
+    end
+
+    it 'schedules other actionable installments for processing' do
+      actionable_installment = create(:installment, :actionable)
+
+      described_class.run
+
+      expect(SolidusSubscriptions::ProcessInstallmentsJob).to have_been_enqueued
+        .with([actionable_installment])
     end
   end
 
-  describe '.run' do
-    subject { described_class.run }
+  shared_examples 'schedules the subscription for reprocessing' do
+    it 'advances the actionable_date' do
+      subscription
+      subscription.update_columns(interval_length: 1, interval_units: 'week')
+      old_actionable_date = subscription.actionable_date
 
-    it_behaves_like 'a subscription order'
+      described_class.run
+
+      expect(subscription.reload.actionable_date.to_date).to eq((old_actionable_date + 1.week).to_date)
+    end
   end
 
-  describe '#build_jobs' do
-    subject { described_class.new([user]).build_jobs }
+  context 'with a regular subscription' do
+    let(:subscription) { create(:subscription, :actionable) }
 
-    it_behaves_like 'a subscription order'
+    include_examples 'processes the subscription'
+    include_examples 'schedules the subscription for reprocessing'
+  end
+
+  context 'with a subscription that is pending deactivation' do
+    let(:subscription) do
+      create(
+        :subscription,
+        :actionable,
+        interval_units: 'week',
+        interval_length: 2,
+        end_date: 3.days.from_now,
+      )
+    end
+
+    include_examples 'processes the subscription'
+    include_examples 'schedules the subscription for reprocessing'
+
+    it 'deactivates the subscription' do
+      subscription
+
+      described_class.run
+
+      expect(subscription.reload.state).to eq('inactive')
+    end
+  end
+
+  context 'with a subscription that is pending cancellation' do
+    let(:subscription) do
+      create(
+        :subscription,
+        :actionable,
+        :pending_cancellation,
+      )
+    end
+
+    include_examples 'processes the subscription'
+
+    it 'cancels the subscription' do
+      subscription
+
+      described_class.run
+
+      expect(subscription.reload.state).to eq('canceled')
+    end
+  end
+
+  context 'with a cancelled subscription with pending installments' do
+    it 'does not process the installment' do
+      subscription = create(:subscription)
+      create(:installment, subscription: subscription, actionable_date: Time.zone.today)
+      subscription.cancel!
+
+      described_class.run
+
+      expect(SolidusSubscriptions::ProcessInstallmentJob).not_to have_been_enqueued
+    end
   end
 end
