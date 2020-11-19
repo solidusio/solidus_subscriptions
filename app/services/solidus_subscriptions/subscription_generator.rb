@@ -32,9 +32,12 @@ module SolidusSubscriptions
         **configuration.to_h
       }
 
-      Subscription.create!(subscription_attributes) do |sub|
+      subscription = Subscription.create!(subscription_attributes) do |sub|
         sub.actionable_date = sub.next_actionable_date
       end
+      order.update!(subscription: subscription)
+
+      subscription
     end
 
     # Group a collection of line items by common subscription configuration

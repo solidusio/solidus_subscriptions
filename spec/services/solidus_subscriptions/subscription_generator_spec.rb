@@ -44,6 +44,14 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
         payment_source: payment_source,
       )
     end
+
+    it 'associates the order to the subscription' do
+      subscription_line_item = build(:subscription_line_item)
+
+      subscription = described_class.activate([subscription_line_item])
+
+      expect(subscription_line_item.order.subscription).to eq(subscription)
+    end
   end
 
   describe '.group' do
