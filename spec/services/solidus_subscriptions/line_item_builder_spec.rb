@@ -24,17 +24,6 @@ RSpec.describe SolidusSubscriptions::LineItemBuilder do
       expect(subject.first).to have_attributes expected_attributes
     end
 
-    context 'the variant is not subscribable' do
-      let!(:variant) { create(:variant) }
-
-      it 'raises an unsubscribable error' do
-        expect { subject }.to raise_error(
-          SolidusSubscriptions::UnsubscribableError,
-          /cannot be subscribed to/
-        )
-      end
-    end
-
     context 'the variant is out of stock' do
       before { create :stock_location, backorderable_default: false }
 

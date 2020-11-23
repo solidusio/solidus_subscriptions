@@ -24,7 +24,6 @@ module SolidusSubscriptions
       line_items = subscription_line_items.map do |subscription_line_item|
         variant = subscription_line_item.subscribable
 
-        raise UnsubscribableError, variant unless variant.subscribable?
         next unless variant.can_supply?(subscription_line_item.quantity)
 
         ::Spree::LineItem.new(variant: variant, quantity: subscription_line_item.quantity)
