@@ -186,8 +186,9 @@ module SolidusSubscriptions
     def next_actionable_date
       return nil unless active?
 
-      new_date = (actionable_date || Time.zone.now)
-      (new_date + interval).beginning_of_minute
+      new_date = actionable_date || Time.zone.today
+
+      new_date + interval
     end
 
     # Advance the actionable date to the next_actionable_date value. Will modify
