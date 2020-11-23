@@ -22,7 +22,7 @@ module SolidusSubscriptions
     # @return [Array<Spree::LineItem>]
     def spree_line_items
       line_items = subscription_line_items.map do |subscription_line_item|
-        variant = subscribables.fetch(subscription_line_item.subscribable_id)
+        variant = subscription_line_item.subscribable
 
         raise UnsubscribableError, variant unless variant.subscribable?
         next unless variant.can_supply?(subscription_line_item.quantity)
@@ -32,15 +32,6 @@ module SolidusSubscriptions
 
       # Either all line items for an installment are fulfilled or none are
       line_items.all? ? line_items : []
-    end
-
-    private
-
-    def subscribables
-      return @subscribables if @subscribables
-
-      ids = subscription_line_items.map(&:subscribable_id)
-      @subscribables ||= ::Spree::Variant.find(ids).index_by(&:id)
     end
   end
 end
