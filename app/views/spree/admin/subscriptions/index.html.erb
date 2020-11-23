@@ -119,7 +119,7 @@
         <tr>
           <td><%= l(subscription.created_at.to_date) %></td>
           <td><%= link_to subscription.user.email, admin_user_path(subscription.user) %></td>
-          <td><%= subscription.actionable_date ? l(subscription.actionable_date.to_date) : '-' %></td>
+          <td><%= subscription.actionable_date ? l(subscription.actionable_date) : '-' %></td>
           <td><%= subscription.interval.inspect %></td>
           <td><%= render 'state_pill', subscription: subscription %></td>
           <td><%= render 'processing_state_pill', subscription: subscription %></td>

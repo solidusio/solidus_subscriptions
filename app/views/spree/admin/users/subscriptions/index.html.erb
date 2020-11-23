@@ -25,7 +25,7 @@
         <% @subscriptions.each do |subscription| %>
           <tr>
             <td><%= l(subscription.created_at.to_date) %></td>
-            <td><%= subscription.actionable_date ? l(subscription.actionable_date.to_date) : '-' %></td>
+            <td><%= subscription.actionable_date ? l(subscription.actionable_date) : '-' %></td>
             <td><%= subscription.interval.inspect %></td>
             <td><%= render 'spree/admin/subscriptions/state_pill', subscription: subscription %></td>
             <td><%= render 'spree/admin/subscriptions/processing_state_pill', subscription: subscription %></td>
