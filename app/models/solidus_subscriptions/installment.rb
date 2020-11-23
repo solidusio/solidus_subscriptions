@@ -24,7 +24,7 @@ module SolidusSubscriptions
     end)
 
     scope :actionable, (lambda do
-      unfulfilled.where("#{table_name}.actionable_date <= ?", Time.zone.now)
+      unfulfilled.where("#{table_name}.actionable_date <= ?", Time.zone.today)
     end)
 
     # Get the builder for the subscription_line_item. This will be an
