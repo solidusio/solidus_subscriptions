@@ -143,7 +143,7 @@ RSpec.describe SolidusSubscriptions::Checkout do
 
     context 'the variant is out of stock' do
       let(:subscription_line_item) { installments.last.subscription.line_items.first }
-      let(:expected_date) { (DateTime.current + SolidusSubscriptions.configuration.reprocessing_interval).beginning_of_minute }
+      let(:expected_date) { Time.zone.today + SolidusSubscriptions.configuration.reprocessing_interval }
 
       # Remove stock for 1 variant in the consolidated installment
       before do
@@ -181,7 +181,7 @@ RSpec.describe SolidusSubscriptions::Checkout do
         checkout.user.wallet.default_wallet_payment_source = wallet_payment_source
         card
       }
-      let(:expected_date) { (DateTime.current + SolidusSubscriptions.configuration.reprocessing_interval).beginning_of_minute }
+      let(:expected_date) { Time.zone.today + SolidusSubscriptions.configuration.reprocessing_interval }
 
       it { is_expected.to be_nil }
 
@@ -237,7 +237,7 @@ RSpec.describe SolidusSubscriptions::Checkout do
     end
 
     context 'there is an aribitrary failure' do
-      let(:expected_date) { (DateTime.current + SolidusSubscriptions.configuration.reprocessing_interval).beginning_of_minute }
+      let(:expected_date) { Time.zone.today + SolidusSubscriptions.configuration.reprocessing_interval }
 
       before do
         allow(checkout).to receive(:populate).and_raise('arbitrary runtime error')

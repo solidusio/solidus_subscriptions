@@ -40,7 +40,7 @@ module SolidusSubscriptions
     # Find all subscriptions that are "actionable"; that is, ones that have an
     # actionable_date in the past and are not invalid or canceled.
     scope :actionable, (lambda do
-      where("#{table_name}.actionable_date <= ?", Time.zone.now).
+      where("#{table_name}.actionable_date <= ?", Time.zone.today).
         where.not(state: ["canceled", "inactive"])
     end)
 
@@ -186,8 +186,9 @@ module SolidusSubscriptions
     def next_actionable_date
       return nil unless active?
 
-      new_date = (actionable_date || Time.zone.now)
-      (new_date + interval).beginning_of_minute
+      new_date = actionable_date || Time.zone.today
+
+      new_date + interval
     end
 
     # Advance the actionable date to the next_actionable_date value. Will modify

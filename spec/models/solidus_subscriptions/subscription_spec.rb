@@ -569,7 +569,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
           subscription.update!(interval_length: 1, interval_units: 'month')
 
-          expect(subscription.actionable_date.to_date).to eq(Time.zone.today)
+          expect(subscription.actionable_date).to eq(Time.zone.today)
         end
       end
 
@@ -580,7 +580,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
           subscription.update!(interval_length: 1, interval_units: 'month')
 
-          expect(subscription.actionable_date.to_date).to eq((4.days.ago + 1.month).to_date)
+          expect(subscription.actionable_date).to eq((4.days.ago + 1.month).to_date)
         end
       end
     end
@@ -592,7 +592,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
           subscription.update!(interval_length: 1, interval_units: 'month')
 
-          expect(subscription.actionable_date.to_date).to eq(Time.zone.today)
+          expect(subscription.actionable_date).to eq(Time.zone.today)
         end
       end
 
@@ -602,7 +602,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
           subscription.update!(interval_length: 1, interval_units: 'month')
 
-          expect(subscription.actionable_date.to_date).to eq((4.days.ago + 1.month).to_date)
+          expect(subscription.actionable_date).to eq((4.days.ago + 1.month).to_date)
         end
       end
     end

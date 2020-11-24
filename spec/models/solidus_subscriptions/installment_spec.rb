@@ -18,7 +18,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     subject { installment.out_of_stock }
 
     let(:expected_date) do
-      (DateTime.current + SolidusSubscriptions.configuration.reprocessing_interval).beginning_of_minute
+      Time.zone.today + SolidusSubscriptions.configuration.reprocessing_interval
     end
 
     it { is_expected.to be_a SolidusSubscriptions::InstallmentDetail }
@@ -72,7 +72,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     let(:order) { create :order }
 
     let(:expected_date) do
-      (DateTime.current + SolidusSubscriptions.configuration.reprocessing_interval).beginning_of_minute
+      Time.zone.today + SolidusSubscriptions.configuration.reprocessing_interval
     end
 
     it { is_expected.to be_a SolidusSubscriptions::InstallmentDetail }
@@ -191,7 +191,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
         current_installment = create(:installment, subscription: subscription)
         current_installment.payment_failed!(create(:order))
 
-        expect(current_installment.actionable_date).to eq((Time.zone.now + 2.days).beginning_of_minute)
+        expect(current_installment.actionable_date).to eq(Time.zone.today + 2.days)
       end
 
       it 'does not cancel the subscription' do
