@@ -1,4 +1,4 @@
-RSpec.describe SolidusSubscriptions::OutOfStockDispatcher do
+RSpec.describe SolidusSubscriptions::Dispatcher::OutOfStockDispatcher do
   describe '#dispatch' do
     it 'marks all the installments as out of stock' do
       installments = Array.new(2) { instance_spy(SolidusSubscriptions::Installment) }

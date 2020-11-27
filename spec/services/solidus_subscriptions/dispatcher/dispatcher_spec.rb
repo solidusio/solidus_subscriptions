@@ -1,4 +1,4 @@
-RSpec.describe SolidusSubscriptions::Dispatcher do
+RSpec.describe SolidusSubscriptions::Dispatcher::Base do
   describe '#dispatch' do
     it 'raises a NotImplementedError' do
       dispatcher = described_class.new([])

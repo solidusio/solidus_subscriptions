@@ -1,4 +1,4 @@
-RSpec.describe SolidusSubscriptions::FailureDispatcher do
+RSpec.describe SolidusSubscriptions::Dispatcher::FailureDispatcher do
   describe '#dispatch' do
     it 'marks all the installments as failed' do
       installments = Array.new(2) { instance_spy(SolidusSubscriptions::Installment) }

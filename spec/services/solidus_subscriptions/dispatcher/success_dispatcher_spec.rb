@@ -1,4 +1,4 @@
-RSpec.describe SolidusSubscriptions::SuccessDispatcher do
+RSpec.describe SolidusSubscriptions::Dispatcher::SuccessDispatcher do
   describe '#dispatch' do
     it 'marks all the installments as success' do
       installments = Array.new(2) { instance_spy(SolidusSubscriptions::Installment) }

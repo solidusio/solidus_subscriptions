@@ -32,16 +32,16 @@ SolidusSubscriptions.configure do |config|
   # subclass from the the dispatcher you are replacing and call `super` from within `#dispatch`.
 
   # This handler is called when a subscription order is successfully placed.
-  # config.success_dispatcher_class = 'SolidusSubscriptions::SuccessDispatcher'
+  # config.success_dispatcher_class = 'SolidusSubscriptions::Dispatcher::SuccessDispatcher'
 
   # This handler is called when a group of installments fails to be processed.
-  # config.failure_dispatcher_class = 'SolidusSubscriptions::FailureDispatcher'
+  # config.failure_dispatcher_class = 'SolidusSubscriptions::Dispatcher::FailureDispatcher'
 
   # This handler is called when a payment fails on a subscription order.
-  # config.payment_failed_dispatcher_class = 'SolidusSubscriptions::PaymentFailedDispatcher'
+  # config.payment_failed_dispatcher_class = 'SolidusSubscriptions::Dispatcher::PaymentFailedDispatcher'
 
   # This handler is called when there isn't enough stock to fulfill an installment.
-  # config.out_of_stock_dispatcher = 'SolidusSubscriptions::OutOfStockDispatcher'
+  # config.out_of_stock_dispatcher = 'SolidusSubscriptions::Dispatcher::OutOfStockDispatcher'
 
   # ===================================== Permitted attributes =====================================
   #
