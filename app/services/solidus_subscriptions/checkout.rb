@@ -15,15 +15,15 @@ module SolidusSubscriptions
         populate_order(order)
         finalize_order(order)
 
-        SolidusSubscriptions.configuration.success_dispatcher_class.new([installment], order).dispatch
+        SolidusSubscriptions.configuration.success_dispatcher_class.new(installment, order).dispatch
       rescue StateMachines::InvalidTransition
         if order.payments.any?(&:failed?)
-          SolidusSubscriptions.configuration.payment_failed_dispatcher_class.new([installment], order).dispatch
+          SolidusSubscriptions.configuration.payment_failed_dispatcher_class.new(installment, order).dispatch
         else
-          SolidusSubscriptions.configuration.failure_dispatcher_class.new([installment], order).dispatch
+          SolidusSubscriptions.configuration.failure_dispatcher_class.new(installment, order).dispatch
         end
       rescue ::Spree::Order::InsufficientStock
-        SolidusSubscriptions.configuration.out_of_stock_dispatcher_class.new([installment], order).dispatch
+        SolidusSubscriptions.configuration.out_of_stock_dispatcher_class.new(installment, order).dispatch
       end
 
       order

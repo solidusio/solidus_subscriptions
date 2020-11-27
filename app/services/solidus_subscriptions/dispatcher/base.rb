@@ -3,17 +3,10 @@
 module SolidusSubscriptions
   module Dispatcher
     class Base
-      attr_reader :installments, :order
+      attr_reader :installment, :order
 
-      # Returns a new instance of this dispatcher.
-      #
-      # @param installments [Array<SolidusSubscriptions::Installment>] The installments to process
-      #   with this dispatcher
-      # @param order [Spree::Order] The order that was generated as a result of these installments
-      #
-      # @return [SolidusSubscriptions::Dispatcher]
-      def initialize(installments, order = nil)
-        @installments = installments
+      def initialize(installment, order)
+        @installment = installment
         @order = order
       end
 

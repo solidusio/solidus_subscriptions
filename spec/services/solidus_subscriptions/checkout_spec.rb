@@ -114,7 +114,7 @@ RSpec.describe SolidusSubscriptions::Checkout, :checkout do
   def stub_dispatcher(klass, installment)
     instance_spy(klass).tap do |dispatcher|
       allow(klass).to receive(:new).with(
-        [installment],
+        installment,
         an_instance_of(Spree::Order)
       ).and_return(dispatcher)
     end

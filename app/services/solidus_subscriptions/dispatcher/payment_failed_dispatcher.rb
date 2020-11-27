@@ -1,19 +1,16 @@
 # frozen_string_literal: true
 
-# Handles payment failures for subscription installments.
 module SolidusSubscriptions
   module Dispatcher
     class PaymentFailedDispatcher < Base
       def dispatch
         order.touch(:completed_at)
         order.cancel
-        installments.each do |installment|
-          installment.payment_failed!(order)
-        end
+        installment.payment_failed!(order)
 
         ::Spree::Event.fire(
-          'solidus_subscriptions.installments_failed_payment',
-          installments: installments,
+          'solidus_subscriptions.installment_failed_payment',
+          installment: installment,
           order: order,
         )
       end

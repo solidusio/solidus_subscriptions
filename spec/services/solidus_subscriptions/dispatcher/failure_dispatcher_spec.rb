@@ -1,13 +1,13 @@
 RSpec.describe SolidusSubscriptions::Dispatcher::FailureDispatcher do
   describe '#dispatch' do
-    it 'marks all the installments as failed' do
-      installments = Array.new(2) { instance_spy(SolidusSubscriptions::Installment) }
+    it 'marks the installment as failed' do
+      installment = instance_spy(SolidusSubscriptions::Installment)
       order = create(:order_with_line_items)
 
-      dispatcher = described_class.new(installments, order)
+      dispatcher = described_class.new(installment, order)
       dispatcher.dispatch
 
-      expect(installments).to all(have_received(:failed!).with(order).once)
+      expect(installment).to have_received(:failed!).with(order)
     end
 
     it 'cancels the order' do
@@ -15,10 +15,10 @@ RSpec.describe SolidusSubscriptions::Dispatcher::FailureDispatcher do
         skip 'Orders in `cart` state cannot be canceled starting from Solidus 2.11.'
       end
 
-      installments = Array.new(2) { instance_spy(SolidusSubscriptions::Installment) }
+      installment = instance_spy(SolidusSubscriptions::Installment)
       order = create(:order_with_line_items)
 
-      dispatcher = described_class.new(installments, order)
+      dispatcher = described_class.new(installment, order)
       dispatcher.dispatch
 
       expect(order.state).to eq('canceled')

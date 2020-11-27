@@ -6,8 +6,8 @@ module SolidusSubscriptions
 
     event_action :report_subscription_cancellation, event_name: 'solidus_subscriptions.subscription_canceled'
     event_action :report_subscription_ending, event_name: 'solidus_subscriptions.subscription_ended'
-    event_action :report_payment_success, event_name: 'solidus_subscriptions.installments_succeeded'
-    event_action :report_payment_failure, event_name: 'solidus_subscriptions.installments_failed_payment'
+    event_action :report_payment_success, event_name: 'solidus_subscriptions.installment_succeeded'
+    event_action :report_payment_failure, event_name: 'solidus_subscriptions.installment_failed_payment'
     event_action :report_payment_method_change, event_name: 'solidus_subscriptions.subscription_payment_method_changed'
 
     def report_subscription_cancellation(event)

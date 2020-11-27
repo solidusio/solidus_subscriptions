@@ -29,10 +29,10 @@ RSpec.describe SolidusSubscriptions::ChurnBusterSubscriber do
       allow(SolidusSubscriptions).to receive(:churn_buster).and_return(churn_buster)
 
       order = build_stubbed(:order)
-      installments = build_list(:installment, 2)
+      installment = build_stubbed(:installment)
       Spree::Event.fire(
-        'solidus_subscriptions.installments_succeeded',
-        installments: installments,
+        'solidus_subscriptions.installment_succeeded',
+        installment: installment,
         order: order,
       )
 
@@ -46,10 +46,10 @@ RSpec.describe SolidusSubscriptions::ChurnBusterSubscriber do
       allow(SolidusSubscriptions).to receive(:churn_buster).and_return(churn_buster)
 
       order = build_stubbed(:order)
-      installments = build_list(:installment, 2)
+      installment = build_stubbed(:installment)
       Spree::Event.fire(
-        'solidus_subscriptions.installments_failed_payment',
-        installments: installments,
+        'solidus_subscriptions.installment_failed_payment',
+        installment: installment,
         order: order,
       )
 

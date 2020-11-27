@@ -1,13 +1,13 @@
 RSpec.describe SolidusSubscriptions::Dispatcher::PaymentFailedDispatcher do
   describe '#dispatch' do
-    it 'marks all the installments as payment_failed' do
-      installments = Array.new(2) { instance_spy(SolidusSubscriptions::Installment) }
+    it 'marks the installment as payment_failed' do
+      installment = instance_spy(SolidusSubscriptions::Installment)
       order = create(:order_with_line_items)
 
-      dispatcher = described_class.new(installments, order)
+      dispatcher = described_class.new(installment, order)
       dispatcher.dispatch
 
-      expect(installments).to all(have_received(:payment_failed!).with(order).once)
+      expect(installment).to have_received(:payment_failed!).with(order)
     end
 
     it 'cancels the order' do
@@ -15,10 +15,10 @@ RSpec.describe SolidusSubscriptions::Dispatcher::PaymentFailedDispatcher do
         skip 'Orders in `cart` state cannot be canceled starting from Solidus 2.11.'
       end
 
-      installments = Array.new(2) { instance_spy(SolidusSubscriptions::Installment) }
+      installment = instance_spy(SolidusSubscriptions::Installment)
       order = create(:order_with_line_items)
 
-      dispatcher = described_class.new(installments, order)
+      dispatcher = described_class.new(installment, order)
       dispatcher.dispatch
 
       expect(order.state).to eq('canceled')
@@ -26,15 +26,15 @@ RSpec.describe SolidusSubscriptions::Dispatcher::PaymentFailedDispatcher do
 
     it 'fires an installments_failed_payment event' do
       stub_const('Spree::Event', class_spy(Spree::Event))
-      installments = Array.new(2) { instance_spy(SolidusSubscriptions::Installment) }
+      installment = instance_spy(SolidusSubscriptions::Installment)
       order = create(:order_with_line_items)
 
-      dispatcher = described_class.new(installments, order)
+      dispatcher = described_class.new(installment, order)
       dispatcher.dispatch
 
       expect(Spree::Event).to have_received(:fire).with(
-        'solidus_subscriptions.installments_failed_payment',
-        installments: installments,
+        'solidus_subscriptions.installment_failed_payment',
+        installment: installment,
         order: order,
       )
     end
