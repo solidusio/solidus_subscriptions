@@ -130,6 +130,18 @@ SolidusSubscriptions.configure do |config|
 end
 ```
 
+### Minimum cancellation notice
+
+The minimum cancellation notice is set to 0 days by default - users can cancel their subscription whenever they like. To change this, you can configure the extension like this:
+
+```ruby
+SolidusSubscriptions.configure do |config|
+  # ...
+
+  config.minimum_cancellation_notice = 10.days
+end
+```
+
 ## Development
 
 ### Testing the extension
