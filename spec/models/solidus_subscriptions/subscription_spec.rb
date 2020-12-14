@@ -87,8 +87,13 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
     around { |e| Timecop.freeze { e.run } }
 
+    before do
+      allow(SolidusSubscriptions.configuration).to receive(:minimum_cancellation_notice) { minimum_cancellation_notice }
+    end
+
     context 'the subscription can be canceled' do
       let(:actionable_date) { 1.month.from_now }
+      let(:minimum_cancellation_notice) { 1.day }
 
       it 'is canceled' do
         subject
@@ -103,6 +108,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
     context 'the subscription cannot be canceled' do
       let(:actionable_date) { Date.current }
+      let(:minimum_cancellation_notice) { 1.day }
 
       it 'is pending cancelation' do
         subject
@@ -112,6 +118,16 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       it 'creates a subscription_canceled event' do
         subject
         expect(subscription.events.last).to have_attributes(event_type: 'subscription_canceled')
+      end
+    end
+
+    context 'when the minimum cancellation date is 0.days' do
+      let(:actionable_date) { Date.current }
+      let(:minimum_cancellation_notice) { 0.days }
+
+      it 'is canceled' do
+        subject
+        expect(subscription).to be_canceled
       end
     end
   end

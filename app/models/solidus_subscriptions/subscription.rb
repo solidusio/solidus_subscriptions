@@ -150,7 +150,8 @@ module SolidusSubscriptions
     def can_be_canceled?
       return true if actionable_date.nil?
 
-      (actionable_date - SolidusSubscriptions.configuration.minimum_cancellation_notice).future?
+      cancel_by = actionable_date - SolidusSubscriptions.configuration.minimum_cancellation_notice
+      cancel_by.future? || cancel_by.today?
     end
 
     def skip(check_skip_limits: true)

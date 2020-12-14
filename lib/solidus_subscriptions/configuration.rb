@@ -43,7 +43,7 @@ module SolidusSubscriptions
     end
 
     def minimum_cancellation_notice
-      @minimum_cancellation_notice ||= 1.day
+      @minimum_cancellation_notice ||= 0.days
     end
 
     def processing_queue
