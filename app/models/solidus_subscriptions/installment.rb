@@ -23,6 +23,10 @@ module SolidusSubscriptions
       where.not(id: fulfilled_ids).distinct
     end)
 
+    scope :with_active_subscription, (lambda do
+      joins(:subscription).where.not(Subscription.table_name => {state: "canceled"})
+    end)
+
     scope :actionable, (lambda do
       unfulfilled.where("#{table_name}.actionable_date <= ?", Time.zone.today)
     end)

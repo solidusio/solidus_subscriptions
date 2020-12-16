@@ -129,6 +129,17 @@ RSpec.describe SolidusSubscriptions::Processor, :checkout do
         expect { subject }.to change { Spree::Order.complete.count }.by 2
       end
     end
+
+    context 'the subscription is cancelled with pending installments' do
+      let!(:cancelled_installment) do
+        installment = create(:installment, actionable_date: Date.today)
+        installment.subscription.cancel!
+      end
+
+      it 'does not process the installment' do
+        expect { subject }.to change { Spree::Order.complete.count }.by expected_orders
+      end
+    end
   end
 
   describe '.run' do
