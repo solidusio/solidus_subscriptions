@@ -20,9 +20,9 @@ en:
     new_subscription: New Subscription
     admin:
       subscriptions:
-        successfully_canceled: Subsciption Canceled!
-        successfully_activated: Subsciption Activated!
-        successfully_skipped: Subsciption delayed until %{date}
+        successfully_canceled: Subscription Canceled!
+        successfully_activated: Subscription Activated!
+        successfully_skipped: Subscription delayed until %{date}
         actions:
           cancel: Cancel
           cancel_alert: "Are you sure you want to cancel this subscription?"
