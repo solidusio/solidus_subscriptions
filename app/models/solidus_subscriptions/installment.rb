@@ -24,7 +24,7 @@ module SolidusSubscriptions
     end)
 
     scope :with_active_subscription, (lambda do
-      joins(:subscription).where.not(Subscription.table_name => {state: "canceled"})
+      joins(:subscription).where.not(Subscription.table_name => { state: "canceled" })
     end)
 
     scope :actionable, (lambda do
