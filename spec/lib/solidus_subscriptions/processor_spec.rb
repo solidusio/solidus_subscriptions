@@ -132,7 +132,7 @@ RSpec.describe SolidusSubscriptions::Processor, :checkout do
 
     context 'the subscription is cancelled with pending installments' do
       let!(:cancelled_installment) do
-        installment = create(:installment, actionable_date: Date.today)
+        installment = create(:installment, actionable_date: Time.zone.today)
         installment.subscription.cancel!
       end
 
