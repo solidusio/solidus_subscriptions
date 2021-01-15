@@ -137,7 +137,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
     let(:total_skips) { 0 }
     let(:successive_skips) { 0 }
-    let(:expected_date) { 1.month.from_now.to_date }
+    let(:expected_date) { 2.months.from_now.to_date }
 
     let(:subscription) do
       create(
@@ -148,18 +148,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       )
     end
 
-    around do |e|
-      successive_skip_limit = SolidusSubscriptions.configuration.maximum_successive_skips
-      total_skip_limit = SolidusSubscriptions.configuration.maximum_total_skips
-
-      SolidusSubscriptions.configuration.maximum_successive_skips = 1
-      SolidusSubscriptions.configuration.maximum_total_skips = 1
-
-      Timecop.freeze { e.run }
-
-      SolidusSubscriptions.configuration.maximum_successive_skips = successive_skip_limit
-      SolidusSubscriptions.configuration.maximum_total_skips = total_skip_limit
-    end
+    before { stub_config(maximum_total_skips: 1) }
 
     context 'when the successive skips have been exceeded' do
       let(:successive_skips) { 1 }
