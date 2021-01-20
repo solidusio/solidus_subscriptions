@@ -5,7 +5,7 @@ module SolidusSubscriptions
     class << self
       def run
         SolidusSubscriptions::Subscription.actionable.find_each(&method(:process_subscription))
-        SolidusSubscriptions::Installment.actionable.with_active_subscription.find_each(&method(:process_installment))
+        SolidusSubscriptions::Installment.actionable.find_each(&method(:process_installment))
       end
 
       private

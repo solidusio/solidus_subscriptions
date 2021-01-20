@@ -121,16 +121,4 @@ RSpec.describe SolidusSubscriptions::Processor, :checkout do
       expect(subscription.reload.state).to eq('canceled')
     end
   end
-
-  context 'with a cancelled subscription with pending installments' do
-    it 'does not process the installment' do
-      subscription = create(:subscription)
-      create(:installment, subscription: subscription, actionable_date: Time.zone.today)
-      subscription.cancel!
-
-      described_class.run
-
-      expect(SolidusSubscriptions::ProcessInstallmentJob).not_to have_been_enqueued
-    end
-  end
 end
