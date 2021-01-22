@@ -19,7 +19,6 @@ require 'solidus_subscriptions/churn_buster/subscription_payment_method_serializ
 require 'solidus_subscriptions/churn_buster/subscription_serializer'
 require 'solidus_subscriptions/churn_buster/order_serializer'
 require 'solidus_subscriptions/checkout'
-require 'solidus_subscriptions/line_item_builder'
 require 'solidus_subscriptions/subscription_generator'
 require 'solidus_subscriptions/subscription_line_item_builder'
 require 'solidus_subscriptions/dispatcher/base'

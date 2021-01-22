@@ -348,16 +348,6 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
     end
   end
 
-  describe '#line_item_builder' do
-    subject { subscription.line_item_builder }
-
-    let(:subscription) { create :subscription, :with_line_item }
-    let(:line_items) { subscription.line_items }
-
-    it { is_expected.to be_a SolidusSubscriptions::LineItemBuilder }
-    it { is_expected.to have_attributes(subscription_line_items: line_items) }
-  end
-
   describe '#processing_state' do
     subject { subscription.processing_state }
 

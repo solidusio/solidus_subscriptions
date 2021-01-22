@@ -31,13 +31,6 @@ module SolidusSubscriptions
       unfulfilled.where("#{table_name}.actionable_date <= ?", Time.zone.today)
     end)
 
-    # Get the builder for the subscription_line_item. This will be an
-    # object that can generate the appropriate line item for the subscribable
-    # object
-    #
-    # @return [SolidusSubscriptions::LineItemBuilder]
-    delegate :line_item_builder, to: :subscription
-
     # Mark this installment as out of stock.
     #
     # @return [SolidusSubscriptions::InstallmentDetail] The record of the failed
