@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe SolidusSubscriptions::Spree::User::HaveManySubscritptions, type: :model do
+RSpec.describe SolidusSubscriptions::Spree::User::HaveManySubscriptions, type: :model do
   subject { Spree::User.new }
 
   it { is_expected.to have_many :subscriptions }
