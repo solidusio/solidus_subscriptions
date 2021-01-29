@@ -10,6 +10,9 @@
       <li<%== ' class="active"' if current == :events %>>
         <%= link_to t("spree.admin.subscriptions.edit.events"), spree.admin_subscription_subscription_events_path(subscription) %>
       </li>
+      <li<%== ' class="active"' if current == :orders %>>
+        <%= link_to t("spree.admin.subscriptions.edit.orders"), spree.admin_subscription_subscription_orders_path(subscription) %>
+      </li>
     </ul>
   </nav>
 <% end %>
