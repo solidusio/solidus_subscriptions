@@ -19,8 +19,7 @@ module SolidusSubscriptions
     end)
 
     scope :unfulfilled, (lambda do
-      fulfilled_ids = fulfilled.pluck(:id)
-      where.not(id: fulfilled_ids).distinct
+      where.not(id: Installment.fulfilled).distinct
     end)
 
     scope :with_active_subscription, (lambda do
