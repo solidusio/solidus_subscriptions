@@ -37,7 +37,8 @@ module SolidusSubscriptions
         email: installment.subscription.user.email,
         store: installment.subscription.store || ::Spree::Store.default,
         subscription_order: true,
-        subscription: installment.subscription
+        subscription: installment.subscription,
+        currency: installment.subscription.currency
       )
     end
 
