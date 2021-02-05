@@ -14,6 +14,14 @@ module SolidusSubscriptions
 
           base.accepts_nested_attributes_for :subscriptions
         end
+
+        def subscriptions_attributes=(params)
+          ::Spree::Deprecation.warn(
+            'Creating or updating subscriptions through Spree::User nested attributes is deprecated. ' \
+            'Please use subscriptions APIs directly.'
+          )
+          super
+        end
       end
     end
   end
