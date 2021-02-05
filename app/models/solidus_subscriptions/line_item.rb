@@ -38,34 +38,5 @@ module SolidusSubscriptions
     validates :subscribable_id, presence: true
     validates :quantity, numericality: { greater_than: 0 }
     validates :interval_length, numericality: { greater_than: 0 }, unless: -> { subscription }
-
-    def as_json(**options)
-      options[:methods] ||= [:dummy_line_item]
-      super(options)
-    end
-
-    # Get a placeholder line item for calculating the values of future
-    # subscription orders. It is frozen and cannot be saved
-    def dummy_line_item
-      li = LineItemBuilder.new([self]).spree_line_items.first
-      return unless li
-
-      li.order = dummy_order
-      li.validate
-      li.freeze
-    end
-
-    private
-
-    # Get a placeholder order for calculating the values of future
-    # subscription orders. It is a frozen duplicate of the current order and
-    # cannot be saved
-    def dummy_order
-      order = spree_line_item ? spree_line_item.order.dup : ::Spree::Order.create
-      order.ship_address = subscription.shipping_address || subscription.user.ship_address if subscription
-      order.bill_address = subscription.billing_address || subscription.user.bill_address if subscription
-
-      order.freeze
-    end
   end
 end

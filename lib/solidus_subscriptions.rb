@@ -18,6 +18,14 @@ require 'solidus_subscriptions/churn_buster/subscription_customer_serializer'
 require 'solidus_subscriptions/churn_buster/subscription_payment_method_serializer'
 require 'solidus_subscriptions/churn_buster/subscription_serializer'
 require 'solidus_subscriptions/churn_buster/order_serializer'
+require 'solidus_subscriptions/checkout'
+require 'solidus_subscriptions/subscription_generator'
+require 'solidus_subscriptions/subscription_line_item_builder'
+require 'solidus_subscriptions/dispatcher/base'
+require 'solidus_subscriptions/dispatcher/failure_dispatcher'
+require 'solidus_subscriptions/dispatcher/out_of_stock_dispatcher'
+require 'solidus_subscriptions/dispatcher/payment_failed_dispatcher'
+require 'solidus_subscriptions/dispatcher/success_dispatcher'
 
 module SolidusSubscriptions
   class << self

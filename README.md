@@ -62,8 +62,7 @@ This will associate a `SolidusSubscriptions::LineItem` to the line item being ad
 
 The customer will not be charged for the subscription until it is processed. The subscription line
 items should be shown to the user on the cart page by looping over
-`Spree::Order#subscription_line_items`. `SolidusSubscriptions::LineItem#dummy_line_item` may be
-useful to help you display the subscription line item with your existing cart infrastructure.
+`Spree::Order#subscription_line_items`.
 
 When the order is finalized, a `SolidusSubscriptions::Subscription` will be created for each group
 of subscription line items which can be fulfilled by a single subscription.

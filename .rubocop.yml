@@ -7,3 +7,6 @@ RSpec/DescribeClass:
   Exclude:
     - spec/requests/**/*
     - spec/features/**/*
+
+Rails/SkipsModelValidations:
+  Enabled: false

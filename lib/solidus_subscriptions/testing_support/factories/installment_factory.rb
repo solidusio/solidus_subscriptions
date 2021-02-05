@@ -21,5 +21,9 @@ FactoryBot.define do
         [association(:installment_detail, :success, installment: @instance, order: order)]
       end
     end
+
+    trait :actionable do
+      actionable_date { Time.zone.now }
+    end
   end
 end

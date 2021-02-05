@@ -15,22 +15,22 @@ module SolidusSubscriptions
     )
 
     def success_dispatcher_class
-      @success_dispatcher_class ||= 'SolidusSubscriptions::SuccessDispatcher'
+      @success_dispatcher_class ||= 'SolidusSubscriptions::Dispatcher::SuccessDispatcher'
       @success_dispatcher_class.constantize
     end
 
     def failure_dispatcher_class
-      @failure_dispatcher_class ||= 'SolidusSubscriptions::FailureDispatcher'
+      @failure_dispatcher_class ||= 'SolidusSubscriptions::Dispatcher::FailureDispatcher'
       @failure_dispatcher_class.constantize
     end
 
     def payment_failed_dispatcher_class
-      @payment_failed_dispatcher_class ||= 'SolidusSubscriptions::PaymentFailedDispatcher'
+      @payment_failed_dispatcher_class ||= 'SolidusSubscriptions::Dispatcher::PaymentFailedDispatcher'
       @payment_failed_dispatcher_class.constantize
     end
 
     def out_of_stock_dispatcher_class
-      @out_of_stock_dispatcher_class ||= 'SolidusSubscriptions::OutOfStockDispatcher'
+      @out_of_stock_dispatcher_class ||= 'SolidusSubscriptions::Dispatcher::OutOfStockDispatcher'
       @out_of_stock_dispatcher_class.constantize
     end
 
