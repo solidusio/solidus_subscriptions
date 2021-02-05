@@ -162,6 +162,10 @@ module SolidusSubscriptions
         return if errors.any?
       end
 
+      increment(:skip_count)
+      increment(:successive_skip_count)
+      save!
+
       advance_actionable_date.tap do
         events.create!(event_type: 'subscription_skipped')
       end
