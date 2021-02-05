@@ -29,6 +29,7 @@ module SolidusSubscriptions
         billing_address: order.bill_address,
         payment_source: order.payments.valid.last&.payment_source,
         payment_method: order.payments.valid.last&.payment_method,
+        currency: order.currency,
         **configuration.to_h
       }
 
