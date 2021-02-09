@@ -9,10 +9,19 @@ module SolidusSubscriptions
           source_id: object.id,
           email: object.user.email,
           properties: {
-            first_name: object.shipping_address_to_use.firstname,
-            last_name: object.shipping_address_to_use.lastname,
+            name: name
           },
         }
+      end
+
+      private
+
+      def name
+        if ::Spree.solidus_gem_version < Gem::Version.new('2.11.0')
+          "#{object.shipping_address_to_use.first_name} #{object.shipping_address_to_use.last_name}"
+        else
+          object.shipping_address_to_use.name
+        end
       end
     end
   end
