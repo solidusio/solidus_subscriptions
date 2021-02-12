@@ -24,8 +24,7 @@ module Spree
 
       def update
         load_payment_methods
-
-        @subscription.assign_attributes(permitted_resource_params)
+        @subscription.payment_method_id = params[:subscription][:payment_method_id]
 
         if @subscription.payment_method&.source_required?
           @subscription.payment_source = @subscription

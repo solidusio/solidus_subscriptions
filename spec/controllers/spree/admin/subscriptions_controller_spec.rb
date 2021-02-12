@@ -60,6 +60,22 @@ RSpec.describe Spree::Admin::SubscriptionsController, type: :request do
         to expected_date
     end
 
+    it 'does not duplicate line items' do
+      variant = create :variant, subscribable: true
+      subscription = create :subscription
+      subscription_params = {
+        subscription: {
+          line_items_attributes: [
+            { subscribable_id: variant.id, quantity: 1 }
+          ]
+        }
+      }
+
+      expect { put spree.admin_subscription_path(subscription), params: subscription_params }.
+        to change { subscription.reload.line_items.count }.
+        by 1
+    end
+
     context 'when updating the payment method' do
       it 'updates the subscription payment method' do
         check_payment_method = create :check_payment_method
