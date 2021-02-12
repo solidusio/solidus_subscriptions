@@ -4,7 +4,7 @@ SolidusSubscriptions::Engine.routes.draw do
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
       resources :line_items, only: [:update, :destroy]
-      resources :subscriptions, only: [:update] do
+      resources :subscriptions, only: [:create, :update] do
         member do
           post :cancel
           post :skip

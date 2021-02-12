@@ -3,6 +3,40 @@
 RSpec.describe '/api/v1/subscriptions' do
   include SolidusSubscriptions::Engine.routes.url_helpers
 
+  describe 'POST /' do
+    context 'with valid params' do
+      it 'creates the subscription and responds with 200 OK' do
+        user = create(:user, &:generate_spree_api_key!)
+
+        expect do
+          post(
+            api_v1_subscriptions_path,
+            params: { subscription: { interval_length: 11 } },
+            headers: { 'Authorization' => "Bearer #{user.spree_api_key}" },
+          )
+        end.to change(SolidusSubscriptions::Subscription, :count).from(0).to(1)
+
+        expect(response.status).to eq(200)
+      end
+    end
+
+    context 'with invalid params' do
+      it "doesn't create the subscription and responds with 422 Unprocessable Entity" do
+        user = create(:user, &:generate_spree_api_key!)
+
+        expect do
+          post(
+            api_v1_subscriptions_path,
+            params: { subscription: { interval_length: -1 } },
+            headers: { 'Authorization' => "Bearer #{user.spree_api_key}" },
+          )
+        end.not_to change(SolidusSubscriptions::Subscription, :count)
+
+        expect(response.status).to eq(422)
+      end
+    end
+  end
+
   describe 'PATCH /:id' do
     context 'when the subscription belongs to the user' do
       context 'with valid params' do

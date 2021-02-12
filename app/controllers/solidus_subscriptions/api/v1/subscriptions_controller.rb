@@ -6,6 +6,18 @@ module SolidusSubscriptions
       class SubscriptionsController < BaseController
         protect_from_forgery unless: -> { request.format.json? }
 
+        def create
+          store = params[:store_id].nil? ? ::Spree::Store.default : ::Spree::Store.find(id: params[:store_id])
+          attributes = subscription_params.merge(user: current_api_user, store: store)
+          subscription = SolidusSubscriptions::Subscription.new(attributes)
+
+          if subscription.save
+            render json: subscription.to_json(include: [:line_items, :shipping_address, :billing_address])
+          else
+            render json: subscription.errors.to_json, status: :unprocessable_entity
+          end
+        end
+
         def update
           load_subscription
 
