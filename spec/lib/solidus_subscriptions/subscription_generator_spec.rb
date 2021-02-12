@@ -44,6 +44,15 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
         payment_source: payment_source,
       )
     end
+
+    it 'cleanups the subscription line items fields duplicated on the subscription' do
+      subscription_line_item = create(:subscription_line_item)
+
+      described_class.activate([subscription_line_item])
+
+      attrs = %i[interval_length interval_units end_date]
+      expect(subscription_line_item.reload.slice(attrs).values).to eq [nil, nil, nil]
+    end
   end
 
   describe '.group' do
