@@ -46,12 +46,16 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
     end
 
     it 'cleanups the subscription line items fields duplicated on the subscription' do
-      subscription_line_item = create(:subscription_line_item)
+      attrs = { interval_length: 2, interval_units: :week, end_date: Time.zone.tomorrow }
+      subscription_line_item = create(:subscription_line_item, attrs)
 
       described_class.activate([subscription_line_item])
 
-      attrs = %i[interval_length interval_units end_date]
-      expect(subscription_line_item.reload.slice(attrs).values).to eq [nil, nil, nil]
+      expect(subscription_line_item.reload).to have_attributes(
+        interval_length: nil,
+        interval_units: nil,
+        end_date: nil
+      )
     end
   end
 
