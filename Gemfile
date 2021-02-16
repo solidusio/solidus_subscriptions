@@ -9,7 +9,7 @@ gem 'solidus', github: 'solidusio/solidus', branch: branch
 # Needed to help Bundler figure out how to resolve dependencies,
 # otherwise it takes forever to resolve them.
 # See https://github.com/bundler/bundler/issues/6677
-gem 'rails', '>0.a'
+gem 'rails', '~> 6.0.2.2'
 
 # Provides basic authentication functionality for testing parts of your engine
 gem 'solidus_auth_devise'
