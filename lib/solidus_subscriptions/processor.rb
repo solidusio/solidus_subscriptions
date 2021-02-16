@@ -1,3 +1,6 @@
+##
+# == Creating recurring user orders based on their subscription
+#
 # This class is responsible for finding subscriptions and installments
 # which need to be processed. It will group them together by user and attempts
 # to process them together. Subscriptions will also be grouped by their
@@ -7,6 +10,12 @@
 # the consolidated installment class.
 #
 # This class generates `ProcessInstallmentsJob`s
+#
+##
+# == Sending reminder email to user prior to recurring order
+#
+# This class is also responsible for sending reminder email to user prior to recurring order.
+#
 module SolidusSubscriptions
   class Processor
     class << self
@@ -14,6 +23,7 @@ module SolidusSubscriptions
       # by user, and schedule a processing job for the group as a batch
       def run
         batched_users_to_be_processed.each { |batch| new(batch).build_jobs }
+        send_reminder_emails_prior_to_recurring_orders
       end
 
       private
@@ -36,6 +46,17 @@ module SolidusSubscriptions
           ).
           distinct.
           find_in_batches
+      end
+
+      def send_reminder_emails_prior_to_recurring_orders
+        mailer = Config.subscription_email_class
+        return unless mailer
+
+        SolidusSubscriptions::Subscription.needed_be_reminded&.find_in_batches do |subscriptions|
+          subscriptions.each do |subscription|
+            mailer.order_reminder_email(subscription).deliver_later
+          end
+        end
       end
     end
 

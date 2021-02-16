@@ -67,6 +67,7 @@ module SolidusSubscriptions
 
     scope :active, -> { where(state: 'active') }
     scope :inactive, -> { where(state: %w[canceled inactive pending_cancellation]) }
+    scope :not_reminded_yet, -> { where(reminded_at: nil) }
 
     delegate :email, :full_name, :first_name, :last_name, :dsr_id, to: :user, prefix: true, allow_nil: true
 
@@ -76,6 +77,14 @@ module SolidusSubscriptions
 
     def self.processing_states
       PROCESSING_STATES
+    end
+
+    def self.needed_be_reminded
+      return if Config.reminder_before_order_in_days.zero?
+
+      not_reminded_yet
+        .where("#{table_name}.actionable_date <= ?", Config.reminder_before_order_in_days.days.from_now)
+        .where.not(state: %w[canceled inactive])
     end
 
     # The subscription state determines the behaviours around when it is
@@ -113,6 +122,7 @@ module SolidusSubscriptions
       end
 
       after_transition to: :active, do: :advance_actionable_date
+      after_transition to: :active, do: :send_restart_email
     end
 
     # This method determines if a subscription may be canceled. Canceled
@@ -176,7 +186,7 @@ module SolidusSubscriptions
     # @return [Date] The next date after the current actionable_date this
     # subscription will be eligible to be processed.
     def advance_actionable_date
-      update! actionable_date: next_actionable_date
+      update! actionable_date: next_actionable_date, reminded_at: nil
       actionable_date
     end
 
@@ -208,6 +218,12 @@ module SolidusSubscriptions
     def send_cancel_email
       if Config.subscription_email_class.present?
         Config.subscription_email_class.cancel_email(self).deliver_later
+      end
+    end
+
+    def send_restart_email
+      if Config.subscription_email_class.present?
+        Config.subscription_email_class.restart_email(self).deliver_later
       end
     end
 
