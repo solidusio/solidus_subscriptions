@@ -54,6 +54,7 @@ module SolidusSubscriptions
 
         SolidusSubscriptions::Subscription.needed_be_reminded&.find_in_batches do |subscriptions|
           subscriptions.each do |subscription|
+            subscription.update!(reminded_at: Time.current)
             mailer.order_reminder_email(subscription).deliver_later
           end
         end
