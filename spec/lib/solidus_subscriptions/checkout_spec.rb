@@ -22,6 +22,7 @@ RSpec.describe SolidusSubscriptions::Checkout, :checkout do
       expect(order.bill_address.value_attributes).to eq(subscription.billing_address_to_use.value_attributes)
       expect(order.payments.first.payment_method).to eq(subscription.payment_method_to_use)
       expect(order.payments.first.source).to eq(subscription.payment_source_to_use)
+      expect(order.currency).to eq(subscription.currency)
       expect(order.user).to eq(subscription.user)
       expect(order.email).to eq(subscription.user.email)
     end

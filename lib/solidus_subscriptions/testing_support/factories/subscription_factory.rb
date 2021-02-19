@@ -5,6 +5,7 @@ FactoryBot.define do
     store
     interval_length { 1 }
     interval_units { :month }
+    currency { 'USD' }
 
     user do
       new_user = create(:user, :subscription_user)

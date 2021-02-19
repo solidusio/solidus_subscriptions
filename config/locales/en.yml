@@ -114,3 +114,5 @@ en:
               exceeded: >
                 This subscription has exceeded the maximum configured skip
                 limit. It can no longer be skipped.
+            currency:
+              inclusion: "is not a valid currency code"

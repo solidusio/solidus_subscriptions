@@ -25,6 +25,7 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
         interval_units: subscription_line_item.interval_units,
         end_date: subscription_line_item.end_date,
         store: subscription_line_item.order.store,
+        currency: subscription_line_item.order.currency
       )
     end
 

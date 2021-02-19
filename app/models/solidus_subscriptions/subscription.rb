@@ -26,6 +26,7 @@ module SolidusSubscriptions
     validates :interval_length, numericality: { greater_than: 0 }
     validates :payment_method, presence: true, if: -> { payment_source }
     validates :payment_source, presence: true, if: -> { payment_method&.source_required? }
+    validates :currency, inclusion: { in: ::Money::Currency.all.map(&:iso_code) }
 
     accepts_nested_attributes_for :shipping_address
     accepts_nested_attributes_for :billing_address
