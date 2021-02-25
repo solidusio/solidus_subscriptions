@@ -6,11 +6,7 @@ module SolidusSubscriptions
     end
 
     def eligible?(order, **_options)
-      if order.subscription_line_items.any?
-        false
-      else
-        true
-      end
+      order.subscription_line_items.none?
     end
 
   end
