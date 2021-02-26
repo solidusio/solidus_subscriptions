@@ -42,20 +42,70 @@ RSpec.describe Spree::Admin::SubscriptionsController, type: :request do
   end
 
   describe 'PUT :update' do
-    subject { put spree.admin_subscription_path(subscription), params: subscription_params }
+    it 'redirects to edit subscription page' do
+      subscription = create :subscription
+      subscription_params = { subscription: { interval_length: 1 } }
 
-    let(:expected_date) { DateTime.parse('2001/11/12') }
-    let(:subscription) { create :subscription, :actionable }
-    let(:subscription_params) do
-      {
-        subscription: { actionable_date: expected_date }
-      }
+      expect(put(spree.admin_subscription_path(subscription), params: subscription_params)).
+        to redirect_to spree.edit_admin_subscription_path(subscription)
     end
 
-    it { is_expected.to redirect_to spree.edit_admin_subscription_path(subscription) }
-
     it 'updates the subscription attributes', :aggregate_failures do
-      expect { subject }.to change { subscription.reload.actionable_date }.to expected_date
+      expected_date = DateTime.parse('2001/11/12')
+      subscription = create :subscription, :actionable
+      subscription_params = { subscription: { actionable_date: expected_date } }
+
+      expect { put spree.admin_subscription_path(subscription), params: subscription_params }.
+        to change { subscription.reload.actionable_date }.
+        to expected_date
+    end
+
+    it 'does not duplicate line items' do
+      variant = create :variant, subscribable: true
+      subscription = create :subscription
+      subscription_params = {
+        subscription: {
+          line_items_attributes: [
+            { subscribable_id: variant.id, quantity: 1 }
+          ]
+        }
+      }
+
+      expect { put spree.admin_subscription_path(subscription), params: subscription_params }.
+        to change { subscription.reload.line_items.count }.
+        by 1
+    end
+
+    context 'when updating the payment method' do
+      it 'updates the subscription payment method' do
+        check_payment_method = create :check_payment_method
+        subscription = create :subscription
+        subscription_params = { subscription: { payment_method_id: check_payment_method.id } }
+
+        put spree.admin_subscription_path(subscription), params: subscription_params
+
+        expect(subscription.reload).to have_attributes(
+          payment_method: check_payment_method,
+          payment_source: nil,
+        )
+      end
+
+      it 'updates the subscription payment source if payment method requires source' do
+        subscription = create :subscription
+        payment = create :credit_card_payment
+        payment_source = payment.source
+        payment_method = payment.payment_method
+        subscription_params = {
+          subscription: {
+            payment_method_id: payment_method.id,
+            payment_source_id: payment_source.id,
+          }
+        }
+
+        put spree.admin_subscription_path(subscription), params: subscription_params
+
+        expect(subscription.reload.payment_source).to eq(payment_source)
+      end
     end
   end
 
