@@ -33,6 +33,7 @@ module SolidusSubscriptions
     accepts_nested_attributes_for :line_items, allow_destroy: true, reject_if: ->(p) { p[:quantity].blank? }
 
     before_validation :set_payment_method
+    before_validation :set_currency
     before_create :generate_guest_token
     after_create :emit_event_for_creation
     before_update :update_actionable_date_if_interval_changed
@@ -309,6 +310,10 @@ module SolidusSubscriptions
       if payment_source
         self.payment_method = payment_source.payment_method
       end
+    end
+
+    def set_currency
+      self.currency ||= ::Spree::Config[:currency]
     end
 
     def generate_guest_token
