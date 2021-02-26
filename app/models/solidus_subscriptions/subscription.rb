@@ -266,6 +266,10 @@ module SolidusSubscriptions
       Time.zone.now > (failing_since + SolidusSubscriptions.configuration.maximum_reprocessing_time)
     end
 
+    def actionable?
+      actionable_date && actionable_date <= Time.zone.today && ["canceled", "inactive"].exclude?(state)
+    end
+
     private
 
     def check_successive_skips_exceeded
