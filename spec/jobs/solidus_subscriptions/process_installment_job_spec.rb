@@ -8,4 +8,16 @@ RSpec.describe SolidusSubscriptions::ProcessInstallmentJob do
 
     expect(checkout).to have_received(:process)
   end
+
+  context 'when handling #perform errors' do
+    it 'swallows error on #perfom error' do
+      expect { described_class.perform_now(nil) }.not_to raise_error(StandardError)
+    end
+
+    it 'runs proc on #perform error' do
+      stub_config(process_job_error_handler: proc { |e| raise e } )
+
+      expect { described_class.perform_now(nil) }.to raise_error(StandardError)
+    end
+  end
 end
