@@ -8,6 +8,7 @@ en:
   solidus_subscriptions:
     subscription:
       actionable_date: "Actionable Date"
+      invalid_payment_details: Invalid payment method or source
     installment_details:
       out_of_stock: >
         This installment could not be processed because of insufficient
