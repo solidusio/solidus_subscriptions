@@ -141,6 +141,10 @@ SolidusSubscriptions.configure do |config|
 end
 ```
 
+### Subscription product deletion
+When a product is soft deleted, its subscription line items need to be deleted as well, in order to avoid error on subscription processing.
+If the product class is `Spree::Variant`, this corner case is handled automatically on the variant soft deletion, otherwise it should be handled manually.
+
 ## Development
 
 ### Testing the extension
