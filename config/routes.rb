@@ -24,6 +24,7 @@ Spree::Core::Engine.routes.draw do
       post :skip, on: :member
       resources :installments, only: [:index, :show]
       resources :subscription_events, only: :index
+      resources :subscription_orders, path: :orders, only: :index
     end
 
     resources :users do

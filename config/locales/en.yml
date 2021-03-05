@@ -42,6 +42,7 @@ en:
           installments: Installments
           events: Events
           payment: Payment
+          orders: Orders
         new:
           back: Back to Subscriptions List
           title: Create a Susbcription
@@ -56,6 +57,9 @@ en:
       subscription_events:
         index:
           title: Events
+      subscription_orders:
+        index:
+          title: Orders
       user:
         subscriptions: Subscriptions
     promotion_rule_types:
