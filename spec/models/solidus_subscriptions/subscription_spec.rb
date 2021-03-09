@@ -756,4 +756,41 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       end
     end
   end
+
+  describe '#actionable?' do
+    context 'when the actionable date is nil' do
+      it 'is not actionable' do
+        subscription = build_stubbed(:subscription, actionable_date: nil)
+
+        expect(subscription).not_to be_actionable
+      end
+    end
+
+    context 'when the actionable date is in the future' do
+      it 'is not actionable' do
+        subscription = build_stubbed(:subscription, actionable_date: Time.zone.today + 5.days)
+
+        expect(subscription).not_to be_actionable
+      end
+    end
+
+    context 'when the state is either canceled or inactive' do
+      it 'is not actionable' do
+        canceled_subscription = build_stubbed(:subscription, :canceled)
+        inactive_subscription = build_stubbed(:subscription, :inactive)
+
+        [canceled_subscription, inactive_subscription].each do |subscription|
+          expect(subscription).not_to be_actionable
+        end
+      end
+    end
+
+    context 'when the active subscription actionable date is today or in the past' do
+      it 'is actionable' do
+        subscription = build_stubbed(:subscription, actionable_date: Time.zone.today)
+
+        expect(subscription).to be_actionable
+      end
+    end
+  end
 end
