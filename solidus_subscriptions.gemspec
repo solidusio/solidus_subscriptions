@@ -33,7 +33,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'httparty', '~> 0.18'
   spec.add_dependency 'i18n'
   spec.add_dependency 'solidus_core', ['>= 2.0.0', '< 3']
-  spec.add_dependency 'solidus_support', '~> 0.5'
+  spec.add_dependency 'solidus_support', '~> 0.7'
   spec.add_dependency 'state_machines'
 
   spec.add_development_dependency 'rspec-activemodel-mocks'
