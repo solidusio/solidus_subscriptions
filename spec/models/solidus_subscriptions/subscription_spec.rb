@@ -31,6 +31,12 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
       expect(subscription.guest_token).to be_present
     end
+
+    it 'sets default config currency if not given' do
+      subscription = create(:subscription, currency: nil)
+
+      expect(subscription.currency).to eq(Spree::Config.currency)
+    end
   end
 
   describe 'updating a subscription' do
