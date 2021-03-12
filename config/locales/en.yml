@@ -45,7 +45,7 @@ en:
           orders: Orders
         new:
           back: Back to Subscriptions List
-          title: Create a Susbcription
+          title: Create a Subscription
         form:
           subscription: Subscription
           subscription_line_items: Line Items
