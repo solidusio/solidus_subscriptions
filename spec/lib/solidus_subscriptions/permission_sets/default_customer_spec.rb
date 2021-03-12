@@ -10,7 +10,7 @@ RSpec.describe SolidusSubscriptions::PermissionSets::DefaultCustomer do
       permission_set = described_class.new(ability)
       permission_set.activate!
 
-      expect(ability).to be_able_to([:display, :update], subscription)
+      expect(ability).to be_able_to([:show, :display, :update], subscription)
     end
 
     it "is not allowed to display or update someone else's subscriptions" do
@@ -21,7 +21,7 @@ RSpec.describe SolidusSubscriptions::PermissionSets::DefaultCustomer do
       permission_set = described_class.new(ability)
       permission_set.activate!
 
-      expect(ability).not_to be_able_to([:display, :update], subscription)
+      expect(ability).not_to be_able_to([:show, :display, :update], subscription)
     end
 
     it 'is allowed to display and update line items on their subscriptions' do
@@ -33,7 +33,7 @@ RSpec.describe SolidusSubscriptions::PermissionSets::DefaultCustomer do
       permission_set = described_class.new(ability)
       permission_set.activate!
 
-      expect(ability).to be_able_to([:display, :update], line_item)
+      expect(ability).to be_able_to([:show, :display, :update], line_item)
     end
 
     it "is not allowed to display or update line items on someone else's subscriptions" do
@@ -45,7 +45,7 @@ RSpec.describe SolidusSubscriptions::PermissionSets::DefaultCustomer do
       permission_set = described_class.new(ability)
       permission_set.activate!
 
-      expect(ability).not_to be_able_to([:display, :update], line_item)
+      expect(ability).not_to be_able_to([:show, :display, :update], line_item)
     end
   end
 
@@ -57,7 +57,7 @@ RSpec.describe SolidusSubscriptions::PermissionSets::DefaultCustomer do
       permission_set = described_class.new(ability)
       permission_set.activate!
 
-      expect(ability).to be_able_to([:display, :update], subscription, subscription.guest_token)
+      expect(ability).to be_able_to([:show, :display, :update], subscription, subscription.guest_token)
     end
 
     it "is not allowed to display or update someone else's subscriptions" do
@@ -67,7 +67,7 @@ RSpec.describe SolidusSubscriptions::PermissionSets::DefaultCustomer do
       permission_set = described_class.new(ability)
       permission_set.activate!
 
-      expect(ability).not_to be_able_to([:display, :update], subscription, 'invalid')
+      expect(ability).not_to be_able_to([:show, :display, :update], subscription, 'invalid')
     end
 
     it 'is allowed to display and update line items on their subscriptions' do
@@ -78,7 +78,7 @@ RSpec.describe SolidusSubscriptions::PermissionSets::DefaultCustomer do
       permission_set = described_class.new(ability)
       permission_set.activate!
 
-      expect(ability).to be_able_to([:display, :update], line_item, subscription.guest_token)
+      expect(ability).to be_able_to([:show, :display, :update], line_item, subscription.guest_token)
     end
 
     it "is not allowed to display or update line items on someone else's subscriptions" do
@@ -89,7 +89,7 @@ RSpec.describe SolidusSubscriptions::PermissionSets::DefaultCustomer do
       permission_set = described_class.new(ability)
       permission_set.activate!
 
-      expect(ability).not_to be_able_to([:display, :update], line_item, 'invalid')
+      expect(ability).not_to be_able_to([:show, :display, :update], line_item, 'invalid')
     end
   end
 end
