@@ -35,8 +35,8 @@ module SolidusSubscriptions
         return order
       end
 
-      # A new order will only have 1 payment that we created
-      if order.payments.any?(&:failed?)
+      # Cancel the order if there are no any payments or the order has failed payments
+      if order.payments.not_store_credits.empty? || order.payments.any?(&:failed?)
         Config.payment_failed_dispatcher_class.new(installments, order).dispatch
         installments.clear
         nil
@@ -79,8 +79,18 @@ module SolidusSubscriptions
 
       %w[address delivery payment].each do
         order.ship_address = ship_address if order.state == "address"
-        create_payment if order.state == "payment"
-        order.next!
+
+        if order.state == "payment" && active_card.present?
+          create_payment
+        end
+
+        begin
+          order.next!
+        rescue
+          # Stop checkout process to cancel the order later
+          # if store credits payment failed while transition to the next step
+          return false if order.state == "payment" && active_card.nil?
+        end
       end
 
       # Do this as a separate "quiet" transition so that it returns true or
