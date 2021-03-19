@@ -32,7 +32,7 @@ module SolidusSubscriptions
 
     initializer 'solidus_subscriptions.register_promotion_rules', after: 'spree.promo.register.promotion.rules' do |app|
       app.config.spree.promotions.rules << 'SolidusSubscriptions::SubscriptionCreationOrderPromotionRule'
-      app.config.spree.promotions.rules << 'SolidusSubscriptions::SubscriptionOrderPromotionRule'
+      app.config.spree.promotions.rules << 'SolidusSubscriptions::SubscriptionInstallmentOrderPromotionRule'
     end
 
     initializer 'solidus_subscriptions.configure_backend' do

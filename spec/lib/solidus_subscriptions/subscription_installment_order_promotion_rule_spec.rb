@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe SolidusSubscriptions::SubscriptionOrderPromotionRule do
+RSpec.describe SolidusSubscriptions::SubscriptionInstallmentOrderPromotionRule do
   let(:rule) { described_class.new }
 
   describe '#applicable' do
