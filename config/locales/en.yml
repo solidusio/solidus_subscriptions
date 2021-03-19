@@ -97,6 +97,10 @@ en:
       solidus_subscriptions/installment/state:
         fulfilled: Fulfilled
         unfulfilled: Unfulfilled
+      solidus_subscriptions/promotion/rules/subscription_creation_order:
+        description: Creates a subscription
+      solidus_subscriptions/promotion/rules/subscription_installment_order:
+        description: Is a subscription installment
     models:
       solidus_subscriptions/subscription:
         one: Subscription
