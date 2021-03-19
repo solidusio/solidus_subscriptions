@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module SolidusSubscriptions
-  class SubscriptionPromotionRule < ::Spree::PromotionRule
+  class SubscriptionCreationOrderPromotionRule < ::Spree::PromotionRule
     # Promotion can be applied to an entire order. Will only be true
     # for Spree::Order
     #
