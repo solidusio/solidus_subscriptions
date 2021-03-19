@@ -91,10 +91,11 @@ RSpec.describe Spree::Admin::SubscriptionsController, type: :request do
       end
 
       it 'updates the subscription payment source if payment method requires source' do
-        subscription = create :subscription
         payment = create :credit_card_payment
         payment_source = payment.source
         payment_method = payment.payment_method
+
+        subscription = create :subscription, user: payment.order.user
         subscription_params = {
           subscription: {
             payment_method_id: payment_method.id,

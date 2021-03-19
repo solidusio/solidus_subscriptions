@@ -28,6 +28,8 @@ module SolidusSubscriptions
     validates :payment_source, presence: true, if: -> { payment_method&.source_required? }
     validates :currency, inclusion: { in: ::Money::Currency.all.map(&:iso_code) }
 
+    validate :validate_payment_source_ownership
+
     accepts_nested_attributes_for :shipping_address
     accepts_nested_attributes_for :billing_address
     accepts_nested_attributes_for :line_items, allow_destroy: true, reject_if: ->(p) { p[:quantity].blank? }
@@ -272,6 +274,15 @@ module SolidusSubscriptions
     end
 
     private
+
+    def validate_payment_source_ownership
+      return if payment_source.blank?
+
+      if payment_source.respond_to?(:user_id) &&
+         payment_source.user_id != user_id
+        errors.add(:payment_source, :not_owned_by_user)
+      end
+    end
 
     def check_successive_skips_exceeded
       return unless SolidusSubscriptions.configuration.maximum_successive_skips

@@ -32,7 +32,7 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
     it 'copies the payment method from the order' do
       subscription_line_item = build(:subscription_line_item)
       payment_method = create(:credit_card_payment_method)
-      payment_source = create(:credit_card, payment_method: payment_method)
+      payment_source = create(:credit_card, payment_method: payment_method, user: subscription_line_item.order.user)
       create(:payment,
         order: subscription_line_item.spree_line_item.order,
         source: payment_source,
