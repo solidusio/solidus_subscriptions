@@ -90,6 +90,11 @@ The task creates ActiveJob jobs which can be fulfilled by your queue library of 
 
 We suggest using the [Whenever](https://github.com/javan/whenever) gem to schedule the task.
 
+### Promotion rules
+This extensions adds the following [Promotion rules](https://guides.solidus.io/developers/promotions/promotion-rules.html):
+* `SolidusSubscriptions::Promotion::Rules::SubscriptionCreationOrder` which applies if the order is creating a subscription;
+* `SolidusSubscriptions::Promotion::Rules::SubscriptionInstallmentOrder` which applies if the order is an installment of a subscription.
+
 ### API documentation
 
 You can find the API documentation [here](https://stoplight.io/p/docs/gh/solidusio-contrib/solidus_subscriptions?group=master).
