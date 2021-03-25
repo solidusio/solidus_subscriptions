@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe '/api/v1/subscriptions' do
   include SolidusSubscriptions::Engine.routes.url_helpers
 

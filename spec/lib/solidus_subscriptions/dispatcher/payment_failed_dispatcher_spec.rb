@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe SolidusSubscriptions::Dispatcher::PaymentFailedDispatcher do
   describe '#dispatch' do
     it 'marks the installment as payment_failed' do

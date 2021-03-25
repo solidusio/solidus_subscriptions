@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe SolidusSubscriptions::ProcessInstallmentJob do
   it 'processes checkout for the installment' do
     installment = build_stubbed(:installment)

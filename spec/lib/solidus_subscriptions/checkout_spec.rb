@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe SolidusSubscriptions::Checkout, :checkout do
   context 'when the order can be created and paid' do
     it 'creates and finalizes a new order for the installment' do
