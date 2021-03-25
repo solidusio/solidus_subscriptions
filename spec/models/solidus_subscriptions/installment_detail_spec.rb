@@ -8,13 +8,13 @@ RSpec.describe SolidusSubscriptions::InstallmentDetail, type: :model do
   describe '#failed?' do
     subject { build(:installment_detail, success: success).failed? }
 
-    context 'the detail was successful' do
+    context 'when the detail was successful' do
       let(:success) { true }
 
       it { is_expected.to be_falsy }
     end
 
-    context 'the detail was not successfuly' do
+    context 'when the detail was not successfuly' do
       let(:success) { false }
 
       it { is_expected.to be_truthy }

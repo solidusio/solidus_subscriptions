@@ -6,12 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 3
-Lint/AmbiguousBlockAssociation:
-  Exclude:
-    - 'spec/controllers/spree/admin/subscriptions_controller_spec.rb'
-    - 'spec/services/solidus_subscriptions/checkout_spec.rb'
-
 # Offense count: 1
 Lint/MissingSuper:
   Exclude:
@@ -24,68 +18,9 @@ Naming/MemoizedInstanceVariableName:
   Exclude:
     - 'lib/solidus_subscriptions/processor.rb'
 
-# Offense count: 1
-RSpec/AnyInstance:
-  Exclude:
-    - 'spec/jobs/solidus_subscriptions/process_installments_job_spec.rb'
-
-# Offense count: 46
-# Configuration parameters: Prefixes.
-# Prefixes: when, with, without
-RSpec/ContextWording:
-  Exclude:
-    - 'spec/controllers/solidus_subscriptions/api/v1/line_items_controller_spec.rb'
-    - 'spec/controllers/spree/admin/subscriptions_controller_spec.rb'
-    - 'spec/lib/solidus_subscriptions/ability_spec.rb'
-    - 'spec/lib/solidus_subscriptions/processor_spec.rb'
-    - 'spec/models/solidus_subscriptions/installment_detail_spec.rb'
-    - 'spec/models/solidus_subscriptions/installment_spec.rb'
-    - 'spec/models/solidus_subscriptions/line_item_spec.rb'
-    - 'spec/models/solidus_subscriptions/subscription_spec.rb'
-    - 'spec/services/solidus_subscriptions/checkout_spec.rb'
-    - 'spec/services/solidus_subscriptions/line_item_builder_spec.rb'
-    - 'spec/services/solidus_subscriptions/order_builder_spec.rb'
-
-# Offense count: 2
-# Configuration parameters: CustomTransform, IgnoreMethods, SpecSuffixOnly.
-RSpec/FilePath:
-  Exclude:
-    - 'spec/decorators/models/solidus_subscriptions/spree/order/finalize_creates_subscrptions_spec.rb'
-    - 'spec/decorators/models/solidus_subscriptions/spree/user/have_many_subscriptions.rb'
-
-# Offense count: 1
-# Configuration parameters: AssignmentOnly.
-RSpec/InstanceVariable:
-  Exclude:
-    - 'spec/services/solidus_subscriptions/checkout_spec.rb'
-
-# Offense count: 18
-RSpec/LetSetup:
-  Exclude:
-    - 'spec/controllers/solidus_subscriptions/api/v1/subscriptions_controller_spec.rb'
-    - 'spec/decorators/controllers/solidus_subscriptions/spree/orders_controller/create_subscription_line_items_spec.rb'
-    - 'spec/lib/solidus_subscriptions/processor_spec.rb'
-    - 'spec/services/solidus_subscriptions/checkout_spec.rb'
-    - 'spec/services/solidus_subscriptions/line_item_builder_spec.rb'
-
-# Offense count: 8
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: have_received, receive
-RSpec/MessageSpies:
-  Exclude:
-    - 'spec/services/solidus_subscriptions/failure_dispatcher_spec.rb'
-    - 'spec/services/solidus_subscriptions/out_of_stock_dispatcher_spec.rb'
-    - 'spec/services/solidus_subscriptions/payment_failed_dispatcher_spec.rb'
-    - 'spec/services/solidus_subscriptions/success_dispatcher_spec.rb'
-
 # Offense count: 2
 RSpec/MultipleExpectations:
   Max: 2
-
-# Offense count: 27
-# Configuration parameters: AllowSubject.
-RSpec/MultipleMemoizedHelpers:
-  Max: 14
 
 # Offense count: 90
 # Configuration parameters: IgnoreSharedExamples.
@@ -120,7 +55,6 @@ Rails/SkipsModelValidations:
     - 'app/services/solidus_subscriptions/failure_dispatcher.rb'
     - 'app/services/solidus_subscriptions/order_builder.rb'
     - 'app/services/solidus_subscriptions/payment_failed_dispatcher.rb'
-    - 'spec/services/solidus_subscriptions/checkout_spec.rb'
 
 # Offense count: 1
 # Cop supports --auto-correct.

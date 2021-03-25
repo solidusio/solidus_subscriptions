@@ -104,7 +104,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       allow(SolidusSubscriptions.configuration).to receive(:minimum_cancellation_notice) { minimum_cancellation_notice }
     end
 
-    context 'the subscription can be canceled' do
+    context 'when the subscription can be canceled' do
       let(:actionable_date) { 1.month.from_now }
       let(:minimum_cancellation_notice) { 1.day }
 
@@ -119,7 +119,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       end
     end
 
-    context 'the subscription cannot be canceled' do
+    context 'when the subscription cannot be canceled' do
       let(:actionable_date) { Date.current }
       let(:minimum_cancellation_notice) { 1.day }
 
@@ -213,7 +213,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       end
     end
 
-    context 'the subscription can be deactivated' do
+    context 'when the subscription can be deactivated' do
       let(:attributes) do
         { end_date: Date.current.ago(2.days) }
       end
@@ -229,7 +229,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       end
     end
 
-    context 'the subscription cannot be deactivated' do
+    context 'when the subscription cannot be deactivated' do
       it { is_expected.to be_falsy }
 
       it 'does not create an event' do
@@ -263,7 +263,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       end
     end
 
-    context 'the subscription cannot be activated' do
+    context 'when the subscription cannot be activated' do
       it 'returns false' do
         subscription = create(:subscription, actionable_date: Time.zone.today)
 
@@ -402,25 +402,25 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
     let!(:failed_subs) { create_list(:installment, 2, :failed).map(&:subscription) }
     let!(:success_subs) { create_list(:installment, 2, :success).map(&:subscription) }
 
-    context 'successfull subscriptions' do
+    context 'with successfull subscriptions' do
       let(:state) { :success }
 
       it { is_expected.to match_array success_subs }
     end
 
-    context 'failed subscriptions' do
+    context 'with failed subscriptions' do
       let(:state) { :failed }
 
       it { is_expected.to match_array failed_subs }
     end
 
-    context 'new subscriptions' do
+    context 'with new subscriptions' do
       let(:state) { :pending }
 
       it { is_expected.to match_array new_subs }
     end
 
-    context 'unknown state' do
+    context 'with unknown state' do
       let(:state) { :foo }
 
       it 'raises an error' do
