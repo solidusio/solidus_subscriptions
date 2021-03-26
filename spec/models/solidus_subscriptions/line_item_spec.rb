@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe SolidusSubscriptions::LineItem, type: :model do
@@ -7,7 +9,7 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
   it { is_expected.to validate_numericality_of(:interval_length).is_greater_than(0) }
 
   describe "#interval" do
-    subject { line_item.interval }
+    subject(:interval) { line_item.interval }
 
     let(:line_item) { create :subscription_line_item, :with_subscription }
 
@@ -21,7 +23,7 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
     it { is_expected.to be_a ActiveSupport::Duration }
 
     it "calculates the duration correctly" do
-      expect(subject.from_now).to eq Date.parse("2016-10-22")
+      expect(interval.from_now).to eq Date.parse("2016-10-22")
     end
   end
 end

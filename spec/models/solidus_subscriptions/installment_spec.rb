@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe SolidusSubscriptions::Installment, type: :model do
@@ -6,7 +8,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
   it { is_expected.to validate_presence_of :subscription }
 
   describe '#out_of_stock' do
-    subject { installment.out_of_stock }
+    subject(:out_of_stock) { installment.out_of_stock }
 
     let(:expected_date) do
       Time.zone.today + SolidusSubscriptions.configuration.reprocessing_interval
@@ -16,20 +18,20 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     it { is_expected.not_to be_successful }
 
     it 'has the correct message' do
-      expect(subject).to have_attributes(
+      expect(out_of_stock).to have_attributes(
         message: I18n.t('solidus_subscriptions.installment_details.out_of_stock')
       )
     end
 
     it 'advances the installment actionable_date' do
-      subject
+      out_of_stock
       actionable_date = installment.reload.actionable_date
       expect(actionable_date).to eq expected_date
     end
   end
 
   describe '#success!' do
-    subject { installment.success!(order) }
+    subject(:success) { installment.success!(order) }
 
     let(:order) { create :order }
 
@@ -37,19 +39,19 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     let(:actionable_date) { 1.month.from_now.to_date }
 
     it 'removes any actionable date if any' do
-      expect { subject }.
+      expect { success }.
         to change(installment, :actionable_date).
         from(actionable_date).to(nil)
     end
 
     it 'creates a new installment detail' do
-      expect { subject }.
+      expect { success }.
         to change { SolidusSubscriptions::InstallmentDetail.count }.
         by(1)
     end
 
     it 'creates a successful installment detail' do
-      subject
+      success
       expect(installment.details.last).to be_successful && have_attributes(
         order: order,
         message: I18n.t('solidus_subscriptions.installment_details.success')
@@ -58,7 +60,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
   end
 
   describe '#failed!' do
-    subject { installment.failed!(order) }
+    subject(:failed) { installment.failed!(order) }
 
     let(:order) { create :order }
 
@@ -70,23 +72,23 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
     it { is_expected.not_to be_successful }
 
     it 'has the correct message' do
-      expect(subject).to have_attributes(
+      expect(failed).to have_attributes(
         message: I18n.t('solidus_subscriptions.installment_details.failed'),
         order: order
       )
     end
 
     it 'advances the installment actionable_date' do
-      subject
+      failed
       actionable_date = installment.reload.actionable_date
       expect(actionable_date).to eq expected_date
     end
 
-    context 'the reprocessing interval is set to nil' do
+    context 'when the reprocessing interval is set to nil' do
       before { stub_config(reprocessing_interval: nil) }
 
       it 'does not advance the installment actionable_date' do
-        subject
+        failed
         actionable_date = installment.reload.actionable_date
         expect(actionable_date).to be_nil
       end
@@ -98,13 +100,13 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
 
     let(:installment) { create(:installment, details: details) }
 
-    context 'the installment has an associated successful detail' do
+    context 'when the installment has an associated successful detail' do
       let(:details) { create_list :installment_detail, 1, success: true }
 
       it { is_expected.to be_falsy }
     end
 
-    context 'the installment has no associated successful detail' do
+    context 'when the installment has no associated successful detail' do
       let(:details) { create_list :installment_detail, 1 }
 
       it { is_expected.to be_truthy }
@@ -116,13 +118,13 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
 
     let(:installment) { create(:installment, details: details) }
 
-    context 'the installment has an associated completed order' do
+    context 'when the installment has an associated completed order' do
       let(:details) { create_list :installment_detail, 1, success: true }
 
       it { is_expected.to be_truthy }
     end
 
-    context 'the installment has no associated completed order' do
+    context 'when the installment has no associated completed order' do
       let(:details) { create_list :installment_detail, 1 }
 
       it { is_expected.to be_falsy }

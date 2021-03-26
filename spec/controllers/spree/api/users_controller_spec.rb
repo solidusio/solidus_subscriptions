@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'spree/api/testing_support/helpers'
 
@@ -11,7 +13,7 @@ RSpec.describe Spree::Api::UsersController, type: :controller do
   let!(:subscription) { create :subscription, :with_line_item, user: user }
 
   describe 'patch /update' do
-    subject { patch :update, params: params }
+    subject(:update_user) { patch :update, params: params }
 
     let(:params) do
       {
@@ -37,7 +39,7 @@ RSpec.describe Spree::Api::UsersController, type: :controller do
     end
 
     it 'updates the subscription line items' do
-      subject
+      update_user
       line_item = subscription.line_items.reload.first
 
       expect(line_item).to have_attributes(line_item_attributes)

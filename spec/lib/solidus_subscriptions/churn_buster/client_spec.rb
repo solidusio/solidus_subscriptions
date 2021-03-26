@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe SolidusSubscriptions::ChurnBuster::Client, vcr: { cassette_name: 'churn_buster', record: :new_episodes } do
   describe '#report_failed_payment' do
     it 'reports the failed payment to Churn Buster' do

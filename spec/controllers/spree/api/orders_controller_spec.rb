@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'spree/api/testing_support/helpers'
 
@@ -43,7 +45,7 @@ RSpec.describe Spree::Api::OrdersController, type: :controller do
     end
 
     it 'is a successful response' do
-      subject
+      subscription_line_items
       expect(response).to be_successful
     end
 

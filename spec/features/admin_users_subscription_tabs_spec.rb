@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe 'User subscriptions tab', type: :feature do
@@ -27,10 +29,15 @@ RSpec.describe 'User subscriptions tab', type: :feature do
       within('.tabs') { click_link 'Subscriptions' }
     end
 
-    it 'lists user subscriptions' do
+    it 'lists user subscriptions date' do
       subscriptions_table = page.find('#subscriptions-table')
 
       expect(subscriptions_table).to have_content('2020-10-21')
+    end
+
+    it 'lists user subscriptions days' do
+      subscriptions_table = page.find('#subscriptions-table')
+
       expect(subscriptions_table).to have_content('10 days')
     end
 

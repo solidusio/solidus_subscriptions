@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'Subscriptions admin' do
   stub_authorization!
 

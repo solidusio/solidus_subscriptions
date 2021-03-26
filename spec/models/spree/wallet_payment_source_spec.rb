@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Spree::WalletPaymentSource do
   describe 'setting it as the default' do
     it 'reports a payment method changed event for subscriptions that use the default payment source' do

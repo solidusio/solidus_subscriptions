@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'spree/api/testing_support/helpers'
 
@@ -6,7 +8,7 @@ RSpec.describe Spree::Api::LineItemsController, type: :controller do
   routes { Spree::Core::Engine.routes }
 
   describe 'POST :create' do
-    subject { post :create, params: params }
+    subject(:post_create) { post :create, params: params }
 
     let(:params) { line_item_params }
     let!(:variant) { create :variant }
@@ -28,7 +30,7 @@ RSpec.describe Spree::Api::LineItemsController, type: :controller do
       it { is_expected.to be_created }
 
       it 'creates a line item' do
-        expect { subject }.
+        expect { post_create }.
           to change { Spree::LineItem.count }.
           from(0).to(1)
       end
@@ -51,7 +53,7 @@ RSpec.describe Spree::Api::LineItemsController, type: :controller do
       it_behaves_like 'a new line item'
 
       it 'creates a new subscription line item' do
-        expect { subject }.
+        expect { post_create }.
           to change { SolidusSubscriptions::LineItem.count }.
           from(0).to(1)
       end
@@ -63,7 +65,7 @@ RSpec.describe Spree::Api::LineItemsController, type: :controller do
   end
 
   describe 'patch :update' do
-    subject { patch :create, params: params }
+    subject(:patch_create) { patch :create, params: params }
 
     let(:params) { line_item_params }
     let!(:variant) { create :variant }
@@ -93,7 +95,7 @@ RSpec.describe Spree::Api::LineItemsController, type: :controller do
     it { is_expected.to be_successful }
 
     it 'creates a new subscription line item' do
-      expect { subject }.
+      expect { patch_create }.
         to change { SolidusSubscriptions::LineItem.count }.
         from(0).to(1)
     end

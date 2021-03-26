@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe SolidusSubscriptions::ChurnBusterSubscriber do
   describe '#report_subscription_cancellation' do
     it 'reports the cancellation to Churn Buster' do

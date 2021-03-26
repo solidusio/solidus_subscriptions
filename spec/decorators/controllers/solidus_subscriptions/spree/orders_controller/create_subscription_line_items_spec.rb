@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe SolidusSubscriptions::Spree::OrdersController::CreateSubscriptionLineItems, type: :controller do
@@ -5,14 +7,14 @@ RSpec.describe SolidusSubscriptions::Spree::OrdersController::CreateSubscription
   routes { Spree::Core::Engine.routes }
 
   let!(:user) { create :user }
-  let!(:store) { create :store }
 
   before do
     allow(controller).to receive_messages(try_spree_current_user: user)
+    create :store
   end
 
   describe 'POST /orders/populate' do
-    subject { post :populate, params: params }
+    subject(:populate) { post :populate, params: params }
 
     let!(:variant) { create :variant }
     let(:params) { line_item_params }
@@ -27,13 +29,13 @@ RSpec.describe SolidusSubscriptions::Spree::OrdersController::CreateSubscription
       it { is_expected.to redirect_to cart_path }
 
       it 'creates an order' do
-        expect { subject }.
+        expect { populate }.
           to change { Spree::Order.count }.
           from(0).to(1)
       end
 
       it 'creates a line item' do
-        expect { subject }.
+        expect { populate }.
           to change { Spree::LineItem.count }.
           from(0).to(1)
       end
@@ -56,13 +58,13 @@ RSpec.describe SolidusSubscriptions::Spree::OrdersController::CreateSubscription
       it_behaves_like 'a new order line item'
 
       it 'creates a new subscription line item' do
-        expect { subject }.
+        expect { populate }.
           to change { SolidusSubscriptions::LineItem.count }.
           from(0).to(1)
       end
 
       it 'creates a subscription line item with the correct values' do
-        subject
+        populate
         subscription_line_item = SolidusSubscriptions::LineItem.last
 
         expect(subscription_line_item).to have_attributes(

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe SolidusSubscriptions do
   describe '.churn_buster' do
     context 'when Churn Buster was configured' do

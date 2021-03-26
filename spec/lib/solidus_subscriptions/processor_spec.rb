@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe SolidusSubscriptions::Processor do
   it 'schedules the processing of actionable subscriptions' do
     actionable_subscription = create(:subscription, :actionable)
