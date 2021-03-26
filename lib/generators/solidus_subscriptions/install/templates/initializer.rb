@@ -26,6 +26,13 @@ SolidusSubscriptions.configure do |config|
   # failure cancel the subscription.
   # config.maximum_reprocessing_time = nil
 
+  # This custom error handler is called when a ProcessInstallmentJob `#perform` method fails.
+  # The rescued error can be managed as required via a Proc, such as one which logs the error
+  # on an error tracking system.
+  # Though not recommended due to the retry mechanisms built into this gem, the error can be
+  # re-raised if the default retry behaviour is required in ActiveJob.
+  # config.processing_error_handler = nil
+
   # ========================================= Dispatchers ==========================================
   #
   # These dispatchers are pluggable. If you override any handlers, it is highly encouraged that you

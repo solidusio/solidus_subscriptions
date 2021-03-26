@@ -6,6 +6,8 @@ module SolidusSubscriptions
 
     def perform(installment)
       Checkout.new(installment).process
+    rescue StandardError => e
+      SolidusSubscriptions.configuration.processing_error_handler&.call(e)
     end
   end
 end
