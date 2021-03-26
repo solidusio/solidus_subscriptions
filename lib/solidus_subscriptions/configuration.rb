@@ -4,14 +4,14 @@ module SolidusSubscriptions
   class Configuration
     attr_accessor(
       :maximum_total_skips, :maximum_reprocessing_time, :churn_buster_account_id,
-      :churn_buster_api_key, :clear_past_installments,
+      :churn_buster_api_key, :clear_past_installments, :processing_error_handler,
     )
 
     attr_writer(
       :success_dispatcher_class, :failure_dispatcher_class, :payment_failed_dispatcher_class,
       :out_of_stock_dispatcher, :maximum_successive_skips, :reprocessing_interval,
       :minimum_cancellation_notice, :processing_queue, :subscription_line_item_attributes,
-      :subscription_attributes, :subscribable_class, :process_job_error_handler,
+      :subscription_attributes, :subscribable_class,
     )
 
     def success_dispatcher_class
@@ -79,10 +79,6 @@ module SolidusSubscriptions
 
     def churn_buster?
       churn_buster_account_id.present? && churn_buster_api_key.present?
-    end
-
-    def process_job_error_handler
-      @process_job_error_handler ||= nil
     end
   end
 end
