@@ -124,3 +124,5 @@ en:
                 limit. It can no longer be skipped.
             currency:
               inclusion: "is not a valid currency code"
+            payment_source:
+              not_owned_by_user: "does not belong to the user associated with the subscription"

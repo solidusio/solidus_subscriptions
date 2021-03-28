@@ -66,7 +66,7 @@ RSpec.describe SolidusSubscriptions::Checkout, :checkout do
     it 'calls the payment failed dispatcher' do
       stub_spree_preferences(auto_capture: true)
       installment = create(:installment, :actionable).tap do |i|
-        i.subscription.update!(payment_source: create(:credit_card, number: '4111123412341234'))
+        i.subscription.update!(payment_source: create(:credit_card, number: '4111123412341234', user: i.subscription.user))
       end
       payment_failed_dispatcher = stub_dispatcher(SolidusSubscriptions::Dispatcher::PaymentFailedDispatcher, installment)
 

@@ -16,6 +16,16 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       with_message('is not a valid currency code')
   end
 
+  it 'validates payment_source ownership' do
+    subscription = create(:subscription)
+
+    subscription.update(payment_source: create(:credit_card))
+    expect(subscription.errors.messages[:payment_source]).to include('does not belong to the user associated with the subscription')
+
+    subscription.update(payment_source: create(:credit_card, user: subscription.user))
+    expect(subscription.errors.messages[:payment_source]).not_to include('does not belong to the user associated with the subscription')
+  end
+
   describe 'creating a subscription' do
     it 'tracks the creation' do
       stub_const('Spree::Event', class_spy(Spree::Event))
@@ -82,7 +92,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
       stub_const('Spree::Event', class_spy(Spree::Event))
 
       subscription = create(:subscription)
-      subscription.update!(payment_source: create(:credit_card))
+      subscription.update!(payment_source: create(:credit_card, user: subscription.user))
 
       expect(Spree::Event).to have_received(:fire).with(
         'solidus_subscriptions.subscription_payment_method_changed',
