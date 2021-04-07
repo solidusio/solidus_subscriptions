@@ -8,7 +8,7 @@ RSpec.describe SolidusSubscriptions::Spree::Order::FinalizeCreatesSubscriptions 
 
     let(:order) { create :order, :with_subscription_line_items }
     let(:subscription_line_item) { order.subscription_line_items.last }
-    let(:expected_actionable_date) { Time.zone.today + subscription_line_item.interval }
+    let(:expected_actionable_date) { Time.zone.today + subscription_line_item.subscription.interval }
 
     around { |e| Timecop.freeze { e.run } }
 
