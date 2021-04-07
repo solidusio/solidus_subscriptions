@@ -13,6 +13,8 @@ module SolidusSubscriptions
             SolidusSubscriptions::SubscriptionGenerator.activate(line_items)
           end
 
+          reload
+
           super
         end
       end
