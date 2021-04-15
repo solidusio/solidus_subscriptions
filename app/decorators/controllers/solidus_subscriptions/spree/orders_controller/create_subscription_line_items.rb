@@ -32,4 +32,6 @@ module SolidusSubscriptions
   end
 end
 
-Spree::OrdersController.prepend(SolidusSubscriptions::Spree::OrdersController::CreateSubscriptionLineItems)
+if defined? Spree::Frontend
+  Spree::OrdersController.prepend(SolidusSubscriptions::Spree::OrdersController::CreateSubscriptionLineItems)
+end
