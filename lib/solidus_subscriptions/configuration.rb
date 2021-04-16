@@ -52,6 +52,7 @@ module SolidusSubscriptions
 
     def subscription_line_item_attributes
       @subscription_line_item_attributes ||= [
+        :id,
         :quantity,
         :subscribable_id,
         :interval_length,

@@ -78,7 +78,7 @@ module SolidusSubscriptions
         end
 
         def line_item_attributes
-          SolidusSubscriptions.configuration.subscription_line_item_attributes - [:subscribable_id] + [:id]
+          SolidusSubscriptions.configuration.subscription_line_item_attributes
         end
 
         def update_payment_attributes(attributes)
