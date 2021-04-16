@@ -12,9 +12,9 @@ module SolidusSubscriptions
         def remove_from_subscriptions
           SolidusSubscriptions::LineItem.where(subscribable: self).delete_all
         end
+
+        ::Spree::Variant.prepend self
       end
     end
   end
 end
-
-Spree::Variant.prepend(SolidusSubscriptions::Spree::Variant::AutoDeleteFromSubscriptions)
