@@ -58,6 +58,7 @@ module SolidusSubscriptions
         :interval_length,
         :interval_units,
         :end_date,
+        :_destroy
       ]
     end
 
