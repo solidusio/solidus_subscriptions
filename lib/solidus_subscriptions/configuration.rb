@@ -4,14 +4,14 @@ module SolidusSubscriptions
   class Configuration
     attr_accessor(
       :maximum_total_skips, :maximum_reprocessing_time, :churn_buster_account_id,
-      :churn_buster_api_key, :clear_past_installments, :processing_error_handler,
+      :churn_buster_api_key, :clear_past_installments, :processing_error_handler, :order_creation_extra_attributes
     )
 
     attr_writer(
       :success_dispatcher_class, :failure_dispatcher_class, :payment_failed_dispatcher_class,
       :out_of_stock_dispatcher, :maximum_successive_skips, :reprocessing_interval,
       :minimum_cancellation_notice, :processing_queue, :subscription_line_item_attributes,
-      :subscription_attributes, :subscribable_class,
+      :subscription_attributes, :subscribable_class, :order_creation_class
     )
 
     def success_dispatcher_class
@@ -57,7 +57,7 @@ module SolidusSubscriptions
         :subscribable_id,
         :interval_length,
         :interval_units,
-        :end_date,
+        :end_date
       ]
     end
 
@@ -69,7 +69,7 @@ module SolidusSubscriptions
         {
           shipping_address_attributes: Spree::PermittedAttributes.address_attributes,
           billing_address_attributes: Spree::PermittedAttributes.address_attributes
-        },
+        }
       ]
     end
 
@@ -80,6 +80,11 @@ module SolidusSubscriptions
 
     def churn_buster?
       churn_buster_account_id.present? && churn_buster_api_key.present?
+    end
+
+    def order_creation_class
+      @order_creation_class ||= 'SolidusSubscriptions::OrderCreator'
+      @order_creation_class.constantize
     end
   end
 end

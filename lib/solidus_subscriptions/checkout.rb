@@ -32,14 +32,8 @@ module SolidusSubscriptions
     private
 
     def create_order
-      ::Spree::Order.create(
-        user: installment.subscription.user,
-        email: installment.subscription.user.email,
-        store: installment.subscription.store || ::Spree::Store.default,
-        subscription_order: true,
-        subscription: installment.subscription,
-        currency: installment.subscription.currency
-      )
+      extra_attributes = SolidusSubscriptions.configuration.order_creation_extra_attributes
+      SolidusSubscriptions.configuration.order_creation_class.new(installment, extra_attributes).call
     end
 
     def populate_order(order)
@@ -61,7 +55,7 @@ module SolidusSubscriptions
           order.payments.create(
             payment_method: installment.subscription.payment_method_to_use,
             source: installment.subscription.payment_source_to_use,
-            amount: order.total,
+            amount: order.total
           )
         end
 
