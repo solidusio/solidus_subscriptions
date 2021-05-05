@@ -32,8 +32,7 @@ module SolidusSubscriptions
     private
 
     def create_order
-      extra_attributes = SolidusSubscriptions.configuration.order_creation_extra_attributes
-      SolidusSubscriptions.configuration.order_creation_class.new(installment, extra_attributes).call
+      SolidusSubscriptions.configuration.order_creator_class.new(installment).call
     end
 
     def populate_order(order)

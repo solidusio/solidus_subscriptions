@@ -2,9 +2,8 @@
 
 module SolidusSubscriptions
   class OrderCreator
-    def initialize(installment, extra_attributes)
+    def initialize(installment)
       @installment = installment
-      @extra_attributes = (extra_attributes || {}).symbolize_keys
     end
 
     def call
@@ -21,6 +20,10 @@ module SolidusSubscriptions
 
     protected
 
-    attr_reader :installment, :extra_attributes
+    def extra_attributes
+      {}
+    end
+
+    attr_reader :installment
   end
 end
