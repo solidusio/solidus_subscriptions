@@ -18,7 +18,7 @@ module SolidusSubscriptions
       )
     end
 
-    protected
+    private
 
     def extra_attributes
       {}
