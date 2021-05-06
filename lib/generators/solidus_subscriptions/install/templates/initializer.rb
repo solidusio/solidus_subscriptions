@@ -96,4 +96,17 @@ SolidusSubscriptions.configure do |config|
   # with new subscription cycles by clearing any past failed installment when a new one is created
 
   # config.clear_past_installments = true
+
+  # ==================================== Custom Order Creation =====================================
+  #
+  # This settings allows the customization of the creation of each Installment Order by means of
+  # providing a class that can be switched / inherited
+  #
+  #
+  # the order_creator_class is initialized and called on the creation of the Order for each Subscription
+  # Installment.
+  # If you want to add simple extra attributes to the Order (such as a channel), that can be done by
+  # overriding the `extra_attributes` method on a subclass
+  #
+  # config.order_creator_class = 'SolidusSubscriptions::OrderCreator'
 end
