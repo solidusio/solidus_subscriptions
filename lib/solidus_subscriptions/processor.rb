@@ -42,7 +42,7 @@ module SolidusSubscriptions
           ).
           where(
             SolidusSubscriptions::Subscription.actionable.arel.constraints.reduce(:and).
-              or(SolidusSubscriptions::Installment.actionable.arel.constraints.reduce(:and))
+              or(SolidusSubscriptions::Installment.actionable.with_active_subscription.arel.constraints.reduce(:and))
           ).
           distinct.
           find_in_batches
