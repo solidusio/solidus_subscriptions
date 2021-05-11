@@ -5,7 +5,7 @@
 app_root = 'spec/dummy'
 
 unless File.exist? "#{app_root}/bin/rails"
-  system "bin/rake", app_root or begin # rubocop:disable Style/AndOr
+  system "bin/rake", app_root or begin
     warn "Automatic creation of the dummy app failed"
     exit 1
   end

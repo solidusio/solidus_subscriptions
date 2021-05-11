@@ -83,7 +83,7 @@ module SolidusSubscriptions
           i.subscription.shipping_address_id
         end
 
-        installemts_by_address_and_user.values.each do |grouped_installments|
+        installemts_by_address_and_user.each_value do |grouped_installments|
           ProcessInstallmentsJob.perform_later grouped_installments.map(&:id)
         end
       end

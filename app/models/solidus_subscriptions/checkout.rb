@@ -86,7 +86,7 @@ module SolidusSubscriptions
 
         begin
           order.next!
-        rescue
+        rescue StandardError
           # Stop checkout process to cancel the order later
           # if store credits payment failed while transition to the next step
           return false if order.state == "payment" && active_card.nil?

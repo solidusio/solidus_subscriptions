@@ -8,6 +8,7 @@ module SolidusSubscriptions
       #
       # This handler is called when a susbcription order is successfully placed.
       attr_writer :success_dispatcher_class
+
       def success_dispatcher_class
         @success_dispatcher_class ||= ::SolidusSubscriptions::SuccessDispatcher
       end
@@ -15,12 +16,14 @@ module SolidusSubscriptions
       # This handler is called when an order cant be placed for a group of
       # installments
       attr_writer :failure_dispatcher_class
+
       def failure_dispatcher_class
         @failure_dispatcher_class ||= ::SolidusSubscriptions::FailureDispatcher
       end
 
       # This handler is called when a payment fails on a subscription order
       attr_writer :payment_failed_dispatcher_class
+
       def payment_failed_dispatcher_class
         @payment_failed_dispatcher_class ||= ::SolidusSubscriptions::PaymentFailedDispatcher
       end
@@ -28,6 +31,7 @@ module SolidusSubscriptions
       # This handler is called when installemnts cannot be fulfilled due to lack
       # of stock
       attr_writer :out_of_stock_dispatcher
+
       def out_of_stock_dispatcher_class
         @out_of_stock_dispatcher_class ||= ::SolidusSubscriptions::OutOfStockDispatcher
       end
@@ -92,7 +96,7 @@ module SolidusSubscriptions
     mattr_accessor(:subscription_attributes) do
       [
         :actionable_date,
-        shipping_address_attributes: Spree::PermittedAttributes.address_attributes
+        { shipping_address_attributes: Spree::PermittedAttributes.address_attributes }
       ]
     end
 

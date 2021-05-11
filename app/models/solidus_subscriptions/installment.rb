@@ -26,7 +26,7 @@ module SolidusSubscriptions
     end)
 
     scope :with_active_subscription, (lambda do
-      joins(:subscription).where.not(Subscription.table_name => {state: "canceled"})
+      joins(:subscription).where.not(Subscription.table_name => { state: "canceled" })
     end)
 
     # Get the builder for the subscription_line_item. This will be an
