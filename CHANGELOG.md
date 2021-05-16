@@ -1,8 +1,8 @@
 # Changelog
 
-## [v1.0.0.rc1](https://github.com/solidusio-contrib/solidus_subscriptions/tree/v1.0.0.rc1) (2021-04-02)
+## [v1.0.0](https://github.com/solidusio-contrib/solidus_subscriptions/tree/v1.0.0) (2021-05-16)
 
-[Full Changelog](https://github.com/solidusio-contrib/solidus_subscriptions/compare/a8a92654ba21b22bd3f8d07c3ae25e3604e7942a...v1.0.0.rc1)
+[Full Changelog](https://github.com/solidusio-contrib/solidus_subscriptions/compare/a8a92654ba21b22bd3f8d07c3ae25e3604e7942a...v1.0.0)
 
 **Breaking changes:**
 
@@ -80,6 +80,7 @@
 
 **Closed issues:**
 
+- Dependabot can't resolve your Ruby dependency files [\#226](https://github.com/solidusio-contrib/solidus_subscriptions/issues/226)
 - Fix sandbox generation [\#196](https://github.com/solidusio-contrib/solidus_subscriptions/issues/196)
 - Dependabot can't resolve your Ruby dependency files [\#187](https://github.com/solidusio-contrib/solidus_subscriptions/issues/187)
 - Dependabot can't resolve your Ruby dependency files [\#186](https://github.com/solidusio-contrib/solidus_subscriptions/issues/186)
@@ -111,6 +112,11 @@
 
 **Merged pull requests:**
 
+- Introduce Installment OrderCreator configuration [\#229](https://github.com/solidusio-contrib/solidus_subscriptions/pull/229) ([cesartalves](https://github.com/cesartalves))
+- Update solidus\_core requirement from \>= 2.0.0, \< 3 to \>= 2.0.0, \< 4 [\#225](https://github.com/solidusio-contrib/solidus_subscriptions/pull/225) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+- Fix Api Subscription Permitted LineItem Attributes [\#223](https://github.com/solidusio-contrib/solidus_subscriptions/pull/223) ([cesartalves](https://github.com/cesartalves))
+- Fix Spree::OrdersController decoration [\#221](https://github.com/solidusio-contrib/solidus_subscriptions/pull/221) ([cesartalves](https://github.com/cesartalves))
+- Reload order during finalize action [\#220](https://github.com/solidusio-contrib/solidus_subscriptions/pull/220) ([seand7565](https://github.com/seand7565))
 - Update specs to conform with rubocop [\#217](https://github.com/solidusio-contrib/solidus_subscriptions/pull/217) ([seand7565](https://github.com/seand7565))
 - Update promotion rule names on db [\#216](https://github.com/solidusio-contrib/solidus_subscriptions/pull/216) ([luca-landa](https://github.com/luca-landa))
 - Improve promotion rules names [\#215](https://github.com/solidusio-contrib/solidus_subscriptions/pull/215) ([luca-landa](https://github.com/luca-landa))
