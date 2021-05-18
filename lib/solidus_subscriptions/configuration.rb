@@ -11,7 +11,7 @@ module SolidusSubscriptions
       :success_dispatcher_class, :failure_dispatcher_class, :payment_failed_dispatcher_class,
       :out_of_stock_dispatcher, :maximum_successive_skips, :reprocessing_interval,
       :minimum_cancellation_notice, :processing_queue, :subscription_line_item_attributes,
-      :subscription_attributes, :subscribable_class, :order_creator_class
+      :subscription_attributes, :subscribable_class, :order_creator_class, :days_for_subscription_reminder
     )
 
     def success_dispatcher_class
@@ -40,6 +40,10 @@ module SolidusSubscriptions
 
     def reprocessing_interval
       @reprocessing_interval ||= 1.day
+    end
+
+    def days_for_subscription_reminder
+      @days_for_subscription_reminder ||= 0.days
     end
 
     def minimum_cancellation_notice

@@ -5,4 +5,10 @@ namespace :solidus_subscriptions do
   task process: :environment do
     SolidusSubscriptions::Processor.run
   end
+
+  desc 'Send reminders for subscriptions soon to be renewed'
+  task send_reminder: :environment do
+    SolidusSubscriptions::Reminder.run
+  end
+
 end

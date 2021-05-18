@@ -109,4 +109,11 @@ SolidusSubscriptions.configure do |config|
   # overriding the `extra_attributes` method on a subclass
   #
   # config.order_creator_class = 'SolidusSubscriptions::OrderCreator'
+
+  # =================================== Subscription Reminders =====================================
+  #
+  # To send reminders to Subscription customers N days before the subscription is renewed, change this
+  #
+  # config.days_for_subscription_reminder = 3.days
+  #
 end

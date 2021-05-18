@@ -27,6 +27,7 @@ require 'solidus_subscriptions/dispatcher/out_of_stock_dispatcher'
 require 'solidus_subscriptions/dispatcher/payment_failed_dispatcher'
 require 'solidus_subscriptions/dispatcher/success_dispatcher'
 require 'solidus_subscriptions/order_creator'
+require 'solidus_subscriptions/reminder'
 
 module SolidusSubscriptions
   class << self
