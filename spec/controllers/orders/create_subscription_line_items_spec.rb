@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Spree::Controllers::Orders::CreateSubscriptionLineItems, type: :controller do
-  controller(Spree::OrdersController) {}
+RSpec.describe Spree::OrdersController, type: :controller do
   routes { Spree::Core::Engine.routes }
 
   let!(:user) { create :user }

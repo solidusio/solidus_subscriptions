@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Spree::Orders::FinalizeCreatesSubscriptions do
+RSpec.describe Spree::Order, type: :model do
   describe '#finalize!' do
     subject { order.finalize! }
 
@@ -27,4 +27,6 @@ RSpec.describe Spree::Orders::FinalizeCreatesSubscriptions do
       )
     end
   end
+
+  it { is_expected.to have_many :subscription_line_items }
 end
