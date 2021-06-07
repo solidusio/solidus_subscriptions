@@ -21,22 +21,18 @@ module SolidusSubscriptions
       app.config.spree.promotions.rules << 'SolidusSubscriptions::DisableSubscriptionOrderPromotionRule'
     end
 
-    initializer 'subscriptions_backend' do
-      config.to_prepare do
-        next unless Spree::Backend::Config.respond_to?(:menu_items)
-
-        Spree::Backend::Config.configure do |config|
-          config.menu_items << config.class::MenuItem.new(
-            [:subscriptions],
-            'repeat',
-            url: :admin_subscriptions_path,
-            condition: ->{ can?(:admin, SolidusSubscriptions::Subscription) }
-          )
-        end
+    initializer 'solidus_subscriptions.add_admin_section' do
+      Spree::Backend::Config.configure do |config|
+        config.menu_items << config.class::MenuItem.new(
+          [:subscriptions],
+          'repeat',
+          url: :admin_subscriptions_path,
+          condition: ->{ can?(:admin, SolidusSubscriptions::Subscription) }
+        )
       end
     end
 
-    config.to_prepare do
+    config.after_initialize do
       PermittedAttributes.update_spree_permiteed_attributes
       ::Spree::Ability.register_ability(SolidusSubscriptions::Ability)
     end
