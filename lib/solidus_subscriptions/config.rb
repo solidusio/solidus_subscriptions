@@ -103,5 +103,7 @@ module SolidusSubscriptions
     # How many days should user be informed before his subscription creates an order for him?
     # Users will not be informed if this config param set to 0.
     mattr_accessor(:reminder_before_order_in_days) { 0 }
+
+    mattr_accessor(:failed_subscriptions_limit) { 3 }
   end
 end

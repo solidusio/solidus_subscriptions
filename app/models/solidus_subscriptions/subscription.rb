@@ -111,6 +111,7 @@ module SolidusSubscriptions
       after_transition to: :canceled, do: :advance_actionable_date
       after_transition to: :canceled, do: :assign_closed_at_date
       after_transition to: :canceled, do: :send_cancel_email
+      after_transition to: :canceled, do: :deactivate_installments
 
       event :deactivate do
         transition active: :inactive,
@@ -225,6 +226,10 @@ module SolidusSubscriptions
       if Config.subscription_email_class.present?
         Config.subscription_email_class.restart_email(self).deliver_later
       end
+    end
+
+    def deactivate_installments
+      installments.update_all(actionable_date: nil)
     end
 
     private

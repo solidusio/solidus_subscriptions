@@ -114,6 +114,16 @@ module SolidusSubscriptions
         order: order,
         message: I18n.t('solidus_subscriptions.installment_details.payment_failed')
       )
+
+      unless Config.failed_subscriptions_limit.zero?
+        prev_details = details.order(:created_at).last(Config.failed_subscriptions_limit)
+        if prev_details.size == Config.failed_subscriptions_limit && prev_details.all?(&:failed?) && subscription.active?
+          subscription.transaction do
+            subscription.actionable_date = nil
+            subscription.cancel
+          end
+        end
+      end
     end
 
     private
