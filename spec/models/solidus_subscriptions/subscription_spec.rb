@@ -87,18 +87,6 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
         subscription: subscription,
       )
     end
-
-    it 'tracks payment method changes' do
-      stub_const('Spree::Event', class_spy(Spree::Event))
-
-      subscription = create(:subscription)
-      subscription.update!(payment_source: create(:credit_card, user: subscription.user))
-
-      expect(Spree::Event).to have_received(:fire).with(
-        'solidus_subscriptions.subscription_payment_method_changed',
-        subscription: subscription,
-      )
-    end
   end
 
   describe '#cancel' do

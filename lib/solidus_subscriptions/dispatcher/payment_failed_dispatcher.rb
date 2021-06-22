@@ -7,12 +7,6 @@ module SolidusSubscriptions
         order.touch(:completed_at)
         order.cancel
         installment.payment_failed!(order)
-
-        ::Spree::Event.fire(
-          'solidus_subscriptions.installment_failed_payment',
-          installment: installment,
-          order: order,
-        )
       end
     end
   end

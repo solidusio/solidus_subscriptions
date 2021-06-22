@@ -79,10 +79,6 @@ module SolidusSubscriptions
       joins(:installments).merge(Installment.unfulfilled)
     end)
 
-    scope :with_default_payment_source, (lambda do
-      where(payment_method: nil, payment_source: nil)
-    end)
-
     def self.ransackable_scopes(_auth_object = nil)
       [:in_processing_state]
     end
@@ -107,7 +103,7 @@ module SolidusSubscriptions
     state_machine :state, initial: :active do
       event :cancel do
         transition [:active, :pending_cancellation] => :canceled,
-                   if: ->(subscription) { subscription.can_be_canceled? }
+          if: ->(subscription) { subscription.can_be_canceled? }
 
         transition active: :pending_cancellation
       end
@@ -122,7 +118,7 @@ module SolidusSubscriptions
 
       event :deactivate do
         transition active: :inactive,
-                   if: ->(subscription) { subscription.can_be_deactivated? }
+          if: ->(subscription) { subscription.can_be_deactivated? }
       end
 
       event :activate do

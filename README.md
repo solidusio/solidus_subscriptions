@@ -99,24 +99,6 @@ This extensions adds the following [Promotion rules](https://guides.solidus.io/d
 
 You can find the API documentation [here](https://stoplight.io/p/docs/gh/solidusio-contrib/solidus_subscriptions?group=master).
 
-### Churn Buster integration
-
-This extension optionally integrates with [Churn Buster](https://churnbuster.io) for failed payment
-recovery. In order to enable the integration, simply add your Churn Buster credentials to your
-configuration:
-
-```ruby
-SolidusSubscriptions.configure do |config|
-  # ...
-
-  config.churn_buster_account_id = 'YOUR_CHURN_BUSTER_ACCOUNT_ID'
-  config.churn_buster_api_key = 'YOUR_CHURN_BUSTER_API_KEY'
-end
-```
-
-The extension will take care of reporting successful/failed payments and payment method changes
-to Churn Buster.
-
 ### Failed installments retries
 
 The extension generates an installment for each subscription cycle, however some of them can fail

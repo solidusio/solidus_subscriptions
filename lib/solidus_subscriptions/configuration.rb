@@ -3,8 +3,7 @@
 module SolidusSubscriptions
   class Configuration
     attr_accessor(
-      :maximum_total_skips, :maximum_reprocessing_time, :churn_buster_account_id,
-      :churn_buster_api_key, :clear_past_installments, :processing_error_handler
+      :maximum_total_skips, :maximum_reprocessing_time, :clear_past_installments, :processing_error_handler
     )
 
     attr_writer(
@@ -76,10 +75,6 @@ module SolidusSubscriptions
     def subscribable_class
       @subscribable_class ||= 'Spree::Variant'
       @subscribable_class.constantize
-    end
-
-    def churn_buster?
-      churn_buster_account_id.present? && churn_buster_api_key.present?
     end
 
     def order_creator_class
