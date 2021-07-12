@@ -12,7 +12,8 @@ RSpec.describe SolidusSubscriptions::ProcessInstallmentJob do
   end
 
   context 'when handling #perform errors' do
-    it 'by default logs exception data without raising exceptions' do
+    it 'by default logs exception data without raising exceptions' do # rubocop:disable RSpec/MultipleExpectations
+      installment = build_stubbed(:installment)
       checkout = instance_double(SolidusSubscriptions::Checkout).tap do |c|
         allow(c).to receive(:process).and_raise('test error')
       end
@@ -20,9 +21,10 @@ RSpec.describe SolidusSubscriptions::ProcessInstallmentJob do
       allow(Rails.logger).to receive(:error)
 
       expect {
-        described_class.perform_now(build_stubbed(:installment))
+        described_class.perform_now(installment)
       }.not_to raise_error
 
+      expect(Rails.logger).to have_received(:error).with("Error processing installment with ID=#{installment.id}:").ordered
       expect(Rails.logger).to have_received(:error).with("test error").ordered
     end
 
