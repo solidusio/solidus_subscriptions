@@ -12,7 +12,22 @@ RSpec.describe SolidusSubscriptions::ProcessInstallmentJob do
   end
 
   context 'when handling #perform errors' do
+    it 'by default logs exception data without raising exceptions' do
+      checkout = instance_double(SolidusSubscriptions::Checkout).tap do |c|
+        allow(c).to receive(:process).and_raise('test error')
+      end
+      allow(SolidusSubscriptions::Checkout).to receive(:new).and_return(checkout)
+      allow(Rails.logger).to receive(:error)
+
+      expect {
+        described_class.perform_now(build_stubbed(:installment))
+      }.not_to raise_error
+
+      expect(Rails.logger).to have_received(:error).with("test error").ordered
+    end
+
     it 'swallows error when a proc is not configured' do
+      stub_config(processing_error_handler: nil )
       checkout = instance_double(SolidusSubscriptions::Checkout).tap do |c|
         allow(c).to receive(:process).and_raise('test error')
       end

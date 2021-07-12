@@ -4,14 +4,14 @@ module SolidusSubscriptions
   class Configuration
     attr_accessor(
       :maximum_total_skips, :maximum_reprocessing_time, :churn_buster_account_id,
-      :churn_buster_api_key, :clear_past_installments, :processing_error_handler
+      :churn_buster_api_key, :clear_past_installments
     )
 
     attr_writer(
       :success_dispatcher_class, :failure_dispatcher_class, :payment_failed_dispatcher_class,
       :out_of_stock_dispatcher, :maximum_successive_skips, :reprocessing_interval,
       :minimum_cancellation_notice, :processing_queue, :subscription_line_item_attributes,
-      :subscription_attributes, :subscribable_class, :order_creator_class
+      :subscription_attributes, :subscribable_class, :order_creator_class, :processing_error_handler
     )
 
     def success_dispatcher_class
@@ -32,6 +32,11 @@ module SolidusSubscriptions
     def out_of_stock_dispatcher_class
       @out_of_stock_dispatcher_class ||= 'SolidusSubscriptions::Dispatcher::OutOfStockDispatcher'
       @out_of_stock_dispatcher_class.constantize
+    end
+
+    def processing_error_handler
+      @processing_error_handler ||= 'SolidusSubscriptions::ProcessingErrorHandlers::RailsLogger'
+      @processing_error_handler.constantize
     end
 
     def maximum_successive_skips

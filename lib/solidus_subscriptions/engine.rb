@@ -6,6 +6,7 @@ require 'solidus_subscriptions'
 require 'solidus_subscriptions/permitted_attributes'
 require 'solidus_subscriptions/configuration'
 require 'solidus_subscriptions/processor'
+require 'solidus_subscriptions/processing_error_handlers/rails_logger'
 
 module SolidusSubscriptions
   class Engine < Rails::Engine
