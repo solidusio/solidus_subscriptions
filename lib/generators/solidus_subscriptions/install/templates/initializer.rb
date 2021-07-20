@@ -31,7 +31,9 @@ SolidusSubscriptions.configure do |config|
   # on an error tracking system.
   # Though not recommended due to the retry mechanisms built into this gem, the error can be
   # re-raised if the default retry behaviour is required in ActiveJob.
-  # config.processing_error_handler = nil
+  #
+  # By default, it only logs the error message using Rails.logger.error.
+  # config.processing_error_handler = SolidusSubscriptions::ProcessingErrorHandlers::RailsLogger
 
   # ========================================= Dispatchers ==========================================
   #
