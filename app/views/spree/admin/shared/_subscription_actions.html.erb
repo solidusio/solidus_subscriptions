@@ -23,13 +23,32 @@
   <% end %>
 
   <% if subscription.active? %>
-    <%=
-      link_to(
-          t('spree.admin.subscriptions.actions.skip'),
-          spree.skip_admin_subscription_path(subscription),
-          method: :post,
-          class: 'btn btn-default',
-      )
-    %>
+    <% if subscription.paused? %>
+      <%=
+        link_to(
+            t('spree.admin.subscriptions.actions.resume'),
+            spree.resume_admin_subscription_path(subscription),
+            method: :post,
+            class: 'btn btn-default',
+        )
+      %>
+    <% else %>
+      <%=
+        link_to(
+            t('spree.admin.subscriptions.actions.pause'),
+            spree.pause_admin_subscription_path(subscription),
+            method: :post,
+            class: 'btn btn-default',
+        )
+      %>
+      <%=
+        link_to(
+            t('spree.admin.subscriptions.actions.skip'),
+            spree.skip_admin_subscription_path(subscription),
+            method: :post,
+            class: 'btn btn-default',
+        )
+      %>
+    <% end %>
   <% end %>
 <% end %>
