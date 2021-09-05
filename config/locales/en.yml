@@ -127,3 +127,5 @@ en:
               inclusion: "is not a valid currency code"
             payment_source:
               not_owned_by_user: "does not belong to the user associated with the subscription"
+            state:
+              cannot_skip: cannot skip a subscription which is canceled or inactive
