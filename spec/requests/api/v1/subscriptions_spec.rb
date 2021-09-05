@@ -163,6 +163,8 @@ RSpec.describe '/api/v1/subscriptions' do
     end
   end
 
+  # TODO: Migrate API specs here
+
   describe 'POST /:id/skip' do
     context 'when the subscription belongs to the user' do
       it 'responds with 200 OK' do
