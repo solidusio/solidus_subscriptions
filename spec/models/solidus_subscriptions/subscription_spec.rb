@@ -155,6 +155,8 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
     end
   end
 
+  # TODO: Migrate model specs here
+
   describe '#skip' do
     subject { subscription.skip&.to_date }
 

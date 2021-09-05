@@ -161,6 +161,11 @@ module SolidusSubscriptions
     def skip(check_skip_limits: true)
       check_incorrect_skip_states
 
+      if paused?
+        errors.add(:paused, :cannot_skip)
+        return
+      end
+
       if check_skip_limits
         check_successive_skips_exceeded
         check_total_skips_exceeded
@@ -208,9 +213,37 @@ module SolidusSubscriptions
     # @return [Date] The next date after the current actionable_date this
     # subscription will be eligible to be processed.
     def advance_actionable_date
-      update! actionable_date: next_actionable_date
+      create_and_emit_event(type: 'subscription_resumed') if paused?
+
+      update! actionable_date: next_actionable_date, paused: false
 
       actionable_date
+    end
+
+    def pause(actionable_date: nil)
+      check_incorrect_pause_states
+      return false if errors.any?
+
+      return true if paused?
+
+      result = update paused: true, actionable_date: actionable_date && tomorrow_or_after(actionable_date)
+      create_and_emit_event(type: 'subscription_paused') if result
+      result
+    end
+
+    def resume(actionable_date: nil)
+      check_incorrect_resume_states
+      return false if errors.any?
+
+      return true unless paused?
+
+      result = update paused: false, actionable_date: tomorrow_or_after(actionable_date)
+      create_and_emit_event(type: 'subscription_resumed') if result
+      result
+    end
+
+    def state_with_pause
+      active? && paused? ? 'paused' : state
     end
 
     # The state of the last attempt to process an installment associated to
@@ -303,8 +336,22 @@ module SolidusSubscriptions
     end
 
     def check_incorrect_skip_states
+      errors.add(:paused, :cannot_skip) if paused?
       errors.add(:state, :cannot_skip) if canceled? || inactive?
     end
+
+    def check_incorrect_pause_states
+      errors.add(:paused, :not_active) unless active?
+    end
+
+    alias check_incorrect_resume_states check_incorrect_pause_states
+
+    def tomorrow_or_after(date)
+      [date.try(:to_date), Time.zone.tomorrow].compact.max
+    rescue ::Date::Error
+      Time.zone.tomorrow
+    end
+
     def update_actionable_date_if_interval_changed
       if persisted? && (interval_length_previously_changed? || interval_units_previously_changed?)
         base_date = if installments.any?
