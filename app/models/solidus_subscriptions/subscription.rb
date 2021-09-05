@@ -171,7 +171,7 @@ module SolidusSubscriptions
       save!
 
       advance_actionable_date.tap do
-        events.create!(event_type: 'subscription_skipped')
+        create_and_emit_event(type: 'subscription_skipped')
       end
     end
 
@@ -338,11 +338,24 @@ module SolidusSubscriptions
       end
     end
 
-    def emit_event_for_creation
+    def create_event(type:)
+      events.create! event_type: type, details: self
+    end
+
+    def emit_event(type:)
       ::Spree::Event.fire(
-        'solidus_subscriptions.subscription_created',
+        "solidus_subscriptions.#{type}",
         subscription: self,
       )
+    end
+
+    def create_and_emit_event(type:)
+      create_event(type: type)
+      emit_event(type: type)
+    end
+
+    def emit_event_for_creation
+      emit_event(type: 'subscription_created')
     end
 
     def emit_event_for_transition
@@ -353,39 +366,24 @@ module SolidusSubscriptions
         inactive: 'subscription_ended',
       }[state.to_sym]
 
-      ::Spree::Event.fire(
-        "solidus_subscriptions.#{event_type}",
-        subscription: self,
-      )
+      emit_event(type: event_type)
     end
 
     def emit_events_for_update
       if previous_changes.key?('interval_length') || previous_changes.key?('interval_units')
-        ::Spree::Event.fire(
-          'solidus_subscriptions.subscription_frequency_changed',
-          subscription: self,
-        )
+        emit_event(type: 'subscription_frequency_changed')
       end
 
       if previous_changes.key?('shipping_address_id')
-        ::Spree::Event.fire(
-          'solidus_subscriptions.subscription_shipping_address_changed',
-          subscription: self,
-        )
+        emit_event(type: 'subscription_shipping_address_changed')
       end
 
       if previous_changes.key?('billing_address_id')
-        ::Spree::Event.fire(
-          'solidus_subscriptions.subscription_billing_address_changed',
-          subscription: self,
-        )
+        emit_event(type: 'subscription_billing_address_changed')
       end
 
       if previous_changes.key?('payment_source_id') || previous_changes.key?('payment_source_type') || previous_changes.key?('payment_method_id')
-        ::Spree::Event.fire(
-          'solidus_subscriptions.subscription_payment_method_changed',
-          subscription: self,
-        )
+        emit_event('subscription_payment_method_changed')
       end
     end
   end
