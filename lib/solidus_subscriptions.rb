@@ -29,6 +29,7 @@ require 'solidus_subscriptions/dispatcher/success_dispatcher'
 require 'solidus_subscriptions/order_creator'
 require 'solidus_subscriptions/processing_error_handlers/rails_logger'
 require 'solidus_subscriptions/scheduler'
+require 'solidus_subscriptions/processor'
 
 module SolidusSubscriptions
   class << self
