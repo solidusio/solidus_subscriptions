@@ -22,7 +22,7 @@ SolidusSubscriptions.configure do |config|
   # Time between an installment failing to be processed and the system retrying to fulfill it.
   # config.reprocessing_interval = 1.day
 
-  # Maximum time that can pass after the last succesfull subscription installment to make a payment
+  # Maximum time that can pass after the last successful subscription installment to make a payment
   # failure cancel the subscription.
   # config.maximum_reprocessing_time = nil
 
