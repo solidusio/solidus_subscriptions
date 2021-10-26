@@ -19,6 +19,10 @@ en:
   spree:
     new_subscription: New Subscription
     admin:
+      promotions:
+        rules:
+          disable_subscription_order_promotion_rule:
+            info: All per-line-item adjustment actions will not be applied to subscription line items in customer and renewal orders.
       solidus_subscriptions:
         subscriptions:
           subscription:
@@ -26,7 +30,6 @@ en:
             cancel_alert: "Are you sure you want to cancel this subscription?"
             activate: Activate
             skip: Skip One
-
       subscriptions:
         successfully_canceled: Subsciption Canceled!
         successfully_activated: Subsciption Activated!
@@ -72,9 +75,12 @@ en:
         description: Order contains a subscription
       solidus_subscriptions/subscription_order_promotion_rule:
         description: Order fulfills a subscription
+      solidus_subscriptions/disable_subscription_order_promotion_rule:
+        description: Disable per-line-item adjustments for subscription products
     models:
       solidus_subscriptions/subscription_promotion_rule: Subscription
       solidus_subscriptions/subscription_order_promotion_rule: Subscription Order
+      solidus_subscriptions/disable_subscription_order_promotion_rule: Disable Promotions for Subscription
 
     errors:
       models:
