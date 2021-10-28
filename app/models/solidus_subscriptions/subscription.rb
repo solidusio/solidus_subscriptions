@@ -107,7 +107,7 @@ module SolidusSubscriptions
     state_machine :state, initial: :active do
       event :cancel do
         transition [:active, :pending_cancellation] => :canceled,
-                   if: ->(subscription) { subscription.can_be_canceled? }
+          if: ->(subscription) { subscription.can_be_canceled? }
 
         transition active: :pending_cancellation
       end
@@ -122,7 +122,7 @@ module SolidusSubscriptions
 
       event :deactivate do
         transition active: :inactive,
-                   if: ->(subscription) { subscription.can_be_deactivated? }
+          if: ->(subscription) { subscription.can_be_deactivated? }
       end
 
       event :activate do
