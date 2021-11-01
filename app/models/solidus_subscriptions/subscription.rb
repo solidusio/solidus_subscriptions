@@ -159,12 +159,14 @@ module SolidusSubscriptions
     end
 
     def skip(check_skip_limits: true)
+      check_invalid_skip_states
+
       if check_skip_limits
         check_successive_skips_exceeded
         check_total_skips_exceeded
-
-        return if errors.any?
       end
+
+      return if errors.any?
 
       increment(:skip_count)
       increment(:successive_skip_count)
@@ -298,6 +300,10 @@ module SolidusSubscriptions
       if skip_count >= SolidusSubscriptions.configuration.maximum_total_skips
         errors.add(:skip_count, :exceeded)
       end
+    end
+
+    def check_invalid_skip_states
+      errors.add(:state, :cannot_skip) if canceled? || inactive?
     end
 
     def update_actionable_date_if_interval_changed
