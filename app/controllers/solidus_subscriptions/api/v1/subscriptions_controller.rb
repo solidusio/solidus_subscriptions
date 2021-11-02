@@ -56,6 +56,26 @@ module SolidusSubscriptions
           end
         end
 
+        def pause
+          load_subscription
+
+          if @subscription.pause(actionable_date: actionable_date_param)
+            render json: @subscription.to_json
+          else
+            render json: @subscription.errors.to_json, status: :unprocessable_entity
+          end
+        end
+
+        def resume
+          load_subscription
+
+          if @subscription.resume(actionable_date: actionable_date_param)
+            render json: @subscription.to_json
+          else
+            render json: @subscription.errors.to_json, status: :unprocessable_entity
+          end
+        end
+
         private
 
         def load_subscription
@@ -75,6 +95,10 @@ module SolidusSubscriptions
           params.require(:subscription).permit(SolidusSubscriptions.configuration.subscription_attributes | [
             line_items_attributes: line_item_attributes,
           ])
+        end
+
+        def actionable_date_param
+          params[:subscription].try(:[], :actionable_date)&.presence
         end
 
         def line_item_attributes
