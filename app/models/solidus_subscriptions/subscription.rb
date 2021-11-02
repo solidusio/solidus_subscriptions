@@ -107,7 +107,7 @@ module SolidusSubscriptions
     state_machine :state, initial: :active do
       event :cancel do
         transition [:active, :pending_cancellation] => :canceled,
-                   if: ->(subscription) { subscription.can_be_canceled? }
+          if: ->(subscription) { subscription.can_be_canceled? }
 
         transition active: :pending_cancellation
       end
@@ -122,7 +122,7 @@ module SolidusSubscriptions
 
       event :deactivate do
         transition active: :inactive,
-                   if: ->(subscription) { subscription.can_be_deactivated? }
+          if: ->(subscription) { subscription.can_be_deactivated? }
       end
 
       event :activate do
@@ -208,9 +208,35 @@ module SolidusSubscriptions
     # @return [Date] The next date after the current actionable_date this
     # subscription will be eligible to be processed.
     def advance_actionable_date
-      update! actionable_date: next_actionable_date
+      create_and_emit_event(type: 'subscription_resumed') if paused?
+
+      update! actionable_date: next_actionable_date, paused: false
 
       actionable_date
+    end
+
+    def pause(actionable_date: nil)
+      check_invalid_pause_states
+      return false if errors.any?
+      return true if paused?
+
+      result = update_columns paused: true, actionable_date: actionable_date && tomorrow_or_after(actionable_date)
+      create_and_emit_event(type: 'subscription_paused') if result
+      result
+    end
+
+    def resume(actionable_date: nil)
+      check_invalid_resume_states
+      return false if errors.any?
+      return true unless paused?
+
+      result = update_columns paused: false, actionable_date: tomorrow_or_after(actionable_date)
+      create_and_emit_event(type: 'subscription_resumed') if result
+      result
+    end
+
+    def state_with_pause
+      active? && paused? ? 'paused' : state
     end
 
     # The state of the last attempt to process an installment associated to
@@ -303,7 +329,20 @@ module SolidusSubscriptions
     end
 
     def check_invalid_skip_states
+      errors.add(:paused, :cannot_skip) if paused?
       errors.add(:state, :cannot_skip) if canceled? || inactive?
+    end
+
+    def check_invalid_pause_states
+      errors.add(:paused, :not_active) unless active?
+    end
+
+    alias check_invalid_resume_states check_invalid_pause_states
+
+    def tomorrow_or_after(date)
+      [date.try(:to_date), Time.zone.tomorrow].compact.max
+    rescue ::Date::Error
+      Time.zone.tomorrow
     end
 
     def update_actionable_date_if_interval_changed

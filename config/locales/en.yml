@@ -24,11 +24,15 @@ en:
         successfully_canceled: Subscription Canceled!
         successfully_activated: Subscription Activated!
         successfully_skipped: Subscription delayed until %{date}
+        successfully_paused: Subscription Paused
+        successfully_resumed: Subscription Resumed
         actions:
           cancel: Cancel
           cancel_alert: "Are you sure you want to cancel this subscription?"
           activate: Activate
           skip: Skip One
+          pause: Pause
+          resume: Resume
         index:
           new_subscription: New Subscription
         edit:
@@ -127,5 +131,8 @@ en:
               inclusion: "is not a valid currency code"
             payment_source:
               not_owned_by_user: "does not belong to the user associated with the subscription"
+            paused:
+              cannot_skip: "cannot skip a subscription which is paused"
+              not_active: "cannot pause/resume a subscription which is not active"
             state:
               cannot_skip: cannot skip a subscription which is canceled or inactive
