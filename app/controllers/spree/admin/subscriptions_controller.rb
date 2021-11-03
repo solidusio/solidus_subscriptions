@@ -68,10 +68,38 @@ module Spree
       def skip
         @subscription.skip(check_skip_limits: false)
 
-        notice = I18n.t(
-          'spree.admin.subscriptions.successfully_skipped',
-          date: @subscription.actionable_date
-        )
+        notice = if @subscription.errors.none?
+                   I18n.t(
+                     'spree.admin.subscriptions.successfully_skipped',
+                     date: @subscription.actionable_date
+                   )
+                 else
+                   @subscription.errors.full_messages.to_sentence
+                 end
+
+        redirect_back(fallback_location: spree.admin_subscriptions_path, notice: notice)
+      end
+
+      def pause
+        @subscription.pause(actionable_date: nil)
+
+        notice = if @subscription.errors.none?
+                   I18n.t('spree.admin.subscriptions.successfully_paused')
+                 else
+                   @subscription.errors.full_messages.to_sentence
+                 end
+
+        redirect_back(fallback_location: spree.admin_subscriptions_path, notice: notice)
+      end
+
+      def resume
+        @subscription.resume(actionable_date: nil)
+
+        notice = if @subscription.errors.none?
+                   I18n.t('spree.admin.subscriptions.successfully_resumed')
+                 else
+                   @subscription.errors.full_messages.to_sentence
+                 end
 
         redirect_back(fallback_location: spree.admin_subscriptions_path, notice: notice)
       end

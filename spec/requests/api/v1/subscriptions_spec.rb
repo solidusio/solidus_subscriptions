@@ -163,6 +163,235 @@ RSpec.describe '/api/v1/subscriptions' do
     end
   end
 
+  describe 'POST /:id/pause' do
+    context 'when the subscription is active and belongs to the user' do
+      context 'with an actionable_date' do
+        it 'pauses the subscription and updates the actionable_date' do
+          user = create(:user, &:generate_spree_api_key!)
+          subscription = create(
+            :subscription,
+            user: user,
+            paused: false,
+            state: 'active'
+          )
+          date = Time.zone.tomorrow + 1.day
+          params = {
+            subscription: {
+              actionable_date: date
+            }
+          }
+
+          post(
+            pause_api_v1_subscription_path(subscription),
+            headers: { 'Authorization' => "Bearer #{user.spree_api_key}" },
+            params: params
+          )
+
+          aggregate_failures do
+            expect(response).to be_ok
+            expect(subscription.reload.actionable_date).to eq(date)
+            expect(subscription.paused).to eq(true)
+          end
+        end
+      end
+
+      context 'without an actionable_date' do
+        it 'pauses the subscription indefinitely' do
+          user = create(:user, &:generate_spree_api_key!)
+          subscription = create(
+            :subscription,
+            :with_shipping_address,
+            user: user,
+            paused: false,
+            state: 'active'
+          )
+          params = nil
+
+          post(
+            pause_api_v1_subscription_path(subscription),
+            headers: { 'Authorization' => "Bearer #{user.spree_api_key}" },
+            params: params
+          )
+
+          aggregate_failures do
+            expect(response).to be_ok
+            expect(subscription.reload.actionable_date).to be_nil
+            expect(subscription.paused).to eq(true)
+          end
+        end
+      end
+    end
+
+    context 'when the subscription is not active and belongs to the user' do
+      it 'is an unprocessable entity' do
+        user = create(:user, &:generate_spree_api_key!)
+        subscription = create(
+          :subscription,
+          :with_shipping_address,
+          user: user,
+          paused: false,
+          state: 'canceled'
+        )
+        params = nil
+
+        post(
+          pause_api_v1_subscription_path(subscription),
+          headers: { 'Authorization' => "Bearer #{user.spree_api_key}" },
+          params: params
+        )
+
+        aggregate_failures do
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(JSON.parse(response.body)["paused"]).to include('cannot pause/resume a subscription which is not active')
+          expect(subscription.reload.paused).to eq(false)
+        end
+      end
+    end
+
+    context('when the subscription is active but does not belong to the user') do
+      it 'responds with 401 Unauthorized' do
+        user = create(:user, &:generate_spree_api_key!)
+        subscription = create(
+          :subscription,
+          paused: false,
+          state: 'active'
+        )
+        date = Time.zone.tomorrow + 1.day
+        params = {
+          subscription: {
+            actionable_date: date
+          }
+        }
+
+        post(
+          pause_api_v1_subscription_path(subscription),
+          headers: { 'Authorization' => "Bearer #{user.spree_api_key}" },
+          params: params
+        )
+
+        expect(response.status).to eq(401)
+      end
+    end
+  end
+
+  describe '#resume' do
+    context 'when the subscription is active and belongs to the user' do
+      context 'with an actionable_date' do
+        it 'resumes the subscription and updates the actionable_date' do
+          user = create(:user, &:generate_spree_api_key!)
+          subscription = create(
+            :subscription,
+            user: user,
+            paused: true,
+            state: 'active'
+          )
+          date = Time.zone.tomorrow + 1.day
+          params = {
+            subscription: {
+              actionable_date: date
+            }
+          }
+
+          post(
+            resume_api_v1_subscription_path(subscription),
+            headers: { 'Authorization' => "Bearer #{user.spree_api_key}" },
+            params: params
+          )
+
+          aggregate_failures do
+            expect(response).to be_ok
+            expect(subscription.reload.actionable_date).to eq(date)
+            expect(subscription.paused).to eq(false)
+          end
+        end
+      end
+
+      context 'without an actionable_date' do
+        it 'resumes the subscription on the next day' do
+          user = create(:user, &:generate_spree_api_key!)
+          subscription = create(
+            :subscription,
+            user: user,
+            paused: true,
+            state: 'active'
+          )
+          params = {
+            subscription: {
+              actionable_date: nil
+            }
+          }
+
+          post(
+            resume_api_v1_subscription_path(subscription),
+            headers: { 'Authorization' => "Bearer #{user.spree_api_key}" },
+            params: params
+          )
+
+          aggregate_failures do
+            expect(response).to be_ok
+            expect(subscription.reload.actionable_date).to eq(Time.zone.tomorrow)
+            expect(subscription.paused).to eq(false)
+          end
+        end
+      end
+    end
+
+    context 'when the subscription is not active and belongs to the user' do
+      it 'is an unprocessable entity' do
+        user = create(:user, &:generate_spree_api_key!)
+        subscription = create(
+          :subscription,
+          user: user,
+          paused: true,
+          state: 'canceled'
+        )
+        params = {
+          subscription: {
+            actionable_date: nil
+          }
+        }
+
+        post(
+          resume_api_v1_subscription_path(subscription),
+          headers: { 'Authorization' => "Bearer #{user.spree_api_key}" },
+          params: params
+        )
+
+        aggregate_failures do
+          expect(response.status).to eq(422)
+          expect(JSON.parse(response.body)["paused"]).to include('cannot pause/resume a subscription which is not active')
+        end
+      end
+    end
+
+    context 'when the subscription is active but does not belong to the user' do
+      it 'responds with 401 Unauthorized' do
+        user = create(:user, &:generate_spree_api_key!)
+        subscription = create(
+          :subscription,
+          paused: true,
+          state: 'active'
+        )
+        params = {
+          subscription: {
+            actionable_date: nil
+          }
+        }
+
+        post(
+          resume_api_v1_subscription_path(subscription),
+          headers: { 'Authorization' => "Bearer #{user.spree_api_key}" },
+          params: params
+        )
+
+        aggregate_failures do
+          expect(response.status).to eq(401)
+          expect(subscription.paused).to eq(true)
+        end
+      end
+    end
+  end
+
   describe 'POST /:id/skip' do
     context 'when the subscription belongs to the user' do
       it 'responds with 200 OK' do

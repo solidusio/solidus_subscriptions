@@ -8,6 +8,8 @@ SolidusSubscriptions::Engine.routes.draw do
         member do
           post :cancel
           post :skip
+          post :pause
+          post :resume
         end
       end
     end
@@ -19,9 +21,13 @@ Spree::Core::Engine.routes.draw do
 
   namespace :admin do
     resources :subscriptions, only: [:index, :new, :create, :edit, :update] do
-      delete :cancel, on: :member
-      post :activate, on: :member
-      post :skip, on: :member
+      member do
+        delete :cancel
+        post :activate
+        post :skip
+        post :pause
+        post :resume
+      end
       resources :installments, only: [:index, :show]
       resources :subscription_events, only: :index
       resources :subscription_orders, path: :orders, only: :index

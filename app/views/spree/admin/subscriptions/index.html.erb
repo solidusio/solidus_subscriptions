@@ -150,15 +150,36 @@
             <% end %>
 
             <% if subscription.active? %>
-              <%=
-                link_to_with_icon(
-                    :'fast-forward',
-                    t('spree.admin.subscriptions.actions.skip'),
-                    spree.skip_admin_subscription_path(subscription),
-                    no_text: true,
-                    method: :post
-                )
-              %>
+              <% if subscription.paused? %>
+                <%=
+                  link_to_with_icon(
+                      :'play-circle',
+                      t('spree.admin.subscriptions.actions.resume'),
+                      spree.resume_admin_subscription_path(subscription),
+                      no_text: true,
+                      method: :post
+                  )
+                %>
+              <% else %>
+                <%=
+                  link_to_with_icon(
+                      :'pause-circle',
+                      t('spree.admin.subscriptions.actions.pause'),
+                      spree.pause_admin_subscription_path(subscription),
+                      no_text: true,
+                      method: :post
+                  )
+                %>
+                <%=
+                  link_to_with_icon(
+                      :'fast-forward',
+                      t('spree.admin.subscriptions.actions.skip'),
+                      spree.skip_admin_subscription_path(subscription),
+                      no_text: true,
+                      method: :post
+                  )
+                %>
+              <% end %>
             <% end %>
 
             <%= link_to_edit(subscription, no_text: true) %>

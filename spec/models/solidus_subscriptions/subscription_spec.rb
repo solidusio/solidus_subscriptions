@@ -155,6 +155,865 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
     end
   end
 
+  describe '#pause' do
+    context 'when an active subscription is paused' do
+      it 'sets the paused column to true' do
+        subscription = create(
+          :subscription,
+          :actionable,
+          :with_shipping_address,
+          state: 'active',
+          paused: false
+        )
+
+        subscription.pause
+
+        expect(subscription.reload.paused).to be_truthy
+      end
+
+      it 'does not change the state' do
+        subscription = create(
+          :subscription,
+          :actionable,
+          :with_shipping_address,
+          state: 'active',
+          paused: false
+        )
+
+        subscription.pause
+
+        expect(subscription.reload.state).to eq('active')
+      end
+
+      it 'creates a paused event' do
+        subscription = create(
+          :subscription,
+          :actionable,
+          :with_shipping_address,
+          state: 'active',
+          paused: false
+        )
+
+        subscription.pause
+
+        expect(subscription.events.last).to have_attributes(event_type: 'subscription_paused')
+      end
+
+      context 'when today is used as the actionable date' do
+        it 'sets actionable_date to the next day' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: false
+          )
+
+          subscription.pause(actionable_date: Time.zone.today)
+
+          expect(subscription.reload.actionable_date).to eq(Time.zone.tomorrow)
+        end
+
+        it 'is not actionable' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: false
+          )
+
+          subscription.pause(actionable_date: Time.zone.today)
+
+          expect(described_class.actionable).not_to include subscription
+        end
+
+        it 'pauses correctly' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: false
+          )
+
+          subscription.pause(actionable_date: Time.zone.today)
+
+          aggregate_failures do
+            expect(subscription.reload.paused).to be_truthy
+            expect(subscription.state).to eq('active')
+          end
+        end
+
+        it 'creates a paused event' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: false
+          )
+
+          subscription.pause(actionable_date: Time.zone.today)
+
+          expect(subscription.events.last).to have_attributes(event_type: 'subscription_paused')
+        end
+      end
+
+      context 'when a past date is used as the actionable date' do
+        it 'sets actionable_date to the next day' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: false
+          )
+
+          subscription.pause(actionable_date: Time.zone.yesterday)
+
+          expect(subscription.reload.actionable_date).to eq(Time.zone.tomorrow)
+        end
+
+        it 'is not actionable' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: false
+          )
+
+          subscription.pause(actionable_date: Time.zone.yesterday)
+
+          expect(described_class.actionable).not_to include subscription
+        end
+
+        it 'pauses correctly' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: false
+          )
+
+          subscription.pause(actionable_date: Time.zone.yesterday)
+
+          aggregate_failures do
+            expect(subscription.reload.paused).to be_truthy
+            expect(subscription.state).to eq('active')
+          end
+        end
+
+        it 'creates a paused event' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: false
+          )
+
+          subscription.pause(actionable_date: Time.zone.yesterday)
+
+          expect(subscription.events.last).to have_attributes(event_type: 'subscription_paused')
+        end
+      end
+
+      context 'when nil is used as the actionable date' do
+        it 'sets actionable_date to nil' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: false
+          )
+
+          subscription.pause(actionable_date: nil)
+
+          expect(subscription.reload.actionable_date).to eq(nil)
+        end
+
+        it 'is not actionable' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: false
+          )
+
+          subscription.pause(actionable_date: nil)
+
+          expect(described_class.actionable).not_to include subscription
+        end
+
+        it 'pauses correctly' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: false
+          )
+
+          subscription.pause(actionable_date: nil)
+
+          aggregate_failures do
+            expect(subscription.reload.paused).to be_truthy
+            expect(subscription.state).to eq('active')
+          end
+        end
+
+        it 'creates a paused event' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: false
+          )
+
+          subscription.pause(actionable_date: nil)
+
+          expect(subscription.events.last).to have_attributes(event_type: 'subscription_paused')
+        end
+      end
+
+      context 'when a future date is used as the actionable date' do
+        it 'sets actionable_date to the specified date' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: false
+          )
+
+          subscription.pause(actionable_date: (Time.zone.tomorrow + 1.day))
+
+          expect(subscription.reload.actionable_date).to eq((Time.zone.tomorrow + 1.day))
+        end
+
+        it 'is not actionable' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: false
+          )
+
+          subscription.pause(actionable_date: (Time.zone.tomorrow + 1.day))
+
+          expect(described_class.actionable).not_to include subscription
+        end
+
+        it 'pauses correctly' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: false
+          )
+
+          subscription.pause(actionable_date: (Time.zone.tomorrow + 1.day))
+
+          aggregate_failures do
+            expect(subscription.reload.paused).to be_truthy
+            expect(subscription.state).to eq('active')
+          end
+        end
+
+        it 'creates a paused event' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: false
+          )
+
+          subscription.pause(actionable_date: (Time.zone.tomorrow + 1.day))
+
+          expect(subscription.events.last).to have_attributes(event_type: 'subscription_paused')
+        end
+      end
+
+      context 'when the actionable date has been reached' do
+        it 'is actionable' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: true
+          )
+
+          subscription.next_actionable_date
+
+          expect(described_class.actionable).to include subscription
+        end
+
+        it 'processes and resumes the subscription' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: true
+          )
+          expected_date = Date.current + subscription.interval
+
+          SolidusSubscriptions::ProcessSubscriptionJob.perform_now(subscription)
+
+          aggregate_failures do
+            expect(subscription.reload.paused).to be_falsy
+            expect(subscription.actionable_date).to eq(expected_date)
+          end
+        end
+      end
+    end
+
+    context 'when a canceled subscription is paused' do
+      it 'adds an error when the method is called on a subscription which is not active' do
+        subscription = create(
+          :subscription,
+          :actionable,
+          :with_shipping_address,
+          state: 'canceled',
+          paused: false
+        )
+
+        subscription.pause
+
+        expect(subscription.errors[:paused].first).to include 'not active'
+      end
+
+      it 'does not alter the subscription' do
+        subscription = create(
+          :subscription,
+          :actionable,
+          :with_shipping_address,
+          state: 'canceled',
+          paused: false
+        )
+
+        expect { subscription.pause }.not_to(change { subscription.reload })
+      end
+
+      it 'does not create an event' do
+        subscription = create(
+          :subscription,
+          :actionable,
+          :with_shipping_address,
+          state: 'canceled',
+          paused: false
+        )
+
+        subscription.pause
+
+        expect(subscription.events.last).not_to have_attributes(event_type: "subscription_paused")
+      end
+    end
+
+    context 'when a `pending_cancellation` subscription is paused' do
+      it 'adds an error when the method is called on a subscription which is not active' do
+        subscription = create(
+          :subscription,
+          :actionable,
+          :with_shipping_address,
+          state: 'pending_cancellation',
+          paused: false
+        )
+
+        subscription.pause
+
+        expect(subscription.errors[:paused].first).to include 'not active'
+      end
+
+      it 'does not alter the subscription' do
+        subscription = create(
+          :subscription,
+          :actionable,
+          :with_shipping_address,
+          state: 'pending_cancellation',
+          paused: false
+        )
+
+        expect { subscription.pause }.not_to(change { subscription.reload })
+      end
+
+      it 'does not create an event' do
+        subscription = create(
+          :subscription,
+          :actionable,
+          :with_shipping_address,
+          state: 'pending_cancellation',
+          paused: true
+        )
+
+        subscription.pause
+
+        expect(subscription.events.last).not_to have_attributes(event_type: "subscription_paused")
+      end
+    end
+
+    context 'when an `inactive` subscription is paused' do
+      it 'adds an error when the method is called on a subscription which is not active' do
+        subscription = create(
+          :subscription,
+          :actionable,
+          :with_shipping_address,
+          state: 'inactive',
+          paused: false
+        )
+
+        subscription.pause
+
+        expect(subscription.errors[:paused].first).to include 'not active'
+      end
+
+      it 'does not alter the subscription' do
+        subscription = create(
+          :subscription,
+          :actionable,
+          :with_shipping_address,
+          state: 'inactive',
+          paused: false
+        )
+
+        expect { subscription.pause }.not_to(change { subscription.reload })
+      end
+
+      it 'does not create an event' do
+        subscription = create(
+          :subscription,
+          :actionable,
+          :with_shipping_address,
+          state: 'inactive',
+          paused: false
+        )
+
+        subscription.pause
+
+        expect(subscription.events.last).not_to have_attributes(event_type: "subscription_paused")
+      end
+    end
+  end
+
+  describe '#resume' do
+    context 'when an active subscription is resumed' do
+      it 'sets the paused column to false' do
+        subscription = create(
+          :subscription,
+          :actionable,
+          :with_shipping_address,
+          state: 'active',
+          paused: true
+        )
+
+        subscription.resume
+
+        expect(subscription.reload.paused).to be_falsy
+      end
+
+      it 'does not change the state' do
+        subscription = create(
+          :subscription,
+          :actionable,
+          :with_shipping_address,
+          state: 'active',
+          paused: true
+        )
+
+        subscription.resume
+
+        expect(subscription.reload.state).to eq('active')
+      end
+
+      it 'creates a resumed event' do
+        subscription = create(
+          :subscription,
+          :actionable,
+          :with_shipping_address,
+          state: 'active',
+          paused: true
+        )
+
+        subscription.resume
+
+        expect(subscription.events.last).to have_attributes(event_type: 'subscription_resumed')
+      end
+
+      context 'when a past date is used as the actionable date' do
+        it 'sets actionable_date to the next day' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: true
+          )
+
+          subscription.resume(actionable_date: Time.zone.yesterday)
+
+          expect(subscription.reload.actionable_date).to eq(Time.zone.tomorrow)
+        end
+
+        it 'is not actionable' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: true
+          )
+
+          subscription.resume(actionable_date: Time.zone.yesterday)
+
+          expect(described_class.actionable).not_to include subscription
+        end
+
+        it 'resumes correctly' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: true
+          )
+
+          subscription.resume(actionable_date: Time.zone.yesterday)
+
+          aggregate_failures do
+            expect(subscription.reload.paused).to be_falsy
+            expect(subscription.state).to eq('active')
+          end
+        end
+
+        it 'creates a resumed event' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: true
+          )
+
+          subscription.resume(actionable_date: Time.zone.yesterday)
+
+          expect(subscription.events.last).to have_attributes(event_type: 'subscription_resumed')
+        end
+      end
+
+      context 'when today is used as the actionable date' do
+        it 'sets actionable_date to the next day' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: true
+          )
+
+          subscription.resume(actionable_date: Time.zone.today)
+
+          expect(subscription.reload.actionable_date).to eq(Time.zone.tomorrow)
+        end
+
+        it 'is not actionable' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: true
+          )
+
+          subscription.resume(actionable_date: Time.zone.today)
+
+          expect(described_class.actionable).not_to include subscription
+        end
+
+        it 'resumes correctly' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: true
+          )
+
+          subscription.resume(actionable_date: Time.zone.today)
+
+          aggregate_failures do
+            expect(subscription.reload.paused).to be_falsy
+            expect(subscription.state).to eq('active')
+          end
+        end
+
+        it 'creates a resumed event' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: true
+          )
+
+          subscription.resume(actionable_date: Time.zone.today)
+
+          expect(subscription.events.last).to have_attributes(event_type: 'subscription_resumed')
+        end
+      end
+
+      context 'when nil is used as the actionable date' do
+        it 'sets actionable_date to the next day' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: true
+          )
+
+          subscription.resume(actionable_date: nil)
+
+          expect(subscription.reload.actionable_date).to eq(Time.zone.tomorrow)
+        end
+
+        it 'is not actionable' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: true
+          )
+
+          subscription.resume(actionable_date: nil)
+
+          expect(described_class.actionable).not_to include subscription
+        end
+
+        it 'resumes correctly' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: true
+          )
+
+          subscription.resume(actionable_date: nil)
+
+          aggregate_failures do
+            expect(subscription.reload.paused).to be_falsy
+            expect(subscription.state).to eq('active')
+          end
+        end
+
+        it 'creates a resumed event' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: true
+          )
+
+          subscription.resume(actionable_date: nil)
+
+          expect(subscription.events.last).to have_attributes(event_type: 'subscription_resumed')
+        end
+      end
+
+      context 'when a future date is used as the actionable date' do
+        it 'sets actionable_date to the specified date' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: true
+          )
+
+          subscription.resume(actionable_date: (Time.zone.tomorrow + 1.day))
+
+          expect(subscription.reload.actionable_date).to eq((Time.zone.tomorrow + 1.day))
+        end
+
+        it 'is not actionable' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: true
+          )
+
+          subscription.resume(actionable_date: (Time.zone.tomorrow + 1.day))
+
+          expect(described_class.actionable).not_to include subscription
+        end
+
+        it 'resumes correctly' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: true
+          )
+
+          subscription.resume(actionable_date: (Time.zone.tomorrow + 1.day))
+
+          aggregate_failures do
+            expect(subscription.reload.paused).to be_falsy
+            expect(subscription.state).to eq('active')
+          end
+        end
+
+        it 'creates a resumed event' do
+          subscription = create(
+            :subscription,
+            :actionable,
+            :with_shipping_address,
+            state: 'active',
+            paused: true
+          )
+
+          subscription.resume(actionable_date: (Time.zone.tomorrow + 1.day))
+
+          expect(subscription.events.last).to have_attributes(event_type: 'subscription_resumed')
+        end
+      end
+    end
+
+    context 'when a `canceled` subscription is resumed' do
+      it 'does not alter the subscription' do
+        subscription = create(
+          :subscription,
+          :actionable,
+          :with_shipping_address,
+          state: 'canceled',
+          paused: true
+        )
+
+        expect { subscription.resume }.not_to(change { subscription.reload })
+      end
+
+      it 'does not create an event' do
+        subscription = create(
+          :subscription,
+          :actionable,
+          :with_shipping_address,
+          state: 'canceled',
+          paused: true
+        )
+
+        subscription.resume
+
+        expect(subscription.events.last).not_to have_attributes(event_type: "subscription_resumed")
+      end
+    end
+
+    context 'when a `pending_cancellation` subscription is resumed' do
+      it 'does not alter the subscription' do
+        subscription = create(
+          :subscription,
+          :actionable,
+          :with_shipping_address,
+          state: 'pending_cancellation',
+          paused: true
+        )
+
+        expect { subscription.resume }.not_to(change { subscription.reload })
+      end
+
+      it 'does not create an event' do
+        subscription = create(
+          :subscription,
+          :actionable,
+          :with_shipping_address,
+          state: 'pending_cancellation',
+          paused: true
+        )
+
+        subscription.resume
+
+        expect(subscription.events.last).not_to have_attributes(event_type: "subscription_resumed")
+      end
+    end
+
+    context 'when an `inactive` subscription is resumed' do
+      it 'does not alter the subscription' do
+        subscription = create(
+          :subscription,
+          :actionable,
+          :with_shipping_address,
+          state: 'inactive',
+          paused: true
+        )
+
+        expect { subscription.resume }.not_to(change { subscription.reload })
+      end
+
+      it 'does not create an event' do
+        subscription = create(
+          :subscription,
+          :actionable,
+          :with_shipping_address,
+          state: 'inactive',
+          paused: true
+        )
+
+        subscription.resume
+
+        expect(subscription.events.last).not_to have_attributes(event_type: "subscription_resumed")
+      end
+    end
+  end
+
+  describe '#state_with_pause' do
+    it 'returns `paused` when the subscription is active and paused' do
+      subscription = create(
+        :subscription,
+        :with_shipping_address,
+        paused: true,
+        state: 'active'
+      )
+
+      expect(subscription.state_with_pause).to eq('paused')
+    end
+
+    it 'returns `active` when the subscription is active and not paused' do
+      subscription = create(
+        :subscription,
+        :with_shipping_address,
+        paused: false,
+        state: 'active'
+      )
+
+      expect(subscription.state_with_pause).to eq('active')
+    end
+
+    it 'returns `canceled` when the subscription is canceled and not paused' do
+      subscription = create(
+        :subscription,
+        :with_shipping_address,
+        paused: false,
+        state: 'canceled'
+      )
+
+      expect(subscription.state_with_pause).to eq('canceled')
+    end
+  end
+
   describe '#skip' do
     subject { subscription.skip&.to_date }
 

@@ -107,7 +107,7 @@ module SolidusSubscriptions
     state_machine :state, initial: :active do
       event :cancel do
         transition [:active, :pending_cancellation] => :canceled,
-                   if: ->(subscription) { subscription.can_be_canceled? }
+          if: ->(subscription) { subscription.can_be_canceled? }
 
         transition active: :pending_cancellation
       end
@@ -122,7 +122,7 @@ module SolidusSubscriptions
 
       event :deactivate do
         transition active: :inactive,
-                   if: ->(subscription) { subscription.can_be_deactivated? }
+          if: ->(subscription) { subscription.can_be_deactivated? }
       end
 
       event :activate do
@@ -159,19 +159,21 @@ module SolidusSubscriptions
     end
 
     def skip(check_skip_limits: true)
+      check_invalid_skip_states
+
       if check_skip_limits
         check_successive_skips_exceeded
         check_total_skips_exceeded
-
-        return if errors.any?
       end
+
+      return if errors.any?
 
       increment(:skip_count)
       increment(:successive_skip_count)
       save!
 
       advance_actionable_date.tap do
-        events.create!(event_type: 'subscription_skipped')
+        create_and_emit_event(type: 'subscription_skipped')
       end
     end
 
@@ -206,9 +208,35 @@ module SolidusSubscriptions
     # @return [Date] The next date after the current actionable_date this
     # subscription will be eligible to be processed.
     def advance_actionable_date
-      update! actionable_date: next_actionable_date
+      create_and_emit_event(type: 'subscription_resumed') if paused?
+
+      update! actionable_date: next_actionable_date, paused: false
 
       actionable_date
+    end
+
+    def pause(actionable_date: nil)
+      check_invalid_pause_states
+      return false if errors.any?
+      return true if paused?
+
+      result = update_columns paused: true, actionable_date: actionable_date && tomorrow_or_after(actionable_date)
+      create_and_emit_event(type: 'subscription_paused') if result
+      result
+    end
+
+    def resume(actionable_date: nil)
+      check_invalid_resume_states
+      return false if errors.any?
+      return true unless paused?
+
+      result = update_columns paused: false, actionable_date: tomorrow_or_after(actionable_date)
+      create_and_emit_event(type: 'subscription_resumed') if result
+      result
+    end
+
+    def state_with_pause
+      active? && paused? ? 'paused' : state
     end
 
     # The state of the last attempt to process an installment associated to
@@ -300,6 +328,23 @@ module SolidusSubscriptions
       end
     end
 
+    def check_invalid_skip_states
+      errors.add(:paused, :cannot_skip) if paused?
+      errors.add(:state, :cannot_skip) if canceled? || inactive?
+    end
+
+    def check_invalid_pause_states
+      errors.add(:paused, :not_active) unless active?
+    end
+
+    alias check_invalid_resume_states check_invalid_pause_states
+
+    def tomorrow_or_after(date)
+      [date.try(:to_date), Time.zone.tomorrow].compact.max
+    rescue ::Date::Error
+      Time.zone.tomorrow
+    end
+
     def update_actionable_date_if_interval_changed
       if persisted? && (interval_length_previously_changed? || interval_units_previously_changed?)
         base_date = if installments.any?
@@ -338,11 +383,20 @@ module SolidusSubscriptions
       end
     end
 
-    def emit_event_for_creation
+    def emit_event(type:)
       ::Spree::Event.fire(
-        'solidus_subscriptions.subscription_created',
+        "solidus_subscriptions.#{type}",
         subscription: self,
       )
+    end
+
+    def create_and_emit_event(type:)
+      events.create!(event_type: type)
+      emit_event(type: type)
+    end
+
+    def emit_event_for_creation
+      emit_event(type: 'subscription_created')
     end
 
     def emit_event_for_transition
@@ -353,39 +407,24 @@ module SolidusSubscriptions
         inactive: 'subscription_ended',
       }[state.to_sym]
 
-      ::Spree::Event.fire(
-        "solidus_subscriptions.#{event_type}",
-        subscription: self,
-      )
+      emit_event(type: event_type)
     end
 
     def emit_events_for_update
       if previous_changes.key?('interval_length') || previous_changes.key?('interval_units')
-        ::Spree::Event.fire(
-          'solidus_subscriptions.subscription_frequency_changed',
-          subscription: self,
-        )
+        emit_event(type: 'subscription_frequency_changed')
       end
 
       if previous_changes.key?('shipping_address_id')
-        ::Spree::Event.fire(
-          'solidus_subscriptions.subscription_shipping_address_changed',
-          subscription: self,
-        )
+        emit_event(type: 'subscription_shipping_address_changed')
       end
 
       if previous_changes.key?('billing_address_id')
-        ::Spree::Event.fire(
-          'solidus_subscriptions.subscription_billing_address_changed',
-          subscription: self,
-        )
+        emit_event(type: 'subscription_billing_address_changed')
       end
 
       if previous_changes.key?('payment_source_id') || previous_changes.key?('payment_source_type') || previous_changes.key?('payment_method_id')
-        ::Spree::Event.fire(
-          'solidus_subscriptions.subscription_payment_method_changed',
-          subscription: self,
-        )
+        emit_event(type: 'subscription_payment_method_changed')
       end
     end
   end
