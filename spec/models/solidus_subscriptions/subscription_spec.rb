@@ -466,13 +466,14 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
             state: 'active',
             paused: true
           )
-          expected_date = Date.current + subscription.interval
+          expected_actionable_date = subscription.actionable_date + subscription.interval
 
           SolidusSubscriptions::ProcessSubscriptionJob.perform_now(subscription)
 
           aggregate_failures do
             expect(subscription.reload.paused).to be_falsy
-            expect(subscription.actionable_date).to eq(expected_date)
+            expect(subscription.installments.last.created_at).to be_within(1.hour).of(Time.zone.now)
+            expect(subscription.actionable_date).to eq(expected_actionable_date)
           end
         end
       end
