@@ -38,7 +38,7 @@ module SolidusSubscriptions
     before_validation :set_currency
     before_create :generate_guest_token
     after_create :emit_event_for_creation
-    before_update :update_actionable_date_if_interval_changed
+    before_update :update_actionable_date_if_interval_changed, unless: :paused_changed?
     after_update :emit_events_for_update
 
     # Find all subscriptions that are "actionable"; that is, ones that have an
@@ -220,7 +220,7 @@ module SolidusSubscriptions
       return false if errors.any?
       return true if paused?
 
-      result = update_columns paused: true, actionable_date: actionable_date && tomorrow_or_after(actionable_date)
+      result = update! paused: true, actionable_date: actionable_date && tomorrow_or_after(actionable_date)
       create_and_emit_event(type: 'subscription_paused') if result
       result
     end
@@ -230,7 +230,7 @@ module SolidusSubscriptions
       return false if errors.any?
       return true unless paused?
 
-      result = update_columns paused: false, actionable_date: tomorrow_or_after(actionable_date)
+      result = update! paused: false, actionable_date: tomorrow_or_after(actionable_date)
       create_and_emit_event(type: 'subscription_resumed') if result
       result
     end
