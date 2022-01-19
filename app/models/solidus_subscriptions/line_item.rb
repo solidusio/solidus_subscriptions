@@ -41,6 +41,7 @@ module SolidusSubscriptions
     after_destroy :update_spree_line_item_quanity
 
     delegate :name, :price, to: :product, prefix: true
+    attr_accessor :admin_update
 
     def next_actionable_date
       dummy_subscription.next_actionable_date
@@ -130,7 +131,7 @@ module SolidusSubscriptions
     end
 
     def update_spree_line_item_quanity
-      return unless spree_line_item
+      return if admin_update || !spree_line_item
 
       spree_line_item.update(quantity: spree_line_item.subscription_line_items.reload.map(&:quantity).sum)
     end

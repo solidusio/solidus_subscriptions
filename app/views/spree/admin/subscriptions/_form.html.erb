@@ -61,6 +61,7 @@
       <legend><%= t('.subscription_line_item') %></legend>
 
       <div class="row">
+        <%= lf.hidden_field :admin_update, value: true %>
         <div class='field alpha two columns'>
           <%= lf.label :quantity %>
           <%= lf.number_field :quantity, min: 1, class: "fullwidth" %>
