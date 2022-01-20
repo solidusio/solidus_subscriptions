@@ -36,7 +36,14 @@ module SolidusSubscriptions
         @out_of_stock_dispatcher_class ||= ::SolidusSubscriptions::OutOfStockDispatcher
       end
 
-      attr_accessor :subscription_email_class
+      # The *subscription_email_class* must have the following methods:
+      # * cancel_email
+      # * restart_email
+      #
+      # The *subscription_failure_notification_email_class* must have the following methods:
+      # * subscription_failure_email
+      #
+      attr_accessor :subscription_email_class, :subscription_failure_notification_email_class
 
       def default_gateway(&block)
         return @gateway.call unless block_given?
@@ -48,7 +55,7 @@ module SolidusSubscriptions
     # must be processed
     mattr_accessor(:maximum_successive_skips) { 1 }
 
-    # Limit on the number of times a user can skip thier subscription. Once
+    # Limit on the number of times a user can skip their subscription. Once
     # this limit is reached, no skips are permitted
     mattr_accessor(:maximum_total_skips) { nil }
 
@@ -57,6 +64,11 @@ module SolidusSubscriptions
     mattr_accessor(:reprocessing_interval) { 1.day }
 
     mattr_accessor(:minimum_cancellation_notice) { 1.day }
+
+    # Limit on the number of times a subscription failure to create an order.
+    # Once this limit is reached, the current subscription activation period is skipped,
+    # but the subscription stays active.
+    mattr_accessor(:maximum_total_failure_skips) { nil }
 
     # Which queue is responsible for processing subscriptions
     mattr_accessor(:processing_queue) { :default }

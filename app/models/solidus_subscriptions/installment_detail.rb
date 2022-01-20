@@ -13,6 +13,11 @@ module SolidusSubscriptions
     validates :installment, presence: true
     alias_attribute :successful, :success
 
+    scope :history, ->(last: nil) do
+      history_scope = order(:created_at)
+      last&.nonzero? ? history_scope.last(last) : history_scope
+    end
+
     # Was the attempt at fulfilling this installment a failure?
     #
     # @return [Boolean]
