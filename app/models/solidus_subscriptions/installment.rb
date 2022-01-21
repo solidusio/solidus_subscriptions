@@ -17,7 +17,7 @@ module SolidusSubscriptions
     end)
 
     scope :unfulfilled, (lambda do
-      fulfilled_ids = fulfilled.pluck(:id)
+      fulfilled_ids = fulfilled.select(:id)
       where.not(id: fulfilled_ids).distinct
     end)
 
@@ -43,12 +43,7 @@ module SolidusSubscriptions
     # @return [SolidusSubscriptions::InstallmentDetail] The record of the failed
     #   processing attempt
     def out_of_stock
-      advance_actionable_date!
-
-      details.create!(
-        success: false,
-        message: I18n.t('solidus_subscriptions.installment_details.out_of_stock')
-      )
+      failure_handler('out_of_stock')
     end
 
     # Mark this installment as a success
@@ -59,7 +54,7 @@ module SolidusSubscriptions
     # @return [SolidusSubscriptions::InstallmentDetail] The record of the
     #   successful processing attempt
     def success!(order)
-      update!(actionable_date: nil)
+      advance_actionable_date!(false)
 
       details.create!(
         success: true,
@@ -76,13 +71,7 @@ module SolidusSubscriptions
     # @return [SolidusSubscriptions::InstallmentDetail] The record of the
     #   failed processing attempt
     def failed!(order)
-      advance_actionable_date!
-
-      details.create!(
-        success: false,
-        order: order,
-        message: I18n.t('solidus_subscriptions.installment_details.failed')
-      )
+      failure_handler('failed', order: order)
     end
 
     # Does this installment still need to be fulfilled by a completed order
@@ -107,17 +96,11 @@ module SolidusSubscriptions
     # @return [SolidusSubscriptions::InstallmentDetail] The record of the
     #   failed processing attempt
     def payment_failed!(order)
-      advance_actionable_date!
-
-      details.create!(
-        success: false,
-        order: order,
-        message: I18n.t('solidus_subscriptions.installment_details.payment_failed')
-      )
+      failure_handler('payment_failed', order: order)
 
       unless Config.failed_subscriptions_limit.zero?
-        prev_details = details.order(:created_at).last(Config.failed_subscriptions_limit)
-        if prev_details.size == Config.failed_subscriptions_limit && prev_details.all?(&:failed?) && subscription.active?
+        prev_details = details.history(last: Config.failed_subscriptions_limit).to_a
+        if prev_details.all?(&:failed?) && prev_details.size == Config.failed_subscriptions_limit && subscription.active?
           subscription.transaction do
             subscription.actionable_date = nil
             subscription.cancel
@@ -128,13 +111,36 @@ module SolidusSubscriptions
 
     private
 
-    def advance_actionable_date!
-      update!(actionable_date: next_actionable_date)
+    def advance_actionable_date!(flag = true)
+      update!(actionable_date: flag ? next_actionable_date : nil)
     end
 
     def next_actionable_date
       return if Config.reprocessing_interval.nil?
       (DateTime.current + Config.reprocessing_interval).beginning_of_minute
+    end
+
+    def failure_handler(err_code, order: nil)
+      advance_actionable_date! if_failure_threshold_not_exceeded
+
+      details.create!(
+        success: false,
+        err_code: err_code,
+        order: order,
+        message: I18n.t(err_code, scope: 'solidus_subscriptions.installment_details')
+      )
+    end
+
+    def if_failure_threshold_not_exceeded
+      !failure_threshold_exceeded?
+    end
+
+    def failure_threshold_exceeded?
+      return unless Config.maximum_total_failure_skips
+
+      prev_details = details.history(last: Config.maximum_total_failure_skips)
+      failure_threshold = Config.maximum_total_failure_skips - 1 # The current failure is not registered yet.
+      prev_details.all?(&:failed?) && prev_details.size >= failure_threshold
     end
   end
 end
