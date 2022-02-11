@@ -54,7 +54,7 @@ module SolidusSubscriptions
     #
     # @return [Spree::Order]
     def order
-      original_order = subscription.original_order
+      original_order = subscription.original_order || Spree::Order.new
 
       @order ||= Spree::Order.create(
         user: user,
@@ -77,7 +77,7 @@ module SolidusSubscriptions
       end
       apply_promotions
 
-      %w[address delivery payment].each do
+      order.checkout_steps[0...-1].each do
         order.ship_address = ship_address if order.state == "address"
 
         if order.state == "payment" && active_card.present?

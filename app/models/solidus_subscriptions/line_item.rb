@@ -84,7 +84,7 @@ module SolidusSubscriptions
     end
 
     def quantity=(value)
-      if value.to_i.zero?
+      if persisted? && value.to_i.zero?
         destroy!
       else
         super

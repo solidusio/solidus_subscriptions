@@ -96,17 +96,18 @@ module SolidusSubscriptions
     # @return [SolidusSubscriptions::InstallmentDetail] The record of the
     #   failed processing attempt
     def payment_failed!(order)
-      failure_handler('payment_failed', order: order)
-
-      unless Config.failed_subscriptions_limit.zero?
-        prev_details = details.history(last: Config.failed_subscriptions_limit).to_a
-        if prev_details.all?(&:failed?) && prev_details.size == Config.failed_subscriptions_limit && subscription.active?
-          subscription.transaction do
-            subscription.actionable_date = nil
-            subscription.cancel
+      failure_handler('payment_failed', order: order).tap do |_installment_details|
+        unless Config.failed_subscriptions_limit.zero?
+          prev_details = details.history(last: Config.failed_subscriptions_limit).to_a
+          if prev_details.all?(&:failed?) && prev_details.size == Config.failed_subscriptions_limit && subscription.active?
+            subscription.transaction do
+              subscription.actionable_date = nil
+              subscription.cancel
+            end
           end
         end
       end
+
     end
 
     private
