@@ -15,6 +15,21 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
   it { is_expected.to accept_nested_attributes_for :line_items }
 
+  describe '#update_line_item_end_date' do
+    subject { subscription.update(end_date: new_end_date) }
+
+    let(:end_date) { 6.months.from_now }
+    let(:new_end_date) { 10.months.from_now }
+    let(:subscription) do
+      create :subscription, :with_line_item, end_date: end_date, line_item_traits: [{ end_date: end_date }]
+    end
+    let(:line_item) { subscription.line_items.first }
+
+    it 'updates line_item end_dates when the subscription end_date changed' do
+      expect { subject }.to change { line_item.reload.end_date }.to(new_end_date.to_date)
+    end
+  end
+
   describe '#cancel' do
     subject { subscription.cancel }
 

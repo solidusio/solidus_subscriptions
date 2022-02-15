@@ -130,6 +130,11 @@ module SolidusSubscriptions
       end
     end
 
+    # * The spree_line_item quantity should be updated when the variant quantity changed
+    #   in the cart of the original order. The admin_update is nil in this case.
+    # * The spree_line_item quantity should be left unchanged in the original order
+    #   when the variant quantity changed by admin on the subscription page in the Admin panel.
+    #   The admin_update is True in this case.
     def update_spree_line_item_quanity
       return if admin_update || !spree_line_item
 
