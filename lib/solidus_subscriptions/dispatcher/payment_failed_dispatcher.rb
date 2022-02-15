@@ -2,22 +2,24 @@
 # the case where a subscription order cannot be processed because a payment
 # failed
 module SolidusSubscriptions
-  class PaymentFailedDispatcher < Dispatcher
-    def dispatch
-      order.touch :completed_at
-      order.cancel!
+  module Dispatcher
+    class PaymentFailedDispatcher < Base
+      def dispatch
+        order.touch :completed_at
+        order.cancel!
 
-      installments.each { |i| i.payment_failed!(order) }
-      super
-    end
+        installments.each { |i| i.payment_failed!(order) }
+        super
+      end
 
-    private
+      private
 
-    def message
-      "
+      def message
+        "
       The following installments could not be processed due to payment
       authorization failure: #{installments.map(&:id).join(', ')}
-      "
+        "
+      end
     end
   end
 end

@@ -10,7 +10,7 @@ module SolidusSubscriptions
       attr_writer :success_dispatcher_class
 
       def success_dispatcher_class
-        @success_dispatcher_class ||= ::SolidusSubscriptions::SuccessDispatcher
+        @success_dispatcher_class ||= ::SolidusSubscriptions::Dispatcher::SuccessDispatcher
       end
 
       # This handler is called when an order cant be placed for a group of
@@ -18,14 +18,14 @@ module SolidusSubscriptions
       attr_writer :failure_dispatcher_class
 
       def failure_dispatcher_class
-        @failure_dispatcher_class ||= ::SolidusSubscriptions::FailureDispatcher
+        @failure_dispatcher_class ||= ::SolidusSubscriptions::Dispatcher::FailureDispatcher
       end
 
       # This handler is called when a payment fails on a subscription order
       attr_writer :payment_failed_dispatcher_class
 
       def payment_failed_dispatcher_class
-        @payment_failed_dispatcher_class ||= ::SolidusSubscriptions::PaymentFailedDispatcher
+        @payment_failed_dispatcher_class ||= ::SolidusSubscriptions::Dispatcher::PaymentFailedDispatcher
       end
 
       # This handler is called when installemnts cannot be fulfilled due to lack
@@ -33,7 +33,7 @@ module SolidusSubscriptions
       attr_writer :out_of_stock_dispatcher
 
       def out_of_stock_dispatcher_class
-        @out_of_stock_dispatcher_class ||= ::SolidusSubscriptions::OutOfStockDispatcher
+        @out_of_stock_dispatcher_class ||= ::SolidusSubscriptions::Dispatcher::OutOfStockDispatcher
       end
 
       # The *subscription_email_class* must have the following methods:

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe SolidusSubscriptions::Dispatcher do
+RSpec.describe SolidusSubscriptions::Dispatcher::Base do
   describe '#dispatch' do
     subject { described_class.new([]).dispatch }
 

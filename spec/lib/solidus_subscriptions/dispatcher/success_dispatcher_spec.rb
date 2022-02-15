@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe SolidusSubscriptions::SuccessDispatcher do
+RSpec.describe SolidusSubscriptions::Dispatcher::SuccessDispatcher do
   let(:dispatcher) { described_class.new(installments) }
   let(:installments) { create_list(:installment, 1) }
 

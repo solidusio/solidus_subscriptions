@@ -16,7 +16,7 @@ module SolidusSubscriptions
 
       installments = SolidusSubscriptions::Installment.where(id: installment_ids).
         includes(subscription: [:line_items, :user])
-      Checkout.new(installments).process
+      OrderRenewal::Checkout.new(installments).process
     end
   end
 end

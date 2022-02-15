@@ -1,20 +1,16 @@
 require 'spec_helper'
 
-RSpec.describe SolidusSubscriptions::PaymentFailedDispatcher do
+RSpec.describe SolidusSubscriptions::Dispatcher::FailureDispatcher do
   let(:dispatcher) { described_class.new(installments, order) }
   let(:installments) { build_list(:installment, 2) }
-  let(:order) { create :order_with_line_items }
 
-  describe 'initialization' do
-    subject { dispatcher }
-    it { is_expected.to be_a described_class }
-  end
+  let(:order) { create :order_with_line_items }
 
   describe '#dispatch' do
     subject { dispatcher.dispatch }
 
     it 'marks all the installments out of stock' do
-      expect(installments).to all receive(:payment_failed!).once
+      expect(installments).to all receive(:failed!).once
       subject
     end
 

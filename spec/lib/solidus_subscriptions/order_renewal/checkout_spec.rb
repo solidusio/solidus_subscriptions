@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe SolidusSubscriptions::Checkout do
+RSpec.describe SolidusSubscriptions::OrderRenewal::Checkout do
   let(:checkout) { described_class.new(installments) }
   let(:root_order) { create :completed_order_with_pending_payment, user: subscription_user }
   let(:subscription_user) { create(:user, :subscription_user) }
@@ -35,7 +35,7 @@ RSpec.describe SolidusSubscriptions::Checkout do
 
     it 'raises an error' do
       expect { subject }.
-        to raise_error SolidusSubscriptions::UserMismatchError, /must have the same user/
+        to raise_error SolidusSubscriptions::OrderRenewal::UserMismatchError, /must have the same user/
     end
   end
 

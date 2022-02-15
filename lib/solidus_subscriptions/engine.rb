@@ -1,11 +1,15 @@
+# frozen_string_literal: true
+
+require 'spree/core'
+
+require 'solidus_subscriptions'
+require 'solidus_subscriptions/permitted_attributes'
+require 'solidus_subscriptions/config'
+require 'solidus_subscriptions/processor'
+
 module SolidusSubscriptions
   class Engine < Rails::Engine
     include SolidusSupport::EngineExtensions
-
-    require 'spree/core'
-    require 'solidus_subscriptions/permitted_attributes'
-    require 'solidus_subscriptions/config'
-    require 'solidus_subscriptions/processor'
 
     isolate_namespace SolidusSubscriptions
     engine_name 'solidus_subscriptions'

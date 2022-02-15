@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe SolidusSubscriptions::OrderBuilder do
+RSpec.describe SolidusSubscriptions::OrderRenewal::OrderBuilder do
   let(:builder) { described_class.new order }
 
   describe '#add_line_items' do
