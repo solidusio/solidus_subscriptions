@@ -5,7 +5,7 @@ module Spree
       before_action :set_store_id, only: [:create]
 
       def index
-        @search = SolidusSubscriptions::Subscription.
+        @search = SolidusSubscriptions::Subscription.order(:actionable_date).
           accessible_by(current_ability, :index).ransack(params[:q])
 
         @subscriptions = @search.result(distinct: true).

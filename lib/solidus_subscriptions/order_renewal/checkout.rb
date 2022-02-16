@@ -25,81 +25,59 @@ module SolidusSubscriptions
       #
       # @return [Spree::Order]
       def process
-        populate
-
+        line_items = process_installments
         # Installments are removed and set for future processing if they are
         # out of stock. If there are no line items left there is nothing to do
-        return if installments.empty?
+        return if line_items.blank?
 
-        if checkout
+        order = create_order
+
+        begin
+          populate(order, line_items)
+          finalize(order)
+
           Config.success_dispatcher_class.new(installments, order).dispatch
-          return order
+        rescue StateMachines::InvalidTransition
+          if order.payments.any?(&:failed?) ||       # CreditCard payment is failed, or
+             order.payments.not_store_credits.empty? # StoreCredits amount is less than an order total
+            Config.payment_failed_dispatcher_class.new(installments, order).dispatch
+          else
+            Config.failure_dispatcher_class.new(installments, order).dispatch
+          end
+        rescue ::Spree::Order::InsufficientStock
+          Config.out_of_stock_dispatcher_class.new(installments, order).dispatch
+        rescue
+          Config.admin_dispatcher_class.new(installments, order).dispatch
         end
 
-        # Cancel the order if there are no any payments or the order has failed payments
-        if order.payments.not_store_credits.empty? || order.payments.any?(&:failed?)
-          Config.payment_failed_dispatcher_class.new(installments, order).dispatch
-          installments.clear
-          nil
-        end
-      ensure
-        # Any installments that failed to be processed will be reprocessed
-        unfulfilled_installments = installments.select(&:unfulfilled?)
-        if unfulfilled_installments.any?
-          Config.failure_dispatcher_class.
-            new(unfulfilled_installments, order).dispatch
-        end
+        order
       end
 
-      # The order fulfilling the consolidated installment
-      #
-      # @return [Spree::Order]
-      def order
-        original_order = subscription.original_order || Spree::Order.new
-
-        @order ||= Spree::Order.create(
-          user: user,
-          email: user.email,
-          store: subscription.store || Spree::Store.default,
-          subscription_order: true,
-          order_type: original_order.order_type,
-          source: original_order.source,
-          dsr_id: original_order.dsr_id
-        )
+      def create_order
+        Config.order_creator_class.new(subscription).call
       end
 
       private
 
-      def checkout
-        if Spree.solidus_gem_version >= Gem::Version.new('2.4.0')
-          order.recalculate
-        else
-          order.update!
-        end
-        apply_promotions
+      def finalize(order)
+        order.recalculate
+        apply_promotions(order)
 
         order.checkout_steps[0...-1].each do
-          order.ship_address = ship_address if order.state == "address"
-
-          if order.state == "payment" && active_card.present?
-            create_payment
+          case order.state
+          when 'address'
+            order.ship_address = ship_address
+          when 'payment'
+            create_payment(order)
           end
 
-          begin
-            order.next!
-          rescue StandardError
-            # Stop checkout process to cancel the order later
-            # if store credits payment failed while transition to the next step
-            return false if order.state == "payment" && active_card.nil?
-          end
+          order.next!
         end
 
-        # Do this as a separate "quiet" transition so that it returns true or
-        # false rather than raising a failed transition error
-        order.complete
+        order.complete!
       end
 
-      def populate
+      def process_installments
         unfulfilled_installments = []
 
         order_line_items = installments.flat_map do |installment|
@@ -117,12 +95,11 @@ module SolidusSubscriptions
           Config.out_of_stock_dispatcher_class.new(unfulfilled_installments).dispatch
         end
 
-        return if installments.empty?
-        order_builder.add_line_items(order_line_items)
+        order_line_items
       end
 
-      def order_builder
-        @order_builder ||= OrderBuilder.new(order)
+      def populate(order, line_items)
+        OrderBuilder.new(order).add_line_items(line_items)
       end
 
       def subscription
@@ -134,14 +111,10 @@ module SolidusSubscriptions
       end
 
       def active_card
-        if SolidusSupport.solidus_gem_version < Gem::Version.new("2.2.0")
-          user.credit_cards.default.last
-        else
-          user.wallet.default_wallet_payment_source.payment_source
-        end
+        @active_card ||= user.wallet.default_wallet_payment_source&.payment_source
       end
 
-      def create_payment
+      def create_payment(order)
         order.payments.create(
           source: active_card,
           amount: order.total,
@@ -149,7 +122,7 @@ module SolidusSubscriptions
         )
       end
 
-      def apply_promotions
+      def apply_promotions(order)
         Spree::PromotionHandler::Cart.new(order).activate
         order.updater.update # reload totals
       end

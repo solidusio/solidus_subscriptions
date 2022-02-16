@@ -2,7 +2,7 @@
 # failures
 module SolidusSubscriptions
   module Dispatcher
-    class FailureDispatcher < Base
+    class AdminDispatcher < Base
       def dispatch
         if order
           order.touch :completed_at
@@ -16,6 +16,7 @@ module SolidusSubscriptions
         "
       Something went wrong processing installments: #{installments.map(&:id).join(', ')}.
       They have been marked for reprocessing.
+      Contact the Developer team to help you out.
       "
       end
     end

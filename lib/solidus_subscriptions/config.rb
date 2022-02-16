@@ -30,10 +30,24 @@ module SolidusSubscriptions
 
       # This handler is called when installemnts cannot be fulfilled due to lack
       # of stock
-      attr_writer :out_of_stock_dispatcher
+      attr_writer :out_of_stock_dispatcher_class
 
       def out_of_stock_dispatcher_class
         @out_of_stock_dispatcher_class ||= ::SolidusSubscriptions::Dispatcher::OutOfStockDispatcher
+      end
+
+      # This handler is called when an unexpected error appeared while finalizing the renewal order.
+      attr_writer :admin_dispatcher_class
+
+      def admin_dispatcher_class
+        @admin_dispatcher_class ||= ::SolidusSubscriptions::Dispatcher::AdminDispatcher
+      end
+
+      # This handler is called when a renewal order is initiated
+      attr_writer :order_creator_class
+
+      def order_creator_class
+        @order_creator_class ||= ::SolidusSubscriptions::OrderRenewal::OrderCreator
       end
 
       # The *subscription_email_class* must have the following methods:

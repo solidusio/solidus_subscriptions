@@ -29,8 +29,8 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'deface'
   s.add_dependency 'i18n'
-  s.add_dependency 'solidus', '~> 2.0'
-  s.add_dependency 'solidus_core', '~> 2.0'
+  s.add_dependency 'solidus', '2.10.5'
+  s.add_dependency 'solidus_core', '2.10.5'
   s.add_dependency 'solidus_support', '~> 0.5'
   s.add_dependency 'state_machines'
 

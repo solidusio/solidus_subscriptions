@@ -182,7 +182,7 @@ RSpec.describe SolidusSubscriptions::OrderRenewal::Checkout do
       }
       let(:expected_date) { (DateTime.current + SolidusSubscriptions::Config.reprocessing_interval).beginning_of_minute }
 
-      it { is_expected.to be_nil }
+      it { is_expected.to be_canceled }
 
       it 'marks all of the installments as failed' do
         subject
@@ -235,15 +235,15 @@ RSpec.describe SolidusSubscriptions::OrderRenewal::Checkout do
       end
     end
 
-    context 'there is an aribitrary failure' do
+    context 'when all products is out of stock' do
       let(:expected_date) { (DateTime.current + SolidusSubscriptions::Config.reprocessing_interval).beginning_of_minute }
 
       before do
-        allow(checkout).to receive(:populate).and_raise('arbitrary runtime error')
+        allow_any_instance_of(SolidusSubscriptions::LineItemBuilder).to receive(:spree_line_items).and_return([])
       end
 
       it 'advances the installment actionable dates', :aggregate_failures do
-        expect { subject }.to raise_error('arbitrary runtime error')
+        expect( subject ).to be_nil
 
         actionable_dates = installments.map do |installment|
           installment.reload.actionable_date
@@ -300,8 +300,8 @@ RSpec.describe SolidusSubscriptions::OrderRenewal::Checkout do
     end
   end
 
-  describe '#order' do
-    subject { checkout.order }
+  describe '#create_order' do
+    subject { checkout.create_order }
     let(:user) { installments.first.subscription.user }
 
     it { is_expected.to be_a Spree::Order }
@@ -312,11 +312,6 @@ RSpec.describe SolidusSubscriptions::OrderRenewal::Checkout do
         email: user.email,
         store: installments.first.subscription.store
       )
-    end
-
-    it 'is the same instance any time its called' do
-      order = checkout.order
-      expect(subject).to equal order
     end
   end
 end

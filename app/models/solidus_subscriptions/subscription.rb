@@ -18,7 +18,7 @@ module SolidusSubscriptions
     validates :skip_count, :successive_skip_count, presence: true, numericality: { greater_than_or_equal_to: 0 }
     validates :interval_length, numericality: { greater_than: 0 }
 
-    after_update :update_line_item_end_date, if: :saved_change_to_end_date?
+    after_update :update_line_item_end_date #, if: :saved_change_to_end_date?
 
     accepts_nested_attributes_for :shipping_address
     accepts_nested_attributes_for :line_items, allow_destroy: true
@@ -257,7 +257,7 @@ module SolidusSubscriptions
     end
 
     def update_line_item_end_date
-      line_items.where.not(end_date: end_date).update_all(end_date: end_date)
+      line_items.update_all(end_date: end_date)
     end
   end
 end
