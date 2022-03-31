@@ -15,8 +15,9 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
     it 'creates subscriptions with the correct attributes', :aggregate_failures do
       subscription_line_items = build_list(:subscription_line_item, 2)
       subscription_line_item = subscription_line_items.first
+      order = subscription_line_item.order
 
-      subscription = described_class.activate(subscription_line_items)
+      subscription = described_class.activate(subscription_line_items, order: order)
 
       expect(subscription.line_items).to match_array(subscription_line_items)
       expect(subscription).to have_attributes(
@@ -33,6 +34,7 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
 
     it 'copies the payment method from the order' do
       subscription_line_item = build(:subscription_line_item)
+      order = subscription_line_item.order
       payment_method = create(:credit_card_payment_method)
       payment_source = create(:credit_card, payment_method: payment_method, user: subscription_line_item.order.user)
       create(:payment,
@@ -40,7 +42,7 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
         source: payment_source,
         payment_method: payment_method,)
 
-      subscription = described_class.activate([subscription_line_item])
+      subscription = described_class.activate([subscription_line_item], order: order)
 
       expect(subscription).to have_attributes(
         payment_method: payment_method,
@@ -51,8 +53,9 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
     it 'cleanups the subscription line items fields duplicated on the subscription' do
       attrs = { interval_length: 2, interval_units: :week, end_date: Time.zone.tomorrow }
       subscription_line_item = create(:subscription_line_item, attrs)
+      order = subscription_line_item.order
 
-      described_class.activate([subscription_line_item])
+      described_class.activate([subscription_line_item], order: order)
 
       expect(subscription_line_item.reload).to have_attributes(
         interval_length: nil,

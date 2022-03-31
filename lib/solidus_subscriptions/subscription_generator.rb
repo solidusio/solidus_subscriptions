@@ -8,17 +8,29 @@ module SolidusSubscriptions
 
     SubscriptionConfiguration = Struct.new(:interval_length, :interval_units, :end_date)
 
+    def from_order(order)
+      group(order.subscription_line_items).each do |subscription_line_items_group|
+        activate(subscription_line_items_group, order: order)
+      end
+
+      order.reload
+    end
+
     # Create and persist a subscription for a collection of subscription
-    #   line items
-    #
-    # @param subscription_line_items [Array<SolidusSubscriptions::LineItem>] The
-    #   subscription_line_items to be activated
+    # line items
     #
     # @return [SolidusSubscriptions::Subscription]
-    def activate(subscription_line_items)
+    def activate(subscription_line_items, order: nil)
       return if subscription_line_items.empty?
 
-      order = subscription_line_items.first.order
+      if order.nil?
+        warn "DEPRECATED: Please provide an order", uplevel: 1
+        order = subscription_line_items.first.order
+      end
+
+      payment_source = payment_source_for(subscription_line_items, order: order)
+      payment_method = payment_source&.payment_method
+
       configuration = subscription_configuration(subscription_line_items.first)
 
       subscription_attributes = {
@@ -27,8 +39,8 @@ module SolidusSubscriptions
         store: order.store,
         shipping_address: order.ship_address,
         billing_address: order.bill_address,
-        payment_source: order.payments.valid.last&.payment_source,
-        payment_method: order.payments.valid.last&.payment_method,
+        payment_source: payment_source,
+        payment_method: payment_method,
         currency: order.currency,
         **configuration.to_h
       }
@@ -38,6 +50,15 @@ module SolidusSubscriptions
       end.tap do |_subscription|
         cleanup_subscription_line_items(subscription_line_items)
       end
+    end
+
+    def payment_source_for(subscription_line_items, order:)
+      order.payments.valid&.last&.source || (
+        order.user && (
+          order.user.wallet.default_wallet_payment_source ||
+          order.user.wallet_payment_sources.last
+        )
+      )
     end
 
     # Group a collection of line items by common subscription configuration

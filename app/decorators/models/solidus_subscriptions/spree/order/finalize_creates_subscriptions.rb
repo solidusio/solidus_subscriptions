@@ -9,11 +9,7 @@ module SolidusSubscriptions
     module Order
       module FinalizeCreatesSubscriptions
         def finalize!
-          SolidusSubscriptions::SubscriptionGenerator.group(subscription_line_items).each do |line_items|
-            SolidusSubscriptions::SubscriptionGenerator.activate(line_items)
-          end
-
-          reload
+          SolidusSubscriptions::SubscriptionGenerator.from_order(self)
 
           super
         end
