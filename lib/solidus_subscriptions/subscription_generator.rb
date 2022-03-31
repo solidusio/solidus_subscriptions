@@ -3,37 +3,67 @@
 # This module is responsible for taking SolidusSubscriptions::LineItem
 # objects and creating SolidusSubscriptions::Subscription Objects
 module SolidusSubscriptions
-  module SubscriptionGenerator
-    extend self
-
+  class SubscriptionGenerator
     SubscriptionConfiguration = Struct.new(:interval_length, :interval_units, :end_date)
 
-    def from_order(order)
-      group(order.subscription_line_items).each do |subscription_line_items_group|
-        activate(subscription_line_items_group, order: order)
+    # From an order, group subscription line items by common subscription
+    # configuration options and create subscriptions. Grouped subscription_line_items
+    # can belong to a single subscription.
+    #
+    # @param order [Spree::Order] The order with subscription line items
+    #
+    # @return [Array<SolidusSubscriptions::Subscription>] Array of subscriptions
+    def self.from_order(order)
+      line_items_by_configuration = order.subscription_line_items.group_by do |subscription_line_item|
+        subscription_configuration(subscription_line_item)
       end
 
-      order.reload
+      line_items_by_configuration.map do |configuration, subscription_line_items_group|
+        new(subscription_line_items: subscription_line_items_group, order: order, subscription_attributes: configuration).activate
+      end
+    end
+
+    def self.subscription_configuration(subscription_line_item)
+      SubscriptionConfiguration.new(
+        subscription_line_item.interval_length,
+        subscription_line_item.interval_units,
+        subscription_line_item.end_date
+      )
+    end
+
+    attr_reader :subscription_line_items, :order
+
+    def initialize(subscription_line_items:, order:, subscription_attributes:)
+      @subscription_line_items = subscription_line_items
+      @order = order
+      @subscription_attributes = subscription_attributes.to_h
     end
 
     # Create and persist a subscription for a collection of subscription
     # line items
     #
     # @return [SolidusSubscriptions::Subscription]
-    def activate(subscription_line_items, order: nil)
+    def activate
+      subscription = build_subscription
+      subscription.save!
+      cleanup_subscription_line_items
+      subscription
+    end
+
+    private
+
+    def build_subscription
       return if subscription_line_items.empty?
 
       if order.nil?
-        warn "DEPRECATED: Please provide an order", uplevel: 1
-        order = subscription_line_items.first.order
+        ActiveSupport::Deprecation.warn("DEPRECATED: Please provide an order")
       end
+      order ||= subscription_line_items.first.order
 
-      payment_source = payment_source_for(subscription_line_items, order: order)
+      payment_source = find_payment_source
       payment_method = payment_source&.payment_method
 
-      configuration = subscription_configuration(subscription_line_items.first)
-
-      subscription_attributes = {
+      subscription = Subscription.new(
         user: order.user,
         line_items: subscription_line_items,
         store: order.store,
@@ -42,56 +72,27 @@ module SolidusSubscriptions
         payment_source: payment_source,
         payment_method: payment_method,
         currency: order.currency,
-        **configuration.to_h
-      }
-
-      Subscription.create!(subscription_attributes) do |sub|
-        sub.actionable_date = sub.next_actionable_date
-      end.tap do |_subscription|
-        cleanup_subscription_line_items(subscription_line_items)
-      end
+        **@subscription_attributes
+      )
+      subscription.actionable_date = subscription.next_actionable_date
+      subscription
     end
 
-    def payment_source_for(subscription_line_items, order:)
+    def find_payment_source
       order.payments.valid&.last&.source || (
         order.user && (
-          order.user.wallet.default_wallet_payment_source ||
-          order.user.wallet_payment_sources.last
+          order.user.wallet.default_wallet_payment_source&.payment_source ||
+          order.user.wallet_payment_sources.last&.payment_source
         )
       )
     end
 
-    # Group a collection of line items by common subscription configuration
-    # options. Grouped subscription_line_items can belong to a single
-    # subscription.
-    #
-    # @param subscription_line_items [Array<SolidusSubscriptions::LineItem>] The
-    #   subscription_line_items to be grouped.
-    #
-    # @return [Array<Array<SolidusSubscriptions::LineItem>>]
-    def group(subscription_line_items)
-      subscription_line_items.group_by do |li|
-        subscription_configuration(li)
-      end.
-        values
-    end
-
-    private
-
-    def cleanup_subscription_line_items(subscription_line_items)
+    def cleanup_subscription_line_items
       ids = subscription_line_items.pluck :id
       SolidusSubscriptions::LineItem.where(id: ids).update_all(
         interval_length: nil,
         interval_units: nil,
         end_date: nil
-      )
-    end
-
-    def subscription_configuration(subscription_line_item)
-      SubscriptionConfiguration.new(
-        subscription_line_item.interval_length,
-        subscription_line_item.interval_units,
-        subscription_line_item.end_date
       )
     end
   end

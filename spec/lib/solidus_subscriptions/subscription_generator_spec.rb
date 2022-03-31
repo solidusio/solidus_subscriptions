@@ -3,47 +3,67 @@
 require 'spec_helper'
 
 RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
-  describe '.activate' do
+  describe '.from_order' do
     it 'creates the correct number of subscriptions' do
-      subscription_line_items = build_list(:subscription_line_item, 2)
+      order = create(:order, :with_subscription_line_items)
 
-      expect {
-        described_class.activate(subscription_line_items)
-      }.to change(SolidusSubscriptions::Subscription, :count).by(1)
+      expect { described_class.from_order(order) }.to change(SolidusSubscriptions::Subscription, :count).by(1)
     end
 
     it 'creates subscriptions with the correct attributes', :aggregate_failures do
-      subscription_line_items = build_list(:subscription_line_item, 2)
+      order = create(:order, :with_subscription_line_items)
+      subscription_line_items = order.subscription_line_items
       subscription_line_item = subscription_line_items.first
-      order = subscription_line_item.order
 
-      subscription = described_class.activate(subscription_line_items, order: order)
+      described_class.from_order(order)
 
+      subscription = SolidusSubscriptions::Subscription.last
+      expect(subscription).to be_present
       expect(subscription.line_items).to match_array(subscription_line_items)
       expect(subscription).to have_attributes(
-        user: subscription_line_item.order.user,
-        shipping_address: subscription_line_item.spree_line_item.order.ship_address,
-        billing_address: subscription_line_item.spree_line_item.order.bill_address,
+        user: order.user,
+        shipping_address: order.ship_address,
+        billing_address: order.bill_address,
         interval_length: subscription_line_item.interval_length,
         interval_units: subscription_line_item.interval_units,
         end_date: subscription_line_item.end_date,
-        store: subscription_line_item.order.store,
-        currency: subscription_line_item.order.currency
+        store: order.store,
+        currency: order.currency
       )
     end
 
-    it 'copies the payment method from the order' do
-      subscription_line_item = build(:subscription_line_item)
-      order = subscription_line_item.order
+    it 'uses the payment source from the order payments when available', :aggregate_failures do
+      order = create(:order, :with_subscription_line_items)
+      subscription_line_items = order.subscription_line_items
+      subscription_line_item = subscription_line_items.first
       payment_method = create(:credit_card_payment_method)
-      payment_source = create(:credit_card, payment_method: payment_method, user: subscription_line_item.order.user)
+      payment_source = create(:credit_card, payment_method: payment_method, user: order.user)
       create(:payment,
         order: subscription_line_item.spree_line_item.order,
         source: payment_source,
         payment_method: payment_method,)
 
-      subscription = described_class.activate([subscription_line_item], order: order)
+      described_class.from_order(order)
 
+      subscription = SolidusSubscriptions::Subscription.last
+      expect(subscription).to be_present
+      expect(subscription).to have_attributes(
+        payment_method: payment_method,
+        payment_source: payment_source,
+      )
+    end
+
+    it 'uses the payment source from the user wallet when no order payments are present', :aggregate_failures do
+      user = create(:user)
+      order = create(:order, :with_subscription_line_items, user: user)
+      payment_method = create(:credit_card_payment_method)
+      payment_source = create(:credit_card, payment_method: payment_method, user: user)
+      user.wallet.add(payment_source)
+
+      described_class.from_order(order)
+
+      subscription = SolidusSubscriptions::Subscription.last
+      expect(subscription).to be_present
       expect(subscription).to have_attributes(
         payment_method: payment_method,
         payment_source: payment_source,
@@ -55,7 +75,7 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
       subscription_line_item = create(:subscription_line_item, attrs)
       order = subscription_line_item.order
 
-      described_class.activate([subscription_line_item], order: order)
+      described_class.from_order(order)
 
       expect(subscription_line_item.reload).to have_attributes(
         interval_length: nil,
@@ -65,22 +85,16 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
     end
   end
 
-  describe '.group' do
-    it 'groups subscriptions by interval and end date' do
-      monthly_subscriptions = build_stubbed_list(:subscription_line_item, 2)
-      bimonthly_subscriptions = build_stubbed_list(:subscription_line_item, 2, interval_length: 2)
-      weekly_subscriptions = build_stubbed_list(:subscription_line_item, 2, interval_units: :week)
-      expiring_subscriptions = build_stubbed_list(:subscription_line_item, 2, end_date: Time.zone.tomorrow)
+  describe '.subscription_configuration' do
+    it 'creates a subscription configuration with the correct values', :aggregate_failures do
+      order = create(:order, :with_subscription_line_items)
+      subscription_line_item = order.subscription_line_items.first
 
-      subscriptions = [
-        monthly_subscriptions,
-        bimonthly_subscriptions,
-        weekly_subscriptions,
-        expiring_subscriptions,
-      ]
-      grouping_result = described_class.group(subscriptions.sum)
+      subscription_configuration = described_class.subscription_configuration(subscription_line_item)
 
-      expect(grouping_result).to match_array(subscriptions)
+      expect(subscription_configuration.interval_length).to eq(subscription_line_item.interval_length)
+      expect(subscription_configuration.interval_units).to eq(subscription_line_item.interval_units)
+      expect(subscription_configuration.end_date).to eq(subscription_line_item.end_date)
     end
   end
 end
