@@ -1020,12 +1020,12 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
     let(:total_skips) { 0 }
     let(:successive_skips) { 0 }
-    let(:expected_date) { 2.months.from_now.to_date }
 
     let(:subscription) do
       create(
         :subscription,
         :with_line_item,
+        actionable_date: Time.zone.today + 1.month,
         skip_count: total_skips,
         successive_skip_count: successive_skips
       )
@@ -1064,7 +1064,13 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
     end
 
     context 'when the subscription can be skipped' do
-      it { is_expected.to eq expected_date }
+      it 'skips correctly based on the subscription interval' do
+        expected_actionable_date = subscription.actionable_date + subscription.interval
+
+        subject
+
+        expect(subscription.actionable_date).to eq(expected_actionable_date)
+      end
 
       it 'creates a subscription_skipped event' do
         subject
