@@ -7,7 +7,7 @@ RSpec.describe SolidusSubscriptions::ChurnBusterSubscriber do
       allow(SolidusSubscriptions).to receive(:churn_buster).and_return(churn_buster)
 
       subscription = create(:subscription)
-      Spree::Event.fire('solidus_subscriptions.subscription_canceled', subscription: subscription)
+      SolidusSupport::LegacyEventCompat::Bus.publish(:'solidus_subscriptions.subscription_canceled', subscription: subscription)
 
       expect(churn_buster).to have_received(:report_subscription_cancellation).with(subscription)
     end
@@ -19,7 +19,7 @@ RSpec.describe SolidusSubscriptions::ChurnBusterSubscriber do
       allow(SolidusSubscriptions).to receive(:churn_buster).and_return(churn_buster)
 
       subscription = create(:subscription)
-      Spree::Event.fire('solidus_subscriptions.subscription_ended', subscription: subscription)
+      SolidusSupport::LegacyEventCompat::Bus.publish(:'solidus_subscriptions.subscription_ended', subscription: subscription)
 
       expect(churn_buster).to have_received(:report_subscription_cancellation).with(subscription)
     end
@@ -32,8 +32,8 @@ RSpec.describe SolidusSubscriptions::ChurnBusterSubscriber do
 
       order = build_stubbed(:order)
       installment = build_stubbed(:installment)
-      Spree::Event.fire(
-        'solidus_subscriptions.installment_succeeded',
+      SolidusSupport::LegacyEventCompat::Bus.publish(
+        :'solidus_subscriptions.installment_succeeded',
         installment: installment,
         order: order,
       )
@@ -49,8 +49,8 @@ RSpec.describe SolidusSubscriptions::ChurnBusterSubscriber do
 
       order = build_stubbed(:order)
       installment = build_stubbed(:installment)
-      Spree::Event.fire(
-        'solidus_subscriptions.installment_failed_payment',
+      SolidusSupport::LegacyEventCompat::Bus.publish(
+        :'solidus_subscriptions.installment_failed_payment',
         installment: installment,
         order: order,
       )
@@ -65,8 +65,8 @@ RSpec.describe SolidusSubscriptions::ChurnBusterSubscriber do
       allow(SolidusSubscriptions).to receive(:churn_buster).and_return(churn_buster)
 
       subscription = create(:subscription)
-      Spree::Event.fire(
-        'solidus_subscriptions.subscription_payment_method_changed',
+      SolidusSupport::LegacyEventCompat::Bus.publish(
+        :'solidus_subscriptions.subscription_payment_method_changed',
         subscription: subscription,
       )
 

@@ -3,6 +3,7 @@
 module SolidusSubscriptions
   module EventStorageSubscriber
     include ::Spree::Event::Subscriber
+    include ::SolidusSupport::LegacyEventCompat::Subscriber
 
     event_action :track_subscription_created, event_name: 'solidus_subscriptions.subscription_created'
     event_action :track_subscription_activated, event_name: 'solidus_subscriptions.subscription_activated'

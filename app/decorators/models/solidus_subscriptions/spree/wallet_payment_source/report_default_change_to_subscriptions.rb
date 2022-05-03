@@ -14,8 +14,8 @@ module SolidusSubscriptions
           return if !previous_changes.key?('default') || !default?
 
           user.subscriptions.with_default_payment_source.each do |subscription|
-            ::Spree::Event.fire(
-              'solidus_subscriptions.subscription_payment_method_changed',
+            ::SolidusSupport::LegacyEventCompat::Bus.publish(
+              :'solidus_subscriptions.subscription_payment_method_changed',
               subscription: subscription,
             )
           end

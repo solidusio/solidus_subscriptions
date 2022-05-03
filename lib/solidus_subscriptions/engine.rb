@@ -49,6 +49,32 @@ module SolidusSubscriptions
         )
       end
     end
+
+    initializer 'solidus_subscriptions.pub_sub' do |app|
+      unless SolidusSupport::LegacyEventCompat.using_legacy?
+        app.reloader.to_prepare do
+          %i[
+            subscription_created
+            subscription_activated
+            subscription_canceled
+            subscription_ended
+            subscription_skipped
+            subscription_resumed
+            subscription_paused
+            subscription_frequency_changed
+            subscription_shipping_address_changed
+            subscription_billing_address_changed
+            installment_succeeded
+            installment_failed_payment
+            subscription_payment_method_changed
+          ].each do |event_name|
+            ::Spree::Bus.register(:"solidus_subscriptions.#{event_name}")
+          end
+          SolidusSubscriptions::ChurnBusterSubscriber.omnes_subscriber.subscribe_to(::Spree::Bus)
+          SolidusSubscriptions::EventStorageSubscriber.omnes_subscriber.subscribe_to(::Spree::Bus)
+        end
+      end
+    end
   end
 
   def self.table_name_prefix

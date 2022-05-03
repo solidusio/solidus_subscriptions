@@ -8,8 +8,8 @@ module SolidusSubscriptions
         order.cancel
         installment.payment_failed!(order)
 
-        ::Spree::Event.fire(
-          'solidus_subscriptions.installment_failed_payment',
+        ::SolidusSupport::LegacyEventCompat::Bus.publish(
+          :'solidus_subscriptions.installment_failed_payment',
           installment: installment,
           order: order,
         )

@@ -6,8 +6,8 @@ module SolidusSubscriptions
       def dispatch
         installment.success!(order)
 
-        ::Spree::Event.fire(
-          'solidus_subscriptions.installment_succeeded',
+        ::SolidusSupport::LegacyEventCompat::Bus.publish(
+          :'solidus_subscriptions.installment_succeeded',
           installment: installment,
           order: order,
         )
