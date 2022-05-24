@@ -8,14 +8,22 @@ module SolidusSubscriptions
   module Spree
     module Order
       module FinalizeCreatesSubscriptions
-        def finalize!
+        def self.finalize_method
+          if ::Spree.solidus_version >= Gem::Version.new('3.2.0.alpha')
+            :finalize
+          else
+            :finalize!
+          end
+        end
+
+        define_method finalize_method do
           SolidusSubscriptions::SubscriptionGenerator.group(subscription_line_items).each do |line_items|
             SolidusSubscriptions::SubscriptionGenerator.activate(line_items)
           end
 
           reload
 
-          super
+          super()
         end
       end
     end
