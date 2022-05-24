@@ -14,7 +14,7 @@ RSpec.describe SolidusSubscriptions::Spree::Order::FinalizeCreatesSubscriptions 
 
     it 'creates new subscriptions' do
       expect { finalize }.
-        to change { SolidusSubscriptions::Subscription.count }.
+        to change(SolidusSubscriptions::Subscription, :count).
         by(order.subscription_line_items.count)
     end
 
