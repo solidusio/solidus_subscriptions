@@ -46,7 +46,7 @@ RSpec.describe SolidusSubscriptions::Installment, type: :model do
 
     it 'creates a new installment detail' do
       expect { success }.
-        to change { SolidusSubscriptions::InstallmentDetail.count }.
+        to change(SolidusSubscriptions::InstallmentDetail, :count).
         by(1)
     end
 

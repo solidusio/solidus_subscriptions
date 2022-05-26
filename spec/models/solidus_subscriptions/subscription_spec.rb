@@ -28,12 +28,12 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
   describe 'creating a subscription' do
     it 'tracks the creation' do
-      stub_const('Spree::Event', class_spy(Spree::Event))
+      stub_const('SolidusSupport::LegacyEventCompat::Bus', class_spy(SolidusSupport::LegacyEventCompat::Bus))
 
       subscription = create(:subscription)
 
-      expect(Spree::Event).to have_received(:fire).with(
-        'solidus_subscriptions.subscription_created',
+      expect(SolidusSupport::LegacyEventCompat::Bus).to have_received(:publish).with(
+        :'solidus_subscriptions.subscription_created',
         subscription: subscription,
       )
     end
@@ -53,49 +53,49 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
   describe 'updating a subscription' do
     it 'tracks interval changes' do
-      stub_const('Spree::Event', class_spy(Spree::Event))
+      stub_const('SolidusSupport::LegacyEventCompat::Bus', class_spy(SolidusSupport::LegacyEventCompat::Bus))
       subscription = create(:subscription)
 
       subscription.update!(interval_length: subscription.interval_length + 1)
 
-      expect(Spree::Event).to have_received(:fire).with(
-        'solidus_subscriptions.subscription_frequency_changed',
+      expect(SolidusSupport::LegacyEventCompat::Bus).to have_received(:publish).with(
+        :'solidus_subscriptions.subscription_frequency_changed',
         subscription: subscription,
       )
     end
 
     it 'tracks shipping address changes' do
-      stub_const('Spree::Event', class_spy(Spree::Event))
+      stub_const('SolidusSupport::LegacyEventCompat::Bus', class_spy(SolidusSupport::LegacyEventCompat::Bus))
       subscription = create(:subscription)
 
       subscription.update!(shipping_address: create(:address))
 
-      expect(Spree::Event).to have_received(:fire).with(
-        'solidus_subscriptions.subscription_shipping_address_changed',
+      expect(SolidusSupport::LegacyEventCompat::Bus).to have_received(:publish).with(
+        :'solidus_subscriptions.subscription_shipping_address_changed',
         subscription: subscription,
       )
     end
 
     it 'tracks billing address changes' do
-      stub_const('Spree::Event', class_spy(Spree::Event))
+      stub_const('SolidusSupport::LegacyEventCompat::Bus', class_spy(SolidusSupport::LegacyEventCompat::Bus))
       subscription = create(:subscription)
 
       subscription.update!(billing_address: create(:address))
 
-      expect(Spree::Event).to have_received(:fire).with(
-        'solidus_subscriptions.subscription_billing_address_changed',
+      expect(SolidusSupport::LegacyEventCompat::Bus).to have_received(:publish).with(
+        :'solidus_subscriptions.subscription_billing_address_changed',
         subscription: subscription,
       )
     end
 
     it 'tracks payment method changes' do
-      stub_const('Spree::Event', class_spy(Spree::Event))
+      stub_const('SolidusSupport::LegacyEventCompat::Bus', class_spy(SolidusSupport::LegacyEventCompat::Bus))
 
       subscription = create(:subscription)
       subscription.update!(payment_source: create(:credit_card, user: subscription.user))
 
-      expect(Spree::Event).to have_received(:fire).with(
-        'solidus_subscriptions.subscription_payment_method_changed',
+      expect(SolidusSupport::LegacyEventCompat::Bus).to have_received(:publish).with(
+        :'solidus_subscriptions.subscription_payment_method_changed',
         subscription: subscription,
       )
     end

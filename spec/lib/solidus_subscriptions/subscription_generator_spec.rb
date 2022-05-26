@@ -75,7 +75,7 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
         weekly_subscriptions,
         expiring_subscriptions,
       ]
-      grouping_result = described_class.group(subscriptions.sum)
+      grouping_result = described_class.group(subscriptions.flatten)
 
       expect(grouping_result).to match_array(subscriptions)
     end

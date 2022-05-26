@@ -3,6 +3,7 @@
 module SolidusSubscriptions
   module ChurnBusterSubscriber
     include ::Spree::Event::Subscriber
+    include ::SolidusSupport::LegacyEventCompat::Subscriber
 
     event_action :report_subscription_cancellation, event_name: 'solidus_subscriptions.subscription_canceled'
     event_action :report_subscription_ending, event_name: 'solidus_subscriptions.subscription_ended'

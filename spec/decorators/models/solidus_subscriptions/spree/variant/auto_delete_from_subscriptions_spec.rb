@@ -10,7 +10,7 @@ RSpec.describe SolidusSubscriptions::Spree::Variant::AutoDeleteFromSubscriptions
       subscription = create(:subscription)
       create(:subscription_line_item, subscription: subscription, subscribable: subject)
 
-      expect { subject.discard }.to change { SolidusSubscriptions::LineItem.count }.by(-1)
+      expect { subject.discard }.to change(SolidusSubscriptions::LineItem, :count).by(-1)
     end
   end
 
@@ -19,7 +19,7 @@ RSpec.describe SolidusSubscriptions::Spree::Variant::AutoDeleteFromSubscriptions
       subscription = create(:subscription)
       create(:subscription_line_item, subscription: subscription, subscribable: subject)
 
-      expect { subject.destroy }.to change { SolidusSubscriptions::LineItem.count }.by(-1)
+      expect { subject.destroy }.to change(SolidusSubscriptions::LineItem, :count).by(-1)
     end
   end
 end

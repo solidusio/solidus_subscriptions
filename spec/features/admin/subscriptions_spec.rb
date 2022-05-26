@@ -56,7 +56,7 @@ RSpec.describe 'Subscriptions admin' do
     select variant.name, from: 'Subscribable'
     fill_in 'Quantity', with: 1
 
-    expect { click_on 'Create' }.to change { SolidusSubscriptions::Subscription.count }.by(1)
+    expect { click_on 'Create' }.to change(SolidusSubscriptions::Subscription, :count).by(1)
 
     expect(page).to have_text('Subscription has been successfully created!')
   end

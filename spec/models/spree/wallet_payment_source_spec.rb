@@ -3,7 +3,7 @@
 RSpec.describe Spree::WalletPaymentSource do
   describe 'setting it as the default' do
     it 'reports a payment method changed event for subscriptions that use the default payment source' do
-      stub_const('Spree::Event', class_spy(Spree::Event))
+      stub_const('SolidusSupport::LegacyEventCompat::Bus', class_spy(SolidusSupport::LegacyEventCompat::Bus))
       user = create(:user)
       subscription = create(:subscription, user: user)
       payment_source = create(:credit_card, user: user)
@@ -11,8 +11,8 @@ RSpec.describe Spree::WalletPaymentSource do
 
       user.wallet.default_wallet_payment_source = wallet_payment_source
 
-      expect(Spree::Event).to have_received(:fire).with(
-        'solidus_subscriptions.subscription_payment_method_changed',
+      expect(SolidusSupport::LegacyEventCompat::Bus).to have_received(:publish).with(
+        :'solidus_subscriptions.subscription_payment_method_changed',
         subscription: subscription,
       )
     end

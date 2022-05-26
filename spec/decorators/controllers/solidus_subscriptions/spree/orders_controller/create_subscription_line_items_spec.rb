@@ -30,13 +30,13 @@ RSpec.describe SolidusSubscriptions::Spree::OrdersController::CreateSubscription
 
       it 'creates an order' do
         expect { populate }.
-          to change { Spree::Order.count }.
+          to change(Spree::Order, :count).
           from(0).to(1)
       end
 
       it 'creates a line item' do
         expect { populate }.
-          to change { Spree::LineItem.count }.
+          to change(Spree::LineItem, :count).
           from(0).to(1)
       end
     end
@@ -59,7 +59,7 @@ RSpec.describe SolidusSubscriptions::Spree::OrdersController::CreateSubscription
 
       it 'creates a new subscription line item' do
         expect { populate }.
-          to change { SolidusSubscriptions::LineItem.count }.
+          to change(SolidusSubscriptions::LineItem, :count).
           from(0).to(1)
       end
 

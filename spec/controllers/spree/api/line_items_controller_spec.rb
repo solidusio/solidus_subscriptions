@@ -31,7 +31,7 @@ RSpec.describe Spree::Api::LineItemsController, type: :controller do
 
       it 'creates a line item' do
         expect { post_create }.
-          to change { Spree::LineItem.count }.
+          to change(Spree::LineItem, :count).
           from(0).to(1)
       end
     end
@@ -54,7 +54,7 @@ RSpec.describe Spree::Api::LineItemsController, type: :controller do
 
       it 'creates a new subscription line item' do
         expect { post_create }.
-          to change { SolidusSubscriptions::LineItem.count }.
+          to change(SolidusSubscriptions::LineItem, :count).
           from(0).to(1)
       end
     end
@@ -96,7 +96,7 @@ RSpec.describe Spree::Api::LineItemsController, type: :controller do
 
     it 'creates a new subscription line item' do
       expect { patch_create }.
-        to change { SolidusSubscriptions::LineItem.count }.
+        to change(SolidusSubscriptions::LineItem, :count).
         from(0).to(1)
     end
   end

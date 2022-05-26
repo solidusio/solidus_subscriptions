@@ -384,8 +384,8 @@ module SolidusSubscriptions
     end
 
     def emit_event(type:)
-      ::Spree::Event.fire(
-        "solidus_subscriptions.#{type}",
+      ::SolidusSupport::LegacyEventCompat::Bus.publish(
+        :"solidus_subscriptions.#{type}",
         subscription: self,
       )
     end
