@@ -9,7 +9,7 @@ module SolidusSubscriptions
     module Order
       module FinalizeCreatesSubscriptions
         def self.finalize_method
-          if ::Spree.solidus_version >= Gem::Version.new('3.2.0.alpha')
+          if Gem::Version.new(::Spree.solidus_version) >= Gem::Version.new('3.2.0.alpha')
             :finalize
           else
             :finalize!
