@@ -6,6 +6,8 @@
   <nav class="menu">
     <fieldset class="no-border-top no-border-bottom" data-hook="admin_user_lifetime_stats">
       <dl id="user-lifetime-stats">
+        <dt><%= SolidusSubscriptions::Subscription.human_attribute_name(:user) %>:</dt>
+        <dd><%= link_to(subscription.user.email, admin_user_path(subscription.user)) %></dd>
         <dt><%= SolidusSubscriptions::Subscription.human_attribute_name(:created_at) %>:</dt>
         <dd><%= l(subscription.created_at.to_date) %></dd>
         <dt><%= SolidusSubscriptions::Subscription.human_attribute_name(:state) %>:</dt>
