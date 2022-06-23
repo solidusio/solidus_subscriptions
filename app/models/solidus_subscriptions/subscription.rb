@@ -85,7 +85,7 @@ module SolidusSubscriptions
 
     # Scope for finding subscription with a specific item
     scope :with_line_item, (lambda do |id|
-      joins(:line_items).where(line_items: { id: id})
+      joins(:line_items).where(line_items: { id: id })
     end)
 
     def self.ransackable_scopes(_auth_object = nil)
