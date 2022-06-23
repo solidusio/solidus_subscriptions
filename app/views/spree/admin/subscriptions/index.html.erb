@@ -48,21 +48,21 @@
       </div>
 
       <div class="row">
-        <div class="field-block col-4">
+        <div class="field-block col-3">
           <div class="field">
             <%= label_tag :q_user_email_cont, Spree.user_class.human_attribute_name(:email) %>
             <%= f.text_field :user_email_cont, size: 25 %>
           </div>
         </div>
 
-        <div class="field-block col-4">
+        <div class="field-block col-3">
           <div class="field">
             <%= label_tag :q_state_eq, SolidusSubscriptions::Subscription.human_attribute_name(:state) %>
             <%= f.select :state_eq, SolidusSubscriptions::Subscription.state_machines[:state].states.map {|s| [s.human_name, s.value]}, {include_blank: true}, class: 'select2 fullwidth' %>
           </div>
         </div>
 
-        <div class="field-block col-4">
+        <div class="field-block col-3">
           <div class="field">
             <%= label_tag :q_processing_state_eq, SolidusSubscriptions::Subscription.human_attribute_name(:processing_state) %>
 
@@ -85,10 +85,23 @@
             %>
           </div>
         </div>
+        <div class="field-block col-3">
+          <div class="field">
+            <%= label_tag :q_with_line_item_eq, SolidusSubscriptions::Subscription.human_attribute_name(:with_line_item) %>
+
+            <%=
+              f.select(
+                :with_line_item,
+                options_for_select(::SolidusSubscriptions::LineItem.joins(:subscribable).map { |item| [ item.subscribable.name, item.id ]}, params.dig(:q, :with_line_item)),
+                { include_blank: true },
+                class: 'select2 fullwidth'
+              )
+            %>
+          </div>
+        </div>
       </div>
 
       <div class="clearfix"></div>
-
       <div class="actions filter-actions">
         <div data-hook="admin_subscriptions_index_search_buttons">
           <%= button_tag I18n.t('spree.filter_results'), class: 'btn btn-primary' %>
