@@ -1265,7 +1265,7 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
     it { is_expected.to match_array [:in_processing_state, :with_line_item] }
   end
 
-  describe '.line_item' do
+  describe '.with_line_item' do
     let(:subscription) do
       create :subscription, :with_line_item
     end
