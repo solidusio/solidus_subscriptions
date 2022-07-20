@@ -3,15 +3,27 @@
 module SolidusSubscriptions
   class Configuration
     attr_accessor(
-      :maximum_total_skips, :maximum_reprocessing_time, :churn_buster_account_id,
-      :churn_buster_api_key, :clear_past_installments
+      :churn_buster_account_id,
+      :churn_buster_api_key,
+      :clear_past_installments,
+      :maximum_reprocessing_time,
+      :maximum_total_skips,
     )
 
     attr_writer(
-      :success_dispatcher_class, :failure_dispatcher_class, :payment_failed_dispatcher_class,
-      :out_of_stock_dispatcher, :maximum_successive_skips, :reprocessing_interval,
-      :minimum_cancellation_notice, :processing_queue, :subscription_line_item_attributes,
-      :subscription_attributes, :subscribable_class, :order_creator_class, :processing_error_handler
+      :failure_dispatcher_class,
+      :maximum_successive_skips,
+      :minimum_cancellation_notice,
+      :order_creator_class,
+      :out_of_stock_dispatcher,
+      :payment_failed_dispatcher_class,
+      :processing_error_handler,
+      :processing_queue,
+      :reprocessing_interval,
+      :subscribable_class,
+      :subscription_attributes,
+      :subscription_line_item_attributes,
+      :success_dispatcher_class,
     )
 
     def success_dispatcher_class
