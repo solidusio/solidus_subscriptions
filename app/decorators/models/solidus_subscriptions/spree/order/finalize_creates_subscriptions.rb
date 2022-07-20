@@ -17,12 +17,7 @@ module SolidusSubscriptions
         end
 
         define_method finalize_method do
-          SolidusSubscriptions::SubscriptionGenerator.group(subscription_line_items).each do |line_items|
-            SolidusSubscriptions::SubscriptionGenerator.activate(line_items)
-          end
-
-          reload
-
+          SolidusSubscriptions::SubscriptionGenerator.call(self)
           super()
         end
       end
