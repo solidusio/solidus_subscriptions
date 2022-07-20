@@ -22,9 +22,15 @@ module SolidusSubscriptions
       :reprocessing_interval,
       :subscribable_class,
       :subscription_attributes,
+      :subscription_generator_class,
       :subscription_line_item_attributes,
       :success_dispatcher_class,
     )
+
+    def subscription_generator_class
+      @subscription_generator_class ||= 'SolidusSubscriptions::SubscriptionGenerator'
+      @subscription_generator_class.constantize
+    end
 
     def success_dispatcher_class
       @success_dispatcher_class ||= 'SolidusSubscriptions::Dispatcher::SuccessDispatcher'

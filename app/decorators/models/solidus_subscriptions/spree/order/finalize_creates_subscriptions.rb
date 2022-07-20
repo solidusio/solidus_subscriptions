@@ -11,7 +11,7 @@ module SolidusSubscriptions
         method_name = Spree::Order.instance_methods.include?(:finalize) ? :finalize : :finalize!
 
         define_method(method_name) do
-          SolidusSubscriptions::SubscriptionGenerator.call(self)
+          SolidusSubscriptions.configuration.subscription_generator_class.call(self)
           super()
         end
 
@@ -20,4 +20,3 @@ module SolidusSubscriptions
     end
   end
 end
-
