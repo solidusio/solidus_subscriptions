@@ -4,7 +4,9 @@ require 'spec_helper'
 
 RSpec.describe SolidusSubscriptions::Spree::Order::FinalizeCreatesSubscriptions do
   describe '#finalize' do
-    subject(:finalize) { order.send(described_class.finalize_method) }
+    subject(:finalize) do
+      order.send(Spree::Order.instance_methods.include?(:finalize) ? :finalize : :finalize!)
+    end
 
     let(:order) { create :order, :with_subscription_line_items }
     let(:subscription_line_item) { order.subscription_line_items.last }

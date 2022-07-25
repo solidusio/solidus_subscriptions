@@ -8,6 +8,12 @@ module SolidusSubscriptions
 
     SubscriptionConfiguration = Struct.new(:interval_length, :interval_units, :end_date)
 
+    def call(order)
+      group(order.subscription_line_items).each { |line_items| activate(line_items) }
+
+      order.reload
+    end
+
     # Create and persist a subscription for a collection of subscription
     #   line items
     #
