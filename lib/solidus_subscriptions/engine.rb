@@ -72,6 +72,7 @@ module SolidusSubscriptions
           end
           SolidusSubscriptions::ChurnBusterSubscriber.omnes_subscriber.subscribe_to(::Spree::Bus)
           SolidusSubscriptions::EventStorageSubscriber.omnes_subscriber.subscribe_to(::Spree::Bus)
+          SolidusSubscriptions::OrderSubscriber.omnes_subscriber.subscribe_to(::Spree::Bus)
         end
       end
     end
