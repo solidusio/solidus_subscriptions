@@ -3,7 +3,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-branch = ENV.fetch('SOLIDUS_BRANCH', 'v3.1')
+branch = ENV.fetch('SOLIDUS_BRANCH', 'master')
 solidus_git, solidus_frontend_git = if (branch == 'master') || (branch >= 'v3.2')
                                       %w[solidusio/solidus solidusio/solidus_frontend]
                                     else
@@ -30,6 +30,13 @@ else
 end
 
 gemspec
+
+if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3')
+  # Fix for Rails 7+ / Ruby 3+, see https://stackoverflow.com/a/72474475
+  gem 'net-imap', require: false
+  gem 'net-pop', require: false
+  gem 'net-smtp', require: false
+end
 
 # Use a local Gemfile to include development dependencies that might not be
 # relevant for the project or for other contributors, e.g. pry-byebug.
