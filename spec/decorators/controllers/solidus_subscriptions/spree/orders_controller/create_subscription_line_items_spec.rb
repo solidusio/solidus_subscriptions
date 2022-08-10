@@ -9,7 +9,7 @@ RSpec.describe SolidusSubscriptions::Spree::OrdersController::CreateSubscription
   let!(:user) { create :user }
 
   before do
-    allow(controller).to receive_messages(try_spree_current_user: user)
+    allow(controller).to receive_messages(spree_current_user: user)
     create :store
   end
 
