@@ -1,7 +1,7 @@
 # solidus_subscriptions
 
-[![CircleCI](https://circleci.com/gh/solidusio-contrib/solidus_subscriptions.svg?style=shield)](https://circleci.com/gh/solidusio-contrib/solidus_subscriptions)
-[![codecov](https://codecov.io/gh/solidusio-contrib/solidus_subscriptions/branch/master/graph/badge.svg)](https://codecov.io/gh/solidusio-contrib/solidus_subscriptions)
+[![CircleCI](https://circleci.com/gh/solidusio/solidus_subscriptions.svg?style=shield)](https://circleci.com/gh/solidusio/solidus_subscriptions)
+[![codecov](https://codecov.io/gh/solidusio/solidus_subscriptions/branch/master/graph/badge.svg)](https://codecov.io/gh/solidusio/solidus_subscriptions)
 
 A Solidus extension to add subscriptions to your store.
 
@@ -10,7 +10,7 @@ A Solidus extension to add subscriptions to your store.
 Add solidus_subscriptions to your Gemfile:
 
 ```ruby
-gem 'solidus_subscriptions', github: 'solidusio-contrib/solidus_subscriptions'
+gem 'solidus_subscriptions', github: 'solidusio/solidus_subscriptions'
 ```
 
 Bundle your dependencies and run the installation generator:
@@ -91,13 +91,10 @@ The task creates ActiveJob jobs which can be fulfilled by your queue library of 
 We suggest using the [Whenever](https://github.com/javan/whenever) gem to schedule the task.
 
 ### Promotion rules
+
 This extensions adds the following [Promotion rules](https://guides.solidus.io/developers/promotions/promotion-rules.html):
 * `SolidusSubscriptions::Promotion::Rules::SubscriptionCreationOrder` which applies if the order is creating a subscription;
 * `SolidusSubscriptions::Promotion::Rules::SubscriptionInstallmentOrder` which applies if the order is an installment of a subscription.
-
-### API documentation
-
-You can find the API documentation [here](https://stoplight.io/p/docs/gh/solidusio-contrib/solidus_subscriptions?group=master).
 
 ### Churn Buster integration
 
