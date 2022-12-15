@@ -10,3 +10,6 @@ RSpec/DescribeClass:
 
 Rails/SkipsModelValidations:
   Enabled: false
+
+AllCops:
+  NewCops: disable
