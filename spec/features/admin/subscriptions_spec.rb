@@ -53,10 +53,20 @@ RSpec.describe 'Subscriptions admin' do
       end
     end
 
-    select variant.name, from: 'Subscribable'
+    select variant.pretty_name, from: 'Subscribable'
     fill_in 'Quantity', with: 1
 
-    expect { click_on 'Create' }.to change(SolidusSubscriptions::Subscription, :count).by(1)
+    expect(SolidusSubscriptions::Subscription.count).to eq(0)
+
+    # The State field is controlled by JS, so we need to set it at the last moment
+    # available.
+    state_id = Spree::State.last.id.to_s
+    find('input#subscription_shipping_address_attributes_state_id', visible: :all).set(state_id)
+    find('input#subscription_billing_address_attributes_state_id', visible: :all).set(state_id)
+
+    click_on 'Create'
+
+    expect(SolidusSubscriptions::Subscription.count).to eq(1)
 
     expect(page).to have_text('Subscription has been successfully created!')
   end
