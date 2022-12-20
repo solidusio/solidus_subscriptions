@@ -1262,7 +1262,20 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
   describe '.ransackable_scopes' do
     subject { described_class.ransackable_scopes }
 
-    it { is_expected.to match_array [:in_processing_state] }
+    it { is_expected.to match_array [:in_processing_state, :with_line_item] }
+  end
+
+  describe '.with_line_item' do
+    let(:subscription) do
+      create :subscription, :with_line_item
+    end
+
+    it 'can find subscription with line item' do
+      line_item_id = subscription.line_items.first.id
+      found_subscription = ::SolidusSubscriptions::Subscription.with_line_item(line_item_id).first
+
+      expect(found_subscription.id).to eql(subscription.id)
+    end
   end
 
   describe '.in_processing_state' do

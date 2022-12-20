@@ -48,21 +48,21 @@
       </div>
 
       <div class="row">
-        <div class="field-block col-4">
+        <div class="field-block col-3">
           <div class="field">
             <%= label_tag :q_user_email_cont, Spree.user_class.human_attribute_name(:email) %>
             <%= f.text_field :user_email_cont, size: 25 %>
           </div>
         </div>
 
-        <div class="field-block col-4">
+        <div class="field-block col-3">
           <div class="field">
             <%= label_tag :q_state_eq, SolidusSubscriptions::Subscription.human_attribute_name(:state) %>
             <%= f.select :state_eq, SolidusSubscriptions::Subscription.state_machines[:state].states.map {|s| [s.human_name, s.value]}, {include_blank: true}, class: 'select2 fullwidth' %>
           </div>
         </div>
 
-        <div class="field-block col-4">
+        <div class="field-block col-3">
           <div class="field">
             <%= label_tag :q_processing_state_eq, SolidusSubscriptions::Subscription.human_attribute_name(:processing_state) %>
 
@@ -85,10 +85,23 @@
             %>
           </div>
         </div>
+        <div class="field-block col-3">
+          <div class="field">
+            <%= label_tag :q_with_line_item_eq, SolidusSubscriptions::Subscription.human_attribute_name(:with_line_item) %>
+
+            <%=
+              f.select(
+                :with_line_item,
+                options_for_select(::SolidusSubscriptions::LineItem.joins(:subscribable).map { |item| [ item.subscribable.name, item.id ]}, params.dig(:q, :with_line_item)),
+                { include_blank: true },
+                class: 'select2 fullwidth'
+              )
+            %>
+          </div>
+        </div>
       </div>
 
       <div class="clearfix"></div>
-
       <div class="actions filter-actions">
         <div data-hook="admin_subscriptions_index_search_buttons">
           <%= button_tag I18n.t('spree.filter_results'), class: 'btn btn-primary' %>
@@ -110,6 +123,7 @@
         <th><%= sort_link(@search, :line_item_interval_length, SolidusSubscriptions::Subscription.human_attribute_name(:interval)) %></th>
         <th><%= sort_link(@search, :state, [:state, 'id asc'], SolidusSubscriptions::Subscription.human_attribute_name(:state)) %></th>
         <th><%= sort_link(@search, :processing_state, [:processing_state, 'id asc'], SolidusSubscriptions::Subscription.human_attribute_name(:processing_state)) %></th>
+        <th><%= SolidusSubscriptions::Subscription.human_attribute_name(:line_items) %></th>
         <th data-hook="admin_subscriptions_index_header_actions" class="actions"></th>
       </tr>
     </thead>
@@ -123,6 +137,7 @@
           <td><%= subscription.interval.inspect %></td>
           <td><%= render 'state_pill', subscription: subscription %></td>
           <td><%= render 'processing_state_pill', subscription: subscription %></td>
+          <td><%= subscription.line_items.map { |line_item| line_item.subscribable&.name }.join(", ") %></td>
           <td class="actions">
             <% if subscription.state_events.include?(:cancel) %>
               <%=
@@ -183,6 +198,7 @@
             <% end %>
 
             <%= link_to_edit(subscription, no_text: true) %>
+
           </td>
         </tr>
       <% end %>

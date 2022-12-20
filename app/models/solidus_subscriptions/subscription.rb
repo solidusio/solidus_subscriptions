@@ -83,8 +83,13 @@ module SolidusSubscriptions
       where(payment_method: nil, payment_source: nil)
     end)
 
+    # Scope for finding subscription with a specific item
+    scope :with_line_item, (lambda do |id|
+      joins(:line_items).where(line_items: { id: id })
+    end)
+
     def self.ransackable_scopes(_auth_object = nil)
-      [:in_processing_state]
+      [:in_processing_state, :with_line_item]
     end
 
     def self.processing_states
