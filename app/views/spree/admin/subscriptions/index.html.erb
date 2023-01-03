@@ -87,12 +87,12 @@
         </div>
         <div class="field-block col-3">
           <div class="field">
-            <%= label_tag :q_with_line_item_eq, SolidusSubscriptions::Subscription.human_attribute_name(:with_line_item) %>
+            <%= label_tag :q_with_subscribable_eq, SolidusSubscriptions::Subscription.human_attribute_name(:with_subscribable) %>
 
             <%=
               f.select(
-                :with_line_item,
-                options_for_select(::SolidusSubscriptions::LineItem.joins(:subscribable).map { |item| [ item.subscribable.name, item.id ]}, params.dig(:q, :with_line_item)),
+                :with_subscribable,
+                options_for_select(::Spree::Variant.includes(:product).where(id: ::SolidusSubscriptions::LineItem.distinct.pluck(:subscribable_id)).map { |subscribable| [ subscribable.name, subscribable.id ]}, params.dig(:q, :with_subscribable)),
                 { include_blank: true },
                 class: 'select2 fullwidth'
               )
