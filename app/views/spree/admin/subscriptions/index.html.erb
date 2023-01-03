@@ -137,7 +137,7 @@
           <td><%= subscription.interval.inspect %></td>
           <td><%= render 'state_pill', subscription: subscription %></td>
           <td><%= render 'processing_state_pill', subscription: subscription %></td>
-          <td><%= subscription.line_items.map { |line_item| line_item.subscribable&.name }.join(", ") %></td>
+          <td><%= subscription.line_items.includes(subscribable: :product).map { |line_item| line_item.subscribable&.name }.join(", ") %></td>
           <td class="actions">
             <% if subscription.state_events.include?(:cancel) %>
               <%=
