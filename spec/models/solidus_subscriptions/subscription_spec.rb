@@ -1262,19 +1262,23 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
   describe '.ransackable_scopes' do
     subject { described_class.ransackable_scopes }
 
-    it { is_expected.to match_array [:in_processing_state, :with_line_item] }
+    it { is_expected.to match_array [:in_processing_state, :with_subscribable] }
   end
 
-  describe '.with_line_item' do
+  describe '.with_subscribable' do
     let(:subscription) do
       create :subscription, :with_line_item
     end
+    let(:other_subscription) do
+      create :subscription, :with_line_item
+    end
 
-    it 'can find subscription with line item' do
-      line_item_id = subscription.line_items.first.id
-      found_subscription = ::SolidusSubscriptions::Subscription.with_line_item(line_item_id).first
+    it 'can find subscription with line items of the provided subscribable' do
+      subscribable = subscription.line_items.first.subscribable
+      other_subscribable = other_subscription.line_items.first.subscribable
 
-      expect(found_subscription.id).to eql(subscription.id)
+      expect(described_class.with_subscribable(subscribable)).to match_array([subscription])
+      expect(described_class.with_subscribable(other_subscribable)).to match_array([other_subscription])
     end
   end
 
