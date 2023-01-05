@@ -17,6 +17,13 @@ en:
       failed: This installment could not be processed
       payment_failed: The payment for this installment failed
 
+  cart_line_items:
+    subscription_fields:
+      quantity: I want
+      quantity_suffix: items
+      interval_length: every
+      subscription_fields: Subscription Settings
+
   spree:
     new_subscription: New Subscription
     admin:

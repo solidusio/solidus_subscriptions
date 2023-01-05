@@ -1,0 +1,30 @@
+<%= content_tag :h3, t('.subscription_fields') %>
+<%= fields_for :'subscription_line_item', SolidusSubscriptions::LineItem.new do |ff| %>
+  <div>
+    <%= ff.label :quantity, t('.quantity') %>
+    <%= ff.number_field :quantity %>
+    <%= ff.label :quantity, t('.quantity_suffix') %>
+  </div>
+
+  <div>
+    <%= ff.label :interval_length, t('.interval_length') %>
+    <%= ff.number_field :interval_length %>
+
+    <%= ff.collection_radio_buttons :interval_units, SolidusSubscriptions::LineItem.interval_units.to_a, :first, :first %>
+  </div>
+
+  <%= ff.hidden_field :subscribable_id %>
+<% end %>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function(e) {
+    var cartForm = document.querySelector('.product-page__info form');
+    cartForm.addEventListener('submit', function(e) {
+      var quantityInput = e.target.querySelector('[name*="quantity"]');
+      var subscriptionQuantityInput = e.target.querySelector('[name*="subscribable_id"]');
+
+      subscriptionQuantityInput.value = quantityInput.value;
+      return true;
+    });
+  });
+</script>
