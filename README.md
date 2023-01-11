@@ -17,6 +17,19 @@ Bundle your dependencies and run the installation generator:
 
 ```shell
 $ bundle
+$ bin/rails generate solidus_subscriptions:install --frontend=starter
+```
+
+Please, be aware that the starter installation only works with the default
+implementation of the starter frontend. Any customization to the files that
+will be modified by the installer might break the installation procedure.
+If that happens, try to adapt the installed code on top of the customizations
+of the store.
+
+
+If you are using the legacy `solidus_frontend` gem, please run this command instead:
+
+```shell
 $ bin/rails generate solidus_subscriptions:install
 ```
 

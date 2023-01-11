@@ -6,6 +6,7 @@ module SolidusSubscriptions
       source_root File.expand_path('templates', __dir__)
 
       class_option :auto_run_migrations, type: :boolean, default: false
+      class_option :frontend, type: :string, default: 'classic'
 
       def copy_initializer
         template 'initializer.rb', 'config/initializers/solidus_subscriptions.rb'
@@ -13,6 +14,21 @@ module SolidusSubscriptions
 
       def add_javascripts
         append_file 'vendor/assets/javascripts/spree/backend/all.js', "//= require spree/backend/solidus_subscriptions\n"
+      end
+
+      def copy_starter_frontend_files
+        return if options[:frontend] != 'starter'
+
+        copy_file 'app/views/cart_line_items/_subscription_fields.html.erb'
+        prepend_to_file 'app/views/cart_line_items/_product_submit.html.erb', "<%= render 'cart_line_items/subscription_fields' %>\n"
+
+        copy_file 'app/controllers/concerns/create_subscription.rb'
+        insert_into_file 'app/controllers/cart_line_items_controller.rb', after: "class CartLineItemsController < StoreController\n" do
+          <<~RUBY.indent(2)
+            include CreateSubscription
+
+          RUBY
+        end
       end
 
       def add_migrations
