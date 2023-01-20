@@ -8,22 +8,48 @@ orbs:
   solidusio_extensions: solidusio/extensions@volatile
 
 jobs:
-  run-specs-with-postgres:
-    executor: solidusio_extensions/postgres
-    steps:
-      - checkout
-      - solidusio_extensions/run-tests-solidus-older
-      - solidusio_extensions/run-tests-solidus-current
-      - solidusio_extensions/run-tests-solidus-master
-      - solidusio_extensions/store-test-results
   run-specs-with-mysql:
-    executor: solidusio_extensions/mysql
+    executor:
+      name: solidusio_extensions/mysql
+      ruby_version: <<parameters.ruby_version>>
     steps:
       - checkout
       - solidusio_extensions/run-tests-solidus-older
       - solidusio_extensions/run-tests-solidus-current
       - solidusio_extensions/run-tests-solidus-master
       - solidusio_extensions/store-test-results
+    parameters:
+      ruby_version:
+        type: string
+        default: '2.7'
+  run-specs-with-postgres:
+    executor:
+      name: solidusio_extensions/postgres
+      ruby_version: <<parameters.ruby_version>>
+    steps:
+      - checkout
+      - solidusio_extensions/run-tests-solidus-older
+      - solidusio_extensions/run-tests-solidus-current
+      - solidusio_extensions/run-tests-solidus-master
+      - solidusio_extensions/store-test-results
+    parameters:
+      ruby_version:
+        type: string
+        default: '3.0'
+  run-specs-with-sqlite:
+    executor:
+      name: solidusio_extensions/sqlite
+      ruby_version: <<parameters.ruby_version>>
+    steps:
+      - checkout
+      - solidusio_extensions/run-tests-solidus-older
+      - solidusio_extensions/run-tests-solidus-current
+      - solidusio_extensions/run-tests-solidus-master
+      - solidusio_extensions/store-test-results
+    parameters:
+      ruby_version:
+        type: string
+        default: '3.1'
   lint-code:
     executor: solidusio_extensions/sqlite-memory
     steps:
@@ -32,8 +58,15 @@ jobs:
 workflows:
   "Run specs on supported Solidus versions":
     jobs:
-      - run-specs-with-postgres
-      - run-specs-with-mysql
+      - run-specs-with-mysql:
+          ruby_version: '2.7'
+          name: run-specs-with-mysql-ruby-2.7
+      - run-specs-with-postgres:
+          ruby_version: '3.0'
+          name: run-specs-with-postgres-ruby-3.0
+      - run-specs-with-sqlite:
+          ruby_version: '3.1'
+          name: run-specs-with-sqlite-ruby-3.1
       - lint-code
 
   "Weekly run specs against master":
@@ -45,5 +78,12 @@ workflows:
               only:
                 - master
     jobs:
-      - run-specs-with-postgres
-      - run-specs-with-mysql
+      - run-specs-with-mysql:
+          ruby_version: '2.7'
+          name: run-specs-with-mysql-ruby-2.7
+      - run-specs-with-postgres:
+          ruby_version: '3.0'
+          name: run-specs-with-postgres-ruby-3.0
+      - run-specs-with-sqlite:
+          ruby_version: '3.1'
+          name: run-specs-with-sqlite-ruby-3.1
