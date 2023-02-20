@@ -101,5 +101,38 @@ RSpec.describe Spree::Api::LineItemsController, type: :controller do
           from(0).to(1)
       end
     end
+
+    context 'when updating subscription information' do
+      let!(:line_item) { create :subscription_line_item, interval_length: 30 }
+      let(:variant) { line_item.spree_line_item.variant }
+      let(:order) { line_item.spree_line_item.order }
+      let(:line_item_params) do
+        {
+          id: line_item.spree_line_item.id,
+          order_id: order.number,
+          order_token: order.guest_token,
+          format: 'json',
+          line_item: {
+            quantity: 1,
+          },
+          subscription_line_items_attributes: {
+            id: line_item.id,
+            interval_length: 15,
+          }
+        }
+      end
+
+      it { is_expected.to be_successful }
+
+      it 'does not create a new subscription line item' do
+        expect { patch_update }.
+          not_to change(SolidusSubscriptions::LineItem, :count)
+      end
+
+      it 'updates a new subscription line item' do
+        expect { patch_update }.
+          to change { line_item.reload.interval_length }.from(30).to(15)
+      end
+    end
   end
 end

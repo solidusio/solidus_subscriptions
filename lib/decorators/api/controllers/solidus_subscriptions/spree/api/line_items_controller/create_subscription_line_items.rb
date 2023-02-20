@@ -27,6 +27,20 @@ module SolidusSubscriptions
           def handle_subscription_line_items
             create_subscription_line_item(@line_item)
           end
+
+          def line_items_attributes
+            super.tap do |attrs|
+              if params[:subscription_line_items_attributes]
+                attrs[:line_items_attributes].merge!(
+                  subscription_line_items_attributes: subscription_line_item_params
+                )
+              end
+            end
+          end
+
+          def subscription_line_item_params
+            params[:subscription_line_items_attributes].permit(SolidusSubscriptions::PermittedAttributes.subscription_line_item_attributes)
+          end
         end
       end
     end
