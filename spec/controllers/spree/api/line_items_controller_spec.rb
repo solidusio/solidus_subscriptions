@@ -65,39 +65,41 @@ RSpec.describe Spree::Api::LineItemsController, type: :controller do
   end
 
   describe 'patch :update' do
-    subject(:patch_create) { patch :create, params: params }
+    subject(:patch_update) { patch :update, params: params }
 
     let(:params) { line_item_params }
-    let!(:variant) { create :variant }
-    let!(:order) { create :order }
-    let!(:line_item) { create :line_item, order: order, variant: variant }
 
-    let(:line_item_params) do
-      {
-        id: line_item.id,
-        order_id: order.number,
-        order_token: order.guest_token,
-        format: 'json',
-        line_item: {
-          quantity: 1,
-          variant_id: variant.id
-        },
-        subscription_line_item: {
-          quantity: 2,
-          end_date: '1990/10/12',
-          subscribable_id: variant.id,
-          interval_length: 30,
-          interval_units: "day"
+    context 'when adding subscription information' do
+      let(:variant) { create :variant }
+      let(:order) { create :order }
+      let(:line_item) { create :line_item, order: order, variant: variant }
+      let(:line_item_params) do
+        {
+          id: line_item.id,
+          order_id: order.number,
+          order_token: order.guest_token,
+          format: 'json',
+          line_item: {
+            quantity: 1,
+            variant_id: variant.id
+          },
+          subscription_line_item: {
+            quantity: 2,
+            end_date: '1990/10/12',
+            subscribable_id: variant.id,
+            interval_length: 30,
+            interval_units: "day"
+          }
         }
-      }
-    end
+      end
 
-    it { is_expected.to be_successful }
+      it { is_expected.to be_successful }
 
-    it 'creates a new subscription line item' do
-      expect { patch_create }.
-        to change(SolidusSubscriptions::LineItem, :count).
-        from(0).to(1)
+      it 'creates a new subscription line item' do
+        expect { patch_update }.
+          to change(SolidusSubscriptions::LineItem, :count).
+          from(0).to(1)
+      end
     end
   end
 end
