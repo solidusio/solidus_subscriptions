@@ -10,12 +10,12 @@ Gem::Specification.new do |spec|
 
   spec.summary = 'Add subscription support to Solidus'
   spec.description = 'Add subscription support to Solidus'
-  spec.homepage = 'https://github.com/solidusio-contrib/solidus_subscriptions'
+  spec.homepage = 'https://github.com/solidusio/solidus_subscriptions'
   spec.license = 'BSD-3-Clause'
 
   spec.metadata['homepage_uri'] = spec.homepage
-  spec.metadata['source_code_uri'] = 'https://github.com/solidusio-contrib/solidus_subscriptions'
-  spec.metadata['changelog_uri'] = 'https://github.com/solidusio-contrib/solidus_subscriptions/blob/master/CHANGELOG.md'
+  spec.metadata['source_code_uri'] = 'https://github.com/solidusio/solidus_subscriptions'
+  spec.metadata['changelog_uri'] = 'https://github.com/solidusio/solidus_subscriptions/blob/master/CHANGELOG.md'
 
   spec.required_ruby_version = Gem::Requirement.new('>= 2.5')
 
