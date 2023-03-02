@@ -2,7 +2,55 @@
 
 ## [v1.0.1](https://github.com/solidusio/solidus_subscriptions/tree/v1.0.1) (2023-03-01)
 
-[Full Changelog](https://github.com/solidusio/solidus_subscriptions/compare/a8a92654ba21b22bd3f8d07c3ae25e3604e7942a...v1.0.1)
+[Full Changelog](https://github.com/solidusio/solidus_subscriptions/compare/v1.0.0...v1.0.1)
+
+**Implemented enhancements:**
+
+- Free trials [\#231](https://github.com/solidusio/solidus_subscriptions/issues/231)
+- Allow managing individual orders [\#219](https://github.com/solidusio/solidus_subscriptions/issues/219)
+
+**Fixed bugs:**
+
+- N+1 in admin when loading subscription line items [\#274](https://github.com/solidusio/solidus_subscriptions/issues/274)
+- Bugfix update column when pausing [\#245](https://github.com/solidusio/solidus_subscriptions/pull/245) ([FrancescoAiello01](https://github.com/FrancescoAiello01))
+
+**Closed issues:**
+
+- The extension should be tested on all supported ruby versions [\#280](https://github.com/solidusio/solidus_subscriptions/issues/280)
+- Allow guest orders to manage subscriptions via API [\#279](https://github.com/solidusio/solidus_subscriptions/issues/279)
+- Fix broken link to API docs [\#271](https://github.com/solidusio/solidus_subscriptions/issues/271)
+- Add endpoint to list all subscriptions for a user [\#272](https://github.com/solidusio/solidus_subscriptions/issues/272)
+- Link to API docs in README is broken [\#266](https://github.com/solidusio/solidus_subscriptions/issues/266)
+- I can't get rid of sollidus\_subscription [\#265](https://github.com/solidusio/solidus_subscriptions/issues/265)
+- Subscription appears on all product pages. [\#264](https://github.com/solidusio/solidus_subscriptions/issues/264)
+- Stop decorating `order#finalize!` to create subscriptions [\#260](https://github.com/solidusio/solidus_subscriptions/issues/260)
+- Allow overriding `Checkout` with a custom class [\#238](https://github.com/solidusio/solidus_subscriptions/issues/238)
+- Method to filter out line\_items that are associated with a subscription [\#227](https://github.com/solidusio/solidus_subscriptions/issues/227)
+
+**Merged pull requests:**
+
+- Allow updating subscription information in cart [\#282](https://github.com/solidusio/solidus_subscriptions/pull/282) ([kennyadsl](https://github.com/kennyadsl))
+- Run specs on Ruby 2.7, 3.0 and 3.1 [\#281](https://github.com/solidusio/solidus_subscriptions/pull/281) ([FrancescoAiello01](https://github.com/FrancescoAiello01))
+- Support the new starter frontend installation [\#276](https://github.com/solidusio/solidus_subscriptions/pull/276) ([kennyadsl](https://github.com/kennyadsl))
+- Fix filtering by line item in admin [\#275](https://github.com/solidusio/solidus_subscriptions/pull/275) ([nirebu](https://github.com/nirebu))
+- Update README links [\#273](https://github.com/solidusio/solidus_subscriptions/pull/273) ([elia](https://github.com/elia))
+- Restore running specs for solidus master [\#262](https://github.com/solidusio/solidus_subscriptions/pull/262) ([elia](https://github.com/elia))
+- Create order finalized subscriber/job for subscription creation [\#261](https://github.com/solidusio/solidus_subscriptions/pull/261) ([FrancescoAiello01](https://github.com/FrancescoAiello01))
+- Update to use forked solidus\_frontend when needed [\#259](https://github.com/solidusio/solidus_subscriptions/pull/259) ([waiting-for-dev](https://github.com/waiting-for-dev))
+- Make the subscription generator a configurable class [\#258](https://github.com/solidusio/solidus_subscriptions/pull/258) ([elia](https://github.com/elia))
+- Fix CI for broken solidus master [\#257](https://github.com/solidusio/solidus_subscriptions/pull/257) ([elia](https://github.com/elia))
+- Added a way for admins to filter subscriptions by line item [\#256](https://github.com/solidusio/solidus_subscriptions/pull/256) ([styrken](https://github.com/styrken))
+- Compare GemVersions to GemVersions instead of string [\#255](https://github.com/solidusio/solidus_subscriptions/pull/255) ([styrken](https://github.com/styrken))
+- Support Rails 7 and Solidus 3.2 [\#252](https://github.com/solidusio/solidus_subscriptions/pull/252) ([waiting-for-dev](https://github.com/waiting-for-dev))
+- Link to the user in the subscription details sidebar [\#251](https://github.com/solidusio/solidus_subscriptions/pull/251) ([nirebu](https://github.com/nirebu))
+- support ruby 3 [\#246](https://github.com/solidusio/solidus_subscriptions/pull/246) ([ccarruitero](https://github.com/ccarruitero))
+- Add ability to pause/resume subscriptions [\#244](https://github.com/solidusio/solidus_subscriptions/pull/244) ([FrancescoAiello01](https://github.com/FrancescoAiello01))
+- Log installments errors by default [\#235](https://github.com/solidusio/solidus_subscriptions/pull/235) ([kennyadsl](https://github.com/kennyadsl))
+- Upgrade to GitHub-native Dependabot [\#228](https://github.com/solidusio/solidus_subscriptions/pull/228) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+
+## [v1.0.0](https://github.com/solidusio/solidus_subscriptions/tree/v1.0.0) (2021-05-16)
+
+[Full Changelog](https://github.com/solidusio/solidus_subscriptions/compare/a8a92654ba21b22bd3f8d07c3ae25e3604e7942a...v1.0.0)
 
 **Breaking changes:**
 
@@ -15,8 +63,6 @@
 
 **Implemented enhancements:**
 
-- Free trials [\#231](https://github.com/solidusio/solidus_subscriptions/issues/231)
-- Allow managing individual orders [\#219](https://github.com/solidusio/solidus_subscriptions/issues/219)
 - Validate payment source ownership [\#208](https://github.com/solidusio/solidus_subscriptions/issues/208)
 - Prepare Solidus Subscriptions for Solidus 3.0 [\#194](https://github.com/solidusio/solidus_subscriptions/issues/194)
 - Process each subscription in a separate background job [\#190](https://github.com/solidusio/solidus_subscriptions/issues/190)
@@ -51,14 +97,12 @@
 
 **Fixed bugs:**
 
-- N+1 in admin when loading subscription line items [\#274](https://github.com/solidusio/solidus_subscriptions/issues/274)
 - Set default currency when creating subscription from admin panel [\#207](https://github.com/solidusio/solidus_subscriptions/issues/207)
 - skip\_count is never incremented [\#146](https://github.com/solidusio/solidus_subscriptions/issues/146)
 - FailureDispatcher is not compatible with Solidus v2.11 [\#135](https://github.com/solidusio/solidus_subscriptions/issues/135)
 - Handle subscriptions with deleted products [\#133](https://github.com/solidusio/solidus_subscriptions/issues/133)
 - Fix double creation of subscription line items [\#132](https://github.com/solidusio/solidus_subscriptions/issues/132)
 - \#Interval incorrectly builds interval [\#44](https://github.com/solidusio/solidus_subscriptions/issues/44)
-- Bugfix update column when pausing [\#245](https://github.com/solidusio/solidus_subscriptions/pull/245) ([FrancescoAiello01](https://github.com/FrancescoAiello01))
 - Fix skip counters to handle skip limits [\#188](https://github.com/solidusio/solidus_subscriptions/pull/188) ([AlessioRocco](https://github.com/AlessioRocco))
 - Fix legacy unsubscribable subscriptions not being processed [\#173](https://github.com/solidusio/solidus_subscriptions/pull/173) ([aldesantis](https://github.com/aldesantis))
 - Fix automatic cancellation in case of subscription failure [\#168](https://github.com/solidusio/solidus_subscriptions/pull/168) ([aldesantis](https://github.com/aldesantis))
@@ -84,16 +128,6 @@
 
 **Closed issues:**
 
-- The extension should be tested on all supported ruby versions [\#280](https://github.com/solidusio/solidus_subscriptions/issues/280)
-- Allow guest orders to manage subscriptions via API [\#279](https://github.com/solidusio/solidus_subscriptions/issues/279)
-- Fix broken link to API docs [\#271](https://github.com/solidusio/solidus_subscriptions/issues/271)
-- Add endpoint to list all subscriptions for a user [\#272](https://github.com/solidusio/solidus_subscriptions/issues/272)
-- Link to API docs in README is broken [\#266](https://github.com/solidusio/solidus_subscriptions/issues/266)
-- I can't get rid of sollidus\_subscription [\#265](https://github.com/solidusio/solidus_subscriptions/issues/265)
-- Subscription appears on all product pages. [\#264](https://github.com/solidusio/solidus_subscriptions/issues/264)
-- Stop decorating `order#finalize!` to create subscriptions [\#260](https://github.com/solidusio/solidus_subscriptions/issues/260)
-- Allow overriding `Checkout` with a custom class [\#238](https://github.com/solidusio/solidus_subscriptions/issues/238)
-- Method to filter out line\_items that are associated with a subscription [\#227](https://github.com/solidusio/solidus_subscriptions/issues/227)
 - Dependabot can't resolve your Ruby dependency files [\#226](https://github.com/solidusio/solidus_subscriptions/issues/226)
 - Fix sandbox generation [\#196](https://github.com/solidusio/solidus_subscriptions/issues/196)
 - Dependabot can't resolve your Ruby dependency files [\#187](https://github.com/solidusio/solidus_subscriptions/issues/187)
@@ -126,25 +160,7 @@
 
 **Merged pull requests:**
 
-- Allow updating subscription information in cart [\#282](https://github.com/solidusio/solidus_subscriptions/pull/282) ([kennyadsl](https://github.com/kennyadsl))
-- Run specs on Ruby 2.7, 3.0 and 3.1 [\#281](https://github.com/solidusio/solidus_subscriptions/pull/281) ([FrancescoAiello01](https://github.com/FrancescoAiello01))
-- Support the new starter frontend installation [\#276](https://github.com/solidusio/solidus_subscriptions/pull/276) ([kennyadsl](https://github.com/kennyadsl))
-- Fix filtering by line item in admin [\#275](https://github.com/solidusio/solidus_subscriptions/pull/275) ([nirebu](https://github.com/nirebu))
-- Update README links [\#273](https://github.com/solidusio/solidus_subscriptions/pull/273) ([elia](https://github.com/elia))
-- Restore running specs for solidus master [\#262](https://github.com/solidusio/solidus_subscriptions/pull/262) ([elia](https://github.com/elia))
-- Create order finalized subscriber/job for subscription creation [\#261](https://github.com/solidusio/solidus_subscriptions/pull/261) ([FrancescoAiello01](https://github.com/FrancescoAiello01))
-- Update to use forked solidus\_frontend when needed [\#259](https://github.com/solidusio/solidus_subscriptions/pull/259) ([waiting-for-dev](https://github.com/waiting-for-dev))
-- Make the subscription generator a configurable class [\#258](https://github.com/solidusio/solidus_subscriptions/pull/258) ([elia](https://github.com/elia))
-- Fix CI for broken solidus master [\#257](https://github.com/solidusio/solidus_subscriptions/pull/257) ([elia](https://github.com/elia))
-- Added a way for admins to filter subscriptions by line item [\#256](https://github.com/solidusio/solidus_subscriptions/pull/256) ([styrken](https://github.com/styrken))
-- Compare GemVersions to GemVersions instead of string [\#255](https://github.com/solidusio/solidus_subscriptions/pull/255) ([styrken](https://github.com/styrken))
-- Support Rails 7 and Solidus 3.2 [\#252](https://github.com/solidusio/solidus_subscriptions/pull/252) ([waiting-for-dev](https://github.com/waiting-for-dev))
-- Link to the user in the subscription details sidebar [\#251](https://github.com/solidusio/solidus_subscriptions/pull/251) ([nirebu](https://github.com/nirebu))
-- support ruby 3 [\#246](https://github.com/solidusio/solidus_subscriptions/pull/246) ([ccarruitero](https://github.com/ccarruitero))
-- Add ability to pause/resume subscriptions [\#244](https://github.com/solidusio/solidus_subscriptions/pull/244) ([FrancescoAiello01](https://github.com/FrancescoAiello01))
-- Log installments errors by default [\#235](https://github.com/solidusio/solidus_subscriptions/pull/235) ([kennyadsl](https://github.com/kennyadsl))
 - Introduce Installment OrderCreator configuration [\#229](https://github.com/solidusio/solidus_subscriptions/pull/229) ([cesartalves](https://github.com/cesartalves))
-- Upgrade to GitHub-native Dependabot [\#228](https://github.com/solidusio/solidus_subscriptions/pull/228) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Update solidus\_core requirement from \>= 2.0.0, \< 3 to \>= 2.0.0, \< 4 [\#225](https://github.com/solidusio/solidus_subscriptions/pull/225) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Fix Api Subscription Permitted LineItem Attributes [\#223](https://github.com/solidusio/solidus_subscriptions/pull/223) ([cesartalves](https://github.com/cesartalves))
 - Fix Spree::OrdersController decoration [\#221](https://github.com/solidusio/solidus_subscriptions/pull/221) ([cesartalves](https://github.com/cesartalves))
