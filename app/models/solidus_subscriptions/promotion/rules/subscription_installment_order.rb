@@ -22,7 +22,7 @@ module SolidusSubscriptions
         #   to it.
         #
         # @return [Boolean]
-        def eligible?(order, **_options)
+        def eligible?(order, _options = {})
           order.subscription_order?
         end
       end
