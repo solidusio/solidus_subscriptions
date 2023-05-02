@@ -8,66 +8,45 @@ orbs:
   solidusio_extensions: solidusio/extensions@volatile
 
 jobs:
-  run-specs-with-mysql:
+  run-specs:
+    parameters:
+      solidus:
+        type: string
+        default: master
+      db:
+        type: string
+        default: "postgres"
+      ruby:
+        type: string
+        default: "3.2"
     executor:
-      name: solidusio_extensions/mysql
-      ruby_version: <<parameters.ruby_version>>
+      name: solidusio_extensions/<< parameters.db >>
+      ruby_version: << parameters.ruby >>
     steps:
       - checkout
-      - solidusio_extensions/run-tests-solidus-older
-      - solidusio_extensions/run-tests-solidus-current
-      - solidusio_extensions/run-tests-solidus-master
-      - solidusio_extensions/store-test-results
-    parameters:
-      ruby_version:
-        type: string
-        default: '2.7'
-  run-specs-with-postgres:
-    executor:
-      name: solidusio_extensions/postgres
-      ruby_version: <<parameters.ruby_version>>
-    steps:
-      - checkout
-      - solidusio_extensions/run-tests-solidus-older
-      - solidusio_extensions/run-tests-solidus-current
-      - solidusio_extensions/run-tests-solidus-master
-      - solidusio_extensions/store-test-results
-    parameters:
-      ruby_version:
-        type: string
-        default: '3.0'
-  run-specs-with-sqlite:
-    executor:
-      name: solidusio_extensions/sqlite
-      ruby_version: <<parameters.ruby_version>>
-    steps:
-      - checkout
-      - solidusio_extensions/run-tests-solidus-older
-      - solidusio_extensions/run-tests-solidus-current
-      - solidusio_extensions/run-tests-solidus-master
-      - solidusio_extensions/store-test-results
-    parameters:
-      ruby_version:
-        type: string
-        default: '3.1'
+      - solidusio_extensions/run-tests-solidus-<< parameters.solidus >>
   lint-code:
-    executor: solidusio_extensions/sqlite-memory
+    executor:
+      name: solidusio_extensions/sqlite-memory
+      ruby_version: 2.5
     steps:
       - solidusio_extensions/lint-code
 
 workflows:
   "Run specs on supported Solidus versions":
     jobs:
-      - run-specs-with-mysql:
-          ruby_version: '2.7'
-          name: run-specs-with-mysql-ruby-2.7
-      - run-specs-with-postgres:
-          ruby_version: '3.0'
-          name: run-specs-with-postgres-ruby-3.0
-      - run-specs-with-sqlite:
-          ruby_version: '3.1'
-          name: run-specs-with-sqlite-ruby-3.1
-      - lint-code
+      - run-specs:
+          name: &name "run-specs-solidus-<< matrix.solidus >>-ruby-<< matrix.ruby >>-db-<< matrix.db >>"
+          matrix:
+            parameters: { solidus: ["master"], ruby: ["3.2"], db: ["postgres"] }
+      - run-specs:
+          name: *name
+          matrix:
+            parameters: { solidus: ["current"], ruby: ["3.1"], db: ["mysql"] }
+      - run-specs:
+          name: *name
+          matrix:
+            parameters: { solidus: ["older"], ruby: ["3.0"], db: ["sqlite"] }
 
   "Weekly run specs against master":
     triggers:
@@ -78,12 +57,11 @@ workflows:
               only:
                 - master
     jobs:
-      - run-specs-with-mysql:
-          ruby_version: '2.7'
-          name: run-specs-with-mysql-ruby-2.7
-      - run-specs-with-postgres:
-          ruby_version: '3.0'
-          name: run-specs-with-postgres-ruby-3.0
-      - run-specs-with-sqlite:
-          ruby_version: '3.1'
-          name: run-specs-with-sqlite-ruby-3.1
+      - run-specs:
+          name: *name
+          matrix:
+            parameters: { solidus: ["master"], ruby: ["3.2"], db: ["postgres"] }
+      - run-specs:
+          name: *name
+          matrix:
+            parameters: { solidus: ["current"], ruby: ["3.1"], db: ["mysql"] }
