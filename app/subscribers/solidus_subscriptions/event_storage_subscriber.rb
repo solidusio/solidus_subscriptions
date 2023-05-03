@@ -1,17 +1,16 @@
 # frozen_string_literal: true
 
 module SolidusSubscriptions
-  module EventStorageSubscriber
-    include ::Spree::Event::Subscriber
-    include ::SolidusSupport::LegacyEventCompat::Subscriber
+  class EventStorageSubscriber
+    include Omnes::Subscriber
 
-    event_action :track_subscription_created, event_name: 'solidus_subscriptions.subscription_created'
-    event_action :track_subscription_activated, event_name: 'solidus_subscriptions.subscription_activated'
-    event_action :track_subscription_canceled, event_name: 'solidus_subscriptions.subscription_canceled'
-    event_action :track_subscription_ended, event_name: 'solidus_subscriptions.subscription_ended'
-    event_action :track_subscription_shipping_address_changed, event_name: 'solidus_subscriptions.subscription_shipping_address_changed'
-    event_action :track_subscription_billing_address_changed, event_name: 'solidus_subscriptions.subscription_billing_address_changed'
-    event_action :track_subscription_frequency_changed, event_name: 'solidus_subscriptions.subscription_frequency_changed'
+    handle :"solidus_subscriptions.subscription_created", with: :track_subscription_created
+    handle :"solidus_subscriptions.subscription_activated", with: :track_subscription_activated
+    handle :"solidus_subscriptions.subscription_canceled", with: :track_subscription_canceled
+    handle :"solidus_subscriptions.subscription_ended", with: :track_subscription_ended
+    handle :"solidus_subscriptions.subscription_shipping_address_changed", with: :track_subscription_shipping_address_changed
+    handle :"solidus_subscriptions.subscription_billing_address_changed", with: :track_subscription_billing_address_changed
+    handle :"solidus_subscriptions.subscription_frequency_changed", with: :track_subscription_frequency_changed
 
     def track_subscription_created(event)
       event.payload.fetch(:subscription).events.create!(
