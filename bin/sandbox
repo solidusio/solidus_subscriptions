@@ -22,7 +22,7 @@ if [ ! -z $SOLIDUS_BRANCH ]
 then
   BRANCH=$SOLIDUS_BRANCH
 else
-  BRANCH="master"
+  BRANCH="main"
 fi
 
 extension_name="solidus_subscriptions"
