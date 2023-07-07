@@ -71,7 +71,7 @@ unbundled bundle exec rails generate solidus:install \
   --payment-method=none \
   $@
 
-unbundled bundle exec rails generate ${extension_name}:install --frontend=starter --auto-run-migrations=true
+unbundled bundle exec rails generate ${extension_name}:install --auto-run-migrations=true
 
 echo
 echo "🚀 Sandbox app successfully created for $extension_name!"

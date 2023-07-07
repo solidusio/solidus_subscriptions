@@ -6,7 +6,8 @@ module SolidusSubscriptions
       source_root File.expand_path('templates', __dir__)
 
       class_option :auto_run_migrations, type: :boolean, default: false
-      class_option :frontend, type: :string, default: 'classic'
+      # Either 'starter' or 'classic'
+      class_option :frontend, type: :string, default: 'starter'
 
       def copy_initializer
         template 'initializer.rb', 'config/initializers/solidus_subscriptions.rb'
