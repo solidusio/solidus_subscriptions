@@ -9,7 +9,7 @@ module SolidusSubscriptions
 
     attr_writer(
       :success_dispatcher_class, :failure_dispatcher_class, :payment_failed_dispatcher_class,
-      :out_of_stock_dispatcher, :maximum_successive_skips, :reprocessing_interval,
+      :out_of_stock_dispatcher_class, :maximum_successive_skips, :reprocessing_interval,
       :minimum_cancellation_notice, :processing_queue, :subscription_line_item_attributes,
       :subscription_attributes, :subscribable_class, :order_creator_class, :processing_error_handler
     )
