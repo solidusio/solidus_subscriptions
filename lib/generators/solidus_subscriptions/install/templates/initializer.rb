@@ -50,7 +50,7 @@ SolidusSubscriptions.configure do |config|
   # config.payment_failed_dispatcher_class = 'SolidusSubscriptions::Dispatcher::PaymentFailedDispatcher'
 
   # This handler is called when there isn't enough stock to fulfill an installment.
-  # config.out_of_stock_dispatcher = 'SolidusSubscriptions::Dispatcher::OutOfStockDispatcher'
+  # config.out_of_stock_dispatcher_class = 'SolidusSubscriptions::Dispatcher::OutOfStockDispatcher'
 
   # ===================================== Permitted attributes =====================================
   #

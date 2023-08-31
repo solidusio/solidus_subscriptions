@@ -15,7 +15,7 @@ module SolidusSubscriptions
       :maximum_successive_skips,
       :minimum_cancellation_notice,
       :order_creator_class,
-      :out_of_stock_dispatcher,
+      :out_of_stock_dispatcher_class,
       :payment_failed_dispatcher_class,
       :processing_error_handler,
       :processing_queue,
