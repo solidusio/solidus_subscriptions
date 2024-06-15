@@ -135,7 +135,7 @@ module SolidusSubscriptions
       end
 
       after_transition to: :active, do: :advance_actionable_date
-      after_transition do: :emit_event_for_transition
+      #after_transition do: :emit_event_for_transition
     end
 
     # This method determines if a subscription may be canceled. Canceled
@@ -431,6 +431,14 @@ module SolidusSubscriptions
       if previous_changes.key?('payment_source_id') || previous_changes.key?('payment_source_type') || previous_changes.key?('payment_method_id')
         emit_event(type: 'subscription_payment_method_changed')
       end
+    end
+
+    def self.ransackable_attributes(_auth_object = nil)
+      %w[actionable_date billing_address_id created_at currency end_date guest_token id id_value interval_length interval_units paused payment_method_id payment_source_id payment_source_type shipping_address_id skip_count state store_id successive_skip_count updated_at user_id]
+    end
+
+    def self.ransackable_associations(_auth_object = nil)
+      %w[billing_address events installment_details installments line_items orders payment_method payment_source shipping_address store user]
     end
   end
 end
