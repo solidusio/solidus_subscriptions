@@ -41,8 +41,8 @@ module SolidusSubscriptions
 
       ::Spree::Backend::Config.configure do |config|
         config.menu_items << config.class::MenuItem.new(
-          [:subscriptions],
-          'repeat',
+          label: :subscriptions,
+          icon: 'repeat',
           url: :admin_subscriptions_path,
           condition: ->{ can?(:admin, SolidusSubscriptions::Subscription) },
           match_path: '/subscriptions'
