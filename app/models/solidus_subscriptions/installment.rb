@@ -131,5 +131,9 @@ module SolidusSubscriptions
 
       (DateTime.current + SolidusSubscriptions.configuration.reprocessing_interval).beginning_of_minute
     end
+
+    def self.ransackable_attributes(_auth_object = nil)
+      %w[actionable_date created_at id id_value subscription_id updated_at]
+    end
   end
 end
