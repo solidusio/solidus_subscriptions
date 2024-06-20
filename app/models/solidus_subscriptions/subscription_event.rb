@@ -9,7 +9,7 @@ module SolidusSubscriptions
     end
 
     def self.ransackable_attributes(_auth_object = nil)
-      %w[created_at details event_type id id_value subscription_id updated_at]
+      %w[created_at subscription_id updated_at]
     end
   end
 end

@@ -133,7 +133,7 @@ module SolidusSubscriptions
     end
 
     def self.ransackable_attributes(_auth_object = nil)
-      %w[actionable_date created_at id id_value subscription_id updated_at]
+      %w[actionable_date created_at updated_at]
     end
   end
 end

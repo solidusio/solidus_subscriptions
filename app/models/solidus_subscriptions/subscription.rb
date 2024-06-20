@@ -434,11 +434,11 @@ module SolidusSubscriptions
     end
 
     def self.ransackable_attributes(_auth_object = nil)
-      %w[actionable_date billing_address_id created_at currency end_date guest_token id id_value interval_length interval_units paused payment_method_id payment_source_id payment_source_type shipping_address_id skip_count state store_id successive_skip_count updated_at user_id]
+      %w[actionable_date created_at end_date state  updated_at user_id]
     end
 
     def self.ransackable_associations(_auth_object = nil)
-      %w[billing_address events installment_details installments line_items orders payment_method payment_source shipping_address store user]
+      %w[events user]
     end
 
   end
