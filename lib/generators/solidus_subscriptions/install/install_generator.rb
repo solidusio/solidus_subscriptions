@@ -14,7 +14,9 @@ module SolidusSubscriptions
       end
 
       def add_javascripts
-        append_file 'vendor/assets/javascripts/spree/backend/all.js', "//= require spree/backend/solidus_subscriptions\n"
+        if SolidusSupport.backend_available?
+          append_file 'vendor/assets/javascripts/spree/backend/all.js', "//= require spree/backend/solidus_subscriptions\n"
+        end
       end
 
       def copy_starter_frontend_files
