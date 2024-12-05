@@ -3,6 +3,16 @@
 module SolidusSubscriptions
   module PermissionSets
     class DefaultCustomer < ::Spree::PermissionSets::Base
+      class << self
+        def privilege
+          :customer
+        end
+
+        def category
+          :subscription
+        end
+      end
+
       def activate!
         can [:show, :display, :update, :skip, :cancel, :pause, :resume], Subscription, ['user_id = ?', user.id] do |subscription, guest_token|
           (subscription.guest_token.present? && subscription.guest_token == guest_token) ||

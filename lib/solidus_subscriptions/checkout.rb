@@ -42,7 +42,6 @@ module SolidusSubscriptions
     end
 
     def finalize_order(order)
-      ::Spree::PromotionHandler::Cart.new(order).activate
       order.recalculate
 
       order.checkout_steps[0...-1].each do
