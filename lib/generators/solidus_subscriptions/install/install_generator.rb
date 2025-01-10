@@ -30,6 +30,10 @@ module SolidusSubscriptions
 
           RUBY
         end
+
+        inject_into_file 'app/views/cart_line_items/_product_variants.html.erb',
+          "            \"data-subscribable\" => variant.subscribable,\n",
+          before: "            \"data-price\" => variant.price_for_options(current_pricing_options)&.money&.to_html\n"
       end
 
       def add_migrations
