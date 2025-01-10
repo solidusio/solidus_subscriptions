@@ -136,3 +136,7 @@ en:
               not_active: "cannot pause/resume a subscription which is not active"
             state:
               cannot_skip: cannot skip a subscription which is canceled or inactive
+        solidus_subscriptions/line_item:
+          attributes:
+            subscribable:
+              cannot_subscribe: "The requested item cannot be subscribed"
