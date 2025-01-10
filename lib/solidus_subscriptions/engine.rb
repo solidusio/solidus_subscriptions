@@ -31,9 +31,11 @@ module SolidusSubscriptions
       }
     end
 
-    initializer 'solidus_subscriptions.register_promotion_rules', after: 'spree.promo.register.promotion.rules' do |app|
-      app.config.spree.promotions.rules << 'SolidusSubscriptions::Promotion::Rules::SubscriptionCreationOrder'
-      app.config.spree.promotions.rules << 'SolidusSubscriptions::Promotion::Rules::SubscriptionInstallmentOrder'
+    if Object.const_defined?("Spree::Promotion")
+      initializer 'solidus_subscriptions.register_promotion_rules', after: 'spree.promo.register.promotion.rules' do |app|
+        app.config.spree.promotions.rules << 'SolidusSubscriptions::Promotion::Rules::SubscriptionCreationOrder'
+        app.config.spree.promotions.rules << 'SolidusSubscriptions::Promotion::Rules::SubscriptionInstallmentOrder'
+      end
     end
 
     initializer 'solidus_subscriptions.configure_backend' do
