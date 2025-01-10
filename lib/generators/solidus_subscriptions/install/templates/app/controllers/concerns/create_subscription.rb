@@ -5,7 +5,7 @@ module CreateSubscription
   include SolidusSubscriptions::SubscriptionLineItemBuilder
 
   included do
-    after_action :handle_subscription_line_items, only: :create, if: :subscription_line_item_params_present?
+    after_action :handle_subscription_line_items, only: :create, if: :valid_subscription_line_item_params?
   end
 
   private
@@ -15,13 +15,8 @@ module CreateSubscription
     create_subscription_line_item(line_item)
   end
 
-  def subscription_params
-    params.fetch(:subscription_line_item, {})
-  end
-
-  def subscription_line_item_params_present?
-    subscription_params[:subscribable_id].present? &&
-      subscription_params[:quantity].present? &&
-      subscription_params[:interval_length].present?
+  def valid_subscription_line_item_params?
+    subscription_params = params[:subscription_line_item]
+    %i[subscribable_id quantity interval_length].all? { |key| subscription_params[key].present? }
   end
 end

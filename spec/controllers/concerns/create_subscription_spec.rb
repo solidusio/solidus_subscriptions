@@ -31,7 +31,7 @@ RSpec.describe CreateSubscription, type: :controller do
             interval_length: 1
           }
         }
-        expect(controller_instance.send(:subscription_line_item_params_present?)).to be true
+        expect(controller_instance.send(:valid_subscription_line_item_params?)).to be true
       end
     end
 
@@ -44,7 +44,7 @@ RSpec.describe CreateSubscription, type: :controller do
             interval_length: ''
           }
         }
-        expect(controller_instance.send(:subscription_line_item_params_present?)).to be false
+        expect(controller_instance.send(:valid_subscription_line_item_params?)).to be false
       end
     end
   end
@@ -59,7 +59,7 @@ RSpec.describe CreateSubscription, type: :controller do
           subscription_line_item: {}
         }
 
-        expect(controller_instance.send(:subscription_line_item_params_present?)).to be false
+        expect(controller_instance.send(:valid_subscription_line_item_params?)).to be false
 
         expect(controller_instance).not_to receive(:handle_subscription_line_items)
 
