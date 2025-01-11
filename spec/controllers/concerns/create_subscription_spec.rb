@@ -52,7 +52,7 @@ RSpec.describe CreateSubscription, type: :controller do
   describe '#handle_subscription_line_items' do
     context 'when subscription params are missing' do
       it 'does not invoke handle_subscription_line_items and does not create a subscription line item' do
-        initial_line_item_count = order.line_items.count
+        order.line_items.count
 
         controller_instance.params = {
           variant_id: variant.id,
