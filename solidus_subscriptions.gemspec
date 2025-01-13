@@ -37,7 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'state_machines'
 
   spec.add_development_dependency 'rspec-activemodel-mocks'
-  spec.add_development_dependency 'shoulda-matchers', '~> 4.4'
+  spec.add_development_dependency 'shoulda-matchers', '~> 6.4'
   spec.add_development_dependency 'solidus_dev_support', '~> 2.0'
   spec.add_development_dependency 'timecop'
   spec.add_development_dependency 'vcr'
