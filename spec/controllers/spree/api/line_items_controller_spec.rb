@@ -11,7 +11,7 @@ RSpec.describe Spree::Api::LineItemsController, type: :controller do
     subject(:post_create) { post :create, params: params }
 
     let(:params) { line_item_params }
-    let!(:variant) { create :variant }
+    let!(:variant) { create :variant, subscribable: true }
     let!(:order) { create :order }
 
     let(:line_item_params) do
@@ -70,7 +70,7 @@ RSpec.describe Spree::Api::LineItemsController, type: :controller do
     let(:params) { line_item_params }
 
     context 'when adding subscription information' do
-      let(:variant) { create :variant }
+      let(:variant) { create :variant, subscribable: true }
       let(:order) { create :order }
       let(:line_item) { create :line_item, order: order, variant: variant }
       let(:line_item_params) do

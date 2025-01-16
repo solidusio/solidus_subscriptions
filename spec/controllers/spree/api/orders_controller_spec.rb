@@ -8,7 +8,7 @@ RSpec.describe Spree::Api::OrdersController, type: :controller do
   routes { Spree::Core::Engine.routes }
 
   let(:order) { create :order }
-  let(:variant) { create :variant }
+  let(:variant) { create :variant, subscribable: true }
 
   describe 'patch /update' do
     subject(:subscription_line_items) do

@@ -38,5 +38,12 @@ module SolidusSubscriptions
     validates :subscribable_id, presence: true
     validates :quantity, numericality: { greater_than: 0 }
     validates :interval_length, numericality: { greater_than: 0 }, unless: -> { subscription }
+    validate :ensure_subscribable_valid
+
+    def ensure_subscribable_valid
+      return unless subscribable && subscribable.subscribable != true
+
+      errors.add(:subscribable, :cannot_subscribe)
+    end
   end
 end

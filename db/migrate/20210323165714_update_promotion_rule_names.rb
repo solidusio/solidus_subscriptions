@@ -5,6 +5,8 @@ class UpdatePromotionRuleNames < ActiveRecord::Migration[5.2]
   }.freeze
 
   def change
+    return unless Object.const_defined?("Spree::Promotion")
+
     reversible do |dir|
       dir.up do
         TYPE_RENAMES.each do |old_type, new_type|

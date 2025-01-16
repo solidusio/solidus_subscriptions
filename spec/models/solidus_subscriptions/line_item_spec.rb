@@ -26,4 +26,26 @@ RSpec.describe SolidusSubscriptions::LineItem, type: :model do
       expect(interval.from_now).to eq Date.parse("2016-10-22")
     end
   end
+
+  describe "custom validation" do
+    context "when subscribable is not true" do
+      let(:subscribable) { create(:variant, subscribable: false) }
+      let(:line_item) { build(:subscription_line_item, subscribable: subscribable) }
+
+      it "adds an error to subscribable" do
+        line_item.valid?
+        expect(line_item.errors[:subscribable]).to include("The requested item cannot be subscribed")
+      end
+    end
+
+    context "when subscribable is true" do
+      let(:subscribable) { create(:variant, subscribable: true) }
+      let(:line_item) { build(:subscription_line_item, subscribable: subscribable) }
+
+      it "does not add an error to subscribable" do
+        line_item.valid?
+        expect(line_item.errors[:subscribable]).to be_empty
+      end
+    end
+  end
 end

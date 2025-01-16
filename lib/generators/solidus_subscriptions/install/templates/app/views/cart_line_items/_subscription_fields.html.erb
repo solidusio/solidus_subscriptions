@@ -1,39 +1,52 @@
-<% if @product.subscribable %>
-  <%= content_tag :h3, t('.subscription_fields') %>
-  <%= fields_for :'subscription_line_item', SolidusSubscriptions::LineItem.new do |ff| %>
-    <div>
-      <%= ff.label :quantity, t('.quantity') %>
-      <%= ff.number_field :quantity %>
-      <%= ff.label :quantity, t('.quantity_suffix') %>
-    </div>
+<div class="subscription-form">
+  <% if @product.subscribable %>
+    <%= content_tag :h3, t('.subscription_fields') %>
+    <%= fields_for :'subscription_line_item', SolidusSubscriptions::LineItem.new do |ff| %>
+      <div>
+        <%= ff.label :quantity, t('.quantity') %>
+        <%= ff.number_field :quantity %>
+        <%= ff.label :quantity, t('.quantity_suffix') %>
+      </div>
 
-    <div>
-      <%= ff.label :interval_length, t('.interval_length') %>
-      <%= ff.number_field :interval_length %>
+      <div>
+        <%= ff.label :interval_length, t('.interval_length') %>
+        <%= ff.number_field :interval_length %>
 
-      <%= ff.collection_radio_buttons :interval_units, SolidusSubscriptions::LineItem.interval_units.to_a, :first, :first %>
-    </div>
+        <%= ff.collection_radio_buttons :interval_units, SolidusSubscriptions::LineItem.interval_units.to_a, :first, :first %>
+      </div>
 
-    <%= ff.hidden_field :subscribable_id %>
+      <%= ff.hidden_field :subscribable_id %> <!-- Hidden field for subscribable_id -->
+    <% end %>
   <% end %>
-<% end %>
+</div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function(e) {
+  document.addEventListener("DOMContentLoaded", function() {
     var cartForm = document.querySelector('form[action="/cart_line_items"]');
+    var variantRadioButtons = cartForm.querySelectorAll('[data-js="variant-radio"]');
+    var subscribableInput = cartForm.querySelector('[name*="subscription_line_item[subscribable_id]"]');
+    var subscriptionFields = document.querySelector('.subscription-form'); // Select the subscription form container
 
-    cartForm.addEventListener('submit', function(e) {
-      var variantInput = e.target.querySelector('[name*="variant_id"]:checked');
-      var subscribableInput = e.target.querySelector('[name*="subscription_line_item[subscribable_id]"]');
+    function handleVariantSelection(e) {
+      var variantRadioButton = e.target;
+      var isSubscribable = variantRadioButton.getAttribute('data-subscribable') === 'true';
 
-      if (!variantInput) {
-        variantInput = cartForm.querySelector('[name="variant_id"]');
+      if (isSubscribable) {
+        subscribableInput.value = variantRadioButton.value;
+        subscriptionFields.style.display = 'block';
+      } else {
+        subscriptionFields.style.display = 'none';
       }
+    }
 
-      subscribableInput.value = variantInput.value;
-
-      return true;
+    variantRadioButtons.forEach(function(variantRadioButton) {
+      variantRadioButton.addEventListener('change', handleVariantSelection);
     });
+
+    var selectedVariantRadioButton = cartForm.querySelector('[data-js="variant-radio"]:checked');
+    if (selectedVariantRadioButton) {
+      handleVariantSelection({ target: selectedVariantRadioButton });
+    }
   });
 </script>
 

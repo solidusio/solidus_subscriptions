@@ -16,7 +16,7 @@ RSpec.describe SolidusSubscriptions::Spree::OrdersController::CreateSubscription
   describe 'POST /orders/populate' do
     subject(:populate) { post :populate, params: params }
 
-    let!(:variant) { create :variant }
+    let!(:variant) { create :variant, subscribable: true }
     let(:params) { line_item_params }
     let(:line_item_params) do
       {

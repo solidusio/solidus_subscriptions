@@ -5,7 +5,7 @@ RSpec.describe SolidusSubscriptions::ProcessSubscriptionJob do
     it 'voids the actionable date of the unfulfilled installments' do
       stub_config(clear_past_installments: true)
       subscription = create(:subscription)
-      unfulfilled_installment =  create(:installment, :failed, subscription: subscription)
+      unfulfilled_installment = create(:installment, :failed, subscription: subscription)
 
       described_class.perform_now(subscription)
 
