@@ -8,8 +8,6 @@ require 'httparty'
 require 'state_machines'
 
 require 'solidus_subscriptions/configuration'
-require 'solidus_subscriptions/permission_sets/default_customer'
-require 'solidus_subscriptions/permission_sets/subscription_management'
 require 'solidus_subscriptions/version'
 require 'solidus_subscriptions/engine'
 require 'solidus_subscriptions/churn_buster/client'
