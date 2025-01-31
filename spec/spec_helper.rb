@@ -27,4 +27,6 @@ RSpec.configure do |config|
   if Spree.solidus_gem_version < Gem::Version.new('2.11')
     config.extend Spree::TestingSupport::AuthorizationHelpers::Request, type: :system
   end
+
+  config.include ActiveSupport::Testing::TimeHelpers
 end

@@ -1033,6 +1033,12 @@ RSpec.describe SolidusSubscriptions::Subscription, type: :model do
 
     before { stub_config(maximum_total_skips: 1) }
 
+    around do |example|
+      travel_to(Time.zone.parse("2024-09-15")) do
+        example.run
+      end
+    end
+
     context 'when the successive skips have been exceeded' do
       let(:successive_skips) { 1 }
 
