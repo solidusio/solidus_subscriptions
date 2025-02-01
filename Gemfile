@@ -29,7 +29,9 @@ when 'mysql'
 when 'postgresql'
   gem 'pg'
 else
-  gem 'sqlite3'
+  older_solidus = ['v4.1', 'v4.2', 'v4.3']
+  sqlite_version = older_solidus.include?(branch) ? "~> 1.4" : "~> 2.0"
+  gem 'sqlite3', sqlite_version
 end
 
 gemspec
