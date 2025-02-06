@@ -12,9 +12,6 @@ gem 'solidus_frontend'
 rails_version = ENV.fetch('RAILS_VERSION', '7.2')
 gem 'rails', "~> #{rails_version}"
 
-# Provides basic authentication functionality for testing parts of your engine
-gem 'solidus_auth_devise'
-
 case ENV['DB']
 when 'mysql'
   gem 'mysql2'
