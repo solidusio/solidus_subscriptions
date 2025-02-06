@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe SolidusSubscriptions::Spree::User::HaveManySubscriptions, type: :model do
-  subject(:user) { Spree::User.new }
+  subject(:user) { Spree.user_class.new }
 
   it { is_expected.to have_many :subscriptions }
   it { is_expected.to accept_nested_attributes_for :subscriptions }
@@ -16,7 +16,7 @@ RSpec.describe SolidusSubscriptions::Spree::User::HaveManySubscriptions, type: :
 
       expect(::Spree::Deprecation)
         .to have_received(:warn)
-        .with(/Creating or updating subscriptions through Spree::User nested attributes is deprecated/)
+        .with(/Creating or updating subscriptions through #{Spree.user_class} nested attributes is deprecated/)
     end
   end
 end

@@ -18,9 +18,6 @@ end
 rails_requirement_string = ENV.fetch('RAILS_VERSION', '~> 7.0')
 gem 'rails', rails_requirement_string
 
-# Provides basic authentication functionality for testing parts of your engine
-gem 'solidus_auth_devise'
-
 case ENV['DB']
 when 'mysql'
   gem 'mysql2'
