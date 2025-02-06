@@ -7,13 +7,7 @@ branch = ENV.fetch('SOLIDUS_BRANCH', 'main')
 gem 'solidus', github: 'solidusio/solidus', branch: branch
 
 # The solidus_frontend gem has been pulled out since v3.2
-if branch >= 'v3.2'
-  gem 'solidus_frontend'
-elsif branch == 'main'
-  gem 'solidus_frontend', github: 'solidusio/solidus_frontend'
-else
-  gem 'solidus_frontend', github: 'solidusio/solidus', branch: branch
-end
+gem 'solidus_frontend', github: 'solidusio/solidus_frontend'
 
 rails_requirement_string = ENV.fetch('RAILS_VERSION', '~> 7.0')
 gem 'rails', rails_requirement_string
