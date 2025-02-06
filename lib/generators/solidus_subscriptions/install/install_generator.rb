@@ -19,6 +19,7 @@ module SolidusSubscriptions
 
       def copy_starter_frontend_files
         return if options[:frontend] != 'starter'
+        return unless File.exist?(Rails.root.join('app/views/cart_line_items/_product_submit.html.erb'))
 
         copy_file 'app/views/cart_line_items/_subscription_fields.html.erb'
         prepend_to_file 'app/views/cart_line_items/_product_submit.html.erb', "<%= render 'cart_line_items/subscription_fields' %>\n"
