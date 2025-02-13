@@ -7,21 +7,10 @@ branch = ENV.fetch('SOLIDUS_BRANCH', 'main')
 gem 'solidus', github: 'solidusio/solidus', branch: branch
 
 # The solidus_frontend gem has been pulled out since v3.2
-if branch >= 'v3.2'
-  gem 'solidus_frontend'
-elsif branch == 'main'
-  gem 'solidus_frontend', github: 'solidusio/solidus_frontend'
-else
-  gem 'solidus_frontend', github: 'solidusio/solidus', branch: branch
-end
+gem 'solidus_frontend'
 
-# Needed to help Bundler figure out how to resolve dependencies,
-# otherwise it takes forever to resolve them.
-# See https://github.com/bundler/bundler/issues/6677
-gem 'rails', '>0.a'
-
-# Provides basic authentication functionality for testing parts of your engine
-gem 'solidus_auth_devise'
+rails_version = ENV.fetch('RAILS_VERSION', '7.2')
+gem 'rails', "~> #{rails_version}"
 
 case ENV['DB']
 when 'mysql'
@@ -29,17 +18,14 @@ when 'mysql'
 when 'postgresql'
   gem 'pg'
 else
-  gem 'sqlite3'
+  if rails_version <= "7.2"
+    gem 'sqlite3', "~> 1.7"
+  else
+    gem 'sqlite3', "~> 2.0"
+  end
 end
 
 gemspec
-
-if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3')
-  # Fix for Rails 7+ / Ruby 3+, see https://stackoverflow.com/a/72474475
-  gem 'net-imap', require: false
-  gem 'net-pop', require: false
-  gem 'net-smtp', require: false
-end
 
 # Use a local Gemfile to include development dependencies that might not be
 # relevant for the project or for other contributors, e.g. pry-byebug.

@@ -16,8 +16,8 @@ module SolidusSubscriptions
         end
 
         def subscriptions_attributes=(params)
-          ::Spree::Deprecation.warn(
-            'Creating or updating subscriptions through Spree::User nested attributes is deprecated. ' \
+          ::Spree.deprecator.warn(
+            "Creating or updating subscriptions through #{::Spree.user_class} nested attributes is deprecated. " \
             'Please use subscriptions APIs directly.'
           )
           super
@@ -27,4 +27,4 @@ module SolidusSubscriptions
   end
 end
 
-Spree.user_class.prepend(SolidusSubscriptions::Spree::User::HaveManySubscriptions)
+::Spree.user_class.prepend(SolidusSubscriptions::Spree::User::HaveManySubscriptions)
