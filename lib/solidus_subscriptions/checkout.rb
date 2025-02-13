@@ -42,6 +42,9 @@ module SolidusSubscriptions
     end
 
     def finalize_order(order)
+      # Rerun the legacy promotion handler
+      # `solidus_promotions` does not need this handler, and will pickup promotions in `order.recalculate`
+      ::Spree::PromotionHandler::Cart.new(order).activate if defined?(::Spree::PromotionHandler::Cart)
       order.recalculate
 
       order.checkout_steps[0...-1].each do
