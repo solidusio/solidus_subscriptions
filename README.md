@@ -1,6 +1,6 @@
 # solidus_subscriptions
 
-[![CircleCI](https://circleci.com/gh/solidusio/solidus_subscriptions.svg?style=shield)](https://circleci.com/gh/solidusio/solidus_subscriptions)
+[![Test](https://github.com/solidusio/solidus_subscriptions/actions/workflows/test.yml/badge.svg)](https://github.com/solidusio/solidus_subscriptions/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/solidusio/solidus_subscriptions/branch/main/graph/badge.svg)](https://codecov.io/gh/solidusio/solidus_subscriptions)
 
 A Solidus extension to add subscriptions to your store.
