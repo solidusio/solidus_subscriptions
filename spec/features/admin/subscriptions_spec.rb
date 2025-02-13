@@ -25,7 +25,7 @@ RSpec.describe 'Subscriptions admin' do
     expect(subscription.billing_address.zipcode).to eq('33167')
   end
 
-  it 'Creates a subscription' do # rubocop:disable RSpec/MultipleExpectations
+  it 'Creates a subscription' do
     variant = create(:variant, subscribable: true)
     create(:user)
     create(:store)

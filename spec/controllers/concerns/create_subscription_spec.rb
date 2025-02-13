@@ -8,8 +8,7 @@ RSpec.describe CreateSubscription, type: :controller do
       attr_accessor :params, :current_order
 
       def initialize(params = {})
-        @params = params
-        @current_order = nil
+        super
       end
     end.new
   end

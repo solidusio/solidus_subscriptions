@@ -30,6 +30,10 @@ module SolidusSubscriptions
       unfulfilled.where("#{table_name}.actionable_date <= ?", Time.zone.today)
     end)
 
+    def self.ransackable_attributes(_auth_object = nil)
+      %w[actionable_date created_at updated_at]
+    end
+
     # Mark this installment as out of stock.
     #
     # @return [SolidusSubscriptions::InstallmentDetail] The record of the failed
@@ -130,10 +134,6 @@ module SolidusSubscriptions
       return if SolidusSubscriptions.configuration.reprocessing_interval.nil?
 
       (DateTime.current + SolidusSubscriptions.configuration.reprocessing_interval).beginning_of_minute
-    end
-
-    def self.ransackable_attributes(_auth_object = nil)
-      %w[actionable_date created_at updated_at]
     end
   end
 end

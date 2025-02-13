@@ -92,6 +92,14 @@ module SolidusSubscriptions
       [:in_processing_state, :with_subscribable]
     end
 
+    def self.ransackable_attributes(_auth_object = nil)
+      %w[actionable_date created_at end_date state updated_at user_id]
+    end
+
+    def self.ransackable_associations(_auth_object = nil)
+      %w[events user]
+    end
+
     def self.processing_states
       PROCESSING_STATES
     end
@@ -431,14 +439,6 @@ module SolidusSubscriptions
       if previous_changes.key?('payment_source_id') || previous_changes.key?('payment_source_type') || previous_changes.key?('payment_method_id')
         emit_event(type: 'subscription_payment_method_changed')
       end
-    end
-
-    def self.ransackable_attributes(_auth_object = nil)
-      %w[actionable_date created_at end_date state updated_at user_id]
-    end
-
-    def self.ransackable_associations(_auth_object = nil)
-      %w[events user]
     end
   end
 end

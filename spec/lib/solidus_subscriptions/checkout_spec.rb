@@ -2,7 +2,6 @@
 
 RSpec.describe SolidusSubscriptions::Checkout, :checkout do
   context 'when the order can be created and paid' do
-    # rubocop:disable RSpec/MultipleExpectations
     it 'creates and finalizes a new order for the installment' do
       stub_spree_preferences(auto_capture: true)
       installment = create(:installment, :actionable)
@@ -39,7 +38,6 @@ RSpec.describe SolidusSubscriptions::Checkout, :checkout do
       expect(order.subscription).to eq(subscription)
       expect(order.subscription_order).to eq(true)
     end
-    # rubocop:enable RSpec/MultipleExpectations
 
     it 'matches the total on the subscription' do
       stub_spree_preferences(auto_capture: true)
