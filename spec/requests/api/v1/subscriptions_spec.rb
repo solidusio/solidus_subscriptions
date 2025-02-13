@@ -37,7 +37,6 @@ RSpec.describe '/api/v1/subscriptions' do
     end
 
     context 'when valid payment attributes are provided' do
-      # rubocop:disable RSpec/MultipleExpectations
       it 'creates the subscription using the specified payment' do
         user = create(:user, &:generate_spree_api_key!)
         payment_source = create(:credit_card, user: user)
@@ -53,10 +52,8 @@ RSpec.describe '/api/v1/subscriptions' do
         end.to change(SolidusSubscriptions::Subscription, :count).from(0).to(1)
         expect(SolidusSubscriptions::Subscription.last).to have_attributes(payment_params)
       end
-      # rubocop:enable RSpec/MultipleExpectations
     end
 
-    # rubocop:disable RSpec/MultipleExpectations
     context 'when an invalid payment method is provided' do
       it "doesn't create the subscription and responds with 422 Unprocessable Entity" do
         user = create(:user, &:generate_spree_api_key!)
@@ -98,7 +95,6 @@ RSpec.describe '/api/v1/subscriptions' do
         expect(response.status).to eq(422)
       end
     end
-    # rubocop:enable RSpec/MultipleExpectations
   end
 
   describe 'PATCH /:id' do

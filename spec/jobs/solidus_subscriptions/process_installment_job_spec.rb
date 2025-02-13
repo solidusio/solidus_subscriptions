@@ -12,7 +12,7 @@ RSpec.describe SolidusSubscriptions::ProcessInstallmentJob do
   end
 
   context 'when handling #perform errors' do
-    it 'by default logs exception data without raising exceptions' do # rubocop:disable RSpec/MultipleExpectations
+    it 'by default logs exception data without raising exceptions' do
       installment = build_stubbed(:installment)
       checkout = instance_double(SolidusSubscriptions::Checkout).tap do |c|
         allow(c).to receive(:process).and_raise('test error')
