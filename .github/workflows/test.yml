@@ -52,7 +52,7 @@ jobs:
           - ruby-version: "3.4"
             rails-version: "7.0"
     env:
-      TEST_RESULTS_PATH: coverage/coverage.xml
+      CODECOV_COVERAGE_PATH: ./coverage/coverage.xml
     steps:
       - uses: actions/checkout@v4
       - name: Run extension tests
@@ -67,4 +67,4 @@ jobs:
         continue-on-error: true
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ${{ env.TEST_RESULTS_PATH }}
+          files: ${{ env.CODECOV_COVERAGE_PATH }}
