@@ -19,9 +19,9 @@ when 'postgresql'
   gem 'pg'
 else
   if rails_version <= "7.2"
-    gem 'sqlite3', "~> 1.7"
+    gem 'sqlite3', "~> 2.6"
   else
-    gem 'sqlite3', "~> 2.0"
+    gem 'sqlite3', "~> 2.6"
   end
 end
 
