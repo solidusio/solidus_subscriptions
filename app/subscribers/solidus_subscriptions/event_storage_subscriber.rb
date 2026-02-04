@@ -14,50 +14,50 @@ module SolidusSubscriptions
 
     def track_subscription_created(event)
       event.payload.fetch(:subscription).events.create!(
-        event_type: 'subscription_created',
-        details: event.payload.fetch(:subscription).as_json,
+        event_type: "subscription_created",
+        details: event.payload.fetch(:subscription).as_json
       )
     end
 
     def track_subscription_activated(event)
       event.payload.fetch(:subscription).events.create!(
-        event_type: 'subscription_activated',
-        details: event.payload.fetch(:subscription).as_json,
+        event_type: "subscription_activated",
+        details: event.payload.fetch(:subscription).as_json
       )
     end
 
     def track_subscription_canceled(event)
       event.payload.fetch(:subscription).events.create!(
-        event_type: 'subscription_canceled',
-        details: event.payload.fetch(:subscription).as_json,
+        event_type: "subscription_canceled",
+        details: event.payload.fetch(:subscription).as_json
       )
     end
 
     def track_subscription_ended(event)
       event.payload.fetch(:subscription).events.create!(
-        event_type: 'subscription_ended',
-        details: event.payload.fetch(:subscription).as_json,
+        event_type: "subscription_ended",
+        details: event.payload.fetch(:subscription).as_json
       )
     end
 
     def track_subscription_shipping_address_changed(event)
       event.payload.fetch(:subscription).events.create!(
-        event_type: 'subscription_shipping_address_changed',
-        details: event.payload.fetch(:subscription).as_json,
+        event_type: "subscription_shipping_address_changed",
+        details: event.payload.fetch(:subscription).as_json
       )
     end
 
     def track_subscription_billing_address_changed(event)
       event.payload.fetch(:subscription).events.create!(
-        event_type: 'subscription_billing_address_changed',
-        details: event.payload.fetch(:subscription).as_json,
+        event_type: "subscription_billing_address_changed",
+        details: event.payload.fetch(:subscription).as_json
       )
     end
 
     def track_subscription_frequency_changed(event)
       event.payload.fetch(:subscription).events.create!(
-        event_type: 'subscription_frequency_changed',
-        details: event.payload.fetch(:subscription).as_json,
+        event_type: "subscription_frequency_changed",
+        details: event.payload.fetch(:subscription).as_json
       )
     end
   end

@@ -1,16 +1,17 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require 'spree/api/testing_support/helpers'
+require "spec_helper"
+require "spree/api/testing_support/helpers"
 
 RSpec.describe Spree::Api::OrdersController, type: :controller do
   include Spree::Api::TestingSupport::Helpers
+
   routes { Spree::Core::Engine.routes }
 
   let(:order) { create :order }
   let(:variant) { create :variant, subscribable: true }
 
-  describe 'patch /update' do
+  describe "patch /update" do
     subject(:subscription_line_items) do
       patch :update, params: params
       order.subscription_line_items.reload
@@ -20,9 +21,9 @@ RSpec.describe Spree::Api::OrdersController, type: :controller do
 
     let(:params) do
       {
-        order: { line_items_attributes: [line_items_params] },
+        order: {line_items_attributes: [line_items_params]},
         id: order.to_param,
-        format: 'json',
+        format: "json",
         order_token: order.guest_token
       }
     end
@@ -44,14 +45,14 @@ RSpec.describe Spree::Api::OrdersController, type: :controller do
       }
     end
 
-    it 'is a successful response' do
+    it "is a successful response" do
       subscription_line_items
       expect(response).to be_successful
     end
 
-    it 'create the correct number of subscription line items' do
-      expect(subscription_line_items.length).
-        to eq line_items_params[:subscription_line_items_attributes].length
+    it "create the correct number of subscription line items" do
+      expect(subscription_line_items.length)
+        .to eq line_items_params[:subscription_line_items_attributes].length
     end
   end
 end

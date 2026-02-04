@@ -4,7 +4,7 @@ module Spree
   module Admin
     module Users
       class SubscriptionsController < ResourceController
-        belongs_to 'spree/user', model_class: Spree.user_class
+        belongs_to "spree/user", model_class: Spree.user_class
 
         private
 

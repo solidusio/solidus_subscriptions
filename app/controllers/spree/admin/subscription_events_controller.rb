@@ -3,16 +3,16 @@
 module Spree
   module Admin
     class SubscriptionEventsController < ResourceController
-      belongs_to 'subscription', model_class: SolidusSubscriptions::Subscription
+      belongs_to "subscription", model_class: SolidusSubscriptions::Subscription
 
       skip_before_action :load_resource, only: :index
 
       def index
-        @search = collection.ransack((params[:q] || {}).reverse_merge(s: 'created_at desc'))
+        @search = collection.ransack((params[:q] || {}).reverse_merge(s: "created_at desc"))
 
-        @subscription_events = @search.result(distinct: true).
-                               page(params[:page]).
-                               per(params[:per_page] || 20)
+        @subscription_events = @search.result(distinct: true)
+          .page(params[:page])
+          .per(params[:per_page] || 20)
       end
 
       private

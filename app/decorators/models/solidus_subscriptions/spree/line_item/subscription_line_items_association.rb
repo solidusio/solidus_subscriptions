@@ -10,7 +10,7 @@ module SolidusSubscriptions
         def self.prepended(base)
           base.has_many(
             :subscription_line_items,
-            class_name: 'SolidusSubscriptions::LineItem',
+            class_name: "SolidusSubscriptions::LineItem",
             foreign_key: :spree_line_item_id,
             inverse_of: :spree_line_item,
             dependent: :destroy

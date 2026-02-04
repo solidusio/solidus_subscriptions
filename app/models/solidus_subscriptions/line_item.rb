@@ -22,22 +22,22 @@ module SolidusSubscriptions
 
     belongs_to(
       :spree_line_item,
-      class_name: '::Spree::LineItem',
+      class_name: "::Spree::LineItem",
       inverse_of: :subscription_line_items,
-      optional: true,
+      optional: true
     )
-    has_one :order, through: :spree_line_item, class_name: '::Spree::Order'
+    has_one :order, through: :spree_line_item, class_name: "::Spree::Order"
     belongs_to(
       :subscription,
-      class_name: 'SolidusSubscriptions::Subscription',
+      class_name: "SolidusSubscriptions::Subscription",
       inverse_of: :line_items,
       optional: true
     )
     belongs_to :subscribable, class_name: "::#{SolidusSubscriptions.configuration.subscribable_class}"
 
     validates :subscribable_id, presence: true
-    validates :quantity, numericality: { greater_than: 0 }
-    validates :interval_length, numericality: { greater_than: 0 }, unless: -> { subscription }
+    validates :quantity, numericality: {greater_than: 0}
+    validates :interval_length, numericality: {greater_than: 0}, unless: -> { subscription }
     validate :ensure_subscribable_valid
 
     def ensure_subscribable_valid

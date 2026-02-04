@@ -6,15 +6,15 @@ module SolidusSubscriptions
       def to_h
         {
           payment_method: {
-            source: 'in_house',
+            source: "in_house",
             source_id: [
               object.payment_method_to_use&.id,
               object.payment_source_to_use&.id
-            ].compact.join('-'),
-            type: 'card',
-            properties: payment_source_properties,
+            ].compact.join("-"),
+            type: "card",
+            properties: payment_source_properties
           },
-          customer: SubscriptionCustomerSerializer.serialize(object),
+          customer: SubscriptionCustomerSerializer.serialize(object)
         }
       end
 
@@ -26,7 +26,7 @@ module SolidusSubscriptions
             brand: object.payment_source.cc_type,
             last4: object.payment_source.last_digits,
             exp_month: object.payment_source.month,
-            exp_year: object.payment_source.year,
+            exp_year: object.payment_source.year
           }
         else
           {}

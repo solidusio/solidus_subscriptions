@@ -5,7 +5,7 @@ module SolidusSubscriptions
     module V1
       class BaseController < ::Spree::Api::BaseController
         def subscription_guest_token
-          request.headers['X-Spree-Subscription-Token']
+          request.headers["X-Spree-Subscription-Token"]
         end
       end
     end

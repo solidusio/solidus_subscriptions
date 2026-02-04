@@ -11,12 +11,12 @@ module SolidusSubscriptions
         private
 
         def report_default_change_to_subscriptions
-          return if !previous_changes.key?('default') || !default?
+          return if !previous_changes.key?("default") || !default?
 
           user.subscriptions.with_default_payment_source.each do |subscription|
             ::SolidusSupport::LegacyEventCompat::Bus.publish(
-              :'solidus_subscriptions.subscription_payment_method_changed',
-              subscription: subscription,
+              :"solidus_subscriptions.subscription_payment_method_changed",
+              subscription: subscription
             )
           end
         end

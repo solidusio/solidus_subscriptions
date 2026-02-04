@@ -10,23 +10,23 @@ module SolidusSubscriptions
     PROCESSING_STATES = [:pending, :failed, :success].freeze
 
     belongs_to :user, class_name: "::#{::Spree.user_class}"
-    has_many :line_items, class_name: 'SolidusSubscriptions::LineItem', inverse_of: :subscription
-    has_many :installments, class_name: 'SolidusSubscriptions::Installment'
-    has_many :installment_details, class_name: 'SolidusSubscriptions::InstallmentDetail', through: :installments, source: :details
-    has_many :events, class_name: 'SolidusSubscriptions::SubscriptionEvent'
-    has_many :orders, class_name: '::Spree::Order', inverse_of: :subscription
-    belongs_to :store, class_name: '::Spree::Store'
-    belongs_to :shipping_address, class_name: '::Spree::Address', optional: true
-    belongs_to :billing_address, class_name: '::Spree::Address', optional: true
-    belongs_to :payment_method, class_name: '::Spree::PaymentMethod', optional: true
+    has_many :line_items, class_name: "SolidusSubscriptions::LineItem", inverse_of: :subscription
+    has_many :installments, class_name: "SolidusSubscriptions::Installment"
+    has_many :installment_details, class_name: "SolidusSubscriptions::InstallmentDetail", through: :installments, source: :details
+    has_many :events, class_name: "SolidusSubscriptions::SubscriptionEvent"
+    has_many :orders, class_name: "::Spree::Order", inverse_of: :subscription
+    belongs_to :store, class_name: "::Spree::Store"
+    belongs_to :shipping_address, class_name: "::Spree::Address", optional: true
+    belongs_to :billing_address, class_name: "::Spree::Address", optional: true
+    belongs_to :payment_method, class_name: "::Spree::PaymentMethod", optional: true
     belongs_to :payment_source, polymorphic: true, optional: true
 
     validates :user, presence: true
-    validates :skip_count, :successive_skip_count, presence: true, numericality: { greater_than_or_equal_to: 0 }
-    validates :interval_length, numericality: { greater_than: 0 }
+    validates :skip_count, :successive_skip_count, presence: true, numericality: {greater_than_or_equal_to: 0}
+    validates :interval_length, numericality: {greater_than: 0}
     validates :payment_method, presence: true, if: -> { payment_source }
     validates :payment_source, presence: true, if: -> { payment_method&.source_required? }
-    validates :currency, inclusion: { in: ::Money::Currency.all.map(&:iso_code) }
+    validates :currency, inclusion: {in: ::Money::Currency.all.map(&:iso_code)}
 
     validate :validate_payment_source_ownership
 
@@ -44,8 +44,8 @@ module SolidusSubscriptions
     # Find all subscriptions that are "actionable"; that is, ones that have an
     # actionable_date in the past and are not invalid or canceled.
     scope :actionable, (lambda do
-      where("#{table_name}.actionable_date <= ?", Time.zone.today).
-        where.not(state: ["canceled", "inactive"])
+      where("#{table_name}.actionable_date <= ?", Time.zone.today)
+        .where.not(state: ["canceled", "inactive"])
     end)
 
     # Find subscriptions based on their processing state. This state is not a
@@ -64,7 +64,7 @@ module SolidusSubscriptions
         fulfilled_ids = fulfilled.pluck(:id)
         where.not(id: fulfilled_ids)
       when :pending
-        includes(:installments).where(solidus_subscriptions_installments: { id: nil })
+        includes(:installments).where(solidus_subscriptions_installments: {id: nil})
       else
         raise ArgumentError, "state must be one of: :success, :failed, :pending"
       end
@@ -85,7 +85,7 @@ module SolidusSubscriptions
 
     # Scope for finding subscription with a specific item
     scope :with_subscribable, (lambda do |id|
-      joins(line_items: :subscribable).where(spree_variants: { id: id })
+      joins(line_items: :subscribable).where(spree_variants: {id: id})
     end)
 
     def self.ransackable_scopes(_auth_object = nil)
@@ -120,7 +120,7 @@ module SolidusSubscriptions
     state_machine :state, initial: :active do
       event :cancel do
         transition [:active, :pending_cancellation] => :canceled,
-          if: ->(subscription) { subscription.can_be_canceled? }
+          :if => ->(subscription) { subscription.can_be_canceled? }
 
         transition active: :pending_cancellation
       end
@@ -186,7 +186,7 @@ module SolidusSubscriptions
       save!
 
       advance_actionable_date.tap do
-        create_and_emit_event(type: 'subscription_skipped')
+        create_and_emit_event(type: "subscription_skipped")
       end
     end
 
@@ -221,7 +221,7 @@ module SolidusSubscriptions
     # @return [Date] The next date after the current actionable_date this
     # subscription will be eligible to be processed.
     def advance_actionable_date
-      create_and_emit_event(type: 'subscription_resumed') if paused?
+      create_and_emit_event(type: "subscription_resumed") if paused?
 
       update! actionable_date: next_actionable_date, paused: false
 
@@ -234,7 +234,7 @@ module SolidusSubscriptions
       return true if paused?
 
       result = update! paused: true, actionable_date: actionable_date && tomorrow_or_after(actionable_date)
-      create_and_emit_event(type: 'subscription_paused') if result
+      create_and_emit_event(type: "subscription_paused") if result
       result
     end
 
@@ -244,12 +244,12 @@ module SolidusSubscriptions
       return true unless paused?
 
       result = update! paused: false, actionable_date: tomorrow_or_after(actionable_date)
-      create_and_emit_event(type: 'subscription_resumed') if result
+      create_and_emit_event(type: "subscription_resumed") if result
       result
     end
 
     def state_with_pause
-      active? && paused? ? 'paused' : state
+      (active? && paused?) ? "paused" : state
     end
 
     # The state of the last attempt to process an installment associated to
@@ -259,9 +259,9 @@ module SolidusSubscriptions
     #   failed if the last installment has not been fulfilled and, success
     #   if the last installment was fulfilled.
     def processing_state
-      return 'pending' if installments.empty?
+      return "pending" if installments.empty?
 
-      installments.last.fulfilled? ? 'success' : 'failed'
+      installments.last.fulfilled? ? "success" : "failed"
     end
 
     def payment_method_to_use
@@ -285,16 +285,16 @@ module SolidusSubscriptions
     end
 
     def failing_since
-      failing_details = installment_details.failed.order('solidus_subscriptions_installment_details.created_at ASC')
+      failing_details = installment_details.failed.order("solidus_subscriptions_installment_details.created_at ASC")
 
       last_successful_detail = installment_details
-                               .succeeded
-                               .order('solidus_subscriptions_installment_details.created_at DESC')
-                               .first
+        .succeeded
+        .order("solidus_subscriptions_installment_details.created_at DESC")
+        .first
       if last_successful_detail
         failing_details = failing_details.where(
-          'solidus_subscriptions_installment_details.created_at > ?',
-          last_successful_detail.created_at,
+          "solidus_subscriptions_installment_details.created_at > ?",
+          last_successful_detail.created_at
         )
       end
 
@@ -320,7 +320,7 @@ module SolidusSubscriptions
       return if payment_source.blank?
 
       if payment_source.respond_to?(:user_id) &&
-         payment_source.user_id != user_id
+          payment_source.user_id != user_id
         errors.add(:payment_source, :not_owned_by_user)
       end
     end
@@ -350,7 +350,7 @@ module SolidusSubscriptions
       errors.add(:paused, :not_active) unless active?
     end
 
-    alias check_invalid_resume_states check_invalid_pause_states
+    alias_method :check_invalid_resume_states, :check_invalid_pause_states
 
     def tomorrow_or_after(date)
       [date.try(:to_date), Time.zone.tomorrow].compact.max
@@ -361,10 +361,10 @@ module SolidusSubscriptions
     def update_actionable_date_if_interval_changed
       if persisted? && (interval_length_previously_changed? || interval_units_previously_changed?)
         base_date = if installments.any?
-                      installments.last.created_at
-                    else
-                      created_at
-                    end
+          installments.last.created_at
+        else
+          created_at
+        end
 
         new_date = interval.since(base_date)
 
@@ -399,7 +399,7 @@ module SolidusSubscriptions
     def emit_event(type:)
       ::SolidusSupport::LegacyEventCompat::Bus.publish(
         :"solidus_subscriptions.#{type}",
-        subscription: self,
+        subscription: self
       )
     end
 
@@ -409,35 +409,35 @@ module SolidusSubscriptions
     end
 
     def emit_event_for_creation
-      emit_event(type: 'subscription_created')
+      emit_event(type: "subscription_created")
     end
 
     def emit_event_for_transition
       event_type = {
-        active: 'subscription_activated',
-        canceled: 'subscription_canceled',
-        pending_cancellation: 'subscription_canceled',
-        inactive: 'subscription_ended',
+        active: "subscription_activated",
+        canceled: "subscription_canceled",
+        pending_cancellation: "subscription_canceled",
+        inactive: "subscription_ended"
       }[state.to_sym]
 
       emit_event(type: event_type)
     end
 
     def emit_events_for_update
-      if previous_changes.key?('interval_length') || previous_changes.key?('interval_units')
-        emit_event(type: 'subscription_frequency_changed')
+      if previous_changes.key?("interval_length") || previous_changes.key?("interval_units")
+        emit_event(type: "subscription_frequency_changed")
       end
 
-      if previous_changes.key?('shipping_address_id')
-        emit_event(type: 'subscription_shipping_address_changed')
+      if previous_changes.key?("shipping_address_id")
+        emit_event(type: "subscription_shipping_address_changed")
       end
 
-      if previous_changes.key?('billing_address_id')
-        emit_event(type: 'subscription_billing_address_changed')
+      if previous_changes.key?("billing_address_id")
+        emit_event(type: "subscription_billing_address_changed")
       end
 
-      if previous_changes.key?('payment_source_id') || previous_changes.key?('payment_source_type') || previous_changes.key?('payment_method_id')
-        emit_event(type: 'subscription_payment_method_changed')
+      if previous_changes.key?("payment_source_id") || previous_changes.key?("payment_source_type") || previous_changes.key?("payment_method_id")
+        emit_event(type: "subscription_payment_method_changed")
       end
     end
   end

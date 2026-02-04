@@ -7,9 +7,9 @@ module SolidusSubscriptions
         installment.success!(order)
 
         ::SolidusSupport::LegacyEventCompat::Bus.publish(
-          :'solidus_subscriptions.installment_succeeded',
+          :"solidus_subscriptions.installment_succeeded",
           installment: installment,
-          order: order,
+          order: order
         )
       end
     end

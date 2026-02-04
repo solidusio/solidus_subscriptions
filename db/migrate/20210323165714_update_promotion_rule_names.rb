@@ -1,7 +1,7 @@
 class UpdatePromotionRuleNames < ActiveRecord::Migration[5.2]
   TYPE_RENAMES = {
-    'SolidusSubscriptions::SubscriptionPromotionRule' => 'SolidusSubscriptions::Promotion::Rules::SubscriptionCreationOrder',
-    'SolidusSubscriptions::SubscriptionOrderPromotionRule' => 'SolidusSubscriptions::Promotion::Rules::SubscriptionInstallmentOrder',
+    "SolidusSubscriptions::SubscriptionPromotionRule" => "SolidusSubscriptions::Promotion::Rules::SubscriptionCreationOrder",
+    "SolidusSubscriptions::SubscriptionOrderPromotionRule" => "SolidusSubscriptions::Promotion::Rules::SubscriptionInstallmentOrder"
   }.freeze
 
   def change

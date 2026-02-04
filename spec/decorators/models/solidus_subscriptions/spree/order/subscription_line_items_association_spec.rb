@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe SolidusSubscriptions::Spree::Order::SubscriptionLineItemsAssociation, type: :model do
   subject { Spree::Order.new }

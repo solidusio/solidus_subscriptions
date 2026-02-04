@@ -57,8 +57,8 @@ module SolidusSubscriptions
     def group(subscription_line_items)
       subscription_line_items.group_by do |li|
         subscription_configuration(li)
-      end.
-        values
+      end
+        .values
     end
 
     private

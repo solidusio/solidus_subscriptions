@@ -9,9 +9,9 @@ module SolidusSubscriptions
         installment.payment_failed!(order)
 
         ::SolidusSupport::LegacyEventCompat::Bus.publish(
-          :'solidus_subscriptions.installment_failed_payment',
+          :"solidus_subscriptions.installment_failed_payment",
           installment: installment,
-          order: order,
+          order: order
         )
       end
     end

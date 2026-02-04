@@ -5,7 +5,7 @@ module SolidusSubscriptions
     module Order
       module SubscriptionAssociation
         def self.prepended(base)
-          base.belongs_to :subscription, class_name: '::SolidusSubscriptions::Subscription', optional: true
+          base.belongs_to :subscription, class_name: "::SolidusSubscriptions::Subscription", optional: true
         end
       end
     end

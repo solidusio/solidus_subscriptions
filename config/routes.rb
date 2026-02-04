@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 SolidusSubscriptions::Engine.routes.draw do
-  namespace :api, defaults: { format: :json } do
+  namespace :api, defaults: {format: :json} do
     namespace :v1 do
       resources :line_items, only: [:update, :destroy]
       resources :subscriptions, only: [:create, :update] do
@@ -17,7 +17,7 @@ SolidusSubscriptions::Engine.routes.draw do
 end
 
 Spree::Core::Engine.routes.draw do
-  mount SolidusSubscriptions::Engine, at: '/subscriptions'
+  mount SolidusSubscriptions::Engine, at: "/subscriptions"
 
   namespace :admin do
     resources :subscriptions, only: [:index, :new, :create, :edit, :update] do
@@ -34,7 +34,7 @@ Spree::Core::Engine.routes.draw do
     end
 
     resources :users do
-      resources :subscriptions, only: [:index], controller: 'users/subscriptions'
+      resources :subscriptions, only: [:index], controller: "users/subscriptions"
     end
   end
 end

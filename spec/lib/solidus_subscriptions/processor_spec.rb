@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe SolidusSubscriptions::Processor do
-  it 'schedules the processing of actionable subscriptions' do
+  it "schedules the processing of actionable subscriptions" do
     actionable_subscription = create(:subscription, :actionable)
 
     described_class.run
@@ -10,7 +10,7 @@ RSpec.describe SolidusSubscriptions::Processor do
       .with(actionable_subscription)
   end
 
-  it 'schedules the processing of non actionable subscriptions with actionable installments' do
+  it "schedules the processing of non actionable subscriptions with actionable installments" do
     subscription_with_actionable_installment = create(
       :subscription,
       actionable_date: Time.zone.today + 7.days,
@@ -23,7 +23,7 @@ RSpec.describe SolidusSubscriptions::Processor do
       .with(subscription_with_actionable_installment)
   end
 
-  it 'does not schedule the processing of non actionable subscriptions' do
+  it "does not schedule the processing of non actionable subscriptions" do
     non_actionable_subscription = create(:subscription, actionable_date: Time.zone.today + 14.days)
 
     described_class.run

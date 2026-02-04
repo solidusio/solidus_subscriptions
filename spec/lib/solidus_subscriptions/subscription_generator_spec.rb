@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
-  describe '.activate' do
-    it 'creates the correct number of subscriptions' do
+  describe ".activate" do
+    it "creates the correct number of subscriptions" do
       subscription_line_items = build_list(:subscription_line_item, 2)
 
       expect {
@@ -12,7 +12,7 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
       }.to change(SolidusSubscriptions::Subscription, :count).by(1)
     end
 
-    it 'creates subscriptions with the correct attributes', :aggregate_failures do
+    it "creates subscriptions with the correct attributes", :aggregate_failures do
       subscription_line_items = build_list(:subscription_line_item, 2)
       subscription_line_item = subscription_line_items.first
 
@@ -31,25 +31,25 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
       )
     end
 
-    it 'copies the payment method from the order' do
+    it "copies the payment method from the order" do
       subscription_line_item = build(:subscription_line_item)
       payment_method = create(:credit_card_payment_method)
       payment_source = create(:credit_card, payment_method: payment_method, user: subscription_line_item.order.user)
       create(:payment,
         order: subscription_line_item.spree_line_item.order,
         source: payment_source,
-        payment_method: payment_method,)
+        payment_method: payment_method)
 
       subscription = described_class.activate([subscription_line_item])
 
       expect(subscription).to have_attributes(
         payment_method: payment_method,
-        payment_source: payment_source,
+        payment_source: payment_source
       )
     end
 
-    it 'cleanups the subscription line items fields duplicated on the subscription' do
-      attrs = { interval_length: 2, interval_units: :week, end_date: Time.zone.tomorrow }
+    it "cleanups the subscription line items fields duplicated on the subscription" do
+      attrs = {interval_length: 2, interval_units: :week, end_date: Time.zone.tomorrow}
       subscription_line_item = create(:subscription_line_item, attrs)
 
       described_class.activate([subscription_line_item])
@@ -62,8 +62,8 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
     end
   end
 
-  describe '.group' do
-    it 'groups subscriptions by interval and end date' do
+  describe ".group" do
+    it "groups subscriptions by interval and end date" do
       monthly_subscriptions = build_stubbed_list(:subscription_line_item, 2)
       bimonthly_subscriptions = build_stubbed_list(:subscription_line_item, 2, interval_length: 2)
       weekly_subscriptions = build_stubbed_list(:subscription_line_item, 2, interval_units: :week)
@@ -73,7 +73,7 @@ RSpec.describe SolidusSubscriptions::SubscriptionGenerator do
         monthly_subscriptions,
         bimonthly_subscriptions,
         weekly_subscriptions,
-        expiring_subscriptions,
+        expiring_subscriptions
       ]
       grouping_result = described_class.group(subscriptions.flatten)
 

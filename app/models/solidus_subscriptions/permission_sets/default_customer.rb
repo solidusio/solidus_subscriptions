@@ -14,7 +14,7 @@ module SolidusSubscriptions
       end
 
       def activate!
-        can [:show, :display, :update, :skip, :cancel, :pause, :resume], Subscription, ['user_id = ?', user.id] do |subscription, guest_token|
+        can [:show, :display, :update, :skip, :cancel, :pause, :resume], Subscription, ["user_id = ?", user.id] do |subscription, guest_token|
           (subscription.guest_token.present? && subscription.guest_token == guest_token) ||
             (subscription.user && subscription.user == user)
         end

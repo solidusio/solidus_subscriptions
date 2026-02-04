@@ -6,10 +6,10 @@ module SolidusSubscriptions
       def to_h
         {
           subscription: {
-            source: 'in_house',
+            source: "in_house",
             source_id: object.id
           },
-          customer: SubscriptionCustomerSerializer.serialize(object),
+          customer: SubscriptionCustomerSerializer.serialize(object)
         }
       end
     end

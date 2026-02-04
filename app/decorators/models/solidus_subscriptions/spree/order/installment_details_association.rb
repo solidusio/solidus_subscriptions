@@ -5,7 +5,7 @@ module SolidusSubscriptions
     module Order
       module InstallmentDetailsAssociation
         def self.prepended(base)
-          base.has_many :installment_details, class_name: '::SolidusSubscriptions::InstallmentDetail'
+          base.has_many :installment_details, class_name: "::SolidusSubscriptions::InstallmentDetail"
         end
       end
     end
