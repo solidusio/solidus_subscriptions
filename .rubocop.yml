@@ -1,15 +1,5 @@
-inherit_from: .rubocop_todo.yml
-
 require:
   - solidus_dev_support/rubocop
-
-RSpec/DescribeClass:
-  Exclude:
-    - spec/requests/**/*
-    - spec/features/**/*
-
-Rails/SkipsModelValidations:
-  Enabled: false
 
 AllCops:
   NewCops: disable
