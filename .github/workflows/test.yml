@@ -17,4 +17,4 @@ permissions:
 
 jobs:
   call-dev-support-test:
-    uses: solidusio/solidus_dev_support/.github/workflows/test.yml@main
+    uses: solidusio/solidus_dev_support/.github/workflows/test.yml@reusable-workflows
