@@ -15,6 +15,10 @@ else
   gem "solidus_frontend", github: "solidusio/solidus", branch: branch
 end
 
+if branch <= "v4.5" || branch == "main"
+  gem "state_machines", "<= 0.6"
+end
+
 rails_version = ENV.fetch("RAILS_VERSION", "7.0")
 gem "rails", "~> #{rails_version}"
 
