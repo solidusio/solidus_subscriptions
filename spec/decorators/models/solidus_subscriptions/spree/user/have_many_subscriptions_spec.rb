@@ -10,11 +10,11 @@ RSpec.describe SolidusSubscriptions::Spree::User::HaveManySubscriptions, type: :
 
   describe "#subscriptions_attributes=" do
     it "throws a deprecation warning" do
-      allow(::Spree::Deprecation).to receive(:warn)
+      allow(::Spree.deprecator).to receive(:warn)
 
       user.subscriptions_attributes = [{interval_length: 2}]
 
-      expect(::Spree::Deprecation)
+      expect(::Spree.deprecator)
         .to have_received(:warn)
         .with(/Creating or updating subscriptions through #{Spree.user_class} nested attributes is deprecated/)
     end

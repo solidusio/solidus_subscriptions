@@ -40,7 +40,7 @@ RSpec.describe Spree::Api::UsersController, type: :controller do
     end
 
     it "updates the subscription line items" do
-      allow(::Spree::Deprecation).to receive(:warn).with(a_string_matching(
+      allow(::Spree.deprecator).to receive(:warn).with(a_string_matching(
         "Creating or updating subscriptions through #{Spree.user_class} nested attributes is deprecated"
       ))
       update_user
