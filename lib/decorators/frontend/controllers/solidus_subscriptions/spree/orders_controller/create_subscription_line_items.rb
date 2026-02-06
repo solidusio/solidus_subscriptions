@@ -17,7 +17,7 @@ module SolidusSubscriptions
           base.after_action(
             :handle_subscription_line_items,
             only: :populate,
-            if: ->{ params[:subscription_line_item] }
+            if: -> { params[:subscription_line_item] }
           )
         end
 

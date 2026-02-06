@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe SolidusSubscriptions::Spree::Variant::AutoDeleteFromSubscriptions, type: :model do
   subject { create(:variant, subscribable: true) }
 
-  describe '.discard' do
-    it 'deletes itself from subscriptions' do
+  describe ".discard" do
+    it "deletes itself from subscriptions" do
       subscription = create(:subscription)
       create(:subscription_line_item, subscription: subscription, subscribable: subject)
 
@@ -14,8 +14,8 @@ RSpec.describe SolidusSubscriptions::Spree::Variant::AutoDeleteFromSubscriptions
     end
   end
 
-  describe '.destroy' do
-    it 'deletes itself from subscriptions' do
+  describe ".destroy" do
+    it "deletes itself from subscriptions" do
       subscription = create(:subscription)
       create(:subscription_line_item, subscription: subscription, subscribable: subject)
 

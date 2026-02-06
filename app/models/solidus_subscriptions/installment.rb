@@ -5,17 +5,17 @@
 # successful or otherwise at fulfilling this installment
 module SolidusSubscriptions
   class Installment < ApplicationRecord
-    has_many :details, class_name: 'SolidusSubscriptions::InstallmentDetail'
+    has_many :details, class_name: "SolidusSubscriptions::InstallmentDetail"
     belongs_to(
       :subscription,
-      class_name: 'SolidusSubscriptions::Subscription',
-      inverse_of: :installments,
+      class_name: "SolidusSubscriptions::Subscription",
+      inverse_of: :installments
     )
 
     validates :subscription, presence: true
 
     scope :fulfilled, (lambda do
-      joins(:details).where(InstallmentDetail.table_name => { success: true }).distinct
+      joins(:details).where(InstallmentDetail.table_name => {success: true}).distinct
     end)
 
     scope :unfulfilled, (lambda do
@@ -23,7 +23,7 @@ module SolidusSubscriptions
     end)
 
     scope :with_active_subscription, (lambda do
-      joins(:subscription).where.not(Subscription.table_name => { state: "canceled" })
+      joins(:subscription).where.not(Subscription.table_name => {state: "canceled"})
     end)
 
     scope :actionable, (lambda do
@@ -43,7 +43,7 @@ module SolidusSubscriptions
 
       details.create!(
         success: false,
-        message: I18n.t('solidus_subscriptions.installment_details.out_of_stock')
+        message: I18n.t("solidus_subscriptions.installment_details.out_of_stock")
       )
     end
 
@@ -60,7 +60,7 @@ module SolidusSubscriptions
       details.create!(
         success: true,
         order: order,
-        message: I18n.t('solidus_subscriptions.installment_details.success')
+        message: I18n.t("solidus_subscriptions.installment_details.success")
       )
     end
 
@@ -77,7 +77,7 @@ module SolidusSubscriptions
       details.create!(
         success: false,
         order: order,
-        message: I18n.t('solidus_subscriptions.installment_details.failed')
+        message: I18n.t("solidus_subscriptions.installment_details.failed")
       )
     end
 
@@ -113,7 +113,7 @@ module SolidusSubscriptions
       details.create!(
         success: false,
         order: order,
-        message: I18n.t('solidus_subscriptions.installment_details.payment_failed')
+        message: I18n.t("solidus_subscriptions.installment_details.payment_failed")
       )
 
       if subscription.maximum_reprocessing_time_reached? && !subscription.canceled?

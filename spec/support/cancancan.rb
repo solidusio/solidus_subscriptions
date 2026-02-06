@@ -1,1 +1,1 @@
-require 'cancan/matchers'
+require "cancan/matchers"

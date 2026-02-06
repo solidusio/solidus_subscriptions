@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require 'spree/api/testing_support/helpers'
+require "spec_helper"
+require "spree/api/testing_support/helpers"
 
 RSpec.describe Spree::Api::UsersController, type: :controller do
   include Spree::Api::TestingSupport::Helpers
+
   routes { Spree::Core::Engine.routes }
 
   let!(:user) do
@@ -12,14 +13,14 @@ RSpec.describe Spree::Api::UsersController, type: :controller do
   end
   let!(:subscription) { create :subscription, :with_line_item, user: user }
 
-  describe 'patch /update' do
+  describe "patch /update" do
     subject(:update_user) { patch :update, params: params }
 
     let(:params) do
       {
         id: user.id,
         token: user.spree_api_key,
-        format: 'json',
+        format: "json",
         user: {
           subscriptions_attributes: [{
             id: subscription.id,
@@ -34,12 +35,12 @@ RSpec.describe Spree::Api::UsersController, type: :controller do
         id: subscription.line_item_ids.first,
         quantity: 6,
         interval_length: 1,
-        interval_units: 'month'
+        interval_units: "month"
       }
     end
 
-    it 'updates the subscription line items' do
-      allow(::Spree::Deprecation).to receive(:warn).with(a_string_matching(
+    it "updates the subscription line items" do
+      allow(::Spree.deprecator).to receive(:warn).with(a_string_matching(
         "Creating or updating subscriptions through #{Spree.user_class} nested attributes is deprecated"
       ))
       update_user

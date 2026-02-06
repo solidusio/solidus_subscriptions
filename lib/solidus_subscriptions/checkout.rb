@@ -46,10 +46,10 @@ module SolidusSubscriptions
 
       order.checkout_steps[0...-1].each do
         case order.state
-        when 'address'
+        when "address"
           order.ship_address = installment.subscription.shipping_address_to_use
           order.bill_address = installment.subscription.billing_address_to_use
-        when 'payment'
+        when "payment"
           order.payments.create(
             payment_method: installment.subscription.payment_method_to_use,
             source: installment.subscription.payment_source_to_use,

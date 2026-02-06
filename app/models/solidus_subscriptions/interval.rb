@@ -8,7 +8,7 @@
 module SolidusSubscriptions
   module Interval
     def self.included(base)
-      base.enum interval_units: {
+      base.enum :interval_units, {
         day: 0,
         week: 1,
         month: 2,
@@ -20,7 +20,7 @@ module SolidusSubscriptions
     #
     # @return [Integer] The number of seconds.
     def interval
-      ActiveSupport::Duration.new(interval_length, { interval_units.pluralize.to_sym => interval_length })
+      ActiveSupport::Duration.new(interval_length, {interval_units.pluralize.to_sym => interval_length})
     end
   end
 end

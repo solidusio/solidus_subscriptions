@@ -7,10 +7,10 @@ module Spree
 
       def index
         @search = SolidusSubscriptions::Subscription.accessible_by(current_ability).ransack(params[:q])
-        @subscriptions = @search.result(distinct: true).
-                         includes(:line_items, :user).
-                         page(params[:page]).
-                         per(params[:per_page] || Spree::Config[:orders_per_page])
+        @subscriptions = @search.result(distinct: true)
+          .includes(:line_items, :user)
+          .page(params[:page])
+          .per(params[:per_page] || Spree::Config[:orders_per_page])
       end
 
       def new
@@ -26,13 +26,11 @@ module Spree
         load_payment_methods
         @subscription.payment_method_id = params[:subscription][:payment_method_id]
 
-        if @subscription.payment_method&.source_required?
-          @subscription.payment_source = @subscription
-                                         .payment_method
-                                         .payment_source_class
-                                         .find_by(id: params[:subscription][:payment_source_id])
-        else
-          @subscription.payment_source = nil
+        @subscription.payment_source = if @subscription.payment_method&.source_required?
+          @subscription
+            .payment_method
+            .payment_source_class
+            .find_by(id: params[:subscription][:payment_source_id])
         end
 
         super
@@ -45,10 +43,10 @@ module Spree
         end
 
         notice = if @subscription.errors.none?
-                   I18n.t('spree.admin.subscriptions.successfully_canceled')
-                 else
-                   @subscription.errors.full_messages.to_sentence
-                 end
+          I18n.t("spree.admin.subscriptions.successfully_canceled")
+        else
+          @subscription.errors.full_messages.to_sentence
+        end
 
         redirect_back(fallback_location: spree.admin_subscriptions_path, notice: notice)
       end
@@ -57,10 +55,10 @@ module Spree
         @subscription.activate
 
         notice = if @subscription.errors.none?
-                   I18n.t('spree.admin.subscriptions.successfully_activated')
-                 else
-                   @subscription.errors.full_messages.to_sentence
-                 end
+          I18n.t("spree.admin.subscriptions.successfully_activated")
+        else
+          @subscription.errors.full_messages.to_sentence
+        end
 
         redirect_back(fallback_location: spree.admin_subscriptions_path, notice: notice)
       end
@@ -69,13 +67,13 @@ module Spree
         @subscription.skip(check_skip_limits: false)
 
         notice = if @subscription.errors.none?
-                   I18n.t(
-                     'spree.admin.subscriptions.successfully_skipped',
-                     date: @subscription.actionable_date
-                   )
-                 else
-                   @subscription.errors.full_messages.to_sentence
-                 end
+          I18n.t(
+            "spree.admin.subscriptions.successfully_skipped",
+            date: @subscription.actionable_date
+          )
+        else
+          @subscription.errors.full_messages.to_sentence
+        end
 
         redirect_back(fallback_location: spree.admin_subscriptions_path, notice: notice)
       end
@@ -84,10 +82,10 @@ module Spree
         @subscription.pause(actionable_date: nil)
 
         notice = if @subscription.errors.none?
-                   I18n.t('spree.admin.subscriptions.successfully_paused')
-                 else
-                   @subscription.errors.full_messages.to_sentence
-                 end
+          I18n.t("spree.admin.subscriptions.successfully_paused")
+        else
+          @subscription.errors.full_messages.to_sentence
+        end
 
         redirect_back(fallback_location: spree.admin_subscriptions_path, notice: notice)
       end
@@ -96,10 +94,10 @@ module Spree
         @subscription.resume(actionable_date: nil)
 
         notice = if @subscription.errors.none?
-                   I18n.t('spree.admin.subscriptions.successfully_resumed')
-                 else
-                   @subscription.errors.full_messages.to_sentence
-                 end
+          I18n.t("spree.admin.subscriptions.successfully_resumed")
+        else
+          @subscription.errors.full_messages.to_sentence
+        end
 
         redirect_back(fallback_location: spree.admin_subscriptions_path, notice: notice)
       end

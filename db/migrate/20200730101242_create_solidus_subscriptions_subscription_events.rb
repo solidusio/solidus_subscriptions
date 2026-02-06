@@ -4,9 +4,9 @@ class CreateSolidusSubscriptionsSubscriptionEvents < ActiveRecord::Migration[5.2
       t.belongs_to(
         :subscription,
         null: false,
-        foreign_key: { to_table: :solidus_subscriptions_subscriptions },
-        index: { name: :idx_solidus_subscription_events_on_subscription_id },
-        type: :integer,
+        foreign_key: {to_table: :solidus_subscriptions_subscriptions},
+        index: {name: :idx_solidus_subscription_events_on_subscription_id},
+        type: :integer
       )
       t.string :event_type, null: false
 

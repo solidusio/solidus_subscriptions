@@ -3,14 +3,14 @@
 module Spree
   module Admin
     class SubscriptionOrdersController < ResourceController
-      belongs_to 'subscription', model_class: SolidusSubscriptions::Subscription
+      belongs_to "subscription", model_class: SolidusSubscriptions::Subscription
 
       def index
-        @search = collection.ransack((params[:q] || {}).reverse_merge(s: 'created_at desc'))
+        @search = collection.ransack((params[:q] || {}).reverse_merge(s: "created_at desc"))
 
-        @subscription_orders = @search.result(distinct: true).
-                               page(params[:page]).
-                               per(params[:per_page] || 20)
+        @subscription_orders = @search.result(distinct: true)
+          .page(params[:page])
+          .per(params[:per_page] || 20)
       end
 
       private

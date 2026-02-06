@@ -6,11 +6,11 @@ module SolidusSubscriptions
   class InstallmentDetail < ApplicationRecord
     belongs_to(
       :installment,
-      class_name: 'SolidusSubscriptions::Installment',
+      class_name: "SolidusSubscriptions::Installment",
       inverse_of: :details
     )
 
-    belongs_to(:order, class_name: '::Spree::Order', optional: true)
+    belongs_to(:order, class_name: "::Spree::Order", optional: true)
 
     validates :installment, presence: true
     alias_attribute :successful, :success

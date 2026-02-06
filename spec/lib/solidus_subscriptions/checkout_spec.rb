@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe SolidusSubscriptions::Checkout, :checkout do
-  context 'when the order can be created and paid' do
-    it 'creates and finalizes a new order for the installment' do
+  context "when the order can be created and paid" do
+    it "creates and finalizes a new order for the installment" do
       stub_spree_preferences(auto_capture: true)
       installment = create(:installment, :actionable)
 
@@ -12,7 +12,7 @@ RSpec.describe SolidusSubscriptions::Checkout, :checkout do
       expect(order).to be_paid
     end
 
-    it 'copies basic information from the subscription' do
+    it "copies basic information from the subscription" do
       stub_spree_preferences(auto_capture: true)
       installment = create(:installment, :actionable)
       subscription = installment.subscription
@@ -28,7 +28,7 @@ RSpec.describe SolidusSubscriptions::Checkout, :checkout do
       expect(order.email).to eq(subscription.user.email)
     end
 
-    it 'marks the order as a subscription order' do
+    it "marks the order as a subscription order" do
       stub_spree_preferences(auto_capture: true)
       installment = create(:installment, :actionable)
       subscription = installment.subscription
@@ -39,7 +39,7 @@ RSpec.describe SolidusSubscriptions::Checkout, :checkout do
       expect(order.subscription_order).to eq(true)
     end
 
-    it 'matches the total on the subscription' do
+    it "matches the total on the subscription" do
       stub_spree_preferences(auto_capture: true)
       installment = create(:installment, :actionable)
       subscription = installment.subscription
@@ -49,7 +49,7 @@ RSpec.describe SolidusSubscriptions::Checkout, :checkout do
       expect(order.item_total).to eq(subscription.line_items.first.subscribable.price)
     end
 
-    it 'calls the success dispatcher' do
+    it "calls the success dispatcher" do
       stub_spree_preferences(auto_capture: true)
       installment = create(:installment, :actionable)
       success_dispatcher = stub_dispatcher(SolidusSubscriptions::Dispatcher::SuccessDispatcher, installment)
@@ -60,11 +60,11 @@ RSpec.describe SolidusSubscriptions::Checkout, :checkout do
     end
   end
 
-  context 'when payment of the order fails' do
-    it 'calls the payment failed dispatcher' do
+  context "when payment of the order fails" do
+    it "calls the payment failed dispatcher" do
       stub_spree_preferences(auto_capture: true)
       installment = create(:installment, :actionable).tap do |i|
-        i.subscription.update!(payment_source: create(:credit_card, number: '4111123412341234', user: i.subscription.user))
+        i.subscription.update!(payment_source: create(:credit_card, number: "4111123412341234", user: i.subscription.user))
       end
       payment_failed_dispatcher = stub_dispatcher(SolidusSubscriptions::Dispatcher::PaymentFailedDispatcher, installment)
 
@@ -74,8 +74,8 @@ RSpec.describe SolidusSubscriptions::Checkout, :checkout do
     end
   end
 
-  context 'when an item is out of stock' do
-    it 'calls the out of stock dispatcher' do
+  context "when an item is out of stock" do
+    it "calls the out of stock dispatcher" do
       stub_spree_preferences(auto_capture: true)
       installment = create(:installment, :actionable).tap do |i|
         i.subscription.line_items.first.subscribable.stock_items.each do |stock_item|
@@ -90,8 +90,8 @@ RSpec.describe SolidusSubscriptions::Checkout, :checkout do
     end
   end
 
-  context 'when a generic transition error happens during checkout' do
-    it 'calls the failure dispatcher' do
+  context "when a generic transition error happens during checkout" do
+    it "calls the failure dispatcher" do
       stub_spree_preferences(auto_capture: true)
       installment = create(:installment, :actionable)
       failure_dispatcher = stub_dispatcher(SolidusSubscriptions::Dispatcher::FailureDispatcher, installment)
@@ -100,7 +100,7 @@ RSpec.describe SolidusSubscriptions::Checkout, :checkout do
         .and_raise(StateMachines::InvalidTransition.new(
           Spree::Order.new,
           Spree::Order.state_machines[:state],
-          :next,
+          :next
         ))
       # rubocop:enable RSpec/AnyInstance
 

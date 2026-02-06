@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe SolidusSubscriptions::Spree::User::HaveManySubscriptions, type: :model do
   subject(:user) { Spree.user_class.new }
@@ -8,13 +8,13 @@ RSpec.describe SolidusSubscriptions::Spree::User::HaveManySubscriptions, type: :
   it { is_expected.to have_many :subscriptions }
   it { is_expected.to accept_nested_attributes_for :subscriptions }
 
-  describe '#subscriptions_attributes=' do
-    it 'throws a deprecation warning' do
-      allow(::Spree::Deprecation).to receive(:warn)
+  describe "#subscriptions_attributes=" do
+    it "throws a deprecation warning" do
+      allow(::Spree.deprecator).to receive(:warn)
 
-      user.subscriptions_attributes = [{ interval_length: 2 }]
+      user.subscriptions_attributes = [{interval_length: 2}]
 
-      expect(::Spree::Deprecation)
+      expect(::Spree.deprecator)
         .to have_received(:warn)
         .with(/Creating or updating subscriptions through #{Spree.user_class} nested attributes is deprecated/)
     end

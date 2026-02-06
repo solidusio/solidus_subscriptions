@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe SolidusSubscriptions::Dispatcher::OutOfStockDispatcher do
-  describe '#dispatch' do
-    it 'marks the installment as out of stock' do
+  describe "#dispatch" do
+    it "marks the installment as out of stock" do
       installment = instance_spy(SolidusSubscriptions::Installment)
       order = build_stubbed(:order)
 

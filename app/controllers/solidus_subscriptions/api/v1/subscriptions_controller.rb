@@ -20,9 +20,9 @@ module SolidusSubscriptions
               render json: subscription.errors.to_json, status: :unprocessable_entity
             end
           else
-            error_message = I18n.t('solidus_subscriptions.subscription.invalid_payment_details')
+            error_message = I18n.t("solidus_subscriptions.subscription.invalid_payment_details")
 
-            render json: { payment_source_type: [error_message] }.to_json, status: :unprocessable_entity
+            render json: {payment_source_type: [error_message]}.to_json, status: :unprocessable_entity
           end
         end
 
@@ -93,7 +93,7 @@ module SolidusSubscriptions
 
         def subscription_params
           params.require(:subscription).permit(SolidusSubscriptions.configuration.subscription_attributes | [
-            line_items_attributes: line_item_attributes,
+            line_items_attributes: line_item_attributes
           ])
         end
 

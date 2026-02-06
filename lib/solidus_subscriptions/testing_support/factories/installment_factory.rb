@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :installment, class: 'SolidusSubscriptions::Installment' do
+  factory :installment, class: "SolidusSubscriptions::Installment" do
     transient {
       subscription_traits { [] }
     }

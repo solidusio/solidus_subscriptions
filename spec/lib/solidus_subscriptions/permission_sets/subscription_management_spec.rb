@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe SolidusSubscriptions::PermissionSets::SubscriptionManagement do
-  it 'is allowed to manage all subscriptions' do
+  it "is allowed to manage all subscriptions" do
     user = create(:user)
     subscription = create(:subscription)
 

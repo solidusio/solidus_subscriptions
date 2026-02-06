@@ -8,8 +8,8 @@ module SolidusSubscriptions
         def self.prepended(base)
           base.has_many(
             :subscriptions,
-            class_name: 'SolidusSubscriptions::Subscription',
-            foreign_key: 'user_id'
+            class_name: "SolidusSubscriptions::Subscription",
+            foreign_key: "user_id"
           )
 
           base.accepts_nested_attributes_for :subscriptions
@@ -18,7 +18,7 @@ module SolidusSubscriptions
         def subscriptions_attributes=(params)
           ::Spree.deprecator.warn(
             "Creating or updating subscriptions through #{::Spree.user_class} nested attributes is deprecated. " \
-            'Please use subscriptions APIs directly.'
+            "Please use subscriptions APIs directly."
           )
           super
         end

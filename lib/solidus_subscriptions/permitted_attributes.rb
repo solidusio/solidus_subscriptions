@@ -12,7 +12,7 @@ module SolidusSubscriptions
 
       def subscription_attributes
         SolidusSubscriptions.configuration.subscription_attributes | [
-          line_items_attributes: (subscription_line_item_attributes | [:id] - [:subscribable_id]),
+          line_items_attributes: (subscription_line_item_attributes | [:id] - [:subscribable_id])
         ]
       end
     end
