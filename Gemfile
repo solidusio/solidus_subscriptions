@@ -32,7 +32,7 @@ else
 end
 
 if rails_version == "7.0"
-  gem "concurrent-ruby", "< 1.3.7"
+  gem "concurrent-ruby", "< 1.3.8"
 end
 
 if RUBY_VERSION >= "3.4"
