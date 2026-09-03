@@ -10,7 +10,7 @@ module Spree
         @subscriptions = @search.result(distinct: true)
           .includes(:line_items, :user)
           .page(params[:page])
-          .per(params[:per_page] || Spree::Config[:orders_per_page])
+          .per(params[:per_page] || Spree::Config.orders_per_page)
       end
 
       def new
