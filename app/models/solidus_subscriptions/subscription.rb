@@ -386,7 +386,7 @@ module SolidusSubscriptions
     end
 
     def set_currency
-      self.currency ||= ::Spree::Config[:currency]
+      self.currency ||= ::Spree::Config.currency
     end
 
     def generate_guest_token

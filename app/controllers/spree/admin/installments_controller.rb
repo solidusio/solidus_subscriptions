@@ -12,7 +12,7 @@ module Spree
 
         @installments = @search.result(distinct: true)
           .page(params[:page])
-          .per(params[:per_page] || Spree::Config[:orders_per_page])
+          .per(params[:per_page] || Spree::Config.orders_per_page)
       end
 
       private

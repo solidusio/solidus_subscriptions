@@ -46,7 +46,7 @@ An example would be adding this to the registration page:
 
 ```erb
 <%# spree/checkout/registration.html.erb %>
-<% if Spree::Config[:allow_guest_checkout] && current_order.subscription_line_items.empty? %>
+<% if Spree::Config.allow_guest_checkout && current_order.subscription_line_items.empty? %>
 ```
 
 This allows guests to add subscriptions to their carts as guests, but forces them to login or create
