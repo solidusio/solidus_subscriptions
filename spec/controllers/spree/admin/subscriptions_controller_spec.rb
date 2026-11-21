@@ -22,6 +22,21 @@ RSpec.describe Spree::Admin::SubscriptionsController, type: :request do
     end
 
     it { is_expected.to be_successful }
+
+    context "when searching by user email in a different case" do
+      subject do
+        get spree.admin_subscriptions_path, params: {q: {user_email_i_cont: "MATCHING"}}
+        response
+      end
+
+      it "returns only the matching subscriptions" do
+        create :subscription, user: create(:user, email: "matching@example.com")
+        create :subscription, user: create(:user, email: "other@example.com")
+
+        expect(subject.body).to include("matching@example.com")
+        expect(subject.body).not_to include("other@example.com")
+      end
+    end
   end
 
   describe "GET :new" do
